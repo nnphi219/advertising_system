@@ -3,19 +3,22 @@ var express = require('express'),
     port = process.env.PORT || 3000,
     mongoose = require('mongoose'),
     Task = require('./api/models/todoListModel'), //created model loading here
+    AdsArea = require('./api/models/AdsAreaModel'),
     bodyParser = require('body-parser');
 
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/thesis_advertising_system'); 
+mongoose.connect('mongodb://localhost/ads_system'); 
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var routes = require('./api/routes/todoListRoute'); //importing route
-routes(app); //register the route
+var todoListRoute = require('./api/routes/todoListRoute'); //importing route
+var adsAreaRoute = require('./api/routes/AdsAreaRoute');
 
+todoListRoute(app); //register the route
+adsAreaRoute(app);
 
 app.listen(port);
 
