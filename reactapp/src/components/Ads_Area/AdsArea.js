@@ -4,30 +4,33 @@ import Request from 'superagent';
 function RenderRow(props){
   return (
     <tr>
-      <td>{props.trContent.Firstname}</td>
-      <td>{props.trContent.Lastname}</td>
-      <td>{props.trContent.Email}</td>
+      <td>{props.trContentAdsArea.ads_service_id}</td>
+      <td>{props.trContentAdsArea.ads_name}</td>
+      <td>{props.trContentAdsArea.post_apply_type}</td>
     </tr>
   );
 }
 
 function RenderHead(props) {
   var row = [];
-  props.thead.forEach(element => {
-    row.push(<th>{element}</th>);
+  props.theadAdsAreas.forEach(element => {
+    row.push(<th key={element}>{element}</th>);
   });
   return(
     <thead>
+      <tr>
         {row}
+      </tr>
     </thead>
   );
 }
 
 function RenderBody(props) {
   var rows = [];
-  props.tbody.forEach(element => {
-    rows.push(<RenderRow trContent={element} />)
+  props.tbodyAdsAreas.forEach((element, id) => {
+    rows.push(<RenderRow trContentAdsArea={element} key={id}/>)
   });
+  
   return(
     <tbody>
       {rows}
@@ -35,20 +38,20 @@ function RenderBody(props) {
   );
 }
 
-class AdsAreaContent extends Component {
+class AdsAreaContents extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tbodyContents: props.tbodyContents
+      tbodyAdsAreas: props.tbodyAdsAreas
     };
   }
 
   render(){
-    var theadContent = ["Firstname", "Lastname", "Email"];
+    var theadAdsAreas = ["Firstname", "Lastname", "Email"];
     return (
       <table className="table table-striped">
-        <RenderHead thead={theadContent}/>
-        <RenderBody tbody={this.state.tbodyContents}/>
+        <RenderHead theadAdsAreas={theadAdsAreas}/>
+        <RenderBody tbodyAdsAreas={this.props.tbodyAdsAreas}/>
       </table>
     );
   }
@@ -58,7 +61,7 @@ class AdsArea extends Component {
   constructor() {
     super(); 
     this.state = {
-      AdsAreaContents: []
+      tbodyAdsAreas: []
     };
   }
 
@@ -68,24 +71,23 @@ class AdsArea extends Component {
 
   getAdsAreas() {
     var url = "http://localhost:8080/adsareas";
-    Request.get(url).then((res) => {
+    Request.get(url)
+    .then((res) => {
       this.setState({
-        AdsAreaContents: res
+        tbodyAdsAreas: res.body
       });
     });
   }
 
   render(){
-    var tbodyContents = [
-      {"Firstname": "John", "Lastname": "Doe", "Email": "john@example.com"},
-      {"Firstname": "Mary", "Lastname": "Moe", "Email": "mary@example.com"},
-      {"Firstname": "July", "Lastname": "Dooley", "Email": "july@example.com"}
-    ];
-
+    // var tbodyContents = [
+    //   {"Firstname": "John", "Lastname": "Doe", "Email": "john@example.com"},
+    //   {"Firstname": "Mary", "Lastname": "Moe", "Email": "mary@example.com"},
+    //   {"Firstname": "July", "Lastname": "Dooley", "Email": "july@example.com"}
+    // ];
     return (
       <div className="container">
-        {/* <AdsAreaContent tbodyContents={this.state.AdsAreaContents}/> */}
-        <p>ppp</p>
+        <AdsAreaContents tbodyAdsAreas={this.state.tbodyAdsAreas}/>
       </div>
     );
   }
