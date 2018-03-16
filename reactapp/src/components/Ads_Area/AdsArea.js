@@ -48,7 +48,6 @@ function RenderBody(props) {
 class AdsAreaInformation extends Component {
   constructor(props) {
     super(props);
-    
   }
 
   render() {
@@ -96,25 +95,13 @@ class AdsAreaContents extends Component {
   }
 }
 
-class AdsAreaHeader extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleCreateAdsAreaClick = this.handleCreateAdsAreaClick.bind(this);
-  }
-
-  handleCreateAdsAreaClick(){
-    console.log("add ads area");
-  }
-
-  render(){
-    return (
-      <div className="adsarea--header">
-        <h2 className="adsarea--header-title float-left">Vùng quảng cáo</h2>
-        <button type="button" className="btn btn-primary float-left" onClick={this.handleCreateAdsAreaClick}>Tạo vùng quảng cáo</button>
-      </div>
-    );
-  }
+function AdsAreaHeader(props) {
+  return (
+    <div className="adsarea--header">
+          <h2 className="adsarea--header-title float-left">Vùng quảng cáo</h2>
+          <button type="button" className="btn btn-primary float-left">Tạo vùng quảng cáo</button>
+        </div>
+  );
 }
 
 class AdsArea extends Component {
