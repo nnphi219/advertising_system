@@ -1,16 +1,16 @@
 var express = require('express'),
     app = express(),
-    port = process.env.PORT || 3000,
+    port = process.env.PORT || 8080,
     mongoose = require('mongoose'),
     Task = require('./api/models/todoListModel'), //created model loading here
     AdsArea = require('./api/models/AdsAreaModel'),
     bodyParser = require('body-parser');
-
+var cors = require('cors');
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/ads_system'); 
 
-
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

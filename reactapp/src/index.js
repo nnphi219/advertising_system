@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import AdsArea from './components/Ads_Area/AdsArea';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<AdsArea />, document.getElementById('root'));
 registerServiceWorker();
