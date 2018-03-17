@@ -4,6 +4,14 @@ body {
   font-family: sans-serif;
 }
 
+.fullwidth {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
 .adsarea--header {
   margin-top: 20px;
   height: 40px;
