@@ -126,7 +126,7 @@ class NavbarDefault extends Component {
 
 export const Navigation = (props) => {
     return (
-        <nav className="navbar navbar-default navbar-static-top" style={{marginBottom: '0'}}>
+        <nav className="navbar navbar-default navbar-static-top nav-zindex" style={{marginBottom: '0'}}>
             <NavbarHeader />
             <NavTopLinks />
             <NavbarDefault />

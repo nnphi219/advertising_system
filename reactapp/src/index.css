@@ -4,6 +4,10 @@ body {
   font-family: sans-serif;
 }
 
+.nav-zindex {
+  z-index: 1;
+}
+
 .fullwidth {
   width: 100%;
 }
