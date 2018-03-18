@@ -1,29 +1,31 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter, Link, Route, IndexRoute } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import AdsArea from './components/Ads_Area/AdsArea';
 import Root from './components/Root';
 
+class Title extends Component {
+  render(){
+      return(
+          <div id="page-wrapper">
+              <div className="row">
+                  <div className="col-lg-12">
+                      <h1 className="page-header">This is Admin System Page</h1>
+                  </div>
+              </div>
+          </div>
+      );
+  }
+}
+
 class App extends Component {
   render() {
-    // return (
-    //   <div className="App">
-    //     <header className="App-header">
-    //       <img src={logo} className="App-logo" alt="logo" />
-    //       <h1 className="App-title">Welcome to React</h1>
-    //     </header>
-    //     <p className="App-intro">
-    //       To get started, edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //   </div>
-    // );
-
     return (
       <BrowserRouter>
       <div>
           <Route path={"/"} component={Root} />
-          <Route path={"/create/ads-area"} component={AdsArea} />
+          <Route path={"/ads-area"} component={AdsArea} />
+          <Route path={"/test"} component={Title} />
           {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />
           <Route path={"home-single"} component={Home}/> */}

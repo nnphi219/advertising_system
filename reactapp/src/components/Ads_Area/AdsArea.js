@@ -4,7 +4,7 @@ import AdsAreaCreator from './AdsAreaCreator';
 
 function RenderRow(props){
   var areaSize = props.trContentAdsArea.area_size.width + props.trContentAdsArea.area_size.height;
-  var status = (props.trContentAdsArea.status == 1)? "Kích hoạt": "Đã hủy";
+  var status = (props.trContentAdsArea.status === 1)? "Kích hoạt": "Đã hủy";
   return (
     <tr>
       <td>{props.trContentAdsArea.ads_service_id}</td>
@@ -49,7 +49,7 @@ function RenderBody(props) {
 class AdsAreaInformation extends Component {
   render() {
     var informationLeft = [];
-    informationLeft.push(<p>Đang áp dụng(10) Ngừng kích hoạt(3) Đã xóa(3)</p>);
+    informationLeft.push(<p key="title">Đang áp dụng(10) Ngừng kích hoạt(3) Đã xóa(3)</p>);
     informationLeft.push(<button key="Action" id="Action" type="button" className="btn btn-primary">Chọn hành động</button>);
     informationLeft.push(<button key="Apply" id="Apply" type="button" className="btn btn-primary">Áp dụng</button>);
     informationLeft.push(<button key="CreatedDate" id="CreatedDate" type="button" className="btn btn-primary">Chọn ngày tạo</button>);
@@ -146,18 +146,22 @@ class AdsArea extends Component {
 
   render(){
     return (
-      <div className="container">
-        <AdsAreaHeader showCreatorPopup={this.handleShowCreatorPopup}/>
-        <AdsAreaContents tbodyAdsAreas={this.state.tbodyAdsAreas}/>
-        {
-          this.state.showCreatorPopup ?
-          <AdsAreaCreator 
-            closeCreatorPopup={this.handleShowCreatorPopup}
-          /> 
-          : null
-        }
-       
+      <div id="page-wrapper">
+          <div className="row">
+              <div>
+                <AdsAreaHeader showCreatorPopup={this.handleShowCreatorPopup}/>
+                <AdsAreaContents tbodyAdsAreas={this.state.tbodyAdsAreas}/>
+                {
+                  this.state.showCreatorPopup ?
+                  <AdsAreaCreator 
+                    closeCreatorPopup={this.handleShowCreatorPopup}
+                  /> 
+                  : null
+                }
+              </div>
+          </div>
       </div>
+      
     );
   }
 }
