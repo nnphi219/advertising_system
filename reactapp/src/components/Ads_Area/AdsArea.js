@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 import AdsAreaCreator from './AdsAreaCreator';
 
+function RenderEditDeleteButton(props) {
+  return(
+    <div>
+      <button key="Edit" id="Edit" name={props.nameId} type="button" className="btn btn-warning adsarea--button-edit" onClick={props.handleEditClick}>Edit</button>
+      <button key="Delete" id="Delete" name={props.nameId} type="button" className="btn btn-danger adsarea--button-delete" onClick={props.handleDeleteClick}>Delete</button>
+    </div>
+  );
+}
+
 function RenderRow(props){
   var areaSize = props.trContentAdsArea.area_size.width + props.trContentAdsArea.area_size.height;
   var status = (props.trContentAdsArea.status === 1)? "Kích hoạt": "Đã hủy";
@@ -15,6 +24,13 @@ function RenderRow(props){
       <td>{props.trContentAdsArea.max_post_number}</td>
       <td>{areaSize}</td>
       <td>{status}</td>
+      <td>
+        <RenderEditDeleteButton 
+          nameId={props.trContentAdsArea._id}
+          handleEditClick={props.handleEditClick}
+          handleDeleteClick={props.handleDeleteClick}
+        />
+      </td>
     </tr>
   );
 }
@@ -36,7 +52,14 @@ function RenderHead(props) {
 function RenderBody(props) {
   var rows = [];
   props.tbodyAdsAreas.forEach((element, id) => {
-    rows.push(<RenderRow trContentAdsArea={element} key={id}/>)
+    rows.push(
+      <RenderRow 
+        trContentAdsArea={element} 
+        key={id} 
+        handleEditClick={props.handleEditClick}
+        handleDeleteClick={props.handleDeleteClick}
+      />
+    );
   });
   
   return(
@@ -74,8 +97,22 @@ class AdsAreaContents extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tbodyAdsAreas: props.tbodyAdsAreas
+      tbodyAdsAreas: []
     };
+  }
+
+  componentDidMount(){
+    this.getAdsAreas();
+  }
+
+  getAdsAreas() {
+    var url = "http://localhost:8080/adsareas";
+    Request.get(url)
+    .then((res) => {
+      this.setState({
+        tbodyAdsAreas: res.body
+      });
+    });
   }
 
   render(){
@@ -85,7 +122,11 @@ class AdsAreaContents extends Component {
         <AdsAreaInformation />
         <table className="table table-striped">
           <RenderHead theadAdsAreas={theadAdsAreas}/>
-          <RenderBody tbodyAdsAreas={this.props.tbodyAdsAreas}/>
+          <RenderBody 
+            tbodyAdsAreas={this.state.tbodyAdsAreas}
+            handleEditClick={this.props.handleEditClick}
+            handleDeleteClick={this.props.handleDeleteClick}
+          />
         </table>
       </div>
     );
@@ -118,24 +159,11 @@ class AdsArea extends Component {
   constructor() {
     super(); 
     this.state = {
-      showCreatorPopup: false,
-      tbodyAdsAreas: []
+      showCreatorPopup: false
     };
     this.handleShowCreatorPopup = this.handleShowCreatorPopup.bind(this);
-  }
-
-  componentDidMount(){
-    this.getAdsAreas();
-  }
-
-  getAdsAreas() {
-    var url = "http://localhost:8080/adsareas";
-    Request.get(url)
-    .then((res) => {
-      this.setState({
-        tbodyAdsAreas: res.body
-      });
-    });
+    this.handleEditClick = this.handleEditClick.bind(this);
+    this.handleDeleteClick = this.handleDeleteClick.bind(this);
   }
 
   handleShowCreatorPopup() {
@@ -144,13 +172,30 @@ class AdsArea extends Component {
     });
   }
 
+  handleEditClick(event){
+    var name = event.target.name;
+    var value = event.target.value;
+    var key = event.target.key;
+    console.log(name);
+    console.log(value);
+    console.log(key);
+  }
+
+  handleDeleteClick(event){
+    console.log(event.target.name);
+  }
+
   render(){
     return (
       <div id="page-wrapper">
           <div className="row">
               <div>
                 <AdsAreaHeader showCreatorPopup={this.handleShowCreatorPopup}/>
-                <AdsAreaContents tbodyAdsAreas={this.state.tbodyAdsAreas}/>
+                <AdsAreaContents 
+                  handleEditClick={this.handleEditClick}
+                  handleDeleteClick={this.handleDeleteClick}
+                />
+                
                 {
                   this.state.showCreatorPopup ?
                   <AdsAreaCreator 

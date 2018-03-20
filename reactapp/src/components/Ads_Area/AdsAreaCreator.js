@@ -41,7 +41,7 @@ function RenderCombobox(props) {
 function RenderProperties(props) {
     var inputs = [];
     props.inputDatas.forEach(element => {
-        if(element.type=="combobox"){
+        if(element.type === "combobox"){
             inputs.push(<RenderCombobox key={element.id} inputData={element} handleOnchangeSelect={props.handleOnchangeSelect}/>);
         }
         else{

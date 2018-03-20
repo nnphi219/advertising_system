@@ -43,3 +43,11 @@
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.adsarea--button-edit {
+    margin-right: 5px;
+}
+
+.adsarea--button-delete {
+    margin-right: 5px;
+}
