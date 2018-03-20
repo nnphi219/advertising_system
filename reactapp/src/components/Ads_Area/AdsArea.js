@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import AdsAreaCreator from './AdsAreaCreator';
+import AdsAreaDeleteForm from './AdsAreaDelete';
+import './ads_area.css';
 
 function RenderEditDeleteButton(props) {
   return(
@@ -12,7 +14,7 @@ function RenderEditDeleteButton(props) {
 }
 
 function RenderRow(props){
-  var areaSize = props.trContentAdsArea.area_size.width + props.trContentAdsArea.area_size.height;
+  var areaSize = props.trContentAdsArea.area_size.width.toString() + "x" + props.trContentAdsArea.area_size.height.toString();
   var status = (props.trContentAdsArea.status === 1)? "Kích hoạt": "Đã hủy";
   return (
     <tr>
@@ -94,27 +96,6 @@ class AdsAreaInformation extends Component {
 }
 
 class AdsAreaContents extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tbodyAdsAreas: []
-    };
-  }
-
-  componentDidMount(){
-    this.getAdsAreas();
-  }
-
-  getAdsAreas() {
-    var url = "http://localhost:8080/adsareas";
-    Request.get(url)
-    .then((res) => {
-      this.setState({
-        tbodyAdsAreas: res.body
-      });
-    });
-  }
-
   render(){
     var theadAdsAreas = ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"];
     return (
@@ -123,7 +104,7 @@ class AdsAreaContents extends Component {
         <table className="table table-striped">
           <RenderHead theadAdsAreas={theadAdsAreas}/>
           <RenderBody 
-            tbodyAdsAreas={this.state.tbodyAdsAreas}
+            tbodyAdsAreas={this.props.tbodyAdsAreas}
             handleEditClick={this.props.handleEditClick}
             handleDeleteClick={this.props.handleDeleteClick}
           />
@@ -159,16 +140,35 @@ class AdsArea extends Component {
   constructor() {
     super(); 
     this.state = {
-      showCreatorPopup: false
+      ShowCreatorPopup: false,
+      ShowDeletePopup: false,
+      SelectedItemId: null,
+      tbodyAdsAreas: []
     };
     this.handleShowCreatorPopup = this.handleShowCreatorPopup.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
+    this.handleResetContentsState = this.handleResetContentsState.bind(this);
+  }
+
+  componentDidMount(){
+    this.getAdsAreas();
+  }
+
+  getAdsAreas() {
+    var url = "http://localhost:8080/adsareas";
+    Request.get(url)
+    .then((res) => {
+      this.setState({
+        tbodyAdsAreas: res.body
+      });
+    });
   }
 
   handleShowCreatorPopup() {
     this.setState({
-      showCreatorPopup: !this.state.showCreatorPopup
+      ShowCreatorPopup: !this.state.ShowCreatorPopup
     });
   }
 
@@ -182,7 +182,20 @@ class AdsArea extends Component {
   }
 
   handleDeleteClick(event){
-    console.log(event.target.name);
+    this.setState({
+      ShowDeletePopup: !this.state.ShowDeletePopup,
+      SelectedItemId: event.target.name
+    });
+  }
+
+  handleCloseDeletePop() {
+    this.setState({
+      ShowDeletePopup: !this.state.ShowDeletePopup
+    });
+  }
+
+  handleResetContentsState(){
+    this.getAdsAreas();
   }
 
   render(){
@@ -192,17 +205,30 @@ class AdsArea extends Component {
               <div>
                 <AdsAreaHeader showCreatorPopup={this.handleShowCreatorPopup}/>
                 <AdsAreaContents 
+                  tbodyAdsAreas={this.state.tbodyAdsAreas}
                   handleEditClick={this.handleEditClick}
                   handleDeleteClick={this.handleDeleteClick}
                 />
                 
                 {
-                  this.state.showCreatorPopup ?
-                  <AdsAreaCreator 
+                  this.state.ShowCreatorPopup ?
+                  <AdsAreaCreator
+                    resetContentState={this.handleResetContentsState}
                     closeCreatorPopup={this.handleShowCreatorPopup}
                   /> 
                   : null
                 }
+
+                {
+                  this.state.ShowDeletePopup ?
+                  <AdsAreaDeleteForm
+                    SelectedItemId={this.state.SelectedItemId}
+                    closeDeletePopup={this.handleCloseDeletePop}
+                    resetContentState={this.handleResetContentsState}
+                  />
+                  : null
+                }
+
               </div>
           </div>
       </div>

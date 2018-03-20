@@ -51,3 +51,31 @@
 .adsarea--button-delete {
     margin-right: 5px;
 }
+
+.popup_inner--delete {
+    position: absolute;
+    left: 35%;
+    right: 35%;
+    top: 15%;
+    bottom: 67%;
+    margin: auto;
+    background: white;
+    border-radius: 6px;
+    vertical-align: bottom;
+}
+
+.popup_inner--delete h2 {
+    margin-left: 10px;
+}
+
+.popup_inner--delete-content {
+    text-align: center;
+}
+
+.popup_inner--delete-content p {
+    font-size: 17px;
+}
+
+.popup_inner--delete-content button {
+    margin-right: 10px;
+}
