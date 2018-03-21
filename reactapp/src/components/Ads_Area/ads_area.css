@@ -52,6 +52,11 @@
     margin-right: 5px;
 }
 
+.adsarea-radio {
+    display: inline-block;
+    margin-right: 10px;
+}
+
 .popup_inner--delete {
     position: absolute;
     left: 35%;

@@ -38,12 +38,46 @@ function RenderCombobox(props) {
     );
 }
 
+function RenderRadioButton(props) {
+    var radioRender = [];
+    var isSelected = false;
+
+    props.inputData.values.forEach((element, index) => {
+        if (!isSelected) {
+            radioRender.push(
+                <div key={props.inputData.keys[index]} className="adsarea-radio">
+                    <input type="radio" value={props.inputData.keys[index]} key={props.inputData.keys[index]} name={props.inputData.id} defaultChecked />
+                    {element}
+                </div>
+            );
+            isSelected = !isSelected;
+        }
+        else {
+            radioRender.push(
+                <div key={props.inputData.keys[index]} className="adsarea-radio">
+                    <input type="radio" value={props.inputData.keys[index]} key={props.inputData.keys[index]} name={props.inputData.id} />
+                    {element}
+                </div>
+            );
+        }
+    });
+    return(
+        <div key={props.inputData.id} name={props.inputData.id} onChange={props.handleOnchangeRadioButton}>
+            <label className="fullwidth">{props.inputData.description}</label>
+            {radioRender}
+        </div>
+    );
+}
+
 function RenderProperties(props) {
     var inputs = [];
     props.inputDatas.forEach(element => {
         if (element.type === "combobox") {
             inputs.push(<RenderCombobox key={element.id} inputData={element} handleOnchangeSelect={props.handleOnchangeSelect} />);
         }
+        else if (element.type === "radio") {
+            inputs.push(<RenderRadioButton key={element.id} inputData={element} handleOnchangeRadioButton={props.handleOnchangeRadioButton} />);
+        }  
         else {
             inputs.push(<RenderInput key={element.id} inputData={element} handleOnchangeInput={props.handleOnchangeInput} />);
         }
@@ -62,6 +96,7 @@ class AdsAreaCreatorForm extends Component {
         this.handleClosePopup = this.handleClosePopup.bind(this);
         this.handleOnchangeInput = this.handleOnchangeInput.bind(this);
         this.handleOnchangeSelect = this.handleOnchangeSelect.bind(this);
+        this.handleOnchangeRadioButton = this.handleOnchangeRadioButton.bind(this);
     }
 
     handleClosePopup() {
@@ -82,7 +117,13 @@ class AdsAreaCreatorForm extends Component {
             var areaSizeArray = value.split('x');
             value = { width: areaSizeArray[0], height: areaSizeArray[1] };
         }
-        this.setState({ [name]: value });
+        this.props.handleUpdateState({ [name]: value });
+    }
+
+    handleOnchangeRadioButton(e) {
+        this.props.handleUpdateState({
+            [e.target.name]: e.target.value
+        });
     }
 
     render() {
@@ -94,6 +135,7 @@ class AdsAreaCreatorForm extends Component {
                         inputDatas={this.props.adsAreaInformationInputs}
                         handleOnchangeInput={this.handleOnchangeInput}
                         handleOnchangeSelect={this.handleOnchangeSelect}
+                        handleOnchangeRadioButton={this.handleOnchangeRadioButton}
                     />
                 </div>
 
@@ -103,6 +145,7 @@ class AdsAreaCreatorForm extends Component {
                         inputDatas={this.props.adsAreaDescriptionInputs}
                         handleOnchangeInput={this.handleOnchangeInput}
                         handleOnchangeSelect={this.handleOnchangeSelect}
+                        handleOnchangeRadioButton={this.handleOnchangeRadioButton}
                     />
                 </div>
                 <div className="text-center">
@@ -137,6 +180,11 @@ class AdsAreaCreator extends Component {
                     valueState = { width: areaSizeArray[0], height: areaSizeArray[1] };
                 }
                 jsonState[element.id] = valueState;
+            }
+
+            if (element.type === "radio") {
+                var theFirstValue = element.keys[0];
+                jsonState[element.id] = theFirstValue;
             }
         });
     }
@@ -250,7 +298,8 @@ var adsAreaDescriptionInputs = [
         "description": "Có viền vùng quảng cáo",
         "id": "have_border",
         "type": "radio",
-        "values": ["có", "Không"]
+        "values": ["có", "Không"],
+        "keys": [1, 0]
     },
     {
         "description": "Màu viền vùng quảng cáo",
@@ -271,7 +320,8 @@ var adsAreaDescriptionInputs = [
         "description": "Hiên thị video thay thế ảnh đại diện",
         "id": "show_video",
         "type": "radio",
-        "values": ["có", "Không"]
+        "values": ["có", "Không"],
+        "keys": [1, 0]
     }
 ];
 
