@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import AdsAreaCreator from './AdsAreaCreator';
+import AdsAreaDeleteForm from './AdsAreaDelete';
+import './ads_area.css';
+
+function RenderEditDeleteButton(props) {
+  return(
+    <div>
+      <button key="Edit" id="Edit" name={props.nameId} type="button" className="btn btn-warning adsarea--button-edit" onClick={props.handleEditClick}>Edit</button>
+      <button key="Delete" id="Delete" name={props.nameId} type="button" className="btn btn-danger adsarea--button-delete" onClick={props.handleDeleteClick}>Delete</button>
+    </div>
+  );
+}
 
 function RenderRow(props){
-  var areaSize = props.trContentAdsArea.area_size.width + props.trContentAdsArea.area_size.height;
+  var areaSize = props.trContentAdsArea.area_size.width.toString() + "x" + props.trContentAdsArea.area_size.height.toString();
   var status = (props.trContentAdsArea.status === 1)? "Kích hoạt": "Đã hủy";
   return (
     <tr>
@@ -15,6 +26,13 @@ function RenderRow(props){
       <td>{props.trContentAdsArea.max_post_number}</td>
       <td>{areaSize}</td>
       <td>{status}</td>
+      <td>
+        <RenderEditDeleteButton 
+          nameId={props.trContentAdsArea._id}
+          handleEditClick={props.handleEditClick}
+          handleDeleteClick={props.handleDeleteClick}
+        />
+      </td>
     </tr>
   );
 }
@@ -36,7 +54,14 @@ function RenderHead(props) {
 function RenderBody(props) {
   var rows = [];
   props.tbodyAdsAreas.forEach((element, id) => {
-    rows.push(<RenderRow trContentAdsArea={element} key={id}/>)
+    rows.push(
+      <RenderRow 
+        trContentAdsArea={element} 
+        key={id} 
+        handleEditClick={props.handleEditClick}
+        handleDeleteClick={props.handleDeleteClick}
+      />
+    );
   });
   
   return(
@@ -71,13 +96,6 @@ class AdsAreaInformation extends Component {
 }
 
 class AdsAreaContents extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      tbodyAdsAreas: props.tbodyAdsAreas
-    };
-  }
-
   render(){
     var theadAdsAreas = ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"];
     return (
@@ -85,7 +103,11 @@ class AdsAreaContents extends Component {
         <AdsAreaInformation />
         <table className="table table-striped">
           <RenderHead theadAdsAreas={theadAdsAreas}/>
-          <RenderBody tbodyAdsAreas={this.props.tbodyAdsAreas}/>
+          <RenderBody 
+            tbodyAdsAreas={this.props.tbodyAdsAreas}
+            handleEditClick={this.props.handleEditClick}
+            handleDeleteClick={this.props.handleDeleteClick}
+          />
         </table>
       </div>
     );
@@ -118,10 +140,16 @@ class AdsArea extends Component {
   constructor() {
     super(); 
     this.state = {
-      showCreatorPopup: false,
+      ShowCreatorPopup: false,
+      ShowDeletePopup: false,
+      SelectedItemId: null,
       tbodyAdsAreas: []
     };
     this.handleShowCreatorPopup = this.handleShowCreatorPopup.bind(this);
+    this.handleEditClick = this.handleEditClick.bind(this);
+    this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
+    this.handleResetContentsState = this.handleResetContentsState.bind(this);
   }
 
   componentDidMount(){
@@ -140,8 +168,34 @@ class AdsArea extends Component {
 
   handleShowCreatorPopup() {
     this.setState({
-      showCreatorPopup: !this.state.showCreatorPopup
+      ShowCreatorPopup: !this.state.ShowCreatorPopup
     });
+  }
+
+  handleEditClick(event){
+    var name = event.target.name;
+    var value = event.target.value;
+    var key = event.target.key;
+    console.log(name);
+    console.log(value);
+    console.log(key);
+  }
+
+  handleDeleteClick(event){
+    this.setState({
+      ShowDeletePopup: !this.state.ShowDeletePopup,
+      SelectedItemId: event.target.name
+    });
+  }
+
+  handleCloseDeletePop() {
+    this.setState({
+      ShowDeletePopup: !this.state.ShowDeletePopup
+    });
+  }
+
+  handleResetContentsState(){
+    this.getAdsAreas();
   }
 
   render(){
@@ -150,14 +204,31 @@ class AdsArea extends Component {
           <div className="row">
               <div>
                 <AdsAreaHeader showCreatorPopup={this.handleShowCreatorPopup}/>
-                <AdsAreaContents tbodyAdsAreas={this.state.tbodyAdsAreas}/>
+                <AdsAreaContents 
+                  tbodyAdsAreas={this.state.tbodyAdsAreas}
+                  handleEditClick={this.handleEditClick}
+                  handleDeleteClick={this.handleDeleteClick}
+                />
+                
                 {
-                  this.state.showCreatorPopup ?
-                  <AdsAreaCreator 
+                  this.state.ShowCreatorPopup ?
+                  <AdsAreaCreator
+                    resetContentState={this.handleResetContentsState}
                     closeCreatorPopup={this.handleShowCreatorPopup}
                   /> 
                   : null
                 }
+
+                {
+                  this.state.ShowDeletePopup ?
+                  <AdsAreaDeleteForm
+                    SelectedItemId={this.state.SelectedItemId}
+                    closeDeletePopup={this.handleCloseDeletePop}
+                    resetContentState={this.handleResetContentsState}
+                  />
+                  : null
+                }
+
               </div>
           </div>
       </div>

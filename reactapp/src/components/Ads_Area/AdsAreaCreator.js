@@ -2,12 +2,69 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 
 function RenderInput(props) {
-    return(
+    return (
         <div>
-            <label className="fullwidth">
+            <label key={props.inputData.id} className="fullwidth">
                 {props.inputData.description}
-                <input type="text" id={props.inputData.id} className="adsarea--input" name={props.inputData.id} onChange={props.handleOnchange} />
+                <input type="text" id={props.inputData.id} key={props.inputData.id} className="adsarea--input" name={props.inputData.id} onChange={props.handleOnchangeInput} />
             </label>
+        </div>
+    );
+}
+
+function RenderCombobox(props) {
+    var tags = [];
+    var isSelected = false;
+    var count = 0;
+    props.inputData.values.forEach(element => {
+        if (!isSelected) {
+            tags.push(<option key={count} value={element} defaultValue >{element}</option>);
+            isSelected = !isSelected;
+        }
+        else {
+            tags.push(<option key={count} value={element}>{element}</option>);
+        }
+        count++;
+    });
+    return (
+        <div>
+            <label key={props.inputData.id} className="fullwidth">
+                {props.inputData.description}
+                <select name={props.inputData.id} id={props.inputData.id} key={props.inputData.id} onChange={props.handleOnchangeSelect} className="adsarea--select">
+                    {tags}
+                </select>
+            </label>
+        </div>
+    );
+}
+
+function RenderRadioButton(props) {
+    var radioRender = [];
+    var isSelected = false;
+
+    props.inputData.values.forEach((element, index) => {
+        if (!isSelected) {
+            radioRender.push(
+                <div key={props.inputData.keys[index]} className="adsarea-radio">
+                    <input type="radio" value={props.inputData.keys[index]} key={props.inputData.keys[index]} name={props.inputData.id} defaultChecked />
+                    {element}
+                </div>
+            );
+            isSelected = !isSelected;
+        }
+        else {
+            radioRender.push(
+                <div key={props.inputData.keys[index]} className="adsarea-radio">
+                    <input type="radio" value={props.inputData.keys[index]} key={props.inputData.keys[index]} name={props.inputData.id} />
+                    {element}
+                </div>
+            );
+        }
+    });
+    return(
+        <div key={props.inputData.id} name={props.inputData.id} onChange={props.handleOnchangeRadioButton}>
+            <label className="fullwidth">{props.inputData.description}</label>
+            {radioRender}
         </div>
     );
 }
@@ -15,7 +72,15 @@ function RenderInput(props) {
 function RenderProperties(props) {
     var inputs = [];
     props.inputDatas.forEach(element => {
-        inputs.push(<RenderInput inputData={element} handleOnchange={props.handleOnchange}/>)
+        if (element.type === "combobox") {
+            inputs.push(<RenderCombobox key={element.id} inputData={element} handleOnchangeSelect={props.handleOnchangeSelect} />);
+        }
+        else if (element.type === "radio") {
+            inputs.push(<RenderRadioButton key={element.id} inputData={element} handleOnchangeRadioButton={props.handleOnchangeRadioButton} />);
+        }  
+        else {
+            inputs.push(<RenderInput key={element.id} inputData={element} handleOnchangeInput={props.handleOnchangeInput} />);
+        }
     });
     return (
         <div>
@@ -25,124 +90,66 @@ function RenderProperties(props) {
 }
 
 class AdsAreaCreatorForm extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.handleClosePopup = this.handleClosePopup.bind(this);
-        this.handleOnchange = this.handleOnchange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleOnchangeInput = this.handleOnchangeInput.bind(this);
+        this.handleOnchangeSelect = this.handleOnchangeSelect.bind(this);
+        this.handleOnchangeRadioButton = this.handleOnchangeRadioButton.bind(this);
     }
 
     handleClosePopup() {
         this.props.handleClosePopup();
     }
 
-    handleSubmit() {
-        this.props.handleSubmit(this.state);
-    }
-
-    handleOnchange(e){
+    handleOnchangeInput(e) {
         var name = e.target.name;
         var value = e.target.value;
-        this.setState({[name]: value});
+        this.props.handleUpdateState({ [name]: value });
     }
 
-    render(){
-        var adsAreaInformationInputs = [
-            {
-                "description":"Mã dịch vụ quảng cáo",
-                "id":"ads_service_id"
+    handleOnchangeSelect(e) {
+        var name = e.target.name;
+        var value = e.target.value;
 
-            },
-            {
-                "description":"Tên hiển thị",
-                "id":"ads_name"
+        if(name === "area_size") {
+            var areaSizeArray = value.split('x');
+            value = { width: areaSizeArray[0], height: areaSizeArray[1] };
+        }
+        this.props.handleUpdateState({ [name]: value });
+    }
 
-            },
-            {
-                "description":"Trang áp dụng quảng cáo",
-                "id":"applied_ads_page_type"
+    handleOnchangeRadioButton(e) {
+        this.props.handleUpdateState({
+            [e.target.name]: e.target.value
+        });
+    }
 
-            },
-            {
-                "description":"Loại bài đăng  áp dụng",
-                "id":"post_apply_type"
-
-            },
-            {
-                "description":"Kích thước vùng quảng cáo",
-                "id":"area_size"
-
-            },
-            {
-                "description":"Số chia sẻ của vùng",
-                "id":"area_sharing_quantity"
-
-            },
-            {
-                "description":"Số lượng bài đăng tối đa",
-                "id":"max_post_number"
-
-            }
-        ];
-
-        var adsAreaDescriptionInputs = [
-            {
-                "description":"Màu chữ tiêu để",
-                "id":"title_color"
-            },
-            {
-                "description":"Phông chữ của tiêu đề",
-                "id":"title_font_family"
-            },
-            {
-                "description":"Kích cỡ phông chữ tiêu đề",
-                "id":"title_font_size"
-
-            },
-            {
-                "description":"Hiệu ứng tiêu đề",
-                "id":"title_effect"
-
-            },
-            {
-                "description":"Số kí tự tối đa của tiêu đề",
-                "id":"des_characters_quantity"
-
-            },
-            {
-                "description":"Có viền vùng quảng cáo",
-                "id":"have_border"
-
-            },
-            {
-                "description":"Màu viền vùng quảng cáo",
-                "id":"border_color"
-            },
-            {
-                "description":"Kích thước viền vùng quảng cáo",
-                "id":"ads_area_border_size"
-            }
-        ];
-        return(
+    render() {
+        return (
             <div className='popup_inner'>
-                <div className="adsarea_information_left">
+                <div key="left" className="adsarea_information_left">
                     <h2>Thông tin vùng quảng cáo</h2>
-                    <RenderProperties 
-                        inputDatas={adsAreaInformationInputs} 
-                        handleOnchange={this.handleOnchange}
+                    <RenderProperties
+                        inputDatas={this.props.adsAreaInformationInputs}
+                        handleOnchangeInput={this.handleOnchangeInput}
+                        handleOnchangeSelect={this.handleOnchangeSelect}
+                        handleOnchangeRadioButton={this.handleOnchangeRadioButton}
                     />
                 </div>
 
-                <div className="adsarea_information_right">
+                <div key="right" className="adsarea_information_right">
                     <h2>Đặc tả của vùng</h2>
-                    <RenderProperties 
-                        inputDatas={adsAreaDescriptionInputs}
-                        handleOnchange={this.handleOnchange}
+                    <RenderProperties
+                        inputDatas={this.props.adsAreaDescriptionInputs}
+                        handleOnchangeInput={this.handleOnchangeInput}
+                        handleOnchangeSelect={this.handleOnchangeSelect}
+                        handleOnchangeRadioButton={this.handleOnchangeRadioButton}
                     />
                 </div>
                 <div className="text-center">
-                    <button className="btn btn-primary" onClick={this.handleSubmit}>Submit</button>
+                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Submit</button>
                     <button className="btn btn-primary" onClick={this.handleClosePopup}>Cancel</button>
                 </div>
             </div>
@@ -150,38 +157,172 @@ class AdsAreaCreatorForm extends Component {
     }
 }
 
-class AdsAreaCreator extends Component {
+class AdsAreaCreator extends Component {
     constructor(props) {
-      super(props);
+        super(props);
+        var jsonState = {};
+        this.SetInitState(adsAreaInformationInputs, jsonState);
+        this.SetInitState(adsAreaDescriptionInputs, jsonState);
+        this.state = jsonState;
 
-      this.handleClosePopup = this.handleClosePopup.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
-    }
-    
-    handleClosePopup() {
-        this.props.closeCreatorPopup();
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleUpdateState = this.handleUpdateState.bind(this);
     }
 
-    handleSubmit(adsAreaContent) {
+    SetInitState(inputs, jsonState) {
+        inputs.forEach(element => {
+            if (element.type === "combobox") {
+                var theFirstValue = element.values[0];
+                var valueState = theFirstValue;
+
+                if (element.id === "area_size") {
+                    var areaSizeArray = theFirstValue.split('x');
+                    valueState = { width: areaSizeArray[0], height: areaSizeArray[1] };
+                }
+                jsonState[element.id] = valueState;
+            }
+
+            if (element.type === "radio") {
+                var theFirstValue = element.keys[0];
+                jsonState[element.id] = theFirstValue;
+            }
+        });
+    }
+
+    handleUpdateState(jsonState) {
+        this.setState(jsonState);
+    }
+
+    handleSubmit() {
+        var adsAreaContent = this.state;
+
         var url = "http://localhost:8080/adsareas";
+        var $this = this;
         Request.post(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(adsAreaContent)
-            .end(function(err, res){
-                console.log(res.text);
-            });  
+            .end(function (err, res) {
+                $this.props.closeCreatorPopup();
+                $this.props.resetContentState();
+            });
     }
 
     render() {
-      return (
-        <div className='popup'>
-            <AdsAreaCreatorForm 
-                handleClosePopup={this.handleClosePopup}
-                handleSubmit={this.handleSubmit}
-            />
-        </div>
-      );
-    }
-  }
 
-  export default AdsAreaCreator;
+        return (
+            <div className='popup'>
+                <AdsAreaCreatorForm
+                    adsAreaInformationInputs={adsAreaInformationInputs}
+                    adsAreaDescriptionInputs={adsAreaDescriptionInputs}
+                    handleClosePopup={this.props.closeCreatorPopup}
+                    handleSubmit={this.handleSubmit}
+                    handleUpdateState={this.handleUpdateState}
+                />
+            </div>
+        );
+    }
+}
+
+var adsAreaInformationInputs =[
+    {
+        "description": "Mã dịch vụ quảng cáo",
+        "id": "ads_service_id",
+        "type": "textbox"
+
+    },
+    {
+        "description": "Tên hiển thị",
+        "id": "ads_name",
+        "type": "textbox"
+    },
+    {
+        "description": "Trang áp dụng quảng cáo",
+        "id": "applied_ads_page_type",
+        "type": "combobox",
+        "values": ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết"]
+    },
+    {
+        "description": "Loại bài đăng áp dụng",
+        "id": "post_apply_type",
+        "type": "combobox",
+        "values": ["Tin bds", "Dự án"]
+    },
+    {
+        "description": "Kích thước vùng quảng cáo",
+        "id": "area_size",
+        "type": "combobox",
+        "values": ["180x30", "260x60"]
+    },
+    {
+        "description": "Số chia sẻ của vùng",
+        "id": "area_sharing_quantity",
+        "type": "quantity"
+    },
+    {
+        "description": "Số lượng bài đăng tối đa",
+        "id": "max_post_number",
+        "type": "quantity"
+    }
+];
+
+var adsAreaDescriptionInputs = [
+    {
+        "description": "Màu chữ tiêu để",
+        "id": "title_color",
+        "type:": "color"
+    },
+    {
+        "description": "Phông chữ của tiêu đề",
+        "id": "title_font_family",
+        "type": "combobox",
+        "values": ["Arial", "Time new roman"]
+    },
+    {
+        "description": "Kích cỡ phông chữ tiêu đề",
+        "id": "title_font_size",
+        "type": "combobox",
+        "values": [10, 20, 30]
+    },
+    {
+        "description": "Hiệu ứng tiêu đề",
+        "id": "title_effect",
+        "type": "combobox",
+        "values": ["Regular", "Bold", "Italic"]
+    },
+    {
+        "description": "Số kí tự tối đa của tiêu đề",
+        "id": "des_characters_quantity",
+        "type": "quantity"
+    },
+    {
+        "description": "Có viền vùng quảng cáo",
+        "id": "have_border",
+        "type": "radio",
+        "values": ["có", "Không"],
+        "keys": [1, 0]
+    },
+    {
+        "description": "Màu viền vùng quảng cáo",
+        "id": "border_color",
+        "type:": "color"
+    },
+    {
+        "description": "Kích thước viền vùng quảng cáo",
+        "id": "ads_area_border_size",
+        "type": "quantity"
+    },
+    {
+        "description": "Số kí tự tối đa của xem trước bài đăng",
+        "id": "preview_characters_quantity",
+        "type": "quantity"
+    },
+    {
+        "description": "Hiên thị video thay thế ảnh đại diện",
+        "id": "show_video",
+        "type": "radio",
+        "values": ["có", "Không"],
+        "keys": [1, 0]
+    }
+];
+
+export default AdsAreaCreator;

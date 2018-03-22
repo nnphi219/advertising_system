@@ -1,0 +1,86 @@
+.adsarea_information_left {
+    float: left;
+    width: 45%;
+    margin-left: 5%;
+}
+
+.adsarea_information_right {
+    float: left;
+    width: 45%;
+    margin-left: 5%;
+}
+
+.adsarea--input
+{
+    display: block;
+    width: 90%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.adsarea--select {
+    display: block;
+    width: auto;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.adsarea--button-edit {
+    margin-right: 5px;
+}
+
+.adsarea--button-delete {
+    margin-right: 5px;
+}
+
+.adsarea-radio {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.popup_inner--delete {
+    position: absolute;
+    left: 35%;
+    right: 35%;
+    top: 15%;
+    bottom: 67%;
+    margin: auto;
+    background: white;
+    border-radius: 6px;
+    vertical-align: bottom;
+}
+
+.popup_inner--delete h2 {
+    margin-left: 10px;
+}
+
+.popup_inner--delete-content {
+    text-align: center;
+}
+
+.popup_inner--delete-content p {
+    font-size: 17px;
+}
+
+.popup_inner--delete-content button {
+    margin-right: 10px;
+}

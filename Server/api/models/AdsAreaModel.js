@@ -30,6 +30,8 @@ var AdsAreaSchema = new Schema({
         height: Number
     },
     status: Number,
+    preview_characters_quantity: Number,
+    show_video: Boolean,
     created_date: {
         type: Date,
         default: Date.now
