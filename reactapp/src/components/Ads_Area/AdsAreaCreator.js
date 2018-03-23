@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
+import ColorPickerInput from '../share/color_picker_input';
 
 function RenderInput(props) {
     return (
@@ -72,16 +73,20 @@ function RenderRadioButton(props) {
 function RenderProperties(props) {
     var inputs = [];
     props.inputDatas.forEach(element => {
-        if (element.type === "combobox") {
+        if (element.type === "color") {
+            inputs.push(<ColorPickerInput key={element.id} inputData={element} handleOnchangeColor={props.handleOnchangeColor}/>); 
+        }
+        else if (element.type === "combobox") {
             inputs.push(<RenderCombobox key={element.id} inputData={element} handleOnchangeSelect={props.handleOnchangeSelect} />);
         }
         else if (element.type === "radio") {
             inputs.push(<RenderRadioButton key={element.id} inputData={element} handleOnchangeRadioButton={props.handleOnchangeRadioButton} />);
-        }  
+        }
         else {
             inputs.push(<RenderInput key={element.id} inputData={element} handleOnchangeInput={props.handleOnchangeInput} />);
         }
     });
+
     return (
         <div>
             {inputs}
@@ -97,6 +102,7 @@ class AdsAreaCreatorForm extends Component {
         this.handleOnchangeInput = this.handleOnchangeInput.bind(this);
         this.handleOnchangeSelect = this.handleOnchangeSelect.bind(this);
         this.handleOnchangeRadioButton = this.handleOnchangeRadioButton.bind(this);
+        this.handleOnchangeColor = this.handleOnchangeColor.bind(this);
     }
 
     handleClosePopup() {
@@ -126,6 +132,12 @@ class AdsAreaCreatorForm extends Component {
         });
     }
 
+    handleOnchangeColor(id, hexColor) {
+        this.props.handleUpdateState({
+            [id]: hexColor
+        });
+    }
+
     render() {
         return (
             <div className='popup_inner'>
@@ -136,6 +148,7 @@ class AdsAreaCreatorForm extends Component {
                         handleOnchangeInput={this.handleOnchangeInput}
                         handleOnchangeSelect={this.handleOnchangeSelect}
                         handleOnchangeRadioButton={this.handleOnchangeRadioButton}
+                        handleOnchangeColor={this.handleOnchangeColor}
                     />
                 </div>
 
@@ -146,6 +159,7 @@ class AdsAreaCreatorForm extends Component {
                         handleOnchangeInput={this.handleOnchangeInput}
                         handleOnchangeSelect={this.handleOnchangeSelect}
                         handleOnchangeRadioButton={this.handleOnchangeRadioButton}
+                        handleOnchangeColor={this.handleOnchangeColor}
                     />
                 </div>
                 <div className="text-center">
@@ -181,10 +195,12 @@ class AdsAreaCreator extends Component {
                 }
                 jsonState[element.id] = valueState;
             }
-
-            if (element.type === "radio") {
+            else if (element.type === "radio") {
                 var theFirstValue = element.keys[0];
                 jsonState[element.id] = theFirstValue;
+            }
+            else if(element.type === "color") {
+                jsonState[element.id] = "#000000";
             }
         });
     }
@@ -194,17 +210,18 @@ class AdsAreaCreator extends Component {
     }
 
     handleSubmit() {
-        var adsAreaContent = this.state;
+        console.log(this.state);
+        // var adsAreaContent = this.state;
 
-        var url = "http://localhost:8080/adsareas";
-        var $this = this;
-        Request.post(url)
-            .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send(adsAreaContent)
-            .end(function (err, res) {
-                $this.props.closeCreatorPopup();
-                $this.props.resetContentState();
-            });
+        // var url = "http://localhost:8080/adsareas";
+        // var $this = this;
+        // Request.post(url)
+        //     .set('Content-Type', 'application/x-www-form-urlencoded')
+        //     .send(adsAreaContent)
+        //     .end(function (err, res) {
+        //         $this.props.closeCreatorPopup();
+        //         $this.props.resetContentState();
+        //     });
     }
 
     render() {
@@ -269,7 +286,7 @@ var adsAreaDescriptionInputs = [
     {
         "description": "Màu chữ tiêu để",
         "id": "title_color",
-        "type:": "color"
+        "type": "color"
     },
     {
         "description": "Phông chữ của tiêu đề",
@@ -304,7 +321,7 @@ var adsAreaDescriptionInputs = [
     {
         "description": "Màu viền vùng quảng cáo",
         "id": "border_color",
-        "type:": "color"
+        "type": "color"
     },
     {
         "description": "Kích thước viền vùng quảng cáo",
