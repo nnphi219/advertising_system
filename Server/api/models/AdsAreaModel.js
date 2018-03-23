@@ -21,6 +21,7 @@ var AdsAreaSchema = new Schema({
     applied_ads_page_type: String, //
     max_post_number: Number,
     area_sharing_quantity: Number,
+    title_effect: String, // hiệu ứng tiêu đề.
     area_size: { 
         width: Number,
         height: Number
