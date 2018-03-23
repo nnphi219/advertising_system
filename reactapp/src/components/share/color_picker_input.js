@@ -3,15 +3,14 @@ import reactCSS from 'reactcss'
 import { SketchPicker } from 'react-color'
 
 class ColorPickerInput extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
 
   state = {
     displayColorPicker: false,
-    color: {
-      r: '0',
-      g: '0',
-      b: '0',
-      a: '1',
-    },
+    color: this.props.valueColor
   };
 
   handleClick = () => {
@@ -23,7 +22,7 @@ class ColorPickerInput extends React.Component {
   };
 
   handleChange = (color) => {
-    this.setState({ color: color.rgb });
+    this.setState({ color: color.hex });
     this.props.handleOnchangeColor(this.props.inputData.id, color.hex);
   };
 
@@ -35,7 +34,7 @@ class ColorPickerInput extends React.Component {
           width: '36px',
           height: '14px',
           borderRadius: '2px',
-          background: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`,
+          background: this.state.color,
         },
         swatch: {
           padding: '5px',

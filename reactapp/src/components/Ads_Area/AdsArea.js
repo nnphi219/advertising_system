@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import AdsAreaCreator from './AdsAreaCreator';
+import AdsAreaCreatorUpdater from './AdsAreaCreatorUpdater';
 import AdsAreaDeleteForm from './AdsAreaDelete';
 import './ads_area.css';
 
@@ -140,6 +140,8 @@ class AdsArea extends Component {
   constructor() {
     super(); 
     this.state = {
+      ModeAction: "",
+      EditContents: null,
       ShowCreatorPopup: false,
       ShowDeletePopup: false,
       SelectedItemId: null,
@@ -168,17 +170,31 @@ class AdsArea extends Component {
 
   handleShowCreatorPopup() {
     this.setState({
-      ShowCreatorPopup: !this.state.ShowCreatorPopup
+      ShowCreatorPopup: !this.state.ShowCreatorPopup,
+      ModeAction: "create"
     });
   }
 
   handleEditClick(event){
-    var name = event.target.name;
-    var value = event.target.value;
-    var key = event.target.key;
-    console.log(name);
-    console.log(value);
-    console.log(key);
+    var nameId = event.target.name;
+    var editContents = {};
+
+    var i = 0;
+    var finishLoop = false;
+    while( i < this.state.tbodyAdsAreas.length && !finishLoop) {
+      var element = this.state.tbodyAdsAreas[i];
+      if (nameId === element._id) {
+        editContents = element;
+        finishLoop = true;
+      }
+      i++;
+    }
+    
+    this.setState({
+      ModeAction: "edit",
+      EditContents: editContents,
+      ShowCreatorPopup: !this.state.ShowCreatorPopup      
+    });
   }
 
   handleDeleteClick(event){
@@ -212,7 +228,9 @@ class AdsArea extends Component {
                 
                 {
                   this.state.ShowCreatorPopup ?
-                  <AdsAreaCreator
+                  <AdsAreaCreatorUpdater
+                    modeAction={this.state.ModeAction}
+                    editContents={this.state.EditContents}
                     resetContentState={this.handleResetContentsState}
                     closeCreatorPopup={this.handleShowCreatorPopup}
                   /> 
