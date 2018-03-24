@@ -1,17 +1,145 @@
 import React, { Component } from 'react';
+import Request from 'superagent';
+
 import HeadForm from '../share/HeaderForm/HeaderForm';
+import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
+import PriceFactorCreatorUpdater from './PriceFactorCreatorUpdater';
+
+import RenderHeader from '../share/RenderHeader';
+import DeleteForm from '../share/DeleteForm';
 import './price_factor.css';
+import '../Ads_Area/ads_area.css';
+
+function RenderRow(props) {
+    var factorType = props.trContentPriceFactor.loai_nhan_to;
+    var timeLot = `${factorType.khung_gio.bat_dau.toString()}h-${factorType.khung_gio.ket_thuc.toString()}h`;
+    var location = factorType.vi_tri.quan_huyen + "," + factorType.vi_tri.tinh;
+
+    var rateCalculationJson = props.trContentPriceFactor.ti_le_tinh_gia;
+    var rateCalculationString = (rateCalculationJson.tang === 1 ? "+ " : "- ") + rateCalculationJson.gia_tri.toString() + "%";
+    var status = (props.trContentPriceFactor.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
+
+    return (
+        <tr>
+            <td>{props.trContentPriceFactor.ten_chi_so}</td>
+            <td>{props.trContentPriceFactor.ma_gia}</td>
+            <td>{timeLot}</td>
+            <td>{location}</td>
+            <td>{rateCalculationString}</td>
+            <td>{status}</td>
+            <td>
+                <RenderEditDeleteButton
+                    nameId={props.trContentPriceFactor._id}
+                    handleEditClick={props.handleEditClick}
+                    handleDeleteClick={props.handleDeleteClick}
+                />
+            </td>
+        </tr>
+    );
+}
+
+function RenderBody(props) {
+    var rows = [];
+    props.tbody.forEach((element, id) => {
+        rows.push(
+            <RenderRow
+                trContentPriceFactor={element}
+                key={id}
+                handleEditClick={props.handleEditClick}
+                handleDeleteClick={props.handleDeleteClick}
+            />
+        );
+    });
+
+    return (
+        <tbody>
+            {rows}
+        </tbody>
+    );
+}
+
+class PriceFactorContents extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        var theadPriceFactors = ["Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"];
+        return (
+            <div className="adsarea-content">
+                <table className="table table-striped">
+                    <RenderHeader theader={theadPriceFactors} />
+                    <RenderBody
+                        tbody={this.props.tbodyPriceFactors}
+                        handleEditClick={this.props.handleEditClick}
+                        handleDeleteClick={this.props.handleDeleteClick}
+                    />
+                </table>
+            </div>
+        );
+    }
+}
 
 class PriceFactor extends Component {
     constructor(props) {
         super(props);
-        
-        this.showCreatorPopup = this.showCreatorPopup.bind(this);
+
+        this.state = {
+            ModeAction: "",
+            EditContents: null,
+            ShowCreatorUpdaterPopup: false,
+            ShowDeletePopup: false,
+            tbodyPriceFactors: []
+        };
+
+        this.handleShowCreatorUpdaterPopup = this.handleShowCreatorUpdaterPopup.bind(this);
+        this.handleEditClick = this.handleEditClick.bind(this);
+        this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
+        this.handleResetContentsState = this.handleResetContentsState.bind(this);
+    }
+
+    componentDidMount() {
+        this.getPriceFactors();
+    }
+
+    getPriceFactors() {
+        var url = "http://localhost:8080/pricefactors";
+        Request.get(url)
+            .then((res) => {
+                this.setState({
+                    tbodyPriceFactors: res.body
+                });
+            });
+    }
+
+    handleEditClick(event) {
+        console.log("edit " + event.target.name);
+    }
+
+    handleDeleteClick(event) {
+        this.setState({
+            ShowDeletePopup: !this.state.ShowDeletePopup,
+            SelectedItemId: event.target.name
+        });
     }
 
 
-    showCreatorPopup(){
-        console.log("click creator");
+    handleShowCreatorUpdaterPopup() {
+        this.setState({
+            ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup,
+            ModeAction: "create"
+        });
+    }
+
+    handleCloseDeletePop() {
+        this.setState({
+            ShowDeletePopup: !this.state.ShowDeletePopup
+        });
+    }
+
+    handleResetContentsState() {
+        this.getPriceFactors();
     }
 
     render() {
@@ -19,7 +147,34 @@ class PriceFactor extends Component {
             <div id="page-wrapper">
                 <div className="row">
                     <div>
-                        <HeadForm title={"chỉ số ảnh hưởng"} showCreatorPopup={this.showCreatorPopup} />
+                        <HeadForm title={"chỉ số ảnh hưởng"} showCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup} />
+                        <PriceFactorContents
+                            tbodyPriceFactors={this.state.tbodyPriceFactors}
+                            handleEditClick={this.handleEditClick}
+                            handleDeleteClick={this.handleDeleteClick}
+                        />
+
+                        {
+                            this.state.ShowCreatorUpdaterPopup ?
+                                <PriceFactorCreatorUpdater
+                                    modeAction={this.state.ModeAction}
+                                    editContents={this.state.EditContents}
+                                    resetContentState={this.handleResetContentsState}
+                                    closeCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup}
+                                />
+                                : null
+                        }
+
+                        {
+                            this.state.ShowDeletePopup ?
+                                <DeleteForm
+                                    url={"http://localhost:8080/priceFactors"}
+                                    SelectedItemId={this.state.SelectedItemId}
+                                    closeDeletePopup={this.handleCloseDeletePop}
+                                    resetContentState={this.handleResetContentsState}
+                                />
+                                : null
+                        }
                     </div>
                 </div>
             </div>

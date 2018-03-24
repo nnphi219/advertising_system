@@ -59,3 +59,13 @@ body {
 .float-left {
   float: left;
 }
+
+.submit{
+  text-align: center;
+}
+
+.submit button {
+  margin-top: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
+}

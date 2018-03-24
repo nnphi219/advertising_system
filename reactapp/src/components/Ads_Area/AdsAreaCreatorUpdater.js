@@ -3,7 +3,7 @@ import Request from 'superagent';
 import ColorPickerInput from '../share/color_picker_input';
 
 function TransferSizeToString(size) {
-    return size.width  + "x" + size.height;
+    return size.width + "x" + size.height;
 }
 
 function RenderInput(props) {
@@ -21,10 +21,10 @@ function RenderCombobox(props) {
     var tags = [];
     var count = 0;
     var selectedValue = props.valueCombobox;
-    if(AreaCombobox.includes(props.inputData.id)) {
+    if (AreaCombobox.includes(props.inputData.id)) {
         selectedValue = TransferSizeToString(selectedValue);
     }
-    
+
     props.inputData.values.forEach(value => {
         tags.push(<option key={count} value={value} >{value}</option>);
         count++;
@@ -49,7 +49,7 @@ function RenderRadioButton(props) {
     radioData.values.forEach((value, index) => {
         var radioButton = null;
 
-        if(radioData.keys[index] === props.keySelectedItem) {
+        if (radioData.keys[index] === props.keySelectedItem) {
             radioRender.push(
                 <div key={props.inputData.keys[index]} className="adsarea-radio">
                     <input type="radio" value={radioData.keys[index]} key={radioData.keys[index]} name={radioData.id} defaultChecked />
@@ -68,7 +68,7 @@ function RenderRadioButton(props) {
 
         radioRender.push(radioButton);
     });
-    return(
+    return (
         <div key={props.inputData.id} name={props.inputData.id} onChange={props.handleOnchangeRadioButton}>
             <label className="fullwidth">{props.inputData.description}</label>
             {radioRender}
@@ -81,7 +81,7 @@ function RenderProperties(props) {
     props.inputDatas.forEach(element => {
         if (element.type === "color") {
             var valueColor = props.stateValues[element.id];
-            inputs.push(<ColorPickerInput key={element.id} valueColor={valueColor} inputData={element} handleOnchangeColor={props.handleOnchangeColor}/>); 
+            inputs.push(<ColorPickerInput key={element.id} valueColor={valueColor} inputData={element} handleOnchangeColor={props.handleOnchangeColor} />);
         }
         else if (element.type === "combobox") {
             var valueCombobox = props.stateValues[element.id];
@@ -129,7 +129,7 @@ class AdsAreaCreatorForm extends Component {
         var name = e.target.name;
         var value = e.target.value;
 
-        if(name === "area_size") {
+        if (name === "area_size") {
             var areaSizeArray = value.split('x');
             value = { width: areaSizeArray[0], height: areaSizeArray[1] };
         }
@@ -151,32 +151,34 @@ class AdsAreaCreatorForm extends Component {
     render() {
         return (
             <div className='popup_inner'>
-                <h1>{this.props.titleForm}</h1>
-                <div key="left" className="adsarea_information_left">
-                    <h2>Thông tin vùng quảng cáo</h2>
-                    <RenderProperties
-                        inputDatas={this.props.adsAreaInformationInputs}
-                        handleOnchangeInput={this.handleOnchangeInput}
-                        handleOnchangeSelect={this.handleOnchangeSelect}
-                        handleOnchangeRadioButton={this.handleOnchangeRadioButton}
-                        handleOnchangeColor={this.handleOnchangeColor}
-                        stateValues={this.props.stateValues}
-                    />
-                </div>
+                <div>
+                    <h1>{this.props.titleForm}</h1>
+                    <div key="left" className="adsarea_information_left">
+                        <h2>Thông tin vùng quảng cáo</h2>
+                        <RenderProperties
+                            inputDatas={this.props.adsAreaInformationInputs}
+                            handleOnchangeInput={this.handleOnchangeInput}
+                            handleOnchangeSelect={this.handleOnchangeSelect}
+                            handleOnchangeRadioButton={this.handleOnchangeRadioButton}
+                            handleOnchangeColor={this.handleOnchangeColor}
+                            stateValues={this.props.stateValues}
+                        />
+                    </div>
 
-                <div key="right" className="adsarea_information_right">
-                    <h2>Đặc tả của vùng</h2>
-                    <RenderProperties
-                        inputDatas={this.props.adsAreaDescriptionInputs}
-                        handleOnchangeInput={this.handleOnchangeInput}
-                        handleOnchangeSelect={this.handleOnchangeSelect}
-                        handleOnchangeRadioButton={this.handleOnchangeRadioButton}
-                        handleOnchangeColor={this.handleOnchangeColor}
-                        stateValues={this.props.stateValues}
-                    />
+                    <div key="right" className="adsarea_information_right">
+                        <h2>Đặc tả của vùng</h2>
+                        <RenderProperties
+                            inputDatas={this.props.adsAreaDescriptionInputs}
+                            handleOnchangeInput={this.handleOnchangeInput}
+                            handleOnchangeSelect={this.handleOnchangeSelect}
+                            handleOnchangeRadioButton={this.handleOnchangeRadioButton}
+                            handleOnchangeColor={this.handleOnchangeColor}
+                            stateValues={this.props.stateValues}
+                        />
+                    </div>
                 </div>
-                <div className="text-center">
-                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Submit</button>
+                <div className="submit">
+                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
                     <button className="btn btn-primary" onClick={this.handleClosePopup}>Cancel</button>
                 </div>
             </div>
@@ -197,12 +199,12 @@ class AdsAreaCreatorUpdater extends Component {
     }
 
     SetInitState(inputs, jsonState) {
-        if( this.props.modeAction === "create" ){
+        if (this.props.modeAction === "create") {
             inputs.forEach(element => {
                 if (element.type === "combobox") {
                     var theFirstValue = element.values[0];
                     var valueState = theFirstValue;
-    
+
                     if (element.id === "area_size") {
                         var areaSizeArray = theFirstValue.split('x');
                         valueState = { width: areaSizeArray[0], height: areaSizeArray[1] };
@@ -213,12 +215,12 @@ class AdsAreaCreatorUpdater extends Component {
                     var theFirstValue = element.keys[0];
                     jsonState[element.id] = theFirstValue;
                 }
-                else if(element.type === "color") {
+                else if (element.type === "color") {
                     jsonState[element.id] = "#000000";
                 }
             });
         }
-        else{
+        else {
             inputs.forEach(element => {
                 if (element.type === "combobox") {
                     jsonState[element.id] = this.props.editContents[element.id];
@@ -233,7 +235,7 @@ class AdsAreaCreatorUpdater extends Component {
                 }
             });
         }
-        
+
     }
 
     handleUpdateState(jsonState) {
@@ -253,7 +255,7 @@ class AdsAreaCreatorUpdater extends Component {
                 $this.props.resetContentState();
             });
     }
-    
+
     EditAdsArea() {
         var adsAreaContent = this.state;
 
@@ -269,7 +271,7 @@ class AdsAreaCreatorUpdater extends Component {
     }
 
     handleSubmit() {
-        if(this.props.modeAction == "create") {
+        if (this.props.modeAction == "create") {
             this.CreateAdsArea();
         }
         else {
@@ -295,7 +297,7 @@ class AdsAreaCreatorUpdater extends Component {
     }
 }
 
-var adsAreaInformationInputs =[
+var adsAreaInformationInputs = [
     {
         "description": "Mã dịch vụ quảng cáo",
         "id": "ads_service_id",
