@@ -4,6 +4,8 @@ var express = require('express'),
     mongoose = require('mongoose'),
     Task = require('./api/models/todoListModel'), //created model loading here
     AdsArea = require('./api/models/AdsAreaModel'),
+    PriceFactor = require('./api/models/PriceFactorModel'),
+    ServicePrice = require('./api/models/ServicePriceModel'),
     bodyParser = require('body-parser');
 var cors = require('cors');
 // mongoose instance connection url connection
@@ -16,9 +18,13 @@ app.use(bodyParser.json());
 
 var todoListRoute = require('./api/routes/todoListRoute'); //importing route
 var adsAreaRoute = require('./api/routes/AdsAreaRoute');
+var priceFactorRoute = require('./api/routes/PriceFactorRoute');
+var servicePriceRoute = require('./api/routes/ServicePriceRoute');
 
 todoListRoute(app); //register the route
 adsAreaRoute(app);
+priceFactorRoute(app);
+servicePriceRoute(app);
 
 app.listen(port);
 
