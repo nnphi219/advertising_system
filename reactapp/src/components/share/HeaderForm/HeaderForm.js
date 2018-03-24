@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import '../../Ads_Area/ads_area.css';
+import './headerform.css';
 
 // <HeaderForm title={} showCreatorPopup={} />
 
@@ -12,8 +12,8 @@ class HeaderForm extends Component {
     render(){
       var buttonTitle = "Tạo " + this.props.title;
       return (
-        <div className="adsarea--header">
-          <h2 className="adsarea--header-title float-left">{this.props.title}</h2>
+        <div className="header">
+          <h2 className="header-title float-left">{this.props.title}</h2>
           <button type="button" className="btn btn-primary float-left" onClick={this.props.showCreatorPopup}>{buttonTitle}</button>
         </div>
       );
