@@ -10,7 +10,7 @@ class AdsAreaDeleteForm extends Component {
     }
 
     handleDeleteItem() {
-        var url = "http://localhost:8080/adsareas" + "/" + this.props.SelectedItemId.toString();
+        var url = `http://localhost:8080/adsareas/${this.props.SelectedItemId.toString()}`;
         var $this = this;
 
         Request.delete(url)

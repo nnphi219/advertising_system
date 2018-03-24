@@ -3,11 +3,6 @@ import reactCSS from 'reactcss'
 import { SketchPicker } from 'react-color'
 
 class ColorPickerInput extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-
   state = {
     displayColorPicker: false,
     color: this.props.valueColor

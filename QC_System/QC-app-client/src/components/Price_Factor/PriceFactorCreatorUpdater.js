@@ -3,10 +3,6 @@ import Request from 'superagent';
 import './price_factor.css';
 
 class RenderProperTies extends Component {
-    constructor(props) {
-        super(props);
-
-    }
 
     TranserTimeLogToString(timeLogJson){
         return `${timeLogJson.bat_dau.toString()}h-${timeLogJson.ket_thuc.toString()}h`;
@@ -94,9 +90,6 @@ class RenderProperTies extends Component {
 }
 
 class PriceFactorCreatorUpdaterForm extends Component {
-    constructor(props) {
-        super(props);
-    }
     // UpdateState={this.handleUpdateState.bind(this)}
     
     OnChangeInput(e) {

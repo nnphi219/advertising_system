@@ -212,8 +212,7 @@ class AdsAreaCreatorUpdater extends Component {
                     jsonState[element.id] = valueState;
                 }
                 else if (element.type === "radio") {
-                    var theFirstValue = element.keys[0];
-                    jsonState[element.id] = theFirstValue;
+                    jsonState[element.id] = element.keys[0];
                 }
                 else if (element.type === "color") {
                     jsonState[element.id] = "#000000";
@@ -271,7 +270,7 @@ class AdsAreaCreatorUpdater extends Component {
     }
 
     handleSubmit() {
-        if (this.props.modeAction == "create") {
+        if (this.props.modeAction === "create") {
             this.CreateAdsArea();
         }
         else {

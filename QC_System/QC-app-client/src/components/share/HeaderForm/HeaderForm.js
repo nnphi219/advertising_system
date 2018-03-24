@@ -5,10 +5,6 @@ import './headerform.css';
 // <HeaderForm title={} showCreatorUpdaterPopup={} />
 
 class HeaderForm extends Component {
-    constructor(props) {
-      super(props);
-    }
-  
     render(){
       var buttonTitle = "Tạo " + this.props.title;
       return (
