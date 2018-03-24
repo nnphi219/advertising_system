@@ -1,31 +1,32 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Route } from "react-router-dom";
+
+class Title extends Component {
+  render(){
+      return(
+          <div id="page-wrapper">
+              <div className="row">
+                  <div className="col-lg-12">
+                      <h1 className="page-header">This is Admin System Page</h1>
+                  </div>
+              </div>
+          </div>
+      );
+  }
+}
 
 class App extends Component {
-    state = { loading: false };
-
-    componentDidMount() {
-        // 测试 devServer 的代理功能
-        // fetch('/api/category')
-        //     .then(resp => resp.json())
-        //     .then(res => console.log('here here', res));
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <div className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <h2>Welcome to React</h2>
-                </div>
-                <p>{ this.state.loading.toString() }</p>
-                <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <BrowserRouter>
+      <div>
+          <Route exact={true} path={"/"} render={() => (<h1>Welcome</h1>)} />
+          <Route path={"/title"} component={Title} />
+      </div>
+      </BrowserRouter>
+  );
+  }
 }
 
 export default App;
