@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import './ads_area.css';
+import UrlApi from '../share/UrlApi';
 
 class AdsAreaDeleteForm extends Component {
     constructor(props) {
@@ -10,7 +11,7 @@ class AdsAreaDeleteForm extends Component {
     }
 
     handleDeleteItem() {
-        var url = `http://localhost:8080/adsareas/${this.props.SelectedItemId.toString()}`;
+        var url = UrlApi.AdsArea + "/" + this.props.SelectedItemId.toString();
         var $this = this;
 
         Request.delete(url)

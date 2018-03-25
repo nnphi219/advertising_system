@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import ColorPickerInput from '../share/color_picker_input';
+import UrlApi from '../share/UrlApi';
 
 function TransferSizeToString(size) {
     return size.width + "x" + size.height;
@@ -244,9 +245,8 @@ class AdsAreaCreatorUpdater extends Component {
     CreateAdsArea() {
         var adsAreaContent = this.state;
 
-        var url = "http://localhost:8080/adsareas";
         var $this = this;
-        Request.post(url)
+        Request.post(UrlApi.AdsArea)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(adsAreaContent)
             .end(function (err, res) {
@@ -258,7 +258,7 @@ class AdsAreaCreatorUpdater extends Component {
     EditAdsArea() {
         var adsAreaContent = this.state;
 
-        var url = "http://localhost:8080/adsareas/" + this.props.editContents._id;
+        var url = UrlApi.AdsArea + "/" + this.props.editContents._id;
         var $this = this;
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
