@@ -100,7 +100,7 @@ class AdsAreaContents extends Component {
     var theadAdsAreas = ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"];
     return (
       <div className="adsarea-content">
-        <AdsAreaInformation />
+        
         <table className="table table-striped">
           <RenderHead theadAdsAreas={theadAdsAreas} />
           <RenderBody
