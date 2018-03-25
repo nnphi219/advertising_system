@@ -69,3 +69,8 @@ body {
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.react-date-picker__calendar .react-calendar {
+  position: relative;
+  z-index: 1000;
+}

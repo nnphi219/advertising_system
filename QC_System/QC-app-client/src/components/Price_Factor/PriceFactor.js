@@ -10,6 +10,8 @@ import DeleteForm from '../share/DeleteForm';
 import './price_factor.css';
 import '../Ads_Area/ads_area.css';
 
+import UrlApi from "../share/UrlApi";
+
 function RenderRow(props) {
     var factorType = props.trContentPriceFactor.loai_nhan_to;
     var timeLot = `${factorType.khung_gio.bat_dau.toString()}h-${factorType.khung_gio.ket_thuc.toString()}h`;
@@ -59,9 +61,6 @@ function RenderBody(props) {
 }
 
 class PriceFactorContents extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         var theadPriceFactors = ["Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"];
@@ -114,7 +113,25 @@ class PriceFactor extends Component {
     }
 
     handleEditClick(event) {
-        console.log("edit " + event.target.name);
+        var nameId = event.target.name;
+        var editContents = {};
+        console.log(nameId);
+        var i = 0;
+        var finishLoop = false;
+        while (i < this.state.tbodyPriceFactors.length && !finishLoop) {
+            var element = this.state.tbodyPriceFactors[i];
+            if (nameId === element._id) {
+                editContents = element;
+                finishLoop = true;
+            }
+            i++;
+        }
+
+        this.setState({
+            ModeAction: "edit",
+            EditContents: editContents,
+            ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
+          });
     }
 
     handleDeleteClick(event) {
@@ -168,7 +185,7 @@ class PriceFactor extends Component {
                         {
                             this.state.ShowDeletePopup ?
                                 <DeleteForm
-                                    url={"http://localhost:8080/priceFactors"}
+                                    url={UrlApi.PriceFactor}
                                     SelectedItemId={this.state.SelectedItemId}
                                     closeDeletePopup={this.handleCloseDeletePop}
                                     resetContentState={this.handleResetContentsState}
