@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter, Route } from "react-router-dom";
 import AdsArea from './components/Ads_Area/AdsArea';
 import PriceFactor from './components/Price_Factor/PriceFactor';
+import ServicePrice from './components/Service_Price/ServicePrice';
 import Root from './components/Root';
 
 // class Title extends Component {
@@ -26,6 +27,7 @@ class App extends Component {
       <div>
           <Route path={"/"} component={Root} />
           <Route path={"/ads-area"} component={AdsArea} />
+          <Route path={"/service-price"} component={ServicePrice} />
           <Route path={"/price-factor"} component={PriceFactor} />
           {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />

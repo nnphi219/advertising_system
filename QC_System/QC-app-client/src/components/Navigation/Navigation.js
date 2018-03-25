@@ -100,7 +100,7 @@ class NavbarDefault extends Component {
                             <a href="/ads-area"><i className="fa fa-dashboard fa-fw"></i>Advertising Area</a>
                         </li>
                         <li>
-                            <a href="/ads-area"><i className="fa fa-dashboard fa-fw"></i>Service Prices</a>
+                            <a href="/service-price"><i className="fa fa-dashboard fa-fw"></i>Service Prices</a>
                         </li>
                         <li>
                             <a href="/price-factor"><i className="fa fa-dashboard fa-fw"></i>Price Factor</a>

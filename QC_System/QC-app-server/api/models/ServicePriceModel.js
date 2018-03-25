@@ -8,8 +8,11 @@ var ServicePriceSchema = new Schema({
     ma_dich_vu_ap_dung: String,
     gia_tri: Number,
     mo_ta_gia: String,
-    loai_gia: Number, // Table Price
-    so_luong_don_vi_ap_dung: Number, //day, view, ...,
+    loai_gia: String, // Table Price
+    so_luong_don_vi_ap_dung: {//day, view, ...,
+        loai: String,
+        gia_tri: Number
+    },
     loai_co_che: String, //(độc quyền, cố định vị trí, chia sẻ cố định, ngẫu nhiên)
     start_date: Date,
     end_date: Date,

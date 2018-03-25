@@ -103,8 +103,7 @@ class PriceFactor extends Component {
     }
 
     getPriceFactors() {
-        var url = "http://localhost:8080/pricefactors";
-        Request.get(url)
+        Request.get(UrlApi.PriceFactor)
             .then((res) => {
                 this.setState({
                     tbodyPriceFactors: res.body
