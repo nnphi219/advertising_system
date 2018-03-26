@@ -89,10 +89,10 @@ jsonState.phan_tram_tang_giam = 0;
 	"gia_tri": 90000, 
 	"loai_gia": "CPD",
 	"so_luong_don_vi_ap_dung": {
-		"so_ngay_ap_dung": 14
+		"so_ngay_ap_dung": 14,
         "so_click_tren_view": 14
 	},
-	"loai_co_che": "độc quyền",
+	"loai_co_che": "doc_quyen",
 	"trang_thai": 1
 }
 
