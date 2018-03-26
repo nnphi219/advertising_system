@@ -13,10 +13,11 @@ import UrlApi from '../share/UrlApi';
 
 function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
-    var availableQuantityDay = 0;
+    var availableQuantityDay = props.trContent.so_luong_don_vi_ap_dung.so_ngay_ap_dung;
+    var quantityClickOnView = props.trContent.so_luong_don_vi_ap_dung.so_click_tren_view;
     var today = new Date();
     //var day = `${today.getFullYear.toLocaleDateString()}/${today.getMonth.toString()}/${today.getDay.toString()}`;
-
+    
     return (
         <tr>
             <td>{props.trContent.ma_dich_vu_ap_dung}</td>
@@ -24,7 +25,7 @@ function RenderRow(props) {
             <td>{props.trContent.gia_tri}</td>
             <td>{props.trContent.loai_gia}</td>
             <td>{availableQuantityDay}</td>
-            <td>{props.trContent.so_luong_don_vi_ap_dung.gia_tri}</td>
+            <td>{quantityClickOnView}</td>
             <td>{props.trContent.loai_co_che}</td>
             <td>{today.toLocaleDateString()} {today.toLocaleTimeString()}</td>
             <td>{today.toLocaleDateString()} {today.toLocaleTimeString()}</td>
@@ -119,8 +120,26 @@ class ServicePrice extends Component {
             });
     }
 
-    handleEditClick() {
+    handleEditClick(event) {
+        var nameId = event.target.name;
+        var editContents = {};
+        
+        var i = 0;
+        var finishLoop = false;
+        while (i < this.state.tbodyServicePrices.length && !finishLoop) {
+            var element = this.state.tbodyServicePrices[i];
+            if (nameId === element._id) {
+                editContents = element;
+                finishLoop = true;
+            }
+            i++;
+        }
 
+        this.setState({
+            ModeAction: "edit",
+            EditContents: editContents,
+            ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
+          });
     }
 
     handleDeleteClick(event) {

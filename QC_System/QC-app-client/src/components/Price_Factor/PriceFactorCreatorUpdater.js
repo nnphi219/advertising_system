@@ -321,7 +321,7 @@ class PriceFactorCreatorUpdater extends Component {
 
     handleUpdateState(jsonState) {
         this.setState(jsonState);
-
+        console.log(this.state);
     }
 
     handleSubmit() {
@@ -338,7 +338,6 @@ class PriceFactorCreatorUpdater extends Component {
         return (
             <div className='popup'>
                 <PriceFactorCreatorUpdaterForm
-                    modeAction
                     titleForm={titleForm}
                     stateValues={this.state}
                     handleSubmit={this.handleSubmit.bind(this)}

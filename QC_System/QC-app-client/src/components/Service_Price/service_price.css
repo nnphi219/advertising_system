@@ -66,10 +66,10 @@
 
 .popup_inner--serviceprice {
     position: absolute;
-    left: 30%;
-    right: 30%;
-    top: 5%;
-    bottom: 5%;
+    left: 15%;
+    right: 15%;
+    top: 15%;
+    bottom: 25%;
     margin: auto;
     padding-left: 10px;
     background: white;
