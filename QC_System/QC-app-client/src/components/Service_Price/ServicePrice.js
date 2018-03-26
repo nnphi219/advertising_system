@@ -5,6 +5,9 @@ import RenderHeader from '../share/RenderHeader';
 import DeleteForm from '../share/DeleteForm';
 import HeadForm from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
+import ServicePriceCreatorUpdater from './ServicePriceCreatorUpdater';
+import './service_price.css';
+import '../Ads_Area/ads_area.css';
 
 import UrlApi from '../share/UrlApi';
 
@@ -12,7 +15,7 @@ function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
     var availableQuantityDay = 0;
     var today = new Date();
-    var day = `${today.getFullYear.toString()}/${today.getMonth.toString()}/${today.getDay.toString()}`;
+    //var day = `${today.getFullYear.toLocaleDateString()}/${today.getMonth.toString()}/${today.getDay.toString()}`;
 
     return (
         <tr>
@@ -23,8 +26,8 @@ function RenderRow(props) {
             <td>{availableQuantityDay}</td>
             <td>{props.trContent.so_luong_don_vi_ap_dung.gia_tri}</td>
             <td>{props.trContent.loai_co_che}</td>
-            <td>{day}</td>
-            <td>{day}</td>
+            <td>{today.toLocaleDateString()} {today.toLocaleTimeString()}</td>
+            <td>{today.toLocaleDateString()} {today.toLocaleTimeString()}</td>
             <td>{status}</td>
             <td>
                 <RenderEditDeleteButton
@@ -91,6 +94,9 @@ class ServicePrice extends Component {
         this.handleShowCreatorUpdaterPopup = this.handleShowCreatorUpdaterPopup.bind(this);
         this.handleEditClick = this.handleEditClick.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
+        this.handleResetContentsState = this.handleResetContentsState.bind(this);
+        this.handleClosePopup = this.handleClosePopup.bind(this);
     }
 
     componentDidMount() {
@@ -117,8 +123,27 @@ class ServicePrice extends Component {
 
     }
 
-    handleDeleteClick() {
+    handleDeleteClick(event) {
+        this.setState({
+            ShowDeletePopup: !this.state.ShowDeletePopup,
+            SelectedItemId: event.target.name
+        });
+    }
 
+    handleCloseDeletePop() {
+        this.setState({
+            ShowDeletePopup: !this.state.ShowDeletePopup
+        });
+    }
+
+    handleResetContentsState() {
+        this.getServicePrices();
+    }
+
+    handleClosePopup(){
+        this.setState({
+            ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
+        });
     }
 
     render() {
@@ -132,6 +157,31 @@ class ServicePrice extends Component {
                             handleEditClick={this.handleEditClick}
                             handleDeleteClick={this.handleDeleteClick}
                         />
+
+
+                        {
+                            this.state.ShowCreatorUpdaterPopup ?
+                                <ServicePriceCreatorUpdater
+                                    modeAction={this.state.ModeAction}
+                                    editContents={this.state.EditContents}
+                                    resetContentState={this.handleResetContentsState}
+                                    closeCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup}
+                                />
+                                : null
+                        }
+
+                        {
+                            this.state.ShowDeletePopup ?
+                                <DeleteForm
+                                    url={UrlApi.ServicePrice}
+                                    SelectedItemId={this.state.SelectedItemId}
+                                    closeDeletePopup={this.handleCloseDeletePop}
+                                    resetContentState={this.handleResetContentsState}
+                                />
+                                : null
+                        } 
+
+
                     </div>
                 </div>
             </div>
