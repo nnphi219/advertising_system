@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import NumericInput from 'react-numeric-input';
 import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './service_price.css';
-import { isNumber } from 'util';
 
 function RenderRadioButtons(props) {
     var elementPriceTypeRadioButtons = [];
@@ -60,7 +58,7 @@ class RenderLeftForm extends Component {
                             <label className="fullwidth">
                                 {"Thời điểm đấu giá"}
                                 <div>
-                                    <input type="date" format="yyyy/MM/dd" name="start_date" value={this.props.stateValues.start_date} className="input-date" />
+                                    <DatePicker name="start_date" value={this.props.stateValues.start_date} onChange={this.props.OnchangeStartDate} className="input-date"/>
                                 </div>
                             </label>
                         </div>
@@ -77,7 +75,7 @@ class RenderLeftForm extends Component {
                             <label className="fullwidth">
                                 {"Thời điểm kết thúc"}
                                 <div>
-                                    <input type="date" format="yyyy/MM/dd" name="end_date" value={this.props.stateValues.end_date} className="input-date" />
+                                    <DatePicker name="end_date" value={this.props.stateValues.end_date} onChange={this.props.OnchangeEndDate} className="input-date"/>
                                 </div>
                             </label>
                         </div>
@@ -140,28 +138,7 @@ class RenderRightForm extends Component {
 }
 
 class RenderProperties extends Component {
-    constructor(props) {
-        super(props);
 
-        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
-        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
-    }
-
-    OnchangeStartDate(date) {
-        var e = {};
-        e.target = {};
-        e.target.value = date.toString();
-        e.target.name = "start_date";
-        this.props.OnChangeInput(e);
-    }
-
-    OnchangeEndDate(date) {
-        var e = {};
-        e.target = {};
-        e.target.value = date;
-        e.target.name = "end_date";
-        this.props.OnChangeInput(e);
-    }
     render() {
         return (
             <div>
@@ -169,6 +146,9 @@ class RenderProperties extends Component {
                     OnChangeInput={this.props.OnChangeInput}
                     OnChangeSelect={this.props.OnChangeSelect}
                     OnChangeRadioButton={this.props.OnChangeRadioButton}
+                    OnchangeStartDate={this.props.OnchangeStartDate}
+                    OnchangeEndDate={this.props.OnchangeEndDate}
+
                     stateValues={this.props.stateValues}
                 />
 
@@ -190,13 +170,23 @@ class ServicePriceCreatorUpdaterForm extends Component {
         this.OnChangeInput = this.OnChangeInput.bind(this);
         this.OnChangeSelect = this.OnChangeSelect.bind(this);
         this.OnChangeRadioButton = this.OnChangeRadioButton.bind(this);
+        
+        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
+        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
+    }
+
+    OnchangeStartDate(date) {
+        var jsonState = { "start_date": date}
+        this.props.UpdateState(jsonState);
+    }
+
+    OnchangeEndDate(date) {
+        var jsonState = { "end_date": date}
+        this.props.UpdateState(jsonState);
     }
 
     OnChangeInput(e) {
-        var name = e.target.name;
-        var value = e.target.value;
         var jsonState = { [e.target.name]: e.target.value };
-
         this.props.UpdateState(jsonState);
     }
 
@@ -221,8 +211,10 @@ class ServicePriceCreatorUpdaterForm extends Component {
                     OnChangeInput={this.OnChangeInput}
                     OnChangeSelect={this.OnChangeSelect}
                     OnChangeRadioButton={this.OnChangeRadioButton}
-                    stateValues={this.props.stateValues}
+                    OnchangeStartDate={this.OnchangeStartDate}
+                    OnchangeEndDate={this.OnchangeEndDate}
 
+                    stateValues={this.props.stateValues}
                 />
                 <div className="submit">
                     <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
@@ -252,6 +244,9 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.so_ngay_ap_dung = 0;
             jsonState.so_click_tren_view = 0;
 
+            var today = new Date();
+            jsonState.start_date = today;
+            jsonState.end_date = today;
             jsonState.co_thoi_diem_ket_thuc = 1;
         }
         else {
