@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import NumericInput from 'react-numeric-input';
 import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './service_price.css';
-import { isNumber } from 'util';
 
 function RenderRadioButtons(props) {
     var elementPriceTypeRadioButtons = [];
@@ -34,14 +32,14 @@ function RenderRadioButtons(props) {
 }
 
 class RenderLeftForm extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        this.handleChange=this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange = (d) => {
-    console.log(d);
+        console.log(d);
     }
 
     render() {
@@ -70,7 +68,7 @@ class RenderLeftForm extends Component {
                             <label className="fullwidth">
                                 {"Thời điểm đấu giá"}
                                 <div>
-                                    <input type="date"  name="start_date" value={this.props.stateValues.start_date} onChange={this.handleChange} className="input-date" />
+                                    <DatePicker name="start_date" value={this.props.stateValues.start_date} onChange={this.props.OnchangeStartDate} className="input-date" />
                                 </div>
                             </label>
                         </div>
@@ -87,7 +85,7 @@ class RenderLeftForm extends Component {
                             <label className="fullwidth">
                                 {"Thời điểm kết thúc"}
                                 <div>
-                                    <input type="date" format="yyyy/MM/dd" name="end_date" value={this.props.stateValues.end_date} className="input-date" />
+                                    <DatePicker name="end_date" value={this.props.stateValues.end_date} onChange={this.props.OnchangeEndDate} className="input-date" />
                                 </div>
                             </label>
                         </div>
@@ -152,27 +150,8 @@ class RenderRightForm extends Component {
 class RenderProperties extends Component {
     constructor(props) {
         super(props);
-
-        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
-        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
     }
 
-    OnchangeStartDate(date) {
-        var e = {};
-        e.target = {};
-        console.log(date);
-        e.target.value = date.toString();
-        e.target.name = "start_date";
-        this.props.OnChangeInput(e);
-    }
-
-    OnchangeEndDate(date) {
-        var e = {};
-        e.target = {};
-        e.target.value = date;
-        e.target.name = "end_date";
-        this.props.OnChangeInput(e);
-    }
     render() {
         return (
             <div>
@@ -181,6 +160,7 @@ class RenderProperties extends Component {
                     OnChangeSelect={this.props.OnChangeSelect}
                     OnChangeRadioButton={this.props.OnChangeRadioButton}
                     OnchangeStartDate={this.props.OnchangeStartDate}
+                    OnchangeEndDate={this.props.OnchangeEndDate}
 
                     stateValues={this.props.stateValues}
                 />
@@ -203,13 +183,23 @@ class ServicePriceCreatorUpdaterForm extends Component {
         this.OnChangeInput = this.OnChangeInput.bind(this);
         this.OnChangeSelect = this.OnChangeSelect.bind(this);
         this.OnChangeRadioButton = this.OnChangeRadioButton.bind(this);
+
+        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
+        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
+    }
+
+    OnchangeStartDate(date) {
+        var jsonState = { "start_date": date }
+        this.props.UpdateState(jsonState);
+    }
+
+    OnchangeEndDate(date) {
+        var jsonState = { "end_date": date }
+        this.props.UpdateState(jsonState);
     }
 
     OnChangeInput(e) {
-        var name = e.target.name;
-        var value = e.target.value;
         var jsonState = { [e.target.name]: e.target.value };
-
         this.props.UpdateState(jsonState);
     }
 
@@ -234,8 +224,10 @@ class ServicePriceCreatorUpdaterForm extends Component {
                     OnChangeInput={this.OnChangeInput}
                     OnChangeSelect={this.OnChangeSelect}
                     OnChangeRadioButton={this.OnChangeRadioButton}
-                    stateValues={this.props.stateValues}
+                    OnchangeStartDate={this.OnchangeStartDate}
+                    OnchangeEndDate={this.OnchangeEndDate}
 
+                    stateValues={this.props.stateValues}
                 />
                 <div className="submit">
                     <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
@@ -260,16 +252,19 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.ma_gia = "";
             jsonState.ma_dich_vu_ap_dung = "VIPHOME1";
             jsonState.loai_co_che = "doc_quyen";
-            jsonState.loai_gia = "CPC";
+            jsonState.loai_gia = "CPD";
             jsonState.gia_tri = 0;
             jsonState.so_ngay_ap_dung = 0;
             jsonState.so_click_tren_view = 0;
 
+            var today = new Date();
+            jsonState.start_date = today;
+            jsonState.end_date = today;
             jsonState.co_thoi_diem_ket_thuc = 1;
         }
         else {
             var editContents = this.props.editContents;
-            
+
             jsonState.ma_gia = editContents.ma_gia;
             jsonState.ma_dich_vu_ap_dung = editContents.ma_dich_vu_ap_dung;
             jsonState.loai_co_che = editContents.loai_co_che;
@@ -281,7 +276,7 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.start_date = editContents.start_date;
             jsonState.end_date = editContents.end_date;
 
-            if(editContents.end_date === undefined){
+            if (editContents.end_date === undefined) {
                 jsonState.co_thoi_diem_ket_thuc = 0;
             }
             else {
@@ -294,12 +289,67 @@ class ServicePriceCreatorUpdater extends Component {
         this.setState(jsonState);
     }
 
+    GetModelStateJson() {
+        var state = this.state;
+
+        var servicePriceContent = {
+            ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
+            ma_gia: state.ma_gia,
+            start_date: state.start_date,
+            loai_co_che: state.loai_co_che,
+            loai_gia: state.loai_gia,
+            gia_tri: state.gia_tri,
+            so_luong_don_vi_ap_dung: {
+                so_ngay_ap_dung: state.so_ngay_ap_dung
+            }
+        };
+
+        if (state.co_thoi_diem_ket_thuc === 1) {
+            servicePriceContent.end_date = state.end_date
+        }
+
+        var so_click_tren_view = parseInt(state.so_click_tren_view);
+
+        if (so_click_tren_view > 0) {
+            servicePriceContent.so_luong_don_vi_ap_dung.so_click_tren_view = so_click_tren_view
+        }
+
+        return servicePriceContent;
+    }
+
+    CreateServicePrice() {
+        var servicePriceContent = this.GetModelStateJson();
+        
+        var $this = this;
+        Request.post(UrlApi.ServicePrice)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(servicePriceContent)
+            .end(function (err, res) {
+                $this.props.closeCreatorUpdaterPopup();
+                $this.props.resetContentState();
+            });
+    }
+
+    EditServicePrice() {
+        var servicePriceContent = this.GetModelStateJson();
+        
+        var url = UrlApi.ServicePrice + "/" + this.props.editContents._id;
+        var $this = this;
+        Request.put(url)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(servicePriceContent)
+            .end(function (err, res) {
+                $this.props.closeCreatorUpdaterPopup();
+                $this.props.resetContentState();
+            });
+    }
+
     handleSubmit() {
         if (this.props.modeAction === "create") {
-            console.log(this.state);
+            this.CreateServicePrice();
         }
         else {
-            this.EditPriceFactor();
+            this.EditServicePrice();
         }
     }
 
