@@ -34,6 +34,16 @@ function RenderRadioButtons(props) {
 }
 
 class RenderLeftForm extends Component {
+    constructor(props){
+        super(props);
+
+        this.handleChange=this.handleChange.bind(this);
+    }
+
+    handleChange = (d) => {
+    console.log(d);
+    }
+
     render() {
 
         return (
@@ -60,7 +70,7 @@ class RenderLeftForm extends Component {
                             <label className="fullwidth">
                                 {"Thời điểm đấu giá"}
                                 <div>
-                                    <input type="date" format="yyyy/MM/dd" name="start_date" value={this.props.stateValues.start_date} className="input-date" />
+                                    <input type="date"  name="start_date" value={this.props.stateValues.start_date} onChange={this.handleChange} className="input-date" />
                                 </div>
                             </label>
                         </div>
@@ -150,6 +160,7 @@ class RenderProperties extends Component {
     OnchangeStartDate(date) {
         var e = {};
         e.target = {};
+        console.log(date);
         e.target.value = date.toString();
         e.target.name = "start_date";
         this.props.OnChangeInput(e);
@@ -169,6 +180,8 @@ class RenderProperties extends Component {
                     OnChangeInput={this.props.OnChangeInput}
                     OnChangeSelect={this.props.OnChangeSelect}
                     OnChangeRadioButton={this.props.OnChangeRadioButton}
+                    OnchangeStartDate={this.props.OnchangeStartDate}
+
                     stateValues={this.props.stateValues}
                 />
 

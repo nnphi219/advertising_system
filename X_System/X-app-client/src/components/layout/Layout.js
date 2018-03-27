@@ -12,7 +12,7 @@ class Layout extends Component {
         return (
             <div>
                 <Header />
-                <div id="body" className="contents-margin" />
+                    <div id="body" className="contents-margin" />
                 <Footer />
             </div>
         );
