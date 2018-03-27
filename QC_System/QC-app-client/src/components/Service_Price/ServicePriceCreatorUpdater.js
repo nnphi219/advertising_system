@@ -32,14 +32,14 @@ function RenderRadioButtons(props) {
 }
 
 class RenderLeftForm extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
-        this.handleChange=this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange = (d) => {
-    console.log(d);
+        console.log(d);
     }
 
     render() {
@@ -68,11 +68,7 @@ class RenderLeftForm extends Component {
                             <label className="fullwidth">
                                 {"Thời điểm đấu giá"}
                                 <div>
-<<<<<<< HEAD
-                                    <DatePicker name="start_date" value={this.props.stateValues.start_date} onChange={this.props.OnchangeStartDate} className="input-date"/>
-=======
-                                    <input type="date"  name="start_date" value={this.props.stateValues.start_date} onChange={this.handleChange} className="input-date" />
->>>>>>> c246be319a100f16337ea05e2c5b957931aea8a9
+                                    <DatePicker name="start_date" value={this.props.stateValues.start_date} onChange={this.props.OnchangeStartDate} className="input-date" />
                                 </div>
                             </label>
                         </div>
@@ -89,7 +85,7 @@ class RenderLeftForm extends Component {
                             <label className="fullwidth">
                                 {"Thời điểm kết thúc"}
                                 <div>
-                                    <DatePicker name="end_date" value={this.props.stateValues.end_date} onChange={this.props.OnchangeEndDate} className="input-date"/>
+                                    <DatePicker name="end_date" value={this.props.stateValues.end_date} onChange={this.props.OnchangeEndDate} className="input-date" />
                                 </div>
                             </label>
                         </div>
@@ -152,8 +148,6 @@ class RenderRightForm extends Component {
 }
 
 class RenderProperties extends Component {
-<<<<<<< HEAD
-=======
     constructor(props) {
         super(props);
 
@@ -169,7 +163,6 @@ class RenderProperties extends Component {
         e.target.name = "start_date";
         this.props.OnChangeInput(e);
     }
->>>>>>> c246be319a100f16337ea05e2c5b957931aea8a9
 
     render() {
         return (
@@ -179,10 +172,7 @@ class RenderProperties extends Component {
                     OnChangeSelect={this.props.OnChangeSelect}
                     OnChangeRadioButton={this.props.OnChangeRadioButton}
                     OnchangeStartDate={this.props.OnchangeStartDate}
-<<<<<<< HEAD
                     OnchangeEndDate={this.props.OnchangeEndDate}
-=======
->>>>>>> c246be319a100f16337ea05e2c5b957931aea8a9
 
                     stateValues={this.props.stateValues}
                 />
@@ -205,18 +195,18 @@ class ServicePriceCreatorUpdaterForm extends Component {
         this.OnChangeInput = this.OnChangeInput.bind(this);
         this.OnChangeSelect = this.OnChangeSelect.bind(this);
         this.OnChangeRadioButton = this.OnChangeRadioButton.bind(this);
-        
+
         this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
         this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
     }
 
     OnchangeStartDate(date) {
-        var jsonState = { "start_date": date}
+        var jsonState = { "start_date": date }
         this.props.UpdateState(jsonState);
     }
 
     OnchangeEndDate(date) {
-        var jsonState = { "end_date": date}
+        var jsonState = { "end_date": date }
         this.props.UpdateState(jsonState);
     }
 
@@ -286,7 +276,7 @@ class ServicePriceCreatorUpdater extends Component {
         }
         else {
             var editContents = this.props.editContents;
-            
+
             jsonState.ma_gia = editContents.ma_gia;
             jsonState.ma_dich_vu_ap_dung = editContents.ma_dich_vu_ap_dung;
             jsonState.loai_co_che = editContents.loai_co_che;
@@ -298,7 +288,7 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.start_date = editContents.start_date;
             jsonState.end_date = editContents.end_date;
 
-            if(editContents.end_date === undefined){
+            if (editContents.end_date === undefined) {
                 jsonState.co_thoi_diem_ket_thuc = 0;
             }
             else {
@@ -326,11 +316,11 @@ class ServicePriceCreatorUpdater extends Component {
             }
         };
 
-        if(state.co_thoi_diem_ket_thuc === 1) {
+        if (state.co_thoi_diem_ket_thuc === 1) {
             servicePriceContent.end_date = state.end_date
         }
 
-        if(state.so_click_tren_view !== null && state.so_click_tren_view !== 0) {
+        if (state.so_click_tren_view !== null && state.so_click_tren_view !== 0) {
             servicePriceContent.so_click_tren_view = state.so_click_tren_view
         }
 
