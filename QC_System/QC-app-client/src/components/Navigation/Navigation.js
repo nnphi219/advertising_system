@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import './Navigation.css';
 
 class NavbarHeader extends Component {
-    render() {
-        return (
+    render(){
+        return(
             <div className="navbar-header">
                 <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 </button>
@@ -14,8 +14,8 @@ class NavbarHeader extends Component {
 }
 
 class NavTopLinks extends Component {
-    render() {
-        return (
+    render(){
+        return(
             <ul className="nav navbar-top-links navbar-right">
                 <li className="dropdown">
                     <a className="dropdown-toggle" data-toggle="dropdown" href="#1">
@@ -55,7 +55,7 @@ class NavTopLinks extends Component {
                                         <span className="pull-right text-muted">80% Complete</span>
                                     </p>
                                     <div className="progress progress-striped active">
-                                        <div className="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style={{ width: '80%' }}>
+                                        <div className="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style={{width: '80%'}}>
                                             <span className="sr-only">80% Complete (danger)</span>
                                         </div>
                                     </div>
@@ -91,31 +91,19 @@ class NavTopLinks extends Component {
 }
 
 class NavbarDefault extends Component {
-    render() {
-        return (
+    render(){
+        return(
             <div className="navbar-default sidebar" role="navigation">
                 <div className="sidebar-nav navbar-collapse">
                     <ul className="nav" id="side-menu">
                         <li>
-                            <a href="/ads-area"><i className="fa fa-dashboard fa-fw"></i>Vùng quảng cáo</a>
+                            <a href="/ads-area"><i className="fa fa-dashboard fa-fw"></i>Advertising Area</a>
                         </li>
                         <li>
-                            <a href="/service-price"><i className="fa fa-dashboard fa-fw"></i>Giá dịch vụ</a>
+                            <a href="/service-price"><i className="fa fa-dashboard fa-fw"></i>Service Prices</a>
                         </li>
                         <li>
-                            <a href="/price-factor"><i className="fa fa-dashboard fa-fw"></i>Chỉ số ảnh hưởng giá</a>
-                        </li>
-                        <li>
-                            <a href="/post-management"><i className="fa fa-dashboard fa-fw"></i>Bảng tin đăng</a>
-                        </li>
-                        <li>
-                            <a href="/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>
-                        </li>
-                        <li>
-                            <a href="/post-caimpaign-management"><i className="fa fa-dashboard fa-fw"></i>Bảng chiến dịch tin đăng</a>
-                        </li>
-                        <li>
-                            <a href="/payment-management"><i className="fa fa-dashboard fa-fw"></i>Trang thanh toán</a>
+                            <a href="/price-factor"><i className="fa fa-dashboard fa-fw"></i>Price Factor</a>
                         </li>
                         <li>
                             <a href="#10"><i className="fa fa-bar-chart-o fa-fw"></i> Charts<span className="fa arrow"></span></a>
@@ -131,14 +119,14 @@ class NavbarDefault extends Component {
                     </ul>
                 </div>
             </div>
-
+            
         );
     }
 }
 
 export const Navigation = (props) => {
     return (
-        <nav className="navbar navbar-default navbar-static-top nav-zindex" style={{ marginBottom: '0' }}>
+        <nav className="navbar navbar-default navbar-static-top nav-zindex" style={{marginBottom: '0'}}>
             <NavbarHeader />
             <NavTopLinks />
             <NavbarDefault />
