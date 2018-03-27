@@ -150,18 +150,6 @@ class RenderRightForm extends Component {
 class RenderProperties extends Component {
     constructor(props) {
         super(props);
-
-        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
-        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
-    }
-
-    OnchangeStartDate(date) {
-        var e = {};
-        e.target = {};
-        console.log(date);
-        e.target.value = date.toString();
-        e.target.name = "start_date";
-        this.props.OnChangeInput(e);
     }
 
     render() {
@@ -301,7 +289,7 @@ class ServicePriceCreatorUpdater extends Component {
         this.setState(jsonState);
     }
 
-    CreateServicePrice() {
+    GetModelStateJson() {
         var state = this.state;
 
         var servicePriceContent = {
@@ -320,12 +308,34 @@ class ServicePriceCreatorUpdater extends Component {
             servicePriceContent.end_date = state.end_date
         }
 
-        if (state.so_click_tren_view !== null && state.so_click_tren_view !== 0) {
-            servicePriceContent.so_click_tren_view = state.so_click_tren_view
+        var so_click_tren_view = parseInt(state.so_click_tren_view);
+
+        if (so_click_tren_view > 0) {
+            servicePriceContent.so_luong_don_vi_ap_dung.so_click_tren_view = so_click_tren_view
         }
 
+        return servicePriceContent;
+    }
+
+    CreateServicePrice() {
+        var servicePriceContent = this.GetModelStateJson();
+        
         var $this = this;
         Request.post(UrlApi.ServicePrice)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(servicePriceContent)
+            .end(function (err, res) {
+                $this.props.closeCreatorUpdaterPopup();
+                $this.props.resetContentState();
+            });
+    }
+
+    EditServicePrice() {
+        var servicePriceContent = this.GetModelStateJson();
+        
+        var url = UrlApi.ServicePrice + "/" + this.props.editContents._id;
+        var $this = this;
+        Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(servicePriceContent)
             .end(function (err, res) {
@@ -339,7 +349,7 @@ class ServicePriceCreatorUpdater extends Component {
             this.CreateServicePrice();
         }
         else {
-            this.EditPriceFactor();
+            this.EditServicePrice();
         }
     }
 
