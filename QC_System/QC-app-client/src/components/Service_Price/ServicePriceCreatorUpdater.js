@@ -32,6 +32,16 @@ function RenderRadioButtons(props) {
 }
 
 class RenderLeftForm extends Component {
+    constructor(props){
+        super(props);
+
+        this.handleChange=this.handleChange.bind(this);
+    }
+
+    handleChange = (d) => {
+    console.log(d);
+    }
+
     render() {
 
         return (
@@ -58,7 +68,11 @@ class RenderLeftForm extends Component {
                             <label className="fullwidth">
                                 {"Thời điểm đấu giá"}
                                 <div>
+<<<<<<< HEAD
                                     <DatePicker name="start_date" value={this.props.stateValues.start_date} onChange={this.props.OnchangeStartDate} className="input-date"/>
+=======
+                                    <input type="date"  name="start_date" value={this.props.stateValues.start_date} onChange={this.handleChange} className="input-date" />
+>>>>>>> c246be319a100f16337ea05e2c5b957931aea8a9
                                 </div>
                             </label>
                         </div>
@@ -138,6 +152,24 @@ class RenderRightForm extends Component {
 }
 
 class RenderProperties extends Component {
+<<<<<<< HEAD
+=======
+    constructor(props) {
+        super(props);
+
+        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
+        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
+    }
+
+    OnchangeStartDate(date) {
+        var e = {};
+        e.target = {};
+        console.log(date);
+        e.target.value = date.toString();
+        e.target.name = "start_date";
+        this.props.OnChangeInput(e);
+    }
+>>>>>>> c246be319a100f16337ea05e2c5b957931aea8a9
 
     render() {
         return (
@@ -147,7 +179,10 @@ class RenderProperties extends Component {
                     OnChangeSelect={this.props.OnChangeSelect}
                     OnChangeRadioButton={this.props.OnChangeRadioButton}
                     OnchangeStartDate={this.props.OnchangeStartDate}
+<<<<<<< HEAD
                     OnchangeEndDate={this.props.OnchangeEndDate}
+=======
+>>>>>>> c246be319a100f16337ea05e2c5b957931aea8a9
 
                     stateValues={this.props.stateValues}
                 />

@@ -5,6 +5,10 @@ import AdsArea from './components/Ads_Area/AdsArea';
 import PriceFactor from './components/Price_Factor/PriceFactor';
 import ServicePrice from './components/Service_Price/ServicePrice';
 import Root from './components/Root';
+import PostManagement from './components/Post_Management/PostManagement';
+import PromotionManagement from './components/Promotion_Management/PromotionManagement';
+import PostCaimpaignManagement from './components/Post_Caimpaign_Management/PostCaimpaignManagement';
+import PaymentManagement from './components/Payment_Management/PaymentManagement';
 
 // class Title extends Component {
 //   render(){
@@ -29,6 +33,10 @@ class App extends Component {
           <Route path={"/ads-area"} component={AdsArea} />
           <Route path={"/service-price"} component={ServicePrice} />
           <Route path={"/price-factor"} component={PriceFactor} />
+          <Route path={"/post-management"} component={PostManagement} />
+          <Route path={"/promotion-management"} component={PromotionManagement} />
+          <Route path={"/post-caimpaign-management"} component={PostCaimpaignManagement} />
+          <Route path={"/payment-management"} component={PaymentManagement} />
           {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />
           <Route path={"home-single"} component={Home}/> */}
