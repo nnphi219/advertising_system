@@ -239,7 +239,7 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.ma_gia = "";
             jsonState.ma_dich_vu_ap_dung = "VIPHOME1";
             jsonState.loai_co_che = "doc_quyen";
-            jsonState.loai_gia = "CPC";
+            jsonState.loai_gia = "CPD";
             jsonState.gia_tri = 0;
             jsonState.so_ngay_ap_dung = 0;
             jsonState.so_click_tren_view = 0;
@@ -276,9 +276,42 @@ class ServicePriceCreatorUpdater extends Component {
         this.setState(jsonState);
     }
 
+    CreateServicePrice() {
+        var state = this.state;
+
+        var servicePriceContent = {
+            ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
+            ma_gia: state.ma_gia,
+            start_date: state.start_date,
+            loai_co_che: state.loai_co_che,
+            loai_gia: state.loai_gia,
+            gia_tri: state.gia_tri,
+            so_luong_don_vi_ap_dung: {
+                so_ngay_ap_dung: state.so_ngay_ap_dung
+            }
+        };
+
+        if(state.co_thoi_diem_ket_thuc === 1) {
+            servicePriceContent.end_date = state.end_date
+        }
+
+        if(state.so_click_tren_view !== null && state.so_click_tren_view !== 0) {
+            servicePriceContent.so_click_tren_view = state.so_click_tren_view
+        }
+
+        var $this = this;
+        Request.post(UrlApi.ServicePrice)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(servicePriceContent)
+            .end(function (err, res) {
+                $this.props.closeCreatorUpdaterPopup();
+                $this.props.resetContentState();
+            });
+    }
+
     handleSubmit() {
         if (this.props.modeAction === "create") {
-            console.log(this.state);
+            this.CreateServicePrice();
         }
         else {
             this.EditPriceFactor();
