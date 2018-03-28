@@ -10,26 +10,26 @@ import PromotionManagement from './components/Promotion_Management/PromotionMana
 import PostCaimpaignManagement from './components/Post_Caimpaign_Management/PostCaimpaignManagement';
 import PaymentManagement from './components/Payment_Management/PaymentManagement';
 
-// class Title extends Component {
-//   render(){
-//       return(
-//           <div id="page-wrapper">
-//               <div className="row">
-//                   <div className="col-lg-12">
-//                       <h1 className="page-header">This is Admin System Page</h1>
-//                   </div>
-//               </div>
-//           </div>
-//       );
-//   }
-// }
+class Title extends Component {
+  render(){
+      return(
+          <div id="page-wrapper">
+              <div className="row">
+                  <div className="col-lg-12">
+                      <h1 className="page-header">This is Admin System Page</h1>
+                  </div>
+              </div>
+          </div>
+      );
+  }
+}
 
 class App extends Component {
   render() {
     return (
       <BrowserRouter>
       <div>
-          <Route path={"/"} component={Root} />
+          <Route exact={true} path={"/"} component={Title} />
           <Route path={"/ads-area"} component={AdsArea} />
           <Route path={"/service-price"} component={ServicePrice} />
           <Route path={"/price-factor"} component={PriceFactor} />
