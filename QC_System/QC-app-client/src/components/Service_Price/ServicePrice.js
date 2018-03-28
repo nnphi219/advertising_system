@@ -15,9 +15,20 @@ function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
     var availableQuantityDay = props.trContent.so_luong_don_vi_ap_dung.so_ngay_ap_dung;
     var quantityClickOnView = props.trContent.so_luong_don_vi_ap_dung.so_click_tren_view;
-    var today = new Date();
-    //var day = `${today.getFullYear.toLocaleDateString()}/${today.getMonth.toString()}/${today.getDay.toString()}`;
-    
+
+    var start_date = props.trContent.start_date;
+    var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;
+
+    var end_date = props.trContent.end_date;
+    var endDate = "";
+    if (!(end_date === undefined || end_date === null)) {
+        endDate = `${end_date.day}/${end_date.month}/${end_date.year}`;
+    }
+    else {
+        var today = new Date();
+        endDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+    }
+
     return (
         <tr>
             <td>{props.trContent.ma_dich_vu_ap_dung}</td>
@@ -27,8 +38,8 @@ function RenderRow(props) {
             <td>{availableQuantityDay}</td>
             <td>{quantityClickOnView}</td>
             <td>{props.trContent.loai_co_che}</td>
-            <td>{today.toLocaleDateString()} {today.toLocaleTimeString()}</td>
-            <td>{today.toLocaleDateString()} {today.toLocaleTimeString()}</td>
+            <td>{startDate}</td>
+            <td>{endDate}</td>
             <td>{status}</td>
             <td>
                 <RenderEditDeleteButton
@@ -123,7 +134,7 @@ class ServicePrice extends Component {
     handleEditClick(event) {
         var nameId = event.target.name;
         var editContents = {};
-        
+
         var i = 0;
         var finishLoop = false;
         while (i < this.state.tbodyServicePrices.length && !finishLoop) {
@@ -139,7 +150,7 @@ class ServicePrice extends Component {
             ModeAction: "edit",
             EditContents: editContents,
             ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
-          });
+        });
     }
 
     handleDeleteClick(event) {
@@ -159,7 +170,7 @@ class ServicePrice extends Component {
         this.getServicePrices();
     }
 
-    handleClosePopup(){
+    handleClosePopup() {
         this.setState({
             ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
         });
@@ -198,7 +209,7 @@ class ServicePrice extends Component {
                                     resetContentState={this.handleResetContentsState}
                                 />
                                 : null
-                        } 
+                        }
 
 
                     </div>

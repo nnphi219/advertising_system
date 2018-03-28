@@ -14,8 +14,16 @@ var ServicePriceSchema = new Schema({
         so_click_tren_view: Number
     },
     loai_co_che: String, //(độc quyền, cố định vị trí, chia sẻ cố định, ngẫu nhiên)
-    start_date: Date,
-    end_date: Date,
+    start_date: {
+        day: Number,
+        month: Number,
+        year: Number
+    },
+    end_date: {
+        day: Number,
+        month: Number,
+        year: Number
+    },
     trang_thai: Number,
     created_date: {
         type: Date,

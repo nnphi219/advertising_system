@@ -3,6 +3,7 @@ import Request from 'superagent';
 import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './service_price.css';
+import { JsonDateToDate } from '../share/Mapper';
 
 function RenderRadioButtons(props) {
     var elementPriceTypeRadioButtons = [];
@@ -258,6 +259,7 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.so_click_tren_view = 0;
 
             var today = new Date();
+            
             jsonState.start_date = today;
             jsonState.end_date = today;
             jsonState.co_thoi_diem_ket_thuc = 1;
@@ -272,9 +274,16 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.gia_tri = editContents.gia_tri;
             jsonState.so_ngay_ap_dung = editContents.so_luong_don_vi_ap_dung.so_ngay_ap_dung;
             jsonState.so_click_tren_view = editContents.so_luong_don_vi_ap_dung.so_click_tren_view;
+            jsonState.start_date = new Date(editContents.start_date.year, editContents.start_date.month + 1, editContents.start_date.day);
+            
+            console.log(JsonDateToDate(jsonState.start_date));
 
-            jsonState.start_date = editContents.start_date;
-            jsonState.end_date = editContents.end_date;
+            if (!(editContents.end_date === undefined || editContents.end_date === null)) {
+                jsonState.end_date =new Date(editContents.end_date.year, editContents.end_date.month, editContents.end_date.day);
+            }
+            else{
+                jsonState.end_date = new Date();
+            }
 
             if (editContents.end_date === undefined) {
                 jsonState.co_thoi_diem_ket_thuc = 0;
@@ -295,7 +304,7 @@ class ServicePriceCreatorUpdater extends Component {
         var servicePriceContent = {
             ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
             ma_gia: state.ma_gia,
-            start_date: state.start_date,
+            start_date: state.start_date.getDate(),
             loai_co_che: state.loai_co_che,
             loai_gia: state.loai_gia,
             gia_tri: state.gia_tri,
@@ -319,7 +328,12 @@ class ServicePriceCreatorUpdater extends Component {
 
     CreateServicePrice() {
         var servicePriceContent = this.GetModelStateJson();
-        
+        var day = 27;
+        var month = 12;
+        var years = 2018;
+        var date = new Date(years, month, day);
+        console.log(date);
+        return;
         var $this = this;
         Request.post(UrlApi.ServicePrice)
             .set('Content-Type', 'application/x-www-form-urlencoded')
