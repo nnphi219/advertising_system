@@ -1,7 +1,7 @@
 export function DateToJsonDate(date) {
     var jsonDate = {
         day: date.getDate(),
-        month: date.getMonth(),
+        month: date.getMonth() + 1,
         year: date.getFullYear()
     }
 
@@ -9,7 +9,6 @@ export function DateToJsonDate(date) {
 }
 
 export function JsonDateToDate (jsonDate) {
-    var date = new Date(jsonDate.year, jsonDate.month + 1, jsonDate.day);
-    console.log(jsonDate);
+    var date = new Date(parseInt(jsonDate.year) , parseInt(jsonDate.month) - 1, parseInt(jsonDate.day));
     return date;
 }

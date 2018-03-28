@@ -17,18 +17,15 @@ function RenderRow(props) {
     var quantityClickOnView = props.trContent.so_luong_don_vi_ap_dung.so_click_tren_view;
 
     var start_date = props.trContent.start_date;
+
     var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;
 
     var end_date = props.trContent.end_date;
     var endDate = "";
-    if (!(end_date === undefined || end_date === null)) {
+    if (!(end_date === undefined || end_date === null || end_date == "")) {
         endDate = `${end_date.day}/${end_date.month}/${end_date.year}`;
     }
-    else {
-        var today = new Date();
-        endDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
-    }
-
+  
     return (
         <tr>
             <td>{props.trContent.ma_dich_vu_ap_dung}</td>
