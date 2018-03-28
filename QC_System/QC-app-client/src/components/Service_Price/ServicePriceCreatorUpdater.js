@@ -3,6 +3,7 @@ import Request from 'superagent';
 import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './service_price.css';
+import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
 
 function RenderRadioButtons(props) {
     var elementPriceTypeRadioButtons = [];
@@ -258,6 +259,7 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.so_click_tren_view = 0;
 
             var today = new Date();
+            
             jsonState.start_date = today;
             jsonState.end_date = today;
             jsonState.co_thoi_diem_ket_thuc = 1;
@@ -272,15 +274,15 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.gia_tri = editContents.gia_tri;
             jsonState.so_ngay_ap_dung = editContents.so_luong_don_vi_ap_dung.so_ngay_ap_dung;
             jsonState.so_click_tren_view = editContents.so_luong_don_vi_ap_dung.so_click_tren_view;
-
-            jsonState.start_date = editContents.start_date;
-            jsonState.end_date = editContents.end_date;
-
-            if (editContents.end_date === undefined) {
+            jsonState.start_date = JsonDateToDate(editContents.start_date);
+            
+            if (editContents.end_date === undefined || editContents.end_date == "") {
                 jsonState.co_thoi_diem_ket_thuc = 0;
+                jsonState.end_date = new Date();
             }
             else {
                 jsonState.co_thoi_diem_ket_thuc = 1;
+                jsonState.end_date = JsonDateToDate(editContents.end_date);
             }
         }
     }
@@ -292,10 +294,15 @@ class ServicePriceCreatorUpdater extends Component {
     GetModelStateJson() {
         var state = this.state;
 
+        var startDateJson = DateToJsonDate(state.start_date);
+        var endDateJson = parseInt(state.co_thoi_diem_ket_thuc) === 1 ?
+                                DateToJsonDate(state.end_date): null;
+        
         var servicePriceContent = {
             ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
             ma_gia: state.ma_gia,
-            start_date: state.start_date,
+            start_date: startDateJson,
+            end_date: endDateJson,
             loai_co_che: state.loai_co_che,
             loai_gia: state.loai_gia,
             gia_tri: state.gia_tri,
@@ -303,10 +310,6 @@ class ServicePriceCreatorUpdater extends Component {
                 so_ngay_ap_dung: state.so_ngay_ap_dung
             }
         };
-
-        if (state.co_thoi_diem_ket_thuc === 1) {
-            servicePriceContent.end_date = state.end_date
-        }
 
         var so_click_tren_view = parseInt(state.so_click_tren_view);
 
@@ -319,7 +322,7 @@ class ServicePriceCreatorUpdater extends Component {
 
     CreateServicePrice() {
         var servicePriceContent = this.GetModelStateJson();
-        
+
         var $this = this;
         Request.post(UrlApi.ServicePrice)
             .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -332,7 +335,7 @@ class ServicePriceCreatorUpdater extends Component {
 
     EditServicePrice() {
         var servicePriceContent = this.GetModelStateJson();
-        
+ 
         var url = UrlApi.ServicePrice + "/" + this.props.editContents._id;
         var $this = this;
         Request.put(url)
@@ -345,6 +348,7 @@ class ServicePriceCreatorUpdater extends Component {
     }
 
     handleSubmit() {
+        
         if (this.props.modeAction === "create") {
             this.CreateServicePrice();
         }

@@ -93,7 +93,12 @@ jsonState.phan_tram_tang_giam = 0;
         "so_click_tren_view": 14
 	},
 	"loai_co_che": "doc_quyen",
-	"trang_thai": 1
+	"trang_thai": 1,
+	"start_date": {
+		"day": 28,
+		"month": 12,
+		"year" : 2018
+	}
 }
 
 properties:
