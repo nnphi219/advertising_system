@@ -6,6 +6,7 @@ var express = require('express'),
     AdsArea = require('./api/models/AdsAreaModel'),
     PriceFactor = require('./api/models/PriceFactorModel'),
     ServicePrice = require('./api/models/ServicePriceModel'),
+    PromotionManagement = require('./api/models/PromotionManagementModel');
     bodyParser = require('body-parser');
 var cors = require('cors');
 // mongoose instance connection url connection
@@ -20,11 +21,13 @@ var todoListRoute = require('./api/routes/todoListRoute'); //importing route
 var adsAreaRoute = require('./api/routes/AdsAreaRoute');
 var priceFactorRoute = require('./api/routes/PriceFactorRoute');
 var servicePriceRoute = require('./api/routes/ServicePriceRoute');
+var promotionManagement = require('./api/routes/PromotionManagementRoute');
 
 todoListRoute(app); //register the route
 adsAreaRoute(app);
 priceFactorRoute(app);
 servicePriceRoute(app);
+promotionManagement(app);
 
 app.listen(port);
 

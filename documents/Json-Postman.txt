@@ -113,3 +113,35 @@ so_luong_don_vi_ap_dung: {
 	so_ngay_ap_dung
 	so_click_tren_view (optional)
 }
+
+------------ Bang khuyen mai
+{
+	"ma_khuyen_mai": "km1",
+	"mo_ta": "khuyen mai 1",
+	"ma_dich_vu_ap_dung": "Viphome",
+	"muc_gia_ap_dung": {
+		"loai": 1,
+		"gia_tri": 50
+	},
+	"start_date": {
+		"day": 28,
+		"month": 12,
+		"year" : 2018
+	},
+	"end_date": {
+		"day": 30,
+		"month": 12,
+		"year" : 2019
+	}
+}
+
+properties:
+ma_khuyen_mai
+ma_dich_vu_ap_dung
+muc_gia_ap_dung : {
+	loai:
+	gia_tri
+}
+start_date
+end_date
+trang_thai
