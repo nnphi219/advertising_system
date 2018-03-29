@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import './Navigation.css';
+import './NavigationXSystem.css';
 
 class NavbarHeader extends Component {
     render() {
@@ -97,37 +97,18 @@ class NavbarDefault extends Component {
                 <div className="sidebar-nav navbar-collapse">
                     <ul className="nav" id="side-menu">
                         <li>
-                            <a href="/ads-area"><i className="fa fa-dashboard fa-fw"></i>Vùng quảng cáo</a>
+                            <a href="/x-system/post-management"><i className="fa fa-dashboard fa-fw"></i>Bảng tin đăng</a>
                         </li>
                         <li>
-                            <a href="/service-price"><i className="fa fa-dashboard fa-fw"></i>Giá dịch vụ</a>
+                            <a href="/x-system/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>
                         </li>
                         <li>
-                            <a href="/price-factor"><i className="fa fa-dashboard fa-fw"></i>Chỉ số ảnh hưởng giá</a>
+                            <a href="/x-system/post-caimpaign-management"><i className="fa fa-dashboard fa-fw"></i>Bảng chiến dịch tin đăng</a>
                         </li>
                         <li>
-                            <a href="/post-management"><i className="fa fa-dashboard fa-fw"></i>Bảng tin đăng</a>
+                            <a href="/x-system/payment-management"><i className="fa fa-dashboard fa-fw"></i>Trang thanh toán</a>
                         </li>
-                        <li>
-                            <a href="/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>
-                        </li>
-                        <li>
-                            <a href="/post-caimpaign-management"><i className="fa fa-dashboard fa-fw"></i>Bảng chiến dịch tin đăng</a>
-                        </li>
-                        <li>
-                            <a href="/payment-management"><i className="fa fa-dashboard fa-fw"></i>Trang thanh toán</a>
-                        </li>
-                        <li>
-                            <a href="#10"><i className="fa fa-bar-chart-o fa-fw"></i> Charts<span className="fa arrow"></span></a>
-                            <ul className="nav nav-second-level">
-                                <li>
-                                    <a href="flot.html">Flot Charts</a>
-                                </li>
-                                <li>
-                                    <a href="morris.html">Morris.js Charts</a>
-                                </li>
-                            </ul>
-                        </li>
+                      
                     </ul>
                 </div>
             </div>
@@ -136,7 +117,7 @@ class NavbarDefault extends Component {
     }
 }
 
-export const Navigation = (props) => {
+export const NavigationXSystem = (props) => {
     return (
         <nav className="navbar navbar-default navbar-static-top nav-zindex" style={{ marginBottom: '0' }}>
             <NavbarHeader />
@@ -146,4 +127,4 @@ export const Navigation = (props) => {
     );
 };
 
-export default Navigation;
+export default NavigationXSystem;
