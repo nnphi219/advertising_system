@@ -65,10 +65,10 @@ export class AppXSystem extends Component {
             <BrowserRouter>
                 <div>
                     <Route exact={true} path={"/x-system/"} component={XSystemTitle} />
-                    <Route exact={true} path={"/x-system/post-management"} component={PostManagement} />
-                    <Route exact={true} path={"/x-system/promotion-management"} component={PromotionManagement} />
-                    <Route exact={true} path={"/x-system/post-caimpaign-management"} component={PostCaimpaignManagement} />
-                    <Route exact={true} path={"/x-system/payment-management"} component={PaymentManagement} />
+                    <Route path={"/x-system/post-management"} component={PostManagement} />
+                    <Route path={"/x-system/promotion-management"} component={PromotionManagement} />
+                    <Route path={"/x-system/post-caimpaign-management"} component={PostCaimpaignManagement} />
+                    <Route path={"/x-system/payment-management"} component={PaymentManagement} />
                     {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />
           <Route path={"home-single"} component={Home}/> */}

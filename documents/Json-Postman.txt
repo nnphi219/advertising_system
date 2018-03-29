@@ -120,7 +120,7 @@ so_luong_don_vi_ap_dung: {
 	"mo_ta": "khuyen mai 1",
 	"ma_dich_vu_ap_dung": "Viphome",
 	"muc_gia_ap_dung": {
-		"loai": 1,
+		"loai_gia": 1,
 		"gia_tri": 50
 	},
 	"start_date": {
@@ -139,7 +139,7 @@ properties:
 ma_khuyen_mai
 ma_dich_vu_ap_dung
 muc_gia_ap_dung : {
-	loai:
+	loai_gia:
 	gia_tri
 }
 start_date

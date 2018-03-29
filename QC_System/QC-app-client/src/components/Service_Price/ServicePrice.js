@@ -74,7 +74,7 @@ class ServicePriceContents extends Component {
     render() {
         var theadServicePrices = ["Mã dịch vụ áp dụng", "Mã giá", "Giá", "Mô hình giá", "Số ngày hiệu lực", "Số lượng click/view", "Cơ chế hiện thị", "Bắt đầu", "Kết thúc", "Trạng thái"];
         return (
-            <div className="adsarea-content">
+            <div className="table-content">
                 <table className="table table-striped">
                     <RenderHeader theader={theadServicePrices} />
                     <RenderBody
