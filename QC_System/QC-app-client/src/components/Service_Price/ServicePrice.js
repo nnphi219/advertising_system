@@ -22,7 +22,7 @@ function RenderRow(props) {
 
     var end_date = props.trContent.end_date;
     var endDate = "";
-    if (!(end_date === undefined || end_date === null || end_date == "")) {
+    if (!(end_date === undefined || end_date === null || end_date === "")) {
         endDate = `${end_date.day}/${end_date.month}/${end_date.year}`;
     }
   
