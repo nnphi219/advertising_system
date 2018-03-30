@@ -14,7 +14,7 @@ function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
     var muc_gia_ap_dung = props.trContent.muc_gia_ap_dung;
-    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (muc_gia_ap_dung.loai_gia == 1 ? "%" : "VND");
+    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia)  === 1 ? "%" : "VND");
 
     var start_date = props.trContent.start_date;
     var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;
@@ -127,8 +127,8 @@ class PromotionManagement extends Component {
 
         var i = 0;
         var finishLoop = false;
-        while (i < this.state.tbodyServicePrices.length && !finishLoop) {
-            var element = this.state.tbodyServicePrices[i];
+        while (i < this.state.tbodyContents.length && !finishLoop) {
+            var element = this.state.tbodyContents[i];
             if (nameId === element._id) {
                 editContents = element;
                 finishLoop = true;

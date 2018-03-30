@@ -7,7 +7,7 @@ export class RenderInput extends Component {
             <div>
                 <label key={this.props.nameId} className="fullwidth">
                     {this.props.title}
-                    <input type="text" key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={this.props.className} />
+                    <input type={this.props.type} key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={this.props.className} />
                 </label>
             </div>
         );
@@ -20,7 +20,7 @@ export class RenderSelect extends Component {
         var keys = this.props.keys;
         var elements = [];
         values.forEach((value, index) => {
-            elements.push(<option value={keys[index]} >{value}</option>);
+            elements.push(<option key={keys[index]} value={keys[index]} >{value}</option>);
         });
         return (
             <div>
