@@ -8,7 +8,11 @@ export function DateToJsonDate(date) {
     return jsonDate;
 }
 
-export function JsonDateToDate (jsonDate) {
-    var date = new Date(parseInt(jsonDate.year) , parseInt(jsonDate.month) - 1, parseInt(jsonDate.day));
+export function JsonDateToDate(jsonDate) {
+    var date = new Date(parseInt(jsonDate.year), parseInt(jsonDate.month) - 1, parseInt(jsonDate.day));
     return date;
+}
+
+export function TransferFactorUnitKeyToText(value) {
+    var factorUnitText = value === "thoi_luong" ? "Thời lượng" : (value === "khung_gio" ? "Khung giờ" : "Vị trí");
 }

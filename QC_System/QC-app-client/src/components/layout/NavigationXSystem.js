@@ -103,7 +103,7 @@ class NavbarDefault extends Component {
                             <a href="/x-system/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>
                         </li>
                         <li>
-                            <a href="/x-system/post-caimpaign-management"><i className="fa fa-dashboard fa-fw"></i>Bảng chiến dịch tin đăng</a>
+                            <a href="/x-system/post-campaign-management"><i className="fa fa-dashboard fa-fw"></i>Bảng chiến dịch tin đăng</a>
                         </li>
                         <li>
                             <a href="/x-system/payment-management"><i className="fa fa-dashboard fa-fw"></i>Trang thanh toán</a>
