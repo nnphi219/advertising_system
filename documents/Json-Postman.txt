@@ -135,7 +135,7 @@ so_luong_don_vi_ap_dung: {
 	}
 }
 
-properties:
+--- properties:
 ma_khuyen_mai
 ma_dich_vu_ap_dung
 muc_gia_ap_dung : {
@@ -144,4 +144,62 @@ muc_gia_ap_dung : {
 }
 start_date
 end_date
+trang_thai
+
+-------------- Bang chien dich tin dang
+{
+	"ma_chien_dich": "cd1",
+	"ma_bai_dang": "bd1",
+	"ma_khuyen_mai": "km1",
+	"co_che_hien_thi": "doc_quyen",
+	"tinh_theo_gia": "thoi_luong",
+	"loai_nhan_to": {
+		"thoi_luong": 10,
+		"khung_gio": {
+			"bat_dau": 2,
+			"ket_thuc": 4
+		},
+		"vi_tri": {
+			"tinh": "tphcm",
+			"quan_huyen": "Lagi"
+		}
+	},
+	"don_gia_co_ban": 2000,
+	"start_date": {
+		"day": 28,
+		"month": 12,
+		"year" : 2018
+	},
+	"end_date": {
+		"day": 30,
+		"month": 12,
+		"year" : 2019
+	},
+	"thanh_tien": 4000,
+	"tong_cong" : 80000
+}
+
+
+--- properties:
+ma_chien_dich
+ma_bai_dang
+ma_khuyen_mai
+co_che_hien_thi (Độc quyền, cố định vị trí, chia sẻ cố định, ngẫu nhiên)
+tinh_theo_gia (thoi_luong, khung_gio, vi_tri)
+loai_nhan_to: {
+	thoi_luong: Number, 
+	khung_gio: {
+		bat_dau: Number, 
+		ket_thuc: Number
+	},
+	vi_tri:{
+		tinh: String, 
+		quan_huyen: String
+	}   
+},
+don_gia_co_ban
+start_date
+end_date
+thanh_tien
+tong_cong
 trang_thai

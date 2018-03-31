@@ -59,7 +59,7 @@ exports.create_a_promotionManagement = function(req, res) {
         res.send(err);
       }
       else {
-        res.json({ message: 'Advertising area successfully deleted' });
+        res.json({ message: 'successfully deleted' });
       }
     });
   };

@@ -5,31 +5,42 @@ import RenderHeader from '../share/RenderHeader';
 import DeleteForm from '../share/DeleteForm';
 import HeaderForm from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
-import PromotionCreatorUpdater from './PromotionCreatorUpdater';
-import './promotion_management.css';
-
 import UrlApi from '../share/UrlApi';
+import { TransferFactorUnitKeyToText, JsonDateToDate, TransferdisplayMechanismToText } from '../share/Mapper';
+
+import './post_campaign_management.css';
+import PostCampaignCreatorUpdater from './PostCampaignCreatorUpdater';
 
 function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
-    var muc_gia_ap_dung = props.trContent.muc_gia_ap_dung;
-    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia)  === 1 ? "%" : "VND");
+    var tinh_theo_gia = TransferFactorUnitKeyToText(props.trContent.tinh_gia_theo);
+    var co_che_hien_thi = TransferdisplayMechanismToText(props.trContent.co_che_hien_thi);
+
+    var loai_nhan_to = props.trContent.loai_nhan_to;
+    var khung_gio = (loai_nhan_to.khung_gio !== undefined && loai_nhan_to.khung_gio !== null) ? `${loai_nhan_to.khung_gio.bat_dau}h-${loai_nhan_to.khung_gio.ket_thuc}h` : "";
+    var vi_tri = (loai_nhan_to.vi_tri !== undefined && loai_nhan_to.vi_tri !== null) ? `${loai_nhan_to.vi_tri.quan_huyen}, ${loai_nhan_to.vi_tri.tinh}` : "";
 
     var start_date = props.trContent.start_date;
     var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;
-
     var end_date = props.trContent.end_date;
     var endDate = `${end_date.day}/${end_date.month}/${end_date.year}`;
 
+    var tong_cong = `${props.trContent.tong_cong} VND`;
+
     return (
         <tr>
+            <td>{props.trContent.ma_chien_dich}</td>
+            <td>{props.trContent.ma_bai_dang}</td>
             <td>{props.trContent.ma_khuyen_mai}</td>
-            <td>{props.trContent.mo_ta}</td>
-            <td>{props.trContent.ma_dich_vu_ap_dung}</td>
-            <td>{ratesApply}</td>
+            <td>{co_che_hien_thi}</td>
+            <td>{tinh_theo_gia}</td>
+            <td>{loai_nhan_to.thoi_luong}</td>
+            <td>{khung_gio}</td>
+            <td>{vi_tri}</td>
             <td>{startDate}</td>
             <td>{endDate}</td>
+            <td>{tong_cong}</td>
             <td>{status}</td>
             <td>
                 <RenderEditDeleteButton
@@ -62,14 +73,13 @@ function RenderBody(props) {
     );
 }
 
-class PromotionManagementContents extends Component {
-
+class PostCampaignContents extends Component {
     render() {
-        var theaderPromotion = ["Mã khuyến mãi", "Mô tả khuyến mãi", "Mã dịch vụ áp dụng", "Mực giá áp dụng", "Bắt đầu", "Kết thúc", "Trạng thái"];
+        var theaderPostCampaign = ["Mã chiến dịch", "Mã bài đăng", "Mã khuyến mãi", "Cơ chế hiện thị", "Tính theo giá", "Thời lượng", "Khung giờ", "Vị trí", "Bắt đầu", "Kết thúc", "Tổng tiền", "Trạng thái"];
         return (
             <div className="table-content">
                 <table className="table table-striped">
-                    <RenderHeader theader={theaderPromotion} />
+                    <RenderHeader theader={theaderPostCampaign} />
                     <RenderBody
                         tbody={this.props.tbodyContents}
                         handleEditClick={this.props.handleEditClick}
@@ -81,7 +91,7 @@ class PromotionManagementContents extends Component {
     }
 }
 
-class PromotionManagement extends Component {
+class PostCampaignManagement extends Component {
     constructor(props) {
         super(props);
 
@@ -102,11 +112,11 @@ class PromotionManagement extends Component {
     }
 
     componentDidMount() {
-        this.getPromotions();
+        this.getPostCampaigns();
     }
 
-    getPromotions() {
-        Request.get(UrlApi.PromotionManagement)
+    getPostCampaigns() {
+        Request.get(UrlApi.PostCampaignManagement)
             .then((res) => {
                 this.setState({
                     tbodyContents: res.body
@@ -157,7 +167,7 @@ class PromotionManagement extends Component {
     }
 
     handleResetContentsState() {
-        this.getPromotions();
+        this.getPostCampaigns();
     }
 
     handleClosePopup() {
@@ -168,11 +178,11 @@ class PromotionManagement extends Component {
 
     render() {
         return (
-            <div id="page-wrapper">
+            < div id="page-wrapper" >
                 <div className="row">
                     <div>
-                        <HeaderForm title={"khuyến mãi"} showCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup} />
-                        <PromotionManagementContents
+                        <HeaderForm title={"chiến dịch tin đăng"} showCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup} />
+                        <PostCampaignContents
                             tbodyContents={this.state.tbodyContents}
                             handleEditClick={this.handleEditClick}
                             handleDeleteClick={this.handleDeleteClick}
@@ -180,7 +190,7 @@ class PromotionManagement extends Component {
 
                         {
                             this.state.ShowCreatorUpdaterPopup ?
-                                <PromotionCreatorUpdater
+                                <PostCampaignCreatorUpdater
                                     modeAction={this.state.ModeAction}
                                     editContents={this.state.EditContents}
                                     resetContentState={this.handleResetContentsState}
@@ -192,7 +202,7 @@ class PromotionManagement extends Component {
                         {
                             this.state.ShowDeletePopup ?
                                 <DeleteForm
-                                    url={UrlApi.PromotionManagement}
+                                    url={UrlApi.PostCampaignManagement}
                                     SelectedItemId={this.state.SelectedItemId}
                                     closeDeletePopup={this.handleCloseDeletePop}
                                     resetContentState={this.handleResetContentsState}
@@ -201,9 +211,9 @@ class PromotionManagement extends Component {
                         }
                     </div>
                 </div>
-            </div>
+            </div >
         );
     }
 }
 
-export default PromotionManagement;
+export default PostCampaignManagement;

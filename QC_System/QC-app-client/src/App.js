@@ -6,7 +6,7 @@ import PriceFactor from './components/Price_Factor/PriceFactor';
 import ServicePrice from './components/Service_Price/ServicePrice';
 import PostManagement from './components/Post_Management/PostManagement';
 import PromotionManagement from './components/Promotion_Management/PromotionManagement';
-import PostCaimpaignManagement from './components/Post_Caimpaign_Management/PostCaimpaignManagement';
+import PostCampaignManagement from './components/Post_Campaign_Management/PostCampaignManagement';
 import PaymentManagement from './components/Payment_Management/PaymentManagement';
 
 class AdminTitle extends Component {
@@ -48,7 +48,7 @@ export class AppAdmin extends Component {
                     <Route path={"/price-factor"} component={PriceFactor} />
                     <Route path={"/x-system/post-management"} component={PostManagement} />
                     <Route path={"/x-system/promotion-management"} component={PromotionManagement} />
-                    <Route path={"/x-system/post-caimpaign-management"} component={PostCaimpaignManagement} />
+                    <Route path={"/x-system/post-campaign-management"} component={PostCampaignManagement} />
                     <Route path={"/x-system/payment-management"} component={PaymentManagement} />
                     {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />
@@ -67,7 +67,7 @@ export class AppXSystem extends Component {
                     <Route exact={true} path={"/x-system/"} component={XSystemTitle} />
                     <Route path={"/x-system/post-management"} component={PostManagement} />
                     <Route path={"/x-system/promotion-management"} component={PromotionManagement} />
-                    <Route path={"/x-system/post-caimpaign-management"} component={PostCaimpaignManagement} />
+                    <Route path={"/x-system/post-campaign-management"} component={PostCampaignManagement} />
                     <Route path={"/x-system/payment-management"} component={PaymentManagement} />
                     {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />

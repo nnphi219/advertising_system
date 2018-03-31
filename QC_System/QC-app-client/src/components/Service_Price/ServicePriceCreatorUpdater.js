@@ -149,10 +149,6 @@ class RenderRightForm extends Component {
 }
 
 class RenderProperties extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div>
@@ -259,7 +255,7 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.so_click_tren_view = 0;
 
             var today = new Date();
-            
+
             jsonState.start_date = today;
             jsonState.end_date = today;
             jsonState.co_thoi_diem_ket_thuc = 1;
@@ -275,8 +271,8 @@ class ServicePriceCreatorUpdater extends Component {
             jsonState.so_ngay_ap_dung = editContents.so_luong_don_vi_ap_dung.so_ngay_ap_dung;
             jsonState.so_click_tren_view = editContents.so_luong_don_vi_ap_dung.so_click_tren_view;
             jsonState.start_date = JsonDateToDate(editContents.start_date);
-            
-            if (editContents.end_date === undefined || editContents.end_date == "") {
+
+            if (editContents.end_date === undefined || editContents.end_date === "") {
                 jsonState.co_thoi_diem_ket_thuc = 0;
                 jsonState.end_date = new Date();
             }
@@ -295,9 +291,8 @@ class ServicePriceCreatorUpdater extends Component {
         var state = this.state;
 
         var startDateJson = DateToJsonDate(state.start_date);
-        var endDateJson = parseInt(state.co_thoi_diem_ket_thuc) === 1 ?
-                                DateToJsonDate(state.end_date): null;
-        
+        var endDateJson = parseInt(state.co_thoi_diem_ket_thuc) === 1 ? DateToJsonDate(state.end_date) : null;
+
         var servicePriceContent = {
             ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
             ma_gia: state.ma_gia,
@@ -335,7 +330,7 @@ class ServicePriceCreatorUpdater extends Component {
 
     EditServicePrice() {
         var servicePriceContent = this.GetModelStateJson();
- 
+
         var url = UrlApi.ServicePrice + "/" + this.props.editContents._id;
         var $this = this;
         Request.put(url)
@@ -348,7 +343,7 @@ class ServicePriceCreatorUpdater extends Component {
     }
 
     handleSubmit() {
-        
+
         if (this.props.modeAction === "create") {
             this.CreateServicePrice();
         }
