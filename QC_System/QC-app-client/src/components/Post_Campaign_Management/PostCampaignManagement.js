@@ -14,11 +14,11 @@ import PostCampaignCreatorUpdater from './PostCampaignCreatorUpdater';
 function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
-    var tinh_theo_gia = TransferFactorUnitKeyToText(props.trContent.tinh_theo_gia);
+    var tinh_theo_gia = TransferFactorUnitKeyToText(props.trContent.tinh_gia_theo);
 
     var loai_nhan_to = props.trContent.loai_nhan_to;
-    var khung_gio = loai_nhan_to.khung_gio !== null ? `${loai_nhan_to.khung_gio.bat_dau}h-${loai_nhan_to.khung_gio.ket_thuc}h` : "";
-    var vi_tri = loai_nhan_to.vi_tri !== null ? `${loai_nhan_to.vi_tri.quan_huyen}, ${loai_nhan_to.vi_tri.tinh}` : "";
+    var khung_gio = (loai_nhan_to.khung_gio !== undefined && loai_nhan_to.khung_gio !== null) ? `${loai_nhan_to.khung_gio.bat_dau}h-${loai_nhan_to.khung_gio.ket_thuc}h` : "";
+    var vi_tri = (loai_nhan_to.vi_tri !== undefined && loai_nhan_to.vi_tri !== null) ? `${loai_nhan_to.vi_tri.quan_huyen}, ${loai_nhan_to.vi_tri.tinh}` : "";
 
     var start_date = props.trContent.start_date;
     var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;

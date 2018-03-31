@@ -8,7 +8,7 @@ var PostCampaignManagementSchema = new Schema({
     ma_bai_dang: String,
     ma_khuyen_mai: String,
     co_che_hien_thi: String,
-    tinh_theo_gia: String,
+    tinh_gia_theo: String,
     
     loai_nhan_to:  {// (thời lượng, khung giờ, vị trí)
         thoi_luong: Number,
