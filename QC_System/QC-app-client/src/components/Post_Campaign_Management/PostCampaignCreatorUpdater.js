@@ -259,6 +259,7 @@ class PostCampaignCreatorUpdater extends Component {
             jsonState.ma_bai_dang = editContents.ma_bai_dang;
             jsonState.ma_khuyen_mai = editContents.ma_khuyen_mai;
             jsonState.co_che_hien_thi = editContents.co_che_hien_thi;
+            jsonState.tinh_gia_theo = editContents.tinh_gia_theo;
             jsonState.don_gia_co_ban = editContents.don_gia_co_ban;
             jsonState.thanh_tien = editContents.thanh_tien;
             jsonState.tong_cong = editContents.tong_cong;
@@ -297,10 +298,10 @@ class PostCampaignCreatorUpdater extends Component {
             loai_nhan_to.thoi_luong = state.lnt_thoi_luong;
         }
        
-        if(state.tinh !== undefined && state.tinh !== null && state.tinh !== "") {
+        if(state.lnt_tinh !== undefined && state.lnt_tinh !== null && state.lnt_tinh !== "") {
             loai_nhan_to.vi_tri = {};
             loai_nhan_to.vi_tri.tinh = state.lnt_tinh;
-            if(state.quan_huyen !== undefined && state.quan_huyen !== null && state.quan_huyen !== "") {
+            if(state.lnt_quan_huyen !== undefined && state.lnt_quan_huyen !== null && state.lnt_quan_huyen !== "") {
                 loai_nhan_to.vi_tri.quan_huyen = state.lnt_quan_huyen;
             }
         }

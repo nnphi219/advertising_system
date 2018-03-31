@@ -6,7 +6,7 @@ import DeleteForm from '../share/DeleteForm';
 import HeaderForm from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import UrlApi from '../share/UrlApi';
-import { TransferFactorUnitKeyToText, JsonDateToDate } from '../share/Mapper';
+import { TransferFactorUnitKeyToText, JsonDateToDate, TransferdisplayMechanismToText } from '../share/Mapper';
 
 import './post_campaign_management.css';
 import PostCampaignCreatorUpdater from './PostCampaignCreatorUpdater';
@@ -15,6 +15,7 @@ function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
     var tinh_theo_gia = TransferFactorUnitKeyToText(props.trContent.tinh_gia_theo);
+    var co_che_hien_thi = TransferdisplayMechanismToText(props.trContent.co_che_hien_thi);
 
     var loai_nhan_to = props.trContent.loai_nhan_to;
     var khung_gio = (loai_nhan_to.khung_gio !== undefined && loai_nhan_to.khung_gio !== null) ? `${loai_nhan_to.khung_gio.bat_dau}h-${loai_nhan_to.khung_gio.ket_thuc}h` : "";
@@ -32,7 +33,7 @@ function RenderRow(props) {
             <td>{props.trContent.ma_chien_dich}</td>
             <td>{props.trContent.ma_bai_dang}</td>
             <td>{props.trContent.ma_khuyen_mai}</td>
-            <td>{props.trContent.co_che_hien_thi}</td>
+            <td>{co_che_hien_thi}</td>
             <td>{tinh_theo_gia}</td>
             <td>{loai_nhan_to.thoi_luong}</td>
             <td>{khung_gio}</td>

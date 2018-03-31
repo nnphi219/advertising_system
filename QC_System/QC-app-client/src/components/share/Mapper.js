@@ -27,3 +27,20 @@ export function TransferTimeLogStringToJson(value) {
     var valueJson = { "bat_dau": timeLogArr[0], "ket_thuc": timeLogArr[1] };
     return valueJson;
 }
+
+export function TransferdisplayMechanismToText(value) {
+    var result = "";
+    if (value === "doc_quyen") {
+        result = "Độc quyền";
+    }
+    else if (value === "co_dinh_vi_tri") {
+        result = "Cố định vị trí";
+    }
+    else if (value === "chia_se_co_dinh") {
+        result = "Chia sẻ cố định";
+    } else if (value === "ngau_nhien") {
+        result = "Ngẫu nhiên";
+    }
+
+    return result;
+}
