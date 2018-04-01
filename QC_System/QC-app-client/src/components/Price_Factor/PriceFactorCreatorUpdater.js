@@ -5,34 +5,18 @@ import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './price_factor.css';
 
+import { RenderDate } from '../share/InputsRender';
+import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
+
 class RenderProperties extends Component {
     constructor(props) {
         super(props);
-
-        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
-        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
     }
     TranserTimeLogToString(timeLogJson) {
         if (timeLogJson == null) {
             return "";
         }
         return `${timeLogJson.bat_dau.toString()}h-${timeLogJson.ket_thuc.toString()}h`;
-    }
-
-    OnchangeStartDate(date) {
-        var e = {};
-        e.target = {};
-        e.target.value = date.toString();
-        e.target.name = "start_date";
-        this.props.OnChangeInput(e);
-    }
-
-    OnchangeEndDate(date) {
-        var e = {};
-        e.target = {};
-        e.target.value = date;
-        e.target.name = "end_date";
-        this.props.OnChangeInput(e);
     }
 
     render() {
@@ -75,9 +59,23 @@ class RenderProperties extends Component {
                         <label className="fullwidth">
                             {"Cả ngày"}
                             <div>
-                                <DatePicker key={"start_date"} name={"start_date"} value={this.props.stateValues.start_date} onChange={this.OnchangeStartDate} />
-                                {" đến "}
-                                <DatePicker key={"end_date"} name={"end_date"} value={this.props.stateValues.end_date} onChange={this.OnchangeEndDate} />
+                                <RenderDate
+                                    nameId={"start_date"}
+                                    className={"input--date"}
+                                    divClassName={"float-left"}
+                                    value={this.props.stateValues.start_date}
+                                    OnchangeDate={this.props.OnchangeStartDate}
+                                />
+                                <div className={"float-left"} style={{ paddingTop: "5px" }}>
+                                    {" đến "}
+                                </div>
+                                <RenderDate
+                                    nameId={"end_date"}
+                                    className={"input--date"}
+                                    divClassName={"float-left"}
+                                    value={this.props.stateValues.end_date}
+                                    OnchangeDate={this.props.OnchangeEndDate}
+                                />
                             </div>
                         </label>
                     </div>
@@ -137,6 +135,9 @@ class PriceFactorCreatorUpdaterForm extends Component {
         this.OnChangeInput = this.OnChangeInput.bind(this);
         this.OnChangeSelect = this.OnChangeSelect.bind(this);
         this.OnChangeRadioButton = this.OnChangeRadioButton.bind(this);
+
+        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
+        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
     }
 
     OnchangeBasicPrice(number) {
@@ -154,6 +155,16 @@ class PriceFactorCreatorUpdaterForm extends Component {
             jsonState = { "phan_tram_tang_giam": number };
 
         }
+        this.props.UpdateState(jsonState);
+    }
+
+    OnchangeStartDate(date) {
+        var jsonState = { "start_date": date }
+        this.props.UpdateState(jsonState);
+    }
+
+    OnchangeEndDate(date) {
+        var jsonState = { "end_date": date }
         this.props.UpdateState(jsonState);
     }
 
@@ -196,6 +207,9 @@ class PriceFactorCreatorUpdaterForm extends Component {
 
                         OnchangeBasicPrice={this.OnchangeBasicPrice}
                         OnchangeRate={this.OnchangeRate}
+
+                        OnchangeStartDate={this.OnchangeStartDate}
+                        OnchangeEndDate={this.OnchangeEndDate}
                     />
                 </div>
 
@@ -210,7 +224,7 @@ class PriceFactorCreatorUpdater extends Component {
 
         var jsonState = {};
         this.SetInitState(jsonState);
-        
+
         this.state = jsonState;
     }
 
@@ -243,14 +257,16 @@ class PriceFactorCreatorUpdater extends Component {
 
             jsonState.phan_tram_tang_giam = editContents.ti_le_tinh_gia.tang === 1 ? editContents.ti_le_tinh_gia.gia_tri : editContents.ti_le_tinh_gia.gia_tri * -1;
 
-            jsonState.start_date = editContents.start_date;
-            jsonState.end_date = editContents.end_date;
+            jsonState.start_date = JsonDateToDate(editContents.start_date);
+            jsonState.end_date = JsonDateToDate(editContents.end_date);
         }
     }
 
-    CreatePriceFactor() {
+    GetModelStateJson() {
         var state = this.state;
         var phan_tram_tang_giam_iscreased = state.phan_tram_tang_giam >= 0 ? 1 : 0;
+        var startDateJson = DateToJsonDate(state.start_date);
+        var endDateJson = DateToJsonDate(state.end_date);
 
         var priceFactorContent = {
             ten_chi_so: state.ten_chi_so,
@@ -269,10 +285,16 @@ class PriceFactorCreatorUpdater extends Component {
                 gia_tri: state.phan_tram_tang_giam
             },
             gia_tri_thuc: state.gia_tri_thuc,
-            start_date: state.start_date,
-            end_date: state.end_date
+            start_date: startDateJson,
+            end_date: endDateJson
         }
-      
+
+        return priceFactorContent;
+    }
+
+    CreatePriceFactor() {
+        var priceFactorContent = this.GetModelStateJson();
+
         var $this = this;
         Request.post(UrlApi.PriceFactor)
             .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -284,29 +306,7 @@ class PriceFactorCreatorUpdater extends Component {
     }
 
     EditPriceFactor() {
-        var state = this.state;
-        var phan_tram_tang_giam_iscreased = state.phan_tram_tang_giam >= 0 ? 1 : 0;
-
-        var priceFactorContent = {
-            ten_chi_so: state.ten_chi_so,
-            ma_gia: state.ma_gia,
-            don_gia_co_ban: state.don_gia_co_ban,
-            loai_nhan_to: {
-                khung_gio: state.khung_gio_ap_dung,
-                vi_tri: {
-                    tinh: state.tinh,
-                    quan_huyen: state.quan_huyen
-                }
-            },
-            gia_tri_ap_dung: state.don_gia_co_ban,
-            ti_le_tinh_gia: {
-                tang: phan_tram_tang_giam_iscreased,
-                gia_tri: state.phan_tram_tang_giam
-            },
-            gia_tri_thuc: state.gia_tri_thuc,
-            start_date: state.start_date,
-            end_date: state.end_date
-        }
+        var priceFactorContent = this.GetModelStateJson();
 
         var url = UrlApi.PriceFactor + "/" + this.props.editContents._id;
         var $this = this;

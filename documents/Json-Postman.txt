@@ -1,3 +1,4 @@
+-------------- Bang chi so anh huong gia
 var priceFactorInputs = [
     {
         "description": "Nhập tên chỉ số",
@@ -78,6 +79,16 @@ jsonState.phan_tram_tang_giam = 0;
 	"ti_le_tinh_gia": {
 		"tang": 1,
 		"gia_tri": 90
+	},
+	"start_date": {
+		"day": 28,
+		"month": 12,
+		"year" : 2018
+	},
+	"end_date": {
+		"day": 30,
+		"month": 12,
+		"year" : 2019
 	},
 	"trang_thai": 1
 }

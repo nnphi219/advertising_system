@@ -75,7 +75,7 @@ export class RenderRadioButon extends Component {
 export class RenderDate extends Component {
     render() {
         return (
-            <div>
+            <div className={this.props.divClassName}>
                 <div className="">
                     <label className="fullwidth">
                         {this.props.title}

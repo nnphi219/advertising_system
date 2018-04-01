@@ -24,8 +24,16 @@ var PriceFactorSchema = new Schema({
         gia_tri: Number
     },
     gia_tri_thuc: Number,
-    start_date: Date,
-    end_date: Date,
+    start_date: {
+        day: Number,
+        month: Number,
+        year: Number
+    },
+    end_date: {
+        day: Number,
+        month: Number,
+        year: Number
+    },
     trang_thai: Number,
     created_date: {
         type: Date,
