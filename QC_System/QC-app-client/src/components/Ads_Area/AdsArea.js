@@ -3,6 +3,7 @@ import Request from 'superagent';
 import AdsAreaCreatorUpdater from './AdsAreaCreatorUpdater';
 import AdsAreaDeleteForm from './AdsAreaDelete';
 import './ads_area.css';
+import { TransferSelectInputKeyToValue } from '../share/Mapper';
 
 function RenderEditDeleteButton(props) {
   return (
@@ -14,16 +15,27 @@ function RenderEditDeleteButton(props) {
 }
 
 function RenderRow(props) {
-  var areaSize = props.trContentAdsArea.area_size.width.toString() + "x" + props.trContentAdsArea.area_size.height.toString();
+  var areaSize = props.trContentAdsArea.kich_thuoc_vung.width.toString() + "x" + props.trContentAdsArea.kich_thuoc_vung.height.toString();
   var status = (props.trContentAdsArea.status === 1) ? "Kích hoạt" : "Đã hủy";
+  var loai_trang_ap_dung = TransferSelectInputKeyToValue(
+    props.trContentAdsArea.loai_trang_ap_dung,
+    ["trang_chu", "trang_tim_kiem", "trang_chi_tiet"],
+    ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết"]
+  );
+  var loai_bai_dang_ap_dung = TransferSelectInputKeyToValue(
+    props.trContentAdsArea.loai_bai_dang_ap_dung,
+    ["tin_bds", "du_an"],
+    ["Tin bds", "Dự án"]
+  );
+
   return (
     <tr>
-      <td>{props.trContentAdsArea.ads_service_id}</td>
-      <td>{props.trContentAdsArea.ads_name}</td>
-      <td>{props.trContentAdsArea.post_apply_type}</td>
-      <td>{props.trContentAdsArea.applied_ads_page_type}</td>
-      <td>{props.trContentAdsArea.area_sharing_quantity}</td>
-      <td>{props.trContentAdsArea.max_post_number}</td>
+      <td>{props.trContentAdsArea.ma_dich_vu}</td>
+      <td>{props.trContentAdsArea.ten_hien_thi}</td>
+      <td>{loai_bai_dang_ap_dung}</td>
+      <td>{loai_trang_ap_dung}</td>
+      <td>{props.trContentAdsArea.so_luong_chia_se_vung}</td>
+      <td>{props.trContentAdsArea.so_luong_tin_toi_da}</td>
       <td>{areaSize}</td>
       <td>{status}</td>
       <td>

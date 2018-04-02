@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 import ColorPickerInput from '../share/color_picker_input';
 import UrlApi from '../share/UrlApi';
+import { RenderSelect } from '../share/InputsRender';
 
 function TransferSizeToString(size) {
     return size.width + "x" + size.height;
@@ -32,14 +33,15 @@ function RenderCombobox(props) {
     });
 
     return (
-        <div>
-            <label key={props.inputData.id} className="fullwidth">
-                {props.inputData.description}
-                <select name={props.inputData.id} id={props.inputData.id} value={selectedValue} key={props.inputData.id} onChange={props.handleOnchangeSelect} className="adsarea--select">
-                    {tags}
-                </select>
-            </label>
-        </div>
+        <RenderSelect
+            nameId={props.inputData.id}
+            title={props.inputData.description}
+            keys={props.inputData.keys}
+            values={props.inputData.values}
+            selectedValue={selectedValue}
+            OnChangeSelect={props.handleOnchangeSelect}
+            className={"adsarea--select"}
+        />   
     );
 }
 
@@ -130,7 +132,7 @@ class AdsAreaCreatorForm extends Component {
         var name = e.target.name;
         var value = e.target.value;
 
-        if (name === "area_size") {
+        if (name === "kich_thuoc_vung") {
             var areaSizeArray = value.split('x');
             value = { width: areaSizeArray[0], height: areaSizeArray[1] };
         }
@@ -206,7 +208,7 @@ class AdsAreaCreatorUpdater extends Component {
                     var theFirstValue = element.values[0];
                     var valueState = theFirstValue;
 
-                    if (element.id === "area_size") {
+                    if (element.id === "kich_thuoc_vung") {
                         var areaSizeArray = theFirstValue.split('x');
                         valueState = { width: areaSizeArray[0], height: areaSizeArray[1] };
                     }
@@ -299,41 +301,44 @@ class AdsAreaCreatorUpdater extends Component {
 var adsAreaInformationInputs = [
     {
         "description": "Mã dịch vụ quảng cáo",
-        "id": "ads_service_id",
+        "id": "ma_dich_vu",
         "type": "textbox"
 
     },
     {
         "description": "Tên hiển thị",
-        "id": "ads_name",
+        "id": "ten_hien_thi",
         "type": "textbox"
     },
     {
         "description": "Trang áp dụng quảng cáo",
-        "id": "applied_ads_page_type",
+        "id": "loai_trang_ap_dung",
         "type": "combobox",
+        "keys": ["trang_chu", "trang_tim_kiem", "trang_chi_tiet"],
         "values": ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết"]
     },
     {
         "description": "Loại bài đăng áp dụng",
-        "id": "post_apply_type",
+        "id": "loai_bai_dang_ap_dung",
         "type": "combobox",
+        "keys": ["tin_bds", "du_an"],
         "values": ["Tin bds", "Dự án"]
     },
     {
         "description": "Kích thước vùng quảng cáo",
-        "id": "area_size",
+        "id": "kich_thuoc_vung",
         "type": "combobox",
+        "keys": ["180x30", "260x60"],
         "values": ["180x30", "260x60"]
     },
     {
         "description": "Số chia sẻ của vùng",
-        "id": "area_sharing_quantity",
+        "id": "so_luong_chia_se_vung",
         "type": "quantity"
     },
     {
         "description": "Số lượng bài đăng tối đa",
-        "id": "max_post_number",
+        "id": "so_luong_tin_toi_da",
         "type": "quantity"
     }
 ];
@@ -341,57 +346,60 @@ var adsAreaInformationInputs = [
 var adsAreaDescriptionInputs = [
     {
         "description": "Màu chữ tiêu để",
-        "id": "title_color",
+        "id": "mau_chu_tieu_de",
         "type": "color"
     },
     {
         "description": "Phông chữ của tiêu đề",
-        "id": "title_font_family",
+        "id": "font_tieu_de",
         "type": "combobox",
+        "keys": ["Arial", "Time new roman"],
         "values": ["Arial", "Time new roman"]
     },
     {
         "description": "Kích cỡ phông chữ tiêu đề",
-        "id": "title_font_size",
+        "id": "font_size_tieu_de",
         "type": "combobox",
+        "keys": [10, 20, 30],
         "values": [10, 20, 30]
     },
     {
         "description": "Hiệu ứng tiêu đề",
-        "id": "title_effect",
+        "id": "hieu_ung_tieu_de",
         "type": "combobox",
+        "keys": ["Regular", "Bold", "Italic"],
         "values": ["Regular", "Bold", "Italic"]
     },
     {
         "description": "Số kí tự tối đa của tiêu đề",
-        "id": "des_characters_quantity",
+        "id": "so_luong_chu_mo_ta",
         "type": "quantity"
     },
     {
         "description": "Có viền vùng quảng cáo",
-        "id": "have_border",
+        "id": "co_vien",
         "type": "radio",
         "values": ["có", "Không"],
         "keys": [1, 0]
     },
     {
         "description": "Màu viền vùng quảng cáo",
-        "id": "border_color",
+        "id": "mau_vien",
         "type": "color"
     },
     {
         "description": "Kích thước viền vùng quảng cáo",
-        "id": "border_size",
+        "id": "kich_thuoc_vien",
         "type": "quantity"
     },
     {
         "description": "Số kí tự tối đa của xem trước bài đăng",
-        "id": "preview_characters_quantity",
+        "id": "so_luong_chu_xem_truoc",
         "type": "quantity"
     },
     {
         "description": "Hiên thị video thay thế ảnh đại diện",
-        "id": "show_video",
+        "id": "hien_thi_video_thay_the_anh",
         "type": "radio",
         "values": ["có", "Không"],
         "keys": [1, 0]
@@ -399,7 +407,7 @@ var adsAreaDescriptionInputs = [
 ];
 
 var AreaCombobox = [
-    "area_size"
+    "kich_thuoc_vung"
 ];
 
 export default AdsAreaCreatorUpdater;

@@ -44,3 +44,20 @@ export function TransferdisplayMechanismToText(value) {
 
     return result;
 }
+
+// ------------------ ads area
+
+export function TransferSelectInputKeyToValue(value, keys, values) {
+    var i = 0;
+    var isFound = false;
+    var result = values[0];
+
+    while (i < keys.length && isFound) {
+        if (keys[i] === value) {
+            result = values[i];
+            isFound = true;
+        }
+    }
+
+    return result;
+}

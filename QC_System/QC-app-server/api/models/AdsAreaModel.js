@@ -3,36 +3,36 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var AdsAreaSchema = new Schema({
-    ads_service_id: String,
-    ads_name: String,
-    ads_description: String,
-    post_apply_type: String,
-    title_color: String,
-    title_font_family: String,
-    title_font_size: Number,
-    border_size: Number,
-    have_border: Boolean,
-    border_color: String,
-    des_characters_quantity: Number,
+    ma_dich_vu: String,
+    ten_hien_thi: String,
+    mo_ta_dich_vu: String,
+    loai_bai_dang_ap_dung: String,
+    mau_chu_tieu_de: String,
+    font_tieu_de: String,
+    font_size_tieu_de: Number,
+    kich_thuoc_vien: Number,
+    co_vien: Boolean,
+    mau_vien: String,
+    so_luong_chu_mo_ta: Number,
     avatar: String, // Image or video
-    number_of_show_image: Number,
-    image_size: Number,
-    video_size: Number,
-    applied_ads_page_type: String, //
-    max_post_number: Number,
-    area_sharing_quantity: Number,
-    title_effect: String, // hiệu ứng tiêu đề.
-    area_size: { 
+    so_luong_anh: Number,
+    kich_thuoc_anh: Number,
+    kich_thuoc_video: Number,
+    loai_trang_ap_dung: String, //
+    so_luong_tin_toi_da: Number,
+    so_luong_chia_se_vung: Number,
+    hieu_ung_tieu_de: String, // hiệu ứng tiêu đề.
+    kich_thuoc_vung: { 
         width: Number,
         height: Number
     },
-    post_size: { 
+    kich_thuoc_tin: { 
         width: Number,
         height: Number
     },
     status: Number,
-    preview_characters_quantity: Number,
-    show_video: Boolean,
+    so_luong_chu_xem_truoc: Number,
+    hien_thi_video_thay_the_anh: Boolean,
     created_date: {
         type: Date,
         default: Date.now
