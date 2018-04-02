@@ -4,6 +4,19 @@ body {
   font-family: sans-serif;
 }
 
+.div_scroll_bar {
+  overflow-y: scroll;
+}
+
+.deleteform_size {
+  left: 35%;
+    right: 35%;
+    top: 15%;
+    bottom: 65%;
+    width: 30%;
+    height: 20%;
+}
+
 .nav-zindex {
   z-index: 1;
 }

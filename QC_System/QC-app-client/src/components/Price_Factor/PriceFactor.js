@@ -15,8 +15,8 @@ import UrlApi from "../share/UrlApi";
 function RenderRow(props) {
     var factorType = props.trContentPriceFactor.loai_nhan_to;
     var timeLot = `${factorType.khung_gio.bat_dau.toString()}h-${factorType.khung_gio.ket_thuc.toString()}h`;
-    var location = factorType.vi_tri.quan_huyen + "," + factorType.vi_tri.tinh;
-
+    var location = (factorType.vi_tri !== undefined && factorType.vi_tri !== null) ? factorType.vi_tri.quan_huyen + "," + factorType.vi_tri.tinh : "";
+    
     var rateCalculationJson = props.trContentPriceFactor.ti_le_tinh_gia;
     var rateCalculationString = (rateCalculationJson.tang === 1 ? "+ " : "- ") + rateCalculationJson.gia_tri.toString() + "%";
     var status = (props.trContentPriceFactor.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";

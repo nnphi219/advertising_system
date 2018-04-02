@@ -64,14 +64,11 @@
     margin-right: 10px;
 }
 
-.popup_inner--serviceprice {
-    position: absolute;
+.serviceprice_createform_size {
     left: 15%;
     right: 15%;
     top: 15%;
     bottom: 25%;
-    margin: auto;
-    padding-left: 10px;
-    background: white;
-    border-radius: 6px;
+    width: 70%;
+    height: 60%;
 }
