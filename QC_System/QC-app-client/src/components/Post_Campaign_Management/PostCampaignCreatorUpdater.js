@@ -206,7 +206,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
 
     render() {
         return (
-            <div className='popup_inner--promotion'>
+            <div className='popup_inner postcampaign_createform_size div_scroll_bar'>
                 <h1>{this.props.titleForm}</h1>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}

@@ -1,15 +1,3 @@
-.popup_inner--promotion {
-    position: absolute;
-    left: 20%;
-    right: 20%;
-    top: 15%;
-    bottom: 20%;
-    margin: auto;
-    padding-left: 10px;
-    background: white;
-    border-radius: 6px;
-}
-
 .promotion_information {
     margin-left: 30px;
 }
@@ -32,4 +20,13 @@
     -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.promotion_createform_size {
+    left: 20%;
+    right: 20%;
+    top: 15%;
+    bottom: 20%;
+    width: 60%;
+    height: 65%;
 }

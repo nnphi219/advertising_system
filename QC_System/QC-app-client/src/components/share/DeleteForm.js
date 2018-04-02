@@ -25,7 +25,7 @@ class DeleteForm extends Component {
     render(){
         return(
             <div className='popup'>
-                <div className='popup_inner--delete'>
+                <div className='popup_inner div_scroll_bar deleteform_size'>
                     <h2>Xác nhận</h2>
                     <div className='popup_inner--delete-content'>
                         <p>Do you want to delete {this.props.SelectedItemId}?</p>

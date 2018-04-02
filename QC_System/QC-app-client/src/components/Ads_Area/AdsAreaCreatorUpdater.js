@@ -151,7 +151,7 @@ class AdsAreaCreatorForm extends Component {
 
     render() {
         return (
-            <div className='popup_inner'>
+            <div className='popup_inner adsarea_createform_size'>
                 <div>
                     <h1>{this.props.titleForm}</h1>
                     <div key="left" className="adsarea_information_left">

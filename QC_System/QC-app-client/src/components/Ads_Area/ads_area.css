@@ -4,6 +4,16 @@
     margin-left: 5%;
 }
 
+.adsarea_createform_size {
+    left: 10%;
+    right: 10%;
+    top: 5%;
+    bottom: 5%;
+    width: 80%;
+    height: 90%;
+    overflow-y: scroll;
+}
+
 .adsarea_information_right {
     float: left;
     width: 45%;
@@ -57,16 +67,14 @@
     margin-right: 10px;
 }
 
-.popup_inner--delete {
-    position: absolute;
+.adsarea_deleteform_size {
     left: 35%;
     right: 35%;
     top: 15%;
-    bottom: 67%;
-    margin: auto;
-    background: white;
-    border-radius: 6px;
-    vertical-align: bottom;
+    bottom: 65%;
+    width: 30%;
+    height: 20%;
+    overflow-y: scroll;
 }
 
 .popup_inner--delete h2 {
