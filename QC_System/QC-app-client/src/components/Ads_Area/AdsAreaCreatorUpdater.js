@@ -314,8 +314,8 @@ var adsAreaInformationInputs = [
         "description": "Trang áp dụng quảng cáo",
         "id": "loai_trang_ap_dung",
         "type": "combobox",
-        "keys": ["trang_chu", "trang_tim_kiem", "trang_chi_tiet"],
-        "values": ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết"]
+        "keys": ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
+        "values": ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
     },
     {
         "description": "Loại bài đăng áp dụng",

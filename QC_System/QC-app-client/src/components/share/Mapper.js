@@ -52,11 +52,12 @@ export function TransferSelectInputKeyToValue(value, keys, values) {
     var isFound = false;
     var result = values[0];
 
-    while (i < keys.length && isFound) {
+    while (i < keys.length && !isFound) {
         if (keys[i] === value) {
             result = values[i];
             isFound = true;
         }
+        i++;
     }
 
     return result;

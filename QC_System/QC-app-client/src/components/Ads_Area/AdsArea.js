@@ -19,8 +19,8 @@ function RenderRow(props) {
   var status = (props.trContentAdsArea.status === 1) ? "Kích hoạt" : "Đã hủy";
   var loai_trang_ap_dung = TransferSelectInputKeyToValue(
     props.trContentAdsArea.loai_trang_ap_dung,
-    ["trang_chu", "trang_tim_kiem", "trang_chi_tiet"],
-    ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết"]
+    ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
+    ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
   );
   var loai_bai_dang_ap_dung = TransferSelectInputKeyToValue(
     props.trContentAdsArea.loai_bai_dang_ap_dung,
