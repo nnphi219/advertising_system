@@ -8,6 +8,7 @@ import PostManagement from './components/Post_Management/PostManagement';
 import PromotionManagement from './components/Promotion_Management/PromotionManagement';
 import PostCampaignManagement from './components/Post_Campaign_Management/PostCampaignManagement';
 import PaymentManagement from './components/Payment_Management/PaymentManagement';
+import UserManagement from './components/User/UserManagement';
 
 class AdminTitle extends Component {
     render() {
@@ -43,6 +44,7 @@ export class AppAdmin extends Component {
             <BrowserRouter>
                 <div>
                     <Route exact={true} path={"/"} component={AdminTitle} />
+                    <Route path={"/users-management"} component={UserManagement} />
                     <Route path={"/ads-area"} component={AdsArea} />
                     <Route path={"/service-price"} component={ServicePrice} />
                     <Route path={"/price-factor"} component={PriceFactor} />
@@ -50,6 +52,7 @@ export class AppAdmin extends Component {
                     <Route path={"/x-system/promotion-management"} component={PromotionManagement} />
                     <Route path={"/x-system/post-campaign-management"} component={PostCampaignManagement} />
                     <Route path={"/x-system/payment-management"} component={PaymentManagement} />
+                    
                     {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />
           <Route path={"home-single"} component={Home}/> */}

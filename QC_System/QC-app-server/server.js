@@ -13,7 +13,7 @@ var express = require('express'),
 var cors = require('cors');
 const {users, populateUsers} = require('./seed/seed');
 
-beforeEach(populateUsers);
+// beforeEach(populateUsers);
 
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;

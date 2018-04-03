@@ -34,15 +34,15 @@ exports.create_a_user = function (req, res) {
 };
 
 exports.read_a_user = function (req, res) {
-  // User.findById(req.params.userId, function (err, user) {
-  //   if (err)
-  //     res.send(err);
-  //   res.json(user);
-  // });
-
-  authenticate(req, res, function(req, res) {
-    res.send(req.user);
+  User.findById(req.params.userId, function (err, user) {
+    if (err)
+      res.send(err);
+    res.json(user);
   });
+
+  // authenticate(req, res, function(req, res) {
+  //   res.send(req.user);
+  // });
 };
 
 
