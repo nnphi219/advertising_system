@@ -11,6 +11,10 @@ var express = require('express'),
     PostCampaignManagement = require('./api/models/PostCampaignManagementModel'),
     bodyParser = require('body-parser');
 var cors = require('cors');
+const {users, populateUsers} = require('./seed/seed');
+
+beforeEach(populateUsers);
+
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/ads_system');

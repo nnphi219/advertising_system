@@ -9,5 +9,5 @@ module.exports = function(app) {
     app.route('/users/:userId')
         .get(userController.read_a_user)
         .put(userController.update_a_user)
-        .delete(userController.delte);
+        .delete(userController.delete_a_user);
 };
