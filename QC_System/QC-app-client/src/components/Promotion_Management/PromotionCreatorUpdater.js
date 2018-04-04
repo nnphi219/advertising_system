@@ -11,6 +11,9 @@ class RenderProperties extends Component {
     }
 
     render() {
+        var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
+        var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
+
         return (
             <div className="promotion_information">
                 <RenderInput
@@ -34,8 +37,8 @@ class RenderProperties extends Component {
                 <RenderSelect
                     nameId={"ma_dich_vu_ap_dung"}
                     title={"Mã dịch vụ quảng cáo"}
-                    keys={["VIPHOME1", "VIPHOME2"]}
-                    values={["VIPHOME1", "VIPHOME2"]}
+                    keys={AdsAreaIdsKeys}
+                    values={AdsAreaIdsValues}
                     selectedValue={this.props.stateValues.ma_dich_vu_ap_dung}
                     OnChangeSelect={this.props.OnChangeSelect}
                     className={"input--select"}
@@ -142,13 +145,42 @@ class PromotionCreatorUpdater extends Component {
         super(props);
 
         var jsonState = {};
-        this.SetInitState(jsonState);
-        this.state = jsonState;
+        this.state = this.SetInitState(jsonState);
+        this.GetAdsAreaIdInfos();
+    }
+
+    GetAdsAreaIdInfos() {
+        var $this = this;
+        Request.get(UrlApi.GetAdsAreaIdInfo)
+            .then((res) => {
+                var _ids = [];
+                var keys = [];
+                var values = [];
+
+                res.body.map((adsArea) => {
+                    _ids.push(adsArea._id);
+                    keys.push(adsArea.ma_dich_vu);
+                    values.push(adsArea.ten_hien_thi);
+                });
+
+                var jsonAdsAreaIds = {
+                    AdsAreaIds: {
+                        _ids: _ids,
+                        keys: keys,
+                        values: values
+                    },
+
+                };
+                if (this.props.modeAction === "create") {
+                    jsonAdsAreaIds.ma_dich_vu_ap_dung = keys[0];
+                }
+             
+                $this.setState(jsonAdsAreaIds);
+            });
     }
 
     SetInitState(jsonState) {
         if (this.props.modeAction === "create") {
-            jsonState.ma_dich_vu_ap_dung = "VIPHOME1";
             jsonState.loai_gia = 1;
             jsonState.gia_tri = 0;
 
@@ -167,6 +199,8 @@ class PromotionCreatorUpdater extends Component {
             jsonState.start_date = JsonDateToDate(editContents.start_date);
             jsonState.end_date = JsonDateToDate(editContents.end_date);
         }
+
+        return jsonState;
     }
 
     handleUpdateState(jsonState) {

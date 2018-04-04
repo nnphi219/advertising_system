@@ -50,10 +50,10 @@ export class AppAdmin extends Component {
                     <Route path={"/ads-area"} component={AdsArea} />
                     <Route path={"/service-price"} component={ServicePrice} />
                     <Route path={"/price-factor"} component={PriceFactor} />
-                    <Route path={"/x-system/post-management"} component={PostManagement} />
-                    <Route path={"/x-system/promotion-management"} component={PromotionManagement} />
-                    <Route path={"/x-system/post-campaign-management"} component={PostCampaignManagement} />
-                    <Route path={"/x-system/payment-management"} component={PaymentManagement} />
+                    <Route path={"/post-management"} component={PostManagement} />
+                    <Route path={"/promotion-management"} component={PromotionManagement} />
+                    <Route path={"/post-campaign-management"} component={PostCampaignManagement} />
+                    <Route path={"/payment-management"} component={PaymentManagement} />
                     
                     {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />
