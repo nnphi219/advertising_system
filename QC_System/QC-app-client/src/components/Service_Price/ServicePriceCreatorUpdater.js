@@ -217,10 +217,10 @@ class ServicePriceCreatorUpdater extends Component {
 
         var jsonState = {};
         this.state = this.SetInitState(jsonState);
-        this.GetAdsAreaIdInfos(jsonState);
+        this.GetIdInfos();
     }
 
-    GetAdsAreaIdInfos(jsonState) {
+    GetAdsAreaIdInfos() {
         var $this = this;
         Request.get(UrlApi.GetAdsAreaIdInfo)
             .then((res) => {
@@ -245,7 +245,7 @@ class ServicePriceCreatorUpdater extends Component {
                 if(this.props.modeAction === "create"){
                     jsonAdsAreaIds.ma_dich_vu_ap_dung = keys[0];
                 }
-                
+                console.log(jsonAdsAreaIds);
                 $this.setState(jsonAdsAreaIds);
             });
     }
