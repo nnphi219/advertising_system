@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import UrlApi from '../share/UrlApi';
+import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 
 class UserLogin extends Component {
     constructor(props) {
@@ -6,54 +8,56 @@ class UserLogin extends Component {
 
         this.state = {
             email: "",
+            username: "",
             password: ""
         };
-    }
-
-    validateForm() {
-        return this.state.email.length > 0 && this.state.password.length > 0;
-    }
-
-    handleChange = event => {
-        this.setState({
-            [event.target.id]: event.target.value
-        });
     }
 
     handleSubmit = event => {
         event.preventDefault();
     }
 
+    OnChangeInput(e) {
+        var name = e.target.name;
+        var value = e.target.value;
+        var jsonState = { [name]: value };
+        console.log(jsonState);
+        this.setState(jsonState);
+    }
+
     render() {
         return (
-            <div className="Login">
-                <form onSubmit={this.handleSubmit}>
-                    <FormGroup controlId="email" bsSize="large">
-                        <ControlLabel>Email</ControlLabel>
-                        <FormControl
-                            autoFocus
-                            type="email"
+            < div id="page-wrapper" >
+                <div className="row">
+                    <div>
+                        <RenderInput
+                            nameId={"username"}
+                            title={"User name"}
+                            value={this.state.username}
+                            type={"text"}
+                            className={"user--input"}
+                            OnChangeInput={this.OnChangeInput}
+                        />
+
+                        <RenderInput
+                            nameId={"email"}
+                            title={"Email"}
                             value={this.state.email}
-                            onChange={this.handleChange}
+                            type={"text"}
+                            className={"user--input"}
+                            OnChangeInput={this.OnChangeInput}
                         />
-                    </FormGroup>
-                    <FormGroup controlId="password" bsSize="large">
-                        <ControlLabel>Password</ControlLabel>
-                        <FormControl
+
+                        <RenderInput
+                            nameId={"password"}
+                            title={"Password"}
                             value={this.state.password}
-                            onChange={this.handleChange}
-                            type="password"
+                            type={"text"}
+                            className={"user--input"}
+                            OnChangeInput={this.OnChangeInput}
                         />
-                    </FormGroup>
-                    <Button
-                        block
-                        bsSize="large"
-                        disabled={!this.validateForm()}
-                        type="submit"
-                    >
-                        Login
-              </Button>
-                </form>
+                    </div>
+                </div>
             </div>
         );
     }

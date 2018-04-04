@@ -97,6 +97,9 @@ class NavbarDefault extends Component {
                 <div className="sidebar-nav navbar-collapse">
                     <ul className="nav" id="side-menu">
                         <li>
+                            <a href="/user-login"><i className="fa fa-dashboard fa-fw"></i>Login</a>
+                        </li>
+                        <li>
                             <a href="/users-management"><i className="fa fa-dashboard fa-fw"></i>Quản lý user</a>
                         </li>
                         <li>

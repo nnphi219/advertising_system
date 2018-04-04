@@ -1,4 +1,6 @@
 'use strict';
+const _ = require('lodash');
+
 module.exports = function(app) {
     var userController = require('../controllers/UserController');
 
@@ -10,4 +12,10 @@ module.exports = function(app) {
         .get(userController.read_a_user)
         .put(userController.update_a_user)
         .delete(userController.delete_a_user);
+
+    app.post('/users/login', (req, res) => {
+        var body = _.pick(req.body, ['username', 'password']);
+        
+        res.send(req.body);
+    });
 };
