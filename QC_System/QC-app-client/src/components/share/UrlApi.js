@@ -5,10 +5,13 @@ const UrlApi = {
     GetAdsAreaIdInfo: hostName + "/getadsAreasIdInfo",
 
     PriceFactor: hostName + "/pricefactors",
+
     ServicePrice: hostName + "/serviceprices",
     GetServicePriceIdInfo: hostName + "/getservicePricesIdInfo",
 
     PromotionManagement: hostName + "/promotionmanagements",
+    GetPromotionIdInfos: hostName + "/getPromotionsIdInfo",
+
     PostCampaignManagement: hostName + "/postcampaignmanagements",
     UserManagement: hostName + "/users"
 }
