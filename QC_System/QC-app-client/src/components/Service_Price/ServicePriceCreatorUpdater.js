@@ -234,13 +234,19 @@ class ServicePriceCreatorUpdater extends Component {
                     values.push(adsArea.ten_hien_thi);
                 });
 
-                $this.setState({
+                var jsonAdsAreaIds = {
                     AdsAreaIds: {
                         _ids: _ids,
                         keys: keys,
                         values: values
-                    }
-                });
+                    },
+                    
+                };
+                if(this.props.modeAction === "create"){
+                    jsonAdsAreaIds.ma_dich_vu_ap_dung = keys[0];
+                }
+                
+                $this.setState(jsonAdsAreaIds);
             });
     }
 
