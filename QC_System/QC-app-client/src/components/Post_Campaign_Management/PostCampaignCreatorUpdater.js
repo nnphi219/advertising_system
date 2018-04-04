@@ -272,7 +272,6 @@ class PostCampaignCreatorUpdater extends Component {
     SetInitState(jsonState) {
         if (this.props.modeAction === "create") {
             jsonState.ma_bai_dang = "bd1";
-            jsonState.ma_khuyen_mai = "km1";
             jsonState.co_che_hien_thi = "doc_quyen";
             jsonState.tinh_gia_theo = "thoi_luong";
             jsonState.lnt_thoi_luong = 0;
