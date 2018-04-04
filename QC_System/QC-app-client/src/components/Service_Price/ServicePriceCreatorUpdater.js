@@ -244,7 +244,17 @@ class ServicePriceCreatorUpdater extends Component {
         this.state = jsonState;
     }
 
+    GetAdsAreaIdInfos() {
+        Request.get(UrlApi.GetAdsAreaIdInfo)
+            .then((res) => {
+                return res.body;
+            });
+    }
+
     SetInitState(jsonState) {
+        var adsAreaInfos = this.GetAdsAreaIdInfos();
+        console.log(adsAreaInfos);
+
         if (this.props.modeAction === "create") {
             jsonState.ma_gia = "";
             jsonState.ma_dich_vu_ap_dung = "VIPHOME1";
