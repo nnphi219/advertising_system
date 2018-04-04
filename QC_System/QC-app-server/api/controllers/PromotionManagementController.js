@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 
 var mongoose = require('mongoose'),
     PromotionManagement = mongoose.model('PromotionManagements');
@@ -10,6 +11,20 @@ exports.list_all_promotionManagement = function(req, res) {
         }
         else {
             res.json(promotionManagement);
+        }
+    });
+};
+
+exports.read_PromotionId_Info = function (req, res) {
+    PromotionManagement.find({}, function (err, promotions) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            var promotionsIdInfo = promotions.map((promotion) =>
+             _.pick(promotion, ['_id', 'ma_khuyen_mai', 'mo_ta'])
+            );
+            res.json(promotionsIdInfo);
         }
     });
 };

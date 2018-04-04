@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 
 var mongoose = require('mongoose'),
     ServicePrice = mongoose.model('ServicePrices');
@@ -10,6 +11,20 @@ exports.list_all_servicePrice = function(req, res) {
         }
         else {
             res.json(servicePrice);
+        }
+    });
+};
+
+exports.read_servicePriceId_Info = function (req, res) {
+    ServicePrice.find({}, function (err, servicePrices) {
+        if (err) {
+            res.send(err);
+        }
+        else {
+            var servicePricesIdInfo = servicePrices.map((servicePrice) =>
+             _.pick(servicePrice, ['_id', 'ma_gia'])
+            );
+            res.json(servicePricesIdInfo);
         }
     });
 };

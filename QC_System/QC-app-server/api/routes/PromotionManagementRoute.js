@@ -1,5 +1,5 @@
 'use strict';
-module.exports = function(app) {
+module.exports = function (app) {
     var promotionManagementController = require('../controllers/PromotionManagementController');
 
     app.route('/promotionManagements')
@@ -10,4 +10,7 @@ module.exports = function(app) {
         .get(promotionManagementController.read_a_promotionManagement)
         .put(promotionManagementController.update_a_promotionManagement)
         .delete(promotionManagementController.delete_a_promotionManagement);
+
+    app.route('/getPromotionsIdInfo')
+        .get(promotionManagementController.read_PromotionId_Info);
 };

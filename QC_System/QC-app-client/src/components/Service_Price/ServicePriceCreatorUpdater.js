@@ -4,60 +4,31 @@ import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './service_price.css';
 import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
-
-function RenderRadioButtons(props) {
-    var elementPriceTypeRadioButtons = [];
-
-    servicePriceInputs[props.nameId].keys.forEach((key, index) => {
-        if (props.defaultValue === key) {
-            elementPriceTypeRadioButtons.push(
-                <div key={key} className="pricefactor-radio">
-                    <input type="radio" value={key} name={props.nameId} defaultChecked />
-                    {servicePriceInputs[props.nameId].values[index]}
-                </div>
-            );
-        }
-        else {
-            elementPriceTypeRadioButtons.push(
-                <div key={key} className="pricefactor-radio">
-                    <input type="radio" value={key} name={props.nameId} />
-                    {servicePriceInputs[props.nameId].values[index]}
-                </div>
-            );
-        }
-
-    });
-    return (
-        elementPriceTypeRadioButtons
-    );
-}
+import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 
 class RenderLeftForm extends Component {
     constructor(props) {
         super(props);
-
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange = (d) => {
-        console.log(d);
     }
 
     render() {
+        var ma_dich_vu_ap_dung = this.props.stateValues.ma_dich_vu_ap_dung === undefined ? "" : this.props.stateValues.ma_dich_vu_ap_dung;
+        var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
+        var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
 
         return (
             <div key="left" className="serviceprice_information_left">
                 <h2>Thông tin giá dịch vụ</h2>
                 <div>
-                    <div>
-                        <label className="fullwidth">
-                            {"Mã dịch vụ quảng cáo"}
-                            <select name={"ma_dich_vu_ap_dung"} key={"ma_dich_vu_ap_dung"} value={this.props.stateValues.ma_dich_vu_ap_dung} onChange={this.props.OnChangeSelect} className="serviceprice--select">
-                                <option value={"VIPHOME1"} >{"VIPHOME1"}</option>
-                                <option value={"VIPHOME2"} >{"VIPHOME2"}</option>
-                            </select>
-                        </label>
-                    </div>
+                    <RenderSelect
+                        nameId={"ma_dich_vu_ap_dung"}
+                        title={"Mã dịch vụ quảng cáo"}
+                        keys={AdsAreaIdsKeys}
+                        values={AdsAreaIdsValues}
+                        selectedValue={ma_dich_vu_ap_dung}
+                        OnChangeSelect={this.props.OnChangeSelect}
+                        className={"serviceprice--select"}
+                    />
                     <div>
                         <label key={"ma_gia"} className="fullwidth">
                             {"Nhập mã giá"}
@@ -74,13 +45,15 @@ class RenderLeftForm extends Component {
                             </label>
                         </div>
                     </div>
-                    <div key={"co_thoi_diem_ket_thuc"} name={"co_thoi_diem_ket_thuc"} onChange={this.props.OnChangeRadioButton}>
-                        <label className="fullwidth">{"Có thời điểm kết thúc"}</label>
-                        <RenderRadioButtons
-                            nameId={"co_thoi_diem_ket_thuc"}
-                            defaultValue={this.props.stateValues.co_thoi_diem_ket_thuc}
-                        />
-                    </div>
+                    <RenderRadioButon
+                        nameId={"co_thoi_diem_ket_thuc"}
+                        title={"Có thời điểm kết thúc"}
+                        keys={servicePriceInputs.co_thoi_diem_ket_thuc.keys}
+                        values={servicePriceInputs.co_thoi_diem_ket_thuc.values}
+                        selectedValue={this.props.stateValues.co_thoi_diem_ket_thuc}
+                        OnChangeRadioButton={this.props.OnChangeRadioButton}
+                        className={"input-radio"}
+                    />
                     <div>
                         <div className="">
                             <label className="fullwidth">
@@ -100,6 +73,7 @@ class RenderLeftForm extends Component {
 
 class RenderRightForm extends Component {
     render() {
+        var loai_co_che = this.props.stateValues.loai_co_che === undefined ? "" : this.props.stateValues.loai_co_che;
         return (
             <div key="right" className="serviceprice_information_right">
                 <h2>Thông số giá</h2>
@@ -107,7 +81,7 @@ class RenderRightForm extends Component {
                     <div>
                         <label className="fullwidth" >
                             {"Cơ chế hiển thị"}
-                            <select name={"loai_co_che"} key={"loai_co_che"} value={this.props.stateValues.loai_co_che} onChange={this.props.OnChangeSelect} className="serviceprice--select">
+                            <select name={"loai_co_che"} key={"loai_co_che"} value={loai_co_che} onChange={this.props.OnChangeSelect} className="serviceprice--select">
                                 <option value={"doc_quyen"} >{"Độc quyền"}</option>
                                 <option value={"co_dinh_vi_tri"} >{"Cố định vị trí"}</option>
                                 <option value={"chia_se_co_dinh"} >{"Chia sẻ cố định"}</option>
@@ -115,13 +89,15 @@ class RenderRightForm extends Component {
                             </select>
                         </label>
                     </div>
-                    <div key={"loai_gia"} name={"loai_gia"} onChange={this.props.OnChangeRadioButton}>
-                        <label className="fullwidth">{"Mô hình giá"}</label>
-                        <RenderRadioButtons
-                            nameId={"loai_gia"}
-                            defaultValue={this.props.stateValues.loai_gia}
-                        />
-                    </div>
+                    <RenderRadioButon
+                        nameId={"loai_gia"}
+                        title={"Mô hình giá"}
+                        keys={servicePriceInputs.loai_gia.keys}
+                        values={servicePriceInputs.loai_gia.values}
+                        selectedValue={this.props.stateValues.loai_gia}
+                        OnChangeRadioButton={this.props.OnChangeRadioButton}
+                        className={"input-radio"}
+                    />
                     <div>
                         <label className="fullwidth">
                             {"Giá (VND)"}
@@ -240,14 +216,43 @@ class ServicePriceCreatorUpdater extends Component {
         super(props);
 
         var jsonState = {};
-        this.SetInitState(jsonState);
-        this.state = jsonState;
+        this.state = this.SetInitState(jsonState);
+        this.GetAdsAreaIdInfos();
+    }
+
+    GetAdsAreaIdInfos() {
+        var $this = this;
+        Request.get(UrlApi.GetAdsAreaIdInfo)
+            .then((res) => {
+                var _ids = [];
+                var keys = [];
+                var values = [];
+
+                res.body.map((adsArea) => {
+                    _ids.push(adsArea._id);
+                    keys.push(adsArea.ma_dich_vu);
+                    values.push(adsArea.ten_hien_thi);
+                });
+
+                var jsonAdsAreaIds = {
+                    AdsAreaIds: {
+                        _ids: _ids,
+                        keys: keys,
+                        values: values
+                    },
+                    
+                };
+                if(this.props.modeAction === "create"){
+                    jsonAdsAreaIds.ma_dich_vu_ap_dung = keys[0];
+                }
+                
+                $this.setState(jsonAdsAreaIds);
+            });
     }
 
     SetInitState(jsonState) {
         if (this.props.modeAction === "create") {
             jsonState.ma_gia = "";
-            jsonState.ma_dich_vu_ap_dung = "VIPHOME1";
             jsonState.loai_co_che = "doc_quyen";
             jsonState.loai_gia = "CPD";
             jsonState.gia_tri = 0;
@@ -281,6 +286,7 @@ class ServicePriceCreatorUpdater extends Component {
                 jsonState.end_date = JsonDateToDate(editContents.end_date);
             }
         }
+        return jsonState;
     }
 
     handleUpdateState(jsonState) {
