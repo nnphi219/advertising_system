@@ -45,7 +45,7 @@ export class RenderRadioButon extends Component {
         var elementTypeRadioButtons = [];
 
         keys.forEach((key, index) => {
-            if (selectedValue == key) {
+            if (selectedValue === key) {
                 elementTypeRadioButtons.push(
                     <div key={key} className={this.props.className}>
                         <input type="radio" value={key} name={this.props.nameId} defaultChecked />
