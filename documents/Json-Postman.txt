@@ -1,0 +1,216 @@
+-------------- Bang chi so anh huong gia
+var priceFactorInputs = [
+    {
+        "description": "Nhập tên chỉ số",
+        "id": "ten_chi_so",
+        "type": "textbox"
+    },
+    {
+        "description": "Mã giá áp dụng",
+        "id": "ma_gia", //
+        "type": "combobox",
+        "values": ['VIPHOME1', 'VIPHOME2']// //get from ServicePrice, currently set default
+    },
+    {
+        "description": "Đơn giá cơ bản",
+        "id": "don_gia_co_ban",
+        "type": "textbox"
+    },
+    {
+        "description": "Khung giờ áp dụng",
+        "id": "khung_gio_ap_dung",
+        "type": "combobox",
+        "values": ["2h-4h", '4h-6h']
+    },
+    {
+        "description": "Áp dụng cho tỉnh",
+        "id": "tinh",
+        "type": "textbox"
+    },
+    {
+        "description": "Áp dụng cho quận huyện",
+        "id": "quan_huyen",
+        "type": "textbox"
+    },
+    {
+        "description": "Loại giá trị tăng thêm",
+        "id": "loai_gia_tri_tang_them",
+        "type": "radio",
+        "values": ["Tăng theo %", "Giảm theo %"],
+        "keys": [1, 0]
+    },
+    {
+        "description": "Phần trăm tăng/giảm (%)",
+        "id": "phan_tram_tang_giam",
+        "type": "textbox"
+    },
+    {
+        "description": "Tổng tiền",
+        "id": "gia_tri_thuc",
+        "type": "textbox"
+    }
+];
+
+
+jsonState.ma_gia = "VIPHOME1";
+jsonState.don_gia_co_ban = 0;
+jsonState.khung_gio_ap_dung = {
+	bat_dau: 2,
+	ket_thuc: 4
+};
+jsonState.loai_gia_tri_tang_them = 1;
+jsonState.phan_tram_tang_giam = 0;
+
+
+{
+	"ten_chi_so": "Thời lượng 1",
+	"ma_gia": "VIPHOME4",
+	"loai_nhan_to": {
+		"thoi_luong": 28,
+		"khung_gio": {
+			"bat_dau": 2,
+			"ket_thuc": 4
+		},
+		"vi_tri": {
+			"tinh": "TPHCM",
+			"quan_huyen": "Tân bình"
+		}
+	},
+	"ti_le_tinh_gia": {
+		"tang": 1,
+		"gia_tri": 90
+	},
+	"start_date": {
+		"day": 28,
+		"month": 12,
+		"year" : 2018
+	},
+	"end_date": {
+		"day": 30,
+		"month": 12,
+		"year" : 2019
+	},
+	"trang_thai": 1
+}
+
+------------- Bang gia dich vu
+{
+	"ma_gia": "VIPHOME4",
+	"ma_dich_vu_ap_dung": "Viphome",
+	"gia_tri": 90000, 
+	"loai_gia": "CPD",
+	"so_luong_don_vi_ap_dung": {
+		"so_ngay_ap_dung": 14,
+        "so_click_tren_view": 14
+	},
+	"loai_co_che": "doc_quyen",
+	"trang_thai": 1,
+	"start_date": {
+		"day": 28,
+		"month": 12,
+		"year" : 2018
+	}
+}
+
+properties:
+ma_dich_vu_ap_dung
+ma_gia
+start_date
+end_date
+loai_co_che
+loai_gia
+gia_tri
+so_luong_don_vi_ap_dung: {
+	so_ngay_ap_dung
+	so_click_tren_view (optional)
+}
+
+------------ Bang khuyen mai
+{
+	"ma_khuyen_mai": "km1",
+	"mo_ta": "khuyen mai 1",
+	"ma_dich_vu_ap_dung": "Viphome",
+	"muc_gia_ap_dung": {
+		"loai_gia": 1,
+		"gia_tri": 50
+	},
+	"start_date": {
+		"day": 28,
+		"month": 12,
+		"year" : 2018
+	},
+	"end_date": {
+		"day": 30,
+		"month": 12,
+		"year" : 2019
+	}
+}
+
+--- properties:
+ma_khuyen_mai
+ma_dich_vu_ap_dung
+muc_gia_ap_dung : {
+	loai_gia:
+	gia_tri
+}
+start_date
+end_date
+trang_thai
+
+-------------- Bang chien dich tin dang
+{
+	"ma_chien_dich": "cd1",
+	"ma_bai_dang": "bd1",
+	"ma_khuyen_mai": "km1",
+	"co_che_hien_thi": "doc_quyen",
+	"tinh_theo_gia": "thoi_luong",
+	"loai_nhan_to": {
+		"thoi_luong": 10,
+		"khung_gio": {
+			"bat_dau": 2,
+			"ket_thuc": 4
+		},
+		"vi_tri": {
+			"tinh": "tphcm",
+			"quan_huyen": "Lagi"
+		}
+	},
+	"don_gia_co_ban": 2000,
+	"start_date": {
+		"day": 28,
+		"month": 12,
+		"year" : 2018
+	},
+	"end_date": {
+		"day": 30,
+		"month": 12,
+		"year" : 2019
+	},
+	"thanh_tien": 4000,
+	"tong_cong" : 80000
+}
+
+
+--- properties:
+ma_chien_dich
+ma_bai_dang
+ma_khuyen_mai
+co_che_hien_thi (Độc quyền, cố định vị trí, chia sẻ cố định, ngẫu nhiên)
+tinh_theo_gia (thoi_luong, khung_gio, vi_tri)
+loai_nhan_to: {
+	thoi_luong: Number, 
+	khung_gio: {
+		bat_dau: Number, 
+		ket_thuc: Number
+	},
+	vi_tri:{
+		tinh: String, 
+		quan_huyen: String
+	}   
+},
+don_gia_co_ban
+start_date
+end_date
+thanh_tien
+tong_cong
+trang_thai

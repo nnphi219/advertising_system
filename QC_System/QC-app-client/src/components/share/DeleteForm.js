@@ -1,0 +1,41 @@
+import React, { Component } from 'react';
+import Request from 'superagent';
+import '../Ads_Area/ads_area.css';
+
+class DeleteForm extends Component {
+    constructor(props) {
+        super(props);
+
+        this.handleDeleteItem = this.handleDeleteItem.bind(this);
+    }
+
+    handleDeleteItem() {
+        var url = this.props.url + "/" + this.props.SelectedItemId.toString();
+        var $this = this;
+
+        Request.delete(url)
+        .send({ id: this.props.SelectedItemId })
+        .set('Accept', 'application/json')
+        .end(function(err, res){
+            $this.props.resetContentState();
+            $this.props.closeDeletePopup();
+        });
+    }
+
+    render(){
+        return(
+            <div className='popup'>
+                <div className='popup_inner div_scroll_bar deleteform_size'>
+                    <h2>Xác nhận</h2>
+                    <div className='popup_inner--delete-content'>
+                        <p>Do you want to delete {this.props.SelectedItemId}?</p>
+                        <button className="btn btn-primary" onClick={this.handleDeleteItem}>Ok</button>
+                        <button className="btn btn-primary" onClick={this.props.closeDeletePopup}>Cancel</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+export default DeleteForm;
