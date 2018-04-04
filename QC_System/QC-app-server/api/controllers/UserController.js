@@ -19,7 +19,7 @@ exports.create_a_user = function (req, res) {
   if (new_user.user_type === undefined) {
     new_user.user_type = "user";
   }
-
+  // res.send(body);
   new_user.save()
     .then((new_user) => {
       return new_user.generateAuthToken(new_user.password);

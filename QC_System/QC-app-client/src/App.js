@@ -9,6 +9,7 @@ import PromotionManagement from './components/Promotion_Management/PromotionMana
 import PostCampaignManagement from './components/Post_Campaign_Management/PostCampaignManagement';
 import PaymentManagement from './components/Payment_Management/PaymentManagement';
 import UserManagement from './components/User/UserManagement';
+import UserLogin from './components/User/UserLogin';
 
 class AdminTitle extends Component {
     render() {
@@ -44,6 +45,7 @@ export class AppAdmin extends Component {
             <BrowserRouter>
                 <div>
                     <Route exact={true} path={"/"} component={AdminTitle} />
+                    <Route path={"/user-login"} component={UserLogin} />
                     <Route path={"/users-management"} component={UserManagement} />
                     <Route path={"/ads-area"} component={AdsArea} />
                     <Route path={"/service-price"} component={ServicePrice} />
