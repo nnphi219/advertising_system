@@ -112,16 +112,16 @@ class NavbarDefault extends Component {
                             <a href="/price-factor"><i className="fa fa-dashboard fa-fw"></i>Chỉ số ảnh hưởng giá</a>
                         </li>
                         <li>
-                            <a href="/x-system/post-management"><i className="fa fa-dashboard fa-fw"></i>Bảng tin đăng</a>
+                            <a href="/post-management"><i className="fa fa-dashboard fa-fw"></i>Bảng tin đăng</a>
                         </li>
                         <li>
-                            <a href="/x-system/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>
+                            <a href="/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>
                         </li>
                         <li>
-                            <a href="/x-system/post-campaign-management"><i className="fa fa-dashboard fa-fw"></i>Bảng chiến dịch tin đăng</a>
+                            <a href="/post-campaign-management"><i className="fa fa-dashboard fa-fw"></i>Bảng chiến dịch tin đăng</a>
                         </li>
                         <li>
-                            <a href="/x-system/payment-management"><i className="fa fa-dashboard fa-fw"></i>Trang thanh toán</a>
+                            <a href="/payment-management"><i className="fa fa-dashboard fa-fw"></i>Trang thanh toán</a>
                         </li>
                         <li>
                             <a href="#10"><i className="fa fa-bar-chart-o fa-fw"></i> Charts<span className="fa arrow"></span></a>

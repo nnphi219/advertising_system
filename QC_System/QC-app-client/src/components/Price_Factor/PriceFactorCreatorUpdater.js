@@ -5,8 +5,8 @@ import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './price_factor.css';
 
-import { RenderDate } from '../share/InputsRender';
 import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
+import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 
 class RenderProperties extends Component {
     constructor(props) {
@@ -21,6 +21,8 @@ class RenderProperties extends Component {
 
     render() {
         var timeLog = this.TranserTimeLogToString(this.props.stateValues.khung_gio_ap_dung);
+        var ServicePriceIdsKeys = this.props.stateValues.ServicePriceIds === undefined ? [] : this.props.stateValues.ServicePriceIds.keys;
+        var ServicePriceIdsValues = this.props.stateValues.ServicePriceIds === undefined ? [] : this.props.stateValues.ServicePriceIds.values;
 
         return (
             <div>
@@ -30,15 +32,15 @@ class RenderProperties extends Component {
                         <input type="text" id={"ten_chi_so"} key={"ten_chi_so"} name={"ten_chi_so"} value={this.props.stateValues.ten_chi_so} onChange={this.props.OnChangeInput} className="pricefactor--input" />
                     </label>
                 </div>
-                <div>
-                    <label key={"ma_gia"} className="fullwidth">
-                        {"Mã giá áp dụng"}
-                        <select name={"ma_gia"} id={"ma_gia"} key={"ma_gia"} value={this.props.stateValues.ma_gia} onChange={this.props.OnChangeSelect} className="pricefactor--select">
-                            <option value={"VIPHOME1"} >{"VIPHOME1"}</option>
-                            <option value={"VIPHOME2"} >{"VIPHOME2"}</option>
-                        </select>
-                    </label>
-                </div>
+                <RenderSelect
+                    nameId={"ma_gia"}
+                    title={"Mã giá áp dụng"}
+                    keys={ServicePriceIdsKeys}
+                    values={ServicePriceIdsValues}
+                    selectedValue={this.props.stateValues.ma_gia}
+                    OnChangeSelect={this.props.OnChangeSelect}
+                    className={"pricefactor--select"}
+                />
                 <div>
                     <label className="fullwidth">
                         {"Đơn giá cơ bản"}
@@ -223,16 +225,44 @@ class PriceFactorCreatorUpdater extends Component {
         super(props);
 
         var jsonState = {};
-        this.SetInitState(jsonState);
+        this.state = this.SetInitState(jsonState);
+        this.GetServicePriceIdInfos();
+    }
 
-        this.state = jsonState;
+    GetServicePriceIdInfos() {
+        var $this = this;
+        Request.get(UrlApi.GetServicePriceIdInfo)
+            .then((res) => {
+                var _ids = [];
+                var keys = [];
+                var values = [];
+
+                res.body.map((servicePrice) => {
+                    _ids.push(servicePrice._id);
+                    keys.push(servicePrice.ma_gia);
+                    values.push(servicePrice.ma_gia);
+                });
+
+                var jsonServicePriceIds = {
+                    ServicePriceIds: {
+                        _ids: _ids,
+                        keys: keys,
+                        values: values
+                    },
+
+                };
+                if (this.props.modeAction === "create") {
+                    jsonServicePriceIds.ma_gia = keys[0];
+                }
+
+                $this.setState(jsonServicePriceIds);
+            });
     }
 
     SetInitState(jsonState) {
         var today = new Date();
 
         if (this.props.modeAction === "create") {
-            jsonState.ma_gia = "VIPHOME1";
             jsonState.don_gia_co_ban = 0;
             jsonState.khung_gio_ap_dung = {
                 bat_dau: 2,
@@ -247,8 +277,10 @@ class PriceFactorCreatorUpdater extends Component {
         else {
             var editContents = this.props.editContents;
             jsonState.ten_chi_so = editContents.ten_chi_so;
-            jsonState.tinh = editContents.loai_nhan_to.vi_tri.tinh;
-            jsonState.quan_huyen = editContents.loai_nhan_to.vi_tri.quan_huyen;
+            if (editContents.loai_nhan_to.vi_tri !== undefined && editContents.loai_nhan_to.vi_tri !== null) {
+                jsonState.tinh = editContents.loai_nhan_to.vi_tri.tinh;
+                jsonState.quan_huyen = editContents.loai_nhan_to.vi_tri.quan_huyen;
+            }
             jsonState.ma_gia = editContents.ma_gia;
             jsonState.don_gia_co_ban = editContents.gia_tri_ap_dung;
             jsonState.khung_gio_ap_dung = editContents.loai_nhan_to.khung_gio;
@@ -260,6 +292,8 @@ class PriceFactorCreatorUpdater extends Component {
             jsonState.start_date = JsonDateToDate(editContents.start_date);
             jsonState.end_date = JsonDateToDate(editContents.end_date);
         }
+
+        return jsonState;
     }
 
     GetModelStateJson() {
@@ -321,7 +355,6 @@ class PriceFactorCreatorUpdater extends Component {
 
     handleUpdateState(jsonState) {
         this.setState(jsonState);
-        console.log(this.state);
     }
 
     handleSubmit() {

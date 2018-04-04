@@ -6,8 +6,12 @@ import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTi
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 
 function RenderLeftForm(props) {
-    console.log(props.stateValues.lnt_khung_gio);
-    var lnt_khung_gio = TransferTimeLogJsonToString(props.stateValues.lnt_khung_gio);
+    var stateValues = props.stateValues;
+    
+    var lnt_khung_gio = TransferTimeLogJsonToString(stateValues.lnt_khung_gio);
+    var PromotionIdsKeys = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.keys;
+    var PromotionIdsValues = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.values;
+
 
     return (
         <div className="post_campaign--left-form">
@@ -15,7 +19,7 @@ function RenderLeftForm(props) {
                 nameId={"ma_chien_dich"}
                 title={"Mã chiến dịch"}
                 type={"text"}
-                value={props.stateValues.ma_chien_dich}
+                value={stateValues.ma_chien_dich}
                 className={"post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
             />
@@ -25,7 +29,7 @@ function RenderLeftForm(props) {
                 title={"Mã bài đăng"}
                 keys={["bd1", "bd2"]}
                 values={["bd1", "bd2"]}
-                selectedValue={props.stateValues.ma_bai_dang}
+                selectedValue={stateValues.ma_bai_dang}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}
             />
@@ -33,9 +37,9 @@ function RenderLeftForm(props) {
             <RenderSelect
                 nameId={"ma_khuyen_mai"}
                 title={"Mã khuyến mãi"}
-                keys={["km1", "km2"]}
-                values={["km1", "km2"]}
-                selectedValue={props.stateValues.ma_khuyen_mai}
+                keys={PromotionIdsKeys}
+                values={PromotionIdsValues}
+                selectedValue={stateValues.ma_khuyen_mai}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}
             />
@@ -45,7 +49,7 @@ function RenderLeftForm(props) {
                 title={"Cơ chế hiện thị"}
                 keys={["doc_quyen", "co_dinh_vi_tri", "chia_se_co_dinh", "ngau_nhien"]}
                 values={["Độc quyền", "Cố định vị trí", "Chia sẻ cố định", "Ngẫu nhiên"]}
-                selectedValue={props.stateValues.co_che_hien_thi}
+                selectedValue={stateValues.co_che_hien_thi}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}
             />
@@ -55,7 +59,7 @@ function RenderLeftForm(props) {
                 title={"Tính giá theo"}
                 keys={["thoi_luong", "khung_gio", "vi_tri"]}
                 values={["Thời lượng", "Khung giờ", "Vị trí"]}
-                selectedValue={props.stateValues.tinh_gia_theo}
+                selectedValue={stateValues.tinh_gia_theo}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}
             />
@@ -63,7 +67,7 @@ function RenderLeftForm(props) {
             <RenderInput
                 nameId={"lnt_thoi_luong"}
                 title={"Thời lượng"}
-                value={props.stateValues.lnt_thoi_luong}
+                value={stateValues.lnt_thoi_luong}
                 type={"number"}
                 className={"post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
@@ -82,7 +86,7 @@ function RenderLeftForm(props) {
             <RenderInput
                 nameId={"lnt_tinh"}
                 title={"Tỉnh thành"}
-                value={props.stateValues.lnt_tinh}
+                value={stateValues.lnt_tinh}
                 type={"input"}
                 className={"post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
@@ -91,7 +95,7 @@ function RenderLeftForm(props) {
             <RenderInput
                 nameId={"lnt_quan_huyen"}
                 title={"Quận huyện"}
-                value={props.stateValues.lnt_quan_huyen}
+                value={stateValues.lnt_quan_huyen}
                 type={"input"}
                 className={"post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
@@ -101,12 +105,14 @@ function RenderLeftForm(props) {
 }
 
 function RenderRightForm(props) {
+    var stateValues = props.stateValues;
+
     return (
         <div className="post_campaign--right-form">
             <RenderInput
                 nameId={"don_gia_co_ban"}
                 title={"Đơn giá cơ bản"}
-                value={props.stateValues.don_gia_co_ban}
+                value={stateValues.don_gia_co_ban}
                 type={"number"}
                 className={"post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
@@ -116,7 +122,7 @@ function RenderRightForm(props) {
                 nameId={"start_date"}
                 title={"Ngày bắt đầu"}
                 className={"input--date"}
-                value={props.stateValues.start_date}
+                value={stateValues.start_date}
                 OnchangeDate={props.OnchangeStartDate}
             />
 
@@ -124,14 +130,14 @@ function RenderRightForm(props) {
                 nameId={"end_date"}
                 title={"Ngày kết thúc"}
                 className={"input--date"}
-                value={props.stateValues.end_date}
+                value={stateValues.end_date}
                 OnchangeDate={props.OnchangeEndDate}
             />
 
             <RenderInput
                 nameId={"thanh_tien"}
                 title={"Thành tiền"}
-                value={props.stateValues.thanh_tien}
+                value={stateValues.thanh_tien}
                 type={"number"}
                 className={"post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
@@ -141,7 +147,7 @@ function RenderRightForm(props) {
             <RenderInput
                 nameId={"tong_cong"}
                 title={"Tổng cộng"}
-                value={props.stateValues.tong_cong}
+                value={stateValues.tong_cong}
                 type={"number"}
                 className={"post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
@@ -229,8 +235,38 @@ class PostCampaignCreatorUpdater extends Component {
         super(props);
 
         var jsonState = {};
-        this.SetInitState(jsonState);
-        this.state = jsonState;
+        this.state = this.SetInitState(jsonState);
+        this.GetPromotionIdInfos();
+    }
+
+    GetPromotionIdInfos() {
+        var $this = this;
+        Request.get(UrlApi.GetPromotionIdInfos)
+            .then((res) => {
+                var _ids = [];
+                var keys = [];
+                var values = [];
+           
+                res.body.map((promotion) => {
+                    _ids.push(promotion._id);
+                    keys.push(promotion.ma_khuyen_mai);
+                    values.push(promotion.mo_ta);
+                });
+
+                var jsonPromotionIds = {
+                    PromotionIds: {
+                        _ids: _ids,
+                        keys: keys,
+                        values: values
+                    },
+
+                };
+                if (this.props.modeAction === "create") {
+                    jsonPromotionIds.ma_khuyen_mai = keys[0];
+                }
+             
+                $this.setState(jsonPromotionIds);
+            });
     }
 
     SetInitState(jsonState) {
@@ -279,6 +315,8 @@ class PostCampaignCreatorUpdater extends Component {
                 }
             }
         }
+
+        return jsonState;
     }
 
     handleUpdateState(jsonState) {
