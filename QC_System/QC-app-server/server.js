@@ -17,7 +17,7 @@ const {users, populateUsers} = require('./seed/seed');
 
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/ads_system');
+mongoose.connect('mongodb://admin:admin@ds263847.mlab.com:63847/thesis');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -58,7 +58,7 @@ exports.update_a_task = function (req, res) {
   Task.findOneAndUpdate({
     _id: id,
     _creator: req.user._id
-  }).then((task) => {
+  }, req.body).then((task) => {
     if (!task) {
       return res.status(404).send();
     }
