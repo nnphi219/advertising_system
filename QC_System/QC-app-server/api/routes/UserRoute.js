@@ -1,21 +1,26 @@
 'use strict';
 const _ = require('lodash');
+var { authenticate } = require('../../middleware/authenticate');
 
-module.exports = function(app) {
+var urldetail = "/users";
+
+module.exports = function (app) {
     var userController = require('../controllers/UserController');
 
-    app.route('/users')
+    app.get(urldetail + '/me', authenticate, (req, res) => {
+        res.send(req.user);
+    });
+
+    app.route(urldetail)
         .get(userController.list_all_users)
         .post(userController.create_a_user);
 
-    app.route('/users/:userId')
+    app.route(urldetail + '/:userId')
         .get(userController.read_a_user)
         .put(userController.update_a_user)
         .delete(userController.delete_a_user);
 
-    app.post('/users/login', (req, res) => {
-        var body = _.pick(req.body, ['username', 'password']);
-        
-        res.send(req.body);
-    });
+
+
+    app.post(urldetail + '/login', userController.UserLogin);
 };

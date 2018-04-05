@@ -64,3 +64,20 @@ exports.delete_a_user = function (req, res) {
     res.json({ message: 'successfully deleted' });
   });
 };
+
+exports.UserLogin = function (req, res) {
+  var body = _.pick(req.body, ['username', 'password']);
+
+  User.findByCredentials(body.username, body.password)
+    .then((user) => {
+      user.generateAuthToken().then((token) => {
+        res.header('x-auth', token).send(user);
+      });
+    }).catch((e) => {
+      res.status(400).send();
+    });
+};
+
+exports.AuthenticateMe = function (req, res) {
+  res.send(req.user);
+};
