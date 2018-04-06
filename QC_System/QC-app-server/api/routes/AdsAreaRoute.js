@@ -11,6 +11,6 @@ module.exports = function(app) {
         .put(adsAreaController.update_a_adsArea)
         .delete(adsAreaController.delete_a_adsArea);
 
-    app.route('/getadsAreasIdInfo')
-        .get(adsAreaController.read_adsAreaId_Info);
+    app.route('/getadsAreasInfo')
+        .get(adsAreaController.read_adsArea_Info);
 };

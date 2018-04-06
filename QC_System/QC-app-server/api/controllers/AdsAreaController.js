@@ -15,14 +15,14 @@ exports.list_all_adsAreas = function (req, res) {
     });
 };
 
-exports.read_adsAreaId_Info = function (req, res) {
+exports.read_adsArea_Info = function (req, res) {
     AdsArea.find({}, function (err, adsAreas) {
         if (err) {
             res.send(err);
         }
         else {
             var adsareaIdInfo = adsAreas.map((adsArea) =>
-             _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi'])
+             _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung'])
             );
             res.json(adsareaIdInfo);
         }

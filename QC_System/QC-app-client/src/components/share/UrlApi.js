@@ -1,8 +1,10 @@
+const HOST = "localhost";
+const PORT = "8080";
 const hostName = "http://localhost:8080";
 
 const UrlApi = {
     AdsArea: hostName + "/adsareas",
-    GetAdsAreaIdInfo: hostName + "/getadsAreasIdInfo",
+    GetAdsAreaInfo: hostName + "/getadsAreasInfo",
 
     PriceFactor: hostName + "/pricefactors",
 
@@ -13,7 +15,9 @@ const UrlApi = {
     GetPromotionIdInfos: hostName + "/getPromotionsIdInfo",
 
     PostCampaignManagement: hostName + "/postcampaignmanagements",
-    UserManagement: hostName + "/users"
+    UserManagement: hostName + "/users",
+    PostManagement: `http://${HOST}:${PORT}/postmanagement`,
+    Upload: `http://${HOST}:${PORT}/postmanagement/upload`
 }
 
 export default UrlApi;
