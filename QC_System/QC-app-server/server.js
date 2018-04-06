@@ -12,12 +12,12 @@ var express = require('express'),
     PostManagement = require('./api/models/PostManagementModel'),
     bodyParser = require('body-parser');
 var cors = require('cors');
-<<<<<<< HEAD
 const {users, populateUsers} = require('./seed/seed');
 const fileUpload = require('express-fileupload');
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
 
+// mongoose.connect('mongodb://localhost');
 mongoose.connect('mongodb://admin:admin@ds263847.mlab.com:63847/thesis');
 
 app.use(cors());
