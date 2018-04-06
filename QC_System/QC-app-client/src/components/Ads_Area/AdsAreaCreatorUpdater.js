@@ -205,7 +205,7 @@ class AdsAreaCreatorUpdater extends Component {
         if (this.props.modeAction === "create") {
             inputs.forEach(element => {
                 if (element.type === "combobox") {
-                    var theFirstValue = element.values[0];
+                    var theFirstValue = element.keys[0];
                     var valueState = theFirstValue;
 
                     if (element.id === "kich_thuoc_vung") {
