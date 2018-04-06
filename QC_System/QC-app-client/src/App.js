@@ -18,7 +18,15 @@ class AdminTitle extends Component {
                 <div className="row">
                     <div className="col-lg-12">
                         <h1 className="page-header">This is Admin System Page</h1>
+                        <h1></h1>
                     </div>
+                    <button 
+                        type='button'
+                        onClick={() => {
+                          // context.history.push === history.push
+                          window.location.href = '/ads-area';
+                        }}
+                    />
                 </div>
             </div>
         );
