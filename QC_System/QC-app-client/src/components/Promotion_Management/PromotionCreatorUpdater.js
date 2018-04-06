@@ -151,7 +151,7 @@ class PromotionCreatorUpdater extends Component {
 
     GetAdsAreaIdInfos() {
         var $this = this;
-        Request.get(UrlApi.GetAdsAreaIdInfo)
+        Request.get(UrlApi.GetAdsAreaInfo)
             .then((res) => {
                 var _ids = [];
                 var keys = [];

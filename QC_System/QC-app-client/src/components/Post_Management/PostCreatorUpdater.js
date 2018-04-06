@@ -5,9 +5,15 @@ import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 import { ImageVideoUpload } from '../share/ImageGallery/ImageVideoUpload';
+import { TransferSelectInputKeyToValue } from '../share/Mapper';
 
 function RenderLeftForm(props) {
+    var stateValues = props.stateValues;
+    var AdsAreaIdsKeys = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.keys;
+    var AdsAreaIdsValues = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.values;
 
+    var AppliedPageTypeKeys = stateValues.AppliedPageTypes === undefined ? [] : stateValues.AppliedPageTypes.keys;
+    var AppliedPageTypesValues = stateValues.AppliedPageTypes === undefined ? [] : stateValues.AppliedPageTypes.values;
     return (
         <div className="post--left-form">
             <label>Chọn dịch vụ quảng cáo</label>
@@ -24,8 +30,8 @@ function RenderLeftForm(props) {
             <RenderSelect
                 nameId={"ma_dich_vu"}
                 title={"Mã dịch vụ"}
-                keys={["dv1", "dv2"]}
-                values={["dv1", "dv2"]}
+                keys={AdsAreaIdsKeys}
+                values={AdsAreaIdsValues}
                 selectedValue={props.stateValues.ma_dich_vu}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}
@@ -108,6 +114,16 @@ class PostCreatorUpdaterForm extends Component {
         var value = e.target.value;
 
         var jsonState = { [name]: value };
+
+        if(name === "ma_dich_vu"){
+            var stateValues = this.props.stateValues;
+            var adsAreaKeys = stateValues.AdsAreaIds.keys;
+            var appliedPageTypeKeys = stateValues.AdsAreaIds.appliedPageTypeKeys;
+            var indexOfValueInKeys = adsAreaKeys.indexOf(value);
+
+            var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
+            jsonState.trang_hien_thi = appliedPageType;
+        }
         this.props.UpdateState(jsonState);
     }
 
@@ -117,7 +133,7 @@ class PostCreatorUpdaterForm extends Component {
 
     render() {
         return (
-            <div className='popup_inner--promotion'>
+            <div className='popup_inner post_createform_size div_scroll_bar'>
                 <h1>{this.props.titleForm}</h1>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}
@@ -139,8 +155,40 @@ class PostCreatorUpdater extends Component {
         super(props);
 
         var jsonState = {};
-        this.SetInitState(jsonState);
-        this.state = jsonState;
+        this.state = this.SetInitState(jsonState);
+        this.GetAdsAreaInfos();
+    }
+
+    GetAdsAreaInfos() {
+        var $this = this;
+        Request.get(UrlApi.GetAdsAreaInfo)
+            .then((res) => {
+                var _ids = [];
+                var adsAreaIdkeys = [];
+                var adsAreaIdvalues = [];
+                var appliedPageTypeKeys = [];
+
+                res.body.map((adsArea) => {
+                    _ids.push(adsArea._id);
+                    adsAreaIdkeys.push(adsArea.ma_dich_vu);
+                    adsAreaIdvalues.push(adsArea.ten_hien_thi);
+                    appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
+                });
+
+                var jsonAdsAreaIds = {
+                    AdsAreaIds: {
+                        _ids: _ids,
+                        keys: adsAreaIdkeys,
+                        values: adsAreaIdvalues,
+                        appliedPageTypeKeys: appliedPageTypeKeys
+                    }
+                };
+                if (this.props.modeAction === "create") {
+                    jsonAdsAreaIds.ma_dich_vu_ap_dung = adsAreaIdkeys[0];
+                    jsonAdsAreaIds.trang_hien_thi = appliedPageTypeKeys[0];
+                }
+                $this.setState(jsonAdsAreaIds);
+            });
     }
 
     SetInitState(jsonState) {
@@ -163,17 +211,19 @@ class PostCreatorUpdater extends Component {
             jsonState.end_date = JsonDateToDate(editContents.end_date);
 
             var loai_nhan_to = editContents.loai_nhan_to;
-            if(loai_nhan_to !== undefined && loai_nhan_to !== null) {
-                if(loai_nhan_to.thoi_luong !== undefined && loai_nhan_to.thoi_luong !== null) {
+            if (loai_nhan_to !== undefined && loai_nhan_to !== null) {
+                if (loai_nhan_to.thoi_luong !== undefined && loai_nhan_to.thoi_luong !== null) {
                     jsonState.lnt_thoi_luong = loai_nhan_to.thoi_luong;
                 }
                 jsonState.lnt_khung_gio = loai_nhan_to.khung_gio;
-                if(loai_nhan_to.vi_tri !== undefined && loai_nhan_to.vi_tri !== null) {
+                if (loai_nhan_to.vi_tri !== undefined && loai_nhan_to.vi_tri !== null) {
                     jsonState.lnt_tinh = loai_nhan_to.vi_tri.tinh;
                     jsonState.lnt_quan_huyen = loai_nhan_to.vi_tri.quan_huyen;
                 }
             }
         }
+
+        return jsonState;
     }
 
     handleUpdateState(jsonState) {
@@ -196,7 +246,6 @@ class PostCreatorUpdater extends Component {
 
     CreatePost() {
         var content = this.GetModelStateJson();
-        console.log(content);
 
         var $this = this;
         Request.post(UrlApi.PostManagement)

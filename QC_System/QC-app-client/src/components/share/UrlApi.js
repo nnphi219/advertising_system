@@ -4,7 +4,7 @@ const hostName = "http://localhost:8080";
 
 const UrlApi = {
     AdsArea: hostName + "/adsareas",
-    GetAdsAreaIdInfo: hostName + "/getadsAreasIdInfo",
+    GetAdsAreaInfo: hostName + "/getadsAreasInfo",
 
     PriceFactor: hostName + "/pricefactors",
 
