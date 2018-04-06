@@ -4,7 +4,7 @@ import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
-import './user_management.css';
+import './user.css';
 
 class RenderProperties extends Component {
     render() {

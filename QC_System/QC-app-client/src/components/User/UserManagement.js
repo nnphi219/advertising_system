@@ -8,7 +8,7 @@ import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import UrlApi from '../share/UrlApi';
 import { TransferFactorUnitKeyToText, JsonDateToDate, TransferdisplayMechanismToText } from '../share/Mapper';
 
-import './user_management.css';
+import './user.css';
 import UserCreatorUpdater from './UserCreatorUpdater';
 
 function RenderRow(props) {
