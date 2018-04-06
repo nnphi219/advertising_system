@@ -1,6 +1,8 @@
 'use strict';
 const _ = require('lodash');
 var { authenticate } = require('../../middleware/authenticate');
+const { ObjectID } = require('mongodb');
+const bcrypt = require('bcryptjs');
 
 var mongoose = require('mongoose'),
   User = mongoose.model('Users');
@@ -14,12 +16,12 @@ exports.list_all_users = function (req, res) {
 };
 
 exports.create_a_user = function (req, res) {
-  var body = _.pick(req.body, ['email', 'username', 'password']);
+  var body = _.pick(req.body, ['email', 'username', 'password', 'user_type']);
   var new_user = new User(body);
   if (new_user.user_type === undefined) {
     new_user.user_type = "user";
   }
-  // res.send(body);
+
   new_user.save()
     .then((new_user) => {
       return new_user.generateAuthToken(new_user.password);
@@ -47,7 +49,19 @@ exports.read_a_user = function (req, res) {
 
 
 exports.update_a_user = function (req, res) {
-  User.findOneAndUpdate({ _id: req.params.userId }, req.body, { new: true }, function (err, user) {
+  var id = req.params.userId;
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  var updatedUser = _.pick(req.body, ['email', 'username', 'password', 'user_type']);
+
+  if (updatedUser.password !== undefined) {
+    updatedUser.password = bcrypt.hashSync(updatedUser.password);
+  }
+
+  User.findOneAndUpdate({ _id: id }, updatedUser, { new: true }, function (err, user) {
     if (err)
       res.send(err);
     res.json(user);
@@ -63,4 +77,21 @@ exports.delete_a_user = function (req, res) {
       res.send(err);
     res.json({ message: 'successfully deleted' });
   });
+};
+
+exports.UserLogin = function (req, res) {
+  var body = _.pick(req.body, ['username', 'password']);
+
+  User.findByCredentials(body.username, body.password)
+    .then((user) => {
+      user.generateAuthToken().then((token) => {
+        res.header('x-auth', token).send(user);
+      });
+    }).catch((e) => {
+      res.status(400).send();
+    });
+};
+
+exports.AuthenticateMe = function (req, res) {
+  res.send(req.user);
 };

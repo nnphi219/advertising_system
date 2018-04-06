@@ -18,6 +18,10 @@ var TaskSchema = new Schema({
       enum: ['pending', 'ongoing', 'completed']
     }],
     default: ['pending']
+  },
+  _creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
   }
 });
 

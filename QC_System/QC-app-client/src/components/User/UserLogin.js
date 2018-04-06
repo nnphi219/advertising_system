@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import UrlApi from '../share/UrlApi';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import './user.css';
 
 class UserLogin extends Component {
     constructor(props) {
@@ -28,7 +29,8 @@ class UserLogin extends Component {
     render() {
         return (
             < div id="page-wrapper" >
-                <div className="row">
+                <div className="row" className="div_loginform">
+                    <h1>Login</h1>
                     <div>
                         <RenderInput
                             nameId={"username"}
