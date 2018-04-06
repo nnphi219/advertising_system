@@ -6,7 +6,7 @@ import DeleteForm from '../share/DeleteForm';
 import HeaderForm from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import UrlApi from '../share/UrlApi';
-import { TransferFactorUnitKeyToText, JsonDateToDate, TransferdisplayMechanismToText } from '../share/Mapper';
+import { TransferFactorUnitKeyToText, JsonDateToDate, TransferdisplayMechanismToText, TransferSelectInputKeyToValue } from '../share/Mapper';
 
 import './post_management.css';
 import PostCreatorUpdater from './PostCreatorUpdater';
@@ -15,7 +15,11 @@ function RenderRow(props) {
 
     let ma_bai_dang = props.trContent.ma_bai_dang;
     let ma_dich_vu = props.trContent.ma_dich_vu;
-    let trang_hien_thi = props.trContent.trang_hien_thi;
+    let trang_hien_thi = TransferSelectInputKeyToValue(
+        props.trContent.trang_hien_thi,
+        ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
+        ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
+      );
     let tieu_de_hien_thi = props.trContent.tieu_de_hien_thi;
     let mo_ta_bai_dang = props.trContent.mo_ta_bai_dang;
     let anh_dai_dien = props.trContent.anh_dai_dien;

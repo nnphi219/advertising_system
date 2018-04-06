@@ -6,6 +6,7 @@ import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTi
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 import { ImageVideoUpload } from '../share/ImageGallery/ImageVideoUpload';
 import { TransferSelectInputKeyToValue } from '../share/Mapper';
+import './post_management.css';
 
 function RenderLeftForm(props) {
     var stateValues = props.stateValues;
@@ -14,8 +15,14 @@ function RenderLeftForm(props) {
 
     var AppliedPageTypeKeys = stateValues.AppliedPageTypes === undefined ? [] : stateValues.AppliedPageTypes.keys;
     var AppliedPageTypesValues = stateValues.AppliedPageTypes === undefined ? [] : stateValues.AppliedPageTypes.values;
+    console.log(stateValues);
+    var trang_hien_thi = TransferSelectInputKeyToValue(
+        props.stateValues.trang_hien_thi,
+        ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
+        ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
+    );
     return (
-        <div className="post--left-form">
+        <div style={{ marginLeft: "10%" }}>
             <label>Chọn dịch vụ quảng cáo</label>
 
             <RenderInput
@@ -41,7 +48,7 @@ function RenderLeftForm(props) {
                 nameId={"trang_hien_thi"}
                 title={"Trang hiển thị"}
                 type={"text"}
-                value={props.stateValues.trang_hien_thi}
+                value={trang_hien_thi}
                 className={"post--input"}
                 isReadOnly={1}
                 OnChangeInput={props.OnChangeInput}
@@ -71,6 +78,7 @@ function RenderLeftForm(props) {
                 upload_uri={UrlApi.Upload}
                 base_uri={UrlApi.Base}
                 Onchange={props.OnchangeImage}
+                UploadImageDescription={stateValues.UploadImageDescription}
             />
 
         </div>
@@ -115,7 +123,7 @@ class PostCreatorUpdaterForm extends Component {
 
         var jsonState = { [name]: value };
 
-        if(name === "ma_dich_vu"){
+        if (name === "ma_dich_vu") {
             var stateValues = this.props.stateValues;
             var adsAreaKeys = stateValues.AdsAreaIds.keys;
             var appliedPageTypeKeys = stateValues.AdsAreaIds.appliedPageTypeKeys;
@@ -184,7 +192,7 @@ class PostCreatorUpdater extends Component {
                     }
                 };
                 if (this.props.modeAction === "create") {
-                    jsonAdsAreaIds.ma_dich_vu_ap_dung = adsAreaIdkeys[0];
+                    jsonAdsAreaIds.ma_dich_vu = adsAreaIdkeys[0];
                     jsonAdsAreaIds.trang_hien_thi = appliedPageTypeKeys[0];
                 }
                 $this.setState(jsonAdsAreaIds);
@@ -230,12 +238,23 @@ class PostCreatorUpdater extends Component {
         this.setState(jsonState);
     }
 
+    getDisplayPageKey(serviceID) {
+        var stateValues = this.state;
+        var adsAreaKeys = stateValues.AdsAreaIds.keys;
+        var appliedPageTypeKeys = stateValues.AdsAreaIds.appliedPageTypeKeys;
+        var indexOfValueInKeys = adsAreaKeys.indexOf(serviceID);
+
+        var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
+        return appliedPageType;
+    }
+
     GetModelStateJson() {
         var state = this.state;
+        console.log(state);
         var content = {
             ma_bai_dang: state.ma_bai_dang,
             ma_dich_vu: state.ma_dich_vu,
-            trang_hien_thi: state.trang_hien_thi,
+            trang_hien_thi: this.getDisplayPageKey(state.ma_dich_vu),
             tieu_de_hien_thi: state.tieu_de_hien_thi,
             mo_ta_bai_dang: state.mo_ta_bai_dang,
             anh_dai_dien: state.imageName
@@ -246,7 +265,8 @@ class PostCreatorUpdater extends Component {
 
     CreatePost() {
         var content = this.GetModelStateJson();
-
+        console.log(content);
+        return;
         var $this = this;
         Request.post(UrlApi.PostManagement)
             .set('Content-Type', 'application/x-www-form-urlencoded')

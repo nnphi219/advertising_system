@@ -91,12 +91,17 @@ export class ImageVideoUpload extends Component {
             response.json().then((body) => {
             var jsonState = { 
                 imageURL: `${this.props.base_uri}/${body.file}`, 
-                imageName: `${body.file}` 
+                imageName: `${body.file}`,
+                UploadImageDescription : "success"
             };
+            
             this.props.Onchange(jsonState);
             // console.log(`${this.props.base_uri}/${body.file}`);
             // console.log(`${body.file}`);
             });
+        }).catch((e) => {
+           
+            this.props.Onchange({UploadImageDescription: "fail"});
         });
         // axios.post(this.props.upload_uri, data, {
         //     onUploadProgress: progressEvent => {
@@ -119,6 +124,7 @@ export class ImageVideoUpload extends Component {
             <br />
             <div>
                 <button>Upload</button>
+                {this.props.UploadImageDescription}
             </div>
           {/* <img src={this.state.imageURL} alt="img" /> */}
         </form>

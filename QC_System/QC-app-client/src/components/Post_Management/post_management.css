@@ -1,4 +1,4 @@
-.post_campaign--input
+.post--input
 {
     display: block;
     width: 80%;
@@ -18,13 +18,13 @@
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
-.post_campaign--left-form {
+.post--left-form {
     float: left;
     width: 45%;
     margin-left: 5%;
 }
 
-.post_campaign--right-form {
+.post--right-form {
     float: left;
     width: 45%;
     margin-left: 5%;
