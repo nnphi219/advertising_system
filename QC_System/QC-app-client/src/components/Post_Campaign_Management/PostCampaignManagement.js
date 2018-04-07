@@ -186,7 +186,7 @@ class PostCampaignManagement extends Component {
                             tbodyContents={this.state.tbodyContents}
                             handleEditClick={this.handleEditClick}
                             handleDeleteClick={this.handleDeleteClick}
-                        />
+                          />
 
                         {
                             this.state.ShowCreatorUpdaterPopup ?

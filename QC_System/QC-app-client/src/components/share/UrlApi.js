@@ -15,7 +15,12 @@ const UrlApi = {
     GetPromotionIdInfos: hostName + "/getPromotionsIdInfo",
 
     PostCampaignManagement: hostName + "/postcampaignmanagements",
+
     UserManagement: hostName + "/users",
+    UserAuthen: hostName + "/users/me",
+    UserLogin: hostName + "/users/login",
+    UserLogout: hostName + "/users/me/token",
+
     PostManagement: `http://${HOST}:${PORT}/postmanagement`,
     Upload: `http://${HOST}:${PORT}/postmanagement/upload`
 }
