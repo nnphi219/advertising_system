@@ -3,7 +3,8 @@ import Request from 'superagent';
 import AdsAreaCreatorUpdater from './AdsAreaCreatorUpdater';
 import AdsAreaDeleteForm from './AdsAreaDelete';
 import './ads_area.css';
-import { TransferSelectInputKeyToValue } from '../share/Mapper';
+import { TransferSelectInputKeyToValue, JsonSortDateType, JsonSort } from '../share/Mapper';
+import RenderHeader from '../share/RenderHeader';
 
 function RenderEditDeleteButton(props) {
   return (
@@ -109,12 +110,21 @@ class AdsAreaInformation extends Component {
 
 class AdsAreaContents extends Component {
   render() {
-    var theadAdsAreas = ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"];
+    var theadAdsAreas = {
+      keys: ['ma_dich_vu', 'ten_hien_thi', 'loai_bai_dang_ap_dung', 'loai_trang_ap_dung', 'so_luong_chia_se_vung', 'so_luong_tin_toi_da', 'kich_thuoc_vung.width', 'trang_thai'],
+      values: ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"]
+    };
+
+    var props = this.props;
+
     return (
       <div className="adsarea-content">
-        
+
         <table className="table table-striped">
-          <RenderHead theadAdsAreas={theadAdsAreas} />
+          <RenderHeader
+            theader={theadAdsAreas}
+            OnchangeSort={props.OnchangeSort}
+          />
           <RenderBody
             tbodyAdsAreas={this.props.tbodyAdsAreas}
             handleEditClick={this.props.handleEditClick}
@@ -157,13 +167,17 @@ class AdsArea extends Component {
       ShowCreatorPopup: false,
       ShowDeletePopup: false,
       SelectedItemId: null,
-      tbodyAdsAreas: []
+      tbodyAdsAreas: [],
+      IsASC: false,
+      KeySort: ''
     };
     this.handleShowCreatorPopup = this.handleShowCreatorPopup.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
     this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
     this.handleResetContentsState = this.handleResetContentsState.bind(this);
+
+    this.OnchangeSort = this.OnchangeSort.bind(this);
   }
 
   componentDidMount() {
@@ -226,16 +240,48 @@ class AdsArea extends Component {
     this.getAdsAreas();
   }
 
+  OnchangeSort(e) {
+    var newKeySort = e.target.name;
+    var KeySort = this.state.KeySort;
+    var jsonStateSort = {
+      KeySort: newKeySort
+    };
+
+    if (newKeySort === KeySort) {
+      jsonStateSort.IsASC = !this.state.IsASC;
+    }
+    else {
+      jsonStateSort.IsASC = true;
+    }
+
+    this.setState(jsonStateSort);
+    e.preventDefault();
+  }
+
   render() {
+    var currentState = this.state;
+    var KeySort = currentState.KeySort;
+    var tbody = null;
+    if (KeySort === '') {
+      tbody = currentState.tbodyAdsAreas;
+    }
+    else if (KeySort === 'start_date' || KeySort === 'end_date') {
+      tbody = JsonSortDateType(currentState.tbodyAdsAreas, KeySort, currentState.IsASC);
+    }
+    else {
+      tbody = JsonSort(currentState.tbodyAdsAreas, KeySort, currentState.IsASC);
+    }
+
     return (
       <div id="page-wrapper">
         <div className="row">
           <div>
             <AdsAreaHeader showCreatorPopup={this.handleShowCreatorPopup} />
             <AdsAreaContents
-              tbodyAdsAreas={this.state.tbodyAdsAreas}
+              tbodyAdsAreas={tbody}
               handleEditClick={this.handleEditClick}
               handleDeleteClick={this.handleDeleteClick}
+              OnchangeSort={this.OnchangeSort}
             />
 
             {
