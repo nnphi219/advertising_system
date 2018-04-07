@@ -17,8 +17,8 @@ const fileUpload = require('express-fileupload');
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
 
-// mongoose.connect('mongodb://localhost');
-mongoose.connect('mongodb://admin:admin@ds263847.mlab.com:63847/thesis');
+mongoose.connect('mongodb://localhost');
+// mongoose.connect('mongodb://admin:admin@ds263847.mlab.com:63847/thesis');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
