@@ -265,8 +265,8 @@ class PostCreatorUpdater extends Component {
 
     CreatePost() {
         var content = this.GetModelStateJson();
-        console.log(content);
-        return;
+        // console.log(content);
+        // return;
         var $this = this;
         Request.post(UrlApi.PostManagement)
             .set('Content-Type', 'application/x-www-form-urlencoded')
