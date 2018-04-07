@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import { IndexRoute } from 'react-router';
 import AdsArea from './components/Ads_Area/AdsArea';
 import PriceFactor from './components/Price_Factor/PriceFactor';
 import ServicePrice from './components/Service_Price/ServicePrice';
@@ -20,11 +21,11 @@ class AdminTitle extends Component {
                         <h1 className="page-header">This is Admin System Page</h1>
                         <h1></h1>
                     </div>
-                    <button 
+                    <button
                         type='button'
                         onClick={() => {
-                          // context.history.push === history.push
-                          window.location.href = '/ads-area';
+                            // context.history.push === history.push
+                            window.location.href = '/ads-area';
                         }}
                     />
                 </div>
@@ -47,6 +48,29 @@ class XSystemTitle extends Component {
     }
 }
 
+function requireAuth() {
+    console.log("a");
+    window.location.href = '/user-login';
+}
+
+export class PrivateRoute extends Component {
+    render() {
+        var loggedIn = true;
+        var path = this.props.path;
+        var component = this.props.component;
+
+        return (
+            <Route path={"/"} render={() => (
+                loggedIn ? (
+                    <Redirect to={"/ads-area"} />
+                ) : (
+                        <Redirect to={"/user-login"} />
+                    )
+            )} />
+        );
+    }
+}
+
 export class AppAdmin extends Component {
     render() {
         return (
@@ -62,7 +86,7 @@ export class AppAdmin extends Component {
                     <Route path={"/promotion-management"} component={PromotionManagement} />
                     <Route path={"/post-campaign-management"} component={PostCampaignManagement} />
                     <Route path={"/payment-management"} component={PaymentManagement} />
-                    
+
                     {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />
           <Route path={"home-single"} component={Home}/> */}
@@ -90,4 +114,5 @@ export class AppXSystem extends Component {
         );
     }
 }
+
 

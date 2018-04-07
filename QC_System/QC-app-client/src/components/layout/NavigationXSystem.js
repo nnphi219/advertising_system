@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+import UrlApi from '../share/UrlApi';
+import Request from 'superagent';
 import './NavigationXSystem.css';
+
 
 class NavbarHeader extends Component {
     render() {
@@ -14,6 +17,24 @@ class NavbarHeader extends Component {
 }
 
 class NavTopLinks extends Component {
+    constructor(props) {
+        super(props);
+
+        this.logout = this.logout.bind(this);
+    }
+
+    logout() {
+        var token = localStorage.getItem('x-auth');
+        localStorage.setItem('x-auth', '');
+        window.location.href = '/user-login';
+        // Request.delete(UrlApi.UserLogout)
+        //     .set('x-auth', token)
+        //     .end(function (err, res) {
+        //         localStorage.setItem('x-auth', '');
+        //         window.location.href = '/user-login';
+        //     });
+    }
+
     render() {
         return (
             <ul className="nav navbar-top-links navbar-right">
@@ -81,7 +102,8 @@ class NavTopLinks extends Component {
                         <li><a href="#9"><i className="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li className="divider"></li>
-                        <li><a href="login.html"><i className="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li>
+                        <button onClick={this.logout}><i className="fa fa-sign-out fa-fw"></i>Logout</button>
                         </li>
                     </ul>
                 </li>
