@@ -3,19 +3,27 @@ import Request from 'superagent';
 import ColorPickerInput from '../share/color_picker_input';
 import UrlApi from '../share/UrlApi';
 import { RenderSelect } from '../share/InputsRender';
-import swal from 'sweetalert';
-// import { FormErrors } from './FormErrors';
 
 function TransferSizeToString(size) {
     return size.width + "x" + size.height;
 }
 
 function RenderInput(props) {
+    var classNameInput = "adsarea--input";
+    if (props.inputData.required && (props.valueInput === "" || props.valueInput === undefined)) {
+        classNameInput += " input--required";
+    }
+    else if(props.inputData.required && props.inputData.type === "number"){
+        if(parseFloat(props.valueInput) <= 0){
+            classNameInput += " input--required";
+        }
+    }
+
     return (
         <div>
             <label key={props.inputData.id} className="fullwidth">
                 {props.inputData.description}
-                <input type="text" id={props.inputData.id} key={props.inputData.id} value={props.valueInput} className={`adsarea--input ${props.errorClass}`} name={props.inputData.id} onChange={props.handleOnchangeInput} />
+                <input type={props.inputData.type} id={props.inputData.id} key={props.inputData.id} value={props.valueInput} className={classNameInput} name={props.inputData.id} onChange={props.handleOnchangeInput} />
             </label>
         </div>
     );
@@ -43,7 +51,7 @@ function RenderCombobox(props) {
             selectedValue={selectedValue}
             OnChangeSelect={props.handleOnchangeSelect}
             className={"adsarea--select"}
-        />   
+        />
     );
 }
 
@@ -97,9 +105,8 @@ function RenderProperties(props) {
             inputs.push(<RenderRadioButton key={element.id} inputData={element} keySelectedItem={keySelectedItem} handleOnchangeRadioButton={props.handleOnchangeRadioButton} />);
         }
         else {
-            var valueInput = props.stateValues[element.id].value;
-            let errorClass = props.stateValues[element.id].errorClass;
-            inputs.push(<RenderInput errorClass={errorClass} key={element.id} inputData={element} valueInput={valueInput} handleOnchangeInput={props.handleOnchangeInput} />);
+            var valueInput = props.stateValues[element.id];
+            inputs.push(<RenderInput key={element.id} inputData={element} valueInput={valueInput} handleOnchangeInput={props.handleOnchangeInput} />);
         }
     });
 
@@ -128,15 +135,7 @@ class AdsAreaCreatorForm extends Component {
     handleOnchangeInput(e) {
         var name = e.target.name;
         var value = e.target.value;
-        console.log(`${name}: ${typeof(value)}`)
-        this.props.handleUpdateState({ [name]: {"value": value, "errorClass": this.validateFieldValue(value) ? '': 'errorClass--text'} });
-    }
-
-    validateFieldValue(value) {
-        if (value === '') {
-            return false;
-        }
-        return true;
+        this.props.handleUpdateState({ [name]: value });
     }
 
     handleOnchangeSelect(e) {
@@ -207,7 +206,7 @@ class AdsAreaCreatorUpdater extends Component {
         this.SetInitState(adsAreaInformationInputs, jsonState);
         this.SetInitState(adsAreaDescriptionInputs, jsonState);
         this.state = jsonState;
-        console.log(this.state);
+
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUpdateState = this.handleUpdateState.bind(this);
     }
@@ -223,19 +222,16 @@ class AdsAreaCreatorUpdater extends Component {
                         var areaSizeArray = theFirstValue.split('x');
                         valueState = { width: areaSizeArray[0], height: areaSizeArray[1] };
                     }
-                    jsonState[element.id] = {"value": valueState, "errorClass": "errorClass"};
+                    jsonState[element.id] = valueState;
                 }
                 else if (element.type === "radio") {
-                    jsonState[element.id] = {"value": element.keys[0], "errorClass": "errorClass"};
+                    jsonState[element.id] = element.keys[0];
                 }
                 else if (element.type === "color") {
-                    jsonState[element.id] = {"value": "#000000", "errorClass": "errorClass"};
+                    jsonState[element.id] = "#000000";
                 }
-                else if (element.type === 'textbox') {
-                    jsonState[element.id] = {"value": "", "errorClass": "errorClass--text"};
-                }
-                else if (element.type === 'quantity') {
-                    jsonState[element.id] = {"value": 0, "errorClass": "errorClass--text"};
+                else if (element.type === "number") {
+                    jsonState[element.id] = 0;
                 }
             });
         }
@@ -259,11 +255,6 @@ class AdsAreaCreatorUpdater extends Component {
 
     handleUpdateState(jsonState) {
         this.setState(jsonState);
-    }
-    // , () => { this.validateField(jsonState) }
-
-    validateField(jsonState) {
-        console.log(jsonState.target.name);
     }
 
     CreateAdsArea() {
@@ -295,12 +286,7 @@ class AdsAreaCreatorUpdater extends Component {
 
     handleSubmit() {
         if (this.props.modeAction === "create") {
-            swal({
-                title: "Good job!",
-                text: "You clicked the button!",
-                icon: "success",
-              });
-            // this.CreateAdsArea();
+            this.CreateAdsArea();
         }
         else {
             this.EditAdsArea();
@@ -329,13 +315,14 @@ var adsAreaInformationInputs = [
     {
         "description": "Mã dịch vụ quảng cáo",
         "id": "ma_dich_vu",
-        "type": "textbox"
-
+        "type": "textbox",
+        "required": true
     },
     {
         "description": "Tên hiển thị",
         "id": "ten_hien_thi",
-        "type": "textbox"
+        "type": "textbox",
+        "required": true
     },
     {
         "description": "Trang áp dụng quảng cáo",
@@ -361,12 +348,14 @@ var adsAreaInformationInputs = [
     {
         "description": "Số chia sẻ của vùng",
         "id": "so_luong_chia_se_vung",
-        "type": "quantity"
+        "type": "quantity",
+        "required": true
     },
     {
         "description": "Số lượng bài đăng tối đa",
         "id": "so_luong_tin_toi_da",
-        "type": "quantity"
+        "type": "quantity",
+        "required": true
     }
 ];
 
@@ -395,12 +384,14 @@ var adsAreaDescriptionInputs = [
         "id": "hieu_ung_tieu_de",
         "type": "combobox",
         "keys": ["Regular", "Bold", "Italic"],
-        "values": ["Regular", "Bold", "Italic"]
+        "values": ["Regular", "Bold", "Italic"],
+        "required": true
     },
     {
         "description": "Số kí tự tối đa của tiêu đề",
         "id": "so_luong_chu_mo_ta",
-        "type": "quantity"
+        "type": "number",
+        "required": true
     },
     {
         "description": "Có viền vùng quảng cáo",
@@ -417,12 +408,14 @@ var adsAreaDescriptionInputs = [
     {
         "description": "Kích thước viền vùng quảng cáo",
         "id": "kich_thuoc_vien",
-        "type": "quantity"
+        "type": "number",
+        "required": true
     },
     {
         "description": "Số kí tự tối đa của xem trước bài đăng",
         "id": "so_luong_chu_xem_truoc",
-        "type": "quantity"
+        "type": "number",
+        "required": true
     },
     {
         "description": "Hiên thị video thay thế ảnh đại diện",
