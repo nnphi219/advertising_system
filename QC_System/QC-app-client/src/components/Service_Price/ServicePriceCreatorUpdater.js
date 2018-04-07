@@ -16,6 +16,7 @@ class RenderLeftForm extends Component {
         var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
         var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
 
+        var classNamePriceId = this.props.stateValues.ma_gia === "" ? "input--required" : "";
         return (
             <div key="left" className="serviceprice_information_left">
                 <h2>Thông tin giá dịch vụ</h2>
@@ -32,7 +33,7 @@ class RenderLeftForm extends Component {
                     <div>
                         <label key={"ma_gia"} className="fullwidth">
                             {"Nhập mã giá"}
-                            <input type="text" key={"ma_gia"} name={"ma_gia"} value={this.props.stateValues.ma_gia} onChange={this.props.OnChangeInput} className="serviceprice--input" />
+                            <input type="text" key={"ma_gia"} name={"ma_gia"} value={this.props.stateValues.ma_gia} onChange={this.props.OnChangeInput} className={`serviceprice--input ${classNamePriceId}` } />
                         </label>
                     </div>
                     <div>

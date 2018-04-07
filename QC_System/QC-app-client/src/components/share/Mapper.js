@@ -62,3 +62,87 @@ export function TransferSelectInputKeyToValue(value, keys, values) {
 
     return result;
 }
+
+
+// ---------------------- sort
+
+export function JsonSort(data, keys, isASC) {
+    if(keys === ''){
+        return data;
+    }
+
+    var keyArr = keys.split('.');
+
+    return data.sort(function(a, b) {
+        var x = a; 
+        var y = b;
+        keyArr.forEach(key => {
+            x = (x === undefined)? undefined: x[key];
+            y = (y === undefined)? undefined: y[key];
+        });
+
+        if(x !== undefined && y === undefined){
+            if(isASC) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        }
+
+        if(x === undefined && y !== undefined){
+            if(isASC) {
+                return -1;
+            }
+            else {
+                return 1;
+            }
+        }
+
+        if(isASC) {
+            { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
+        }
+        else {
+            { return ((x > y) ? -1 : ((x < y) ? 1 : 0)); }
+        }
+    });
+};
+
+export function JsonSortDateType(data, keyDate, isASC){
+    if(keyDate === ''){
+        return data;
+    }
+
+    return data.sort(function(a, b) {
+        var x = a[keyDate]; 
+        var y = b[keyDate];
+
+        if(x !== undefined && y === undefined){
+            if(isASC) {
+                return 1;
+            }
+            else {
+                return -1;
+            }
+        }
+
+        if(x === undefined && y !== undefined){
+            if(isASC) {
+                return -1;
+            }
+            else {
+                return 1;
+            }
+        }
+
+        x = JsonDateToDate(x);
+        y = JsonDateToDate(y);
+
+        if(isASC) {
+            { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
+        }
+        else {
+            { return ((x > y) ? -1 : ((x < y) ? 1 : 0)); }
+        }
+    });
+};

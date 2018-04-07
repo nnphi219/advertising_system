@@ -8,6 +8,15 @@ body {
   border: 1px solid red;
 }
 
+.button--transparent{
+  background: transparent;
+  border: none;
+}
+
+.button--transparent:hover  {
+  color: blue;
+}
+
 .div_scroll_bar {
   overflow-y: scroll;
 }
