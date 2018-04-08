@@ -8,7 +8,8 @@ var cors = require('cors');
 var hostname = 'http://xsystem-server.localtest.me';
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/x_system'); 
+// mongoose.connect('mongodb://localhost:27017/x_system'); 
+mongoose.connect('mongodb://xsystemadmin:xsystemadmin@ds115569.mlab.com:15569/xsystem'); 
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
