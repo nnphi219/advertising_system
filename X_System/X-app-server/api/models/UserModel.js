@@ -22,6 +22,7 @@ var UserSchema = new mongoose.Schema({
             message: '{VALUE} is not a valid email'
         }
     },
+    avatarUrl: String,
     password: {
         type: String,
         require: true,

@@ -3,6 +3,7 @@ var express = require('express'),
     port = process.env.PORT || 8081,
     mongoose = require('mongoose'),
     Task = require('./api/models/todoListModel'), //created model loading here
+    User = require('./api/models/UserModel'),
     bodyParser = require('body-parser');
 var cors = require('cors');
 var hostname = 'http://xsystem-server.localtest.me';
@@ -16,8 +17,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var todoListRoute = require('./api/routes/todoListRoute'); //importing route
+var userRoute = require('./api/routes/UserRoute');
 
 todoListRoute(app); //register the route
+userRoute(app);
 
 app.listen(port);
 
