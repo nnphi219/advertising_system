@@ -14,7 +14,7 @@ function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
     var muc_gia_ap_dung = props.trContent.muc_gia_ap_dung;
-    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia)  === 1 ? "%" : "VND");
+    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia) === 1 ? "%" : "VND");
 
     var start_date = props.trContent.start_date;
     var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;
@@ -65,7 +65,11 @@ function RenderBody(props) {
 class PromotionManagementContents extends Component {
 
     render() {
-        var theaderPromotion = ["Mã khuyến mãi", "Mô tả khuyến mãi", "Mã dịch vụ áp dụng", "Mực giá áp dụng", "Bắt đầu", "Kết thúc", "Trạng thái"];
+        var theaderPromotion = {
+            keys: [],
+            values: ["Mã khuyến mãi", "Mô tả khuyến mãi", "Mã dịch vụ áp dụng", "Mực giá áp dụng", "Bắt đầu", "Kết thúc", "Trạng thái"]
+        };
+
         return (
             <div className="table-content">
                 <table className="table table-striped">

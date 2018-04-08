@@ -16,7 +16,7 @@ function RenderRow(props) {
     var factorType = props.trContentPriceFactor.loai_nhan_to;
     var timeLot = `${factorType.khung_gio.bat_dau.toString()}h-${factorType.khung_gio.ket_thuc.toString()}h`;
     var location = (factorType.vi_tri !== undefined && factorType.vi_tri !== null) ? factorType.vi_tri.quan_huyen + "," + factorType.vi_tri.tinh : "";
-    
+
     var rateCalculationJson = props.trContentPriceFactor.ti_le_tinh_gia;
     var rateCalculationString = (rateCalculationJson.tang === 1 ? "+ " : "- ") + rateCalculationJson.gia_tri.toString() + "%";
     var status = (props.trContentPriceFactor.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
@@ -63,7 +63,11 @@ function RenderBody(props) {
 class PriceFactorContents extends Component {
 
     render() {
-        var theadPriceFactors = ["Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"];
+        var theadPriceFactors = {
+            keys: [],
+            values: ["Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"]
+        };
+
         return (
             <div className="adsarea-content">
                 <table className="table table-striped">
@@ -130,7 +134,7 @@ class PriceFactor extends Component {
             ModeAction: "edit",
             EditContents: editContents,
             ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
-          });
+        });
     }
 
     handleDeleteClick(event) {

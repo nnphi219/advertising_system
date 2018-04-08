@@ -19,7 +19,7 @@ function RenderRow(props) {
         props.trContent.trang_hien_thi,
         ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
         ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
-      );
+    );
     let tieu_de_hien_thi = props.trContent.tieu_de_hien_thi;
     let mo_ta_bai_dang = props.trContent.mo_ta_bai_dang;
     let anh_dai_dien = props.trContent.anh_dai_dien;
@@ -64,7 +64,11 @@ function RenderBody(props) {
 
 class PostContents extends Component {
     render() {
-        var theaderPost = ["Mã bài đăng", "Mã dịch vụ", "Trang hiển thị", "Tiêu đề hiển thị", "Mô tả bài đăng", "Ảnh đại điện"];
+        var theaderPost = {
+            keys: [],
+            values: ["Mã bài đăng", "Mã dịch vụ", "Trang hiển thị", "Tiêu đề hiển thị", "Mô tả bài đăng", "Ảnh đại điện"]
+        };
+
         return (
             <div className="table-content">
                 <table className="table table-striped">

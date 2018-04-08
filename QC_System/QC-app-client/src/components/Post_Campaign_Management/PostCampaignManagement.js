@@ -75,7 +75,11 @@ function RenderBody(props) {
 
 class PostCampaignContents extends Component {
     render() {
-        var theaderPostCampaign = ["Mã chiến dịch", "Mã bài đăng", "Mã khuyến mãi", "Cơ chế hiện thị", "Tính theo giá", "Thời lượng", "Khung giờ", "Vị trí", "Bắt đầu", "Kết thúc", "Tổng tiền", "Trạng thái"];
+        var theaderPostCampaign = {
+            keys: [],
+            values: ["Mã chiến dịch", "Mã bài đăng", "Mã khuyến mãi", "Cơ chế hiện thị", "Tính theo giá", "Thời lượng", "Khung giờ", "Vị trí", "Bắt đầu", "Kết thúc", "Tổng tiền", "Trạng thái"]
+        };
+        
         return (
             <div className="table-content">
                 <table className="table table-striped">
@@ -186,7 +190,7 @@ class PostCampaignManagement extends Component {
                             tbodyContents={this.state.tbodyContents}
                             handleEditClick={this.handleEditClick}
                             handleDeleteClick={this.handleDeleteClick}
-                          />
+                        />
 
                         {
                             this.state.ShowCreatorUpdaterPopup ?

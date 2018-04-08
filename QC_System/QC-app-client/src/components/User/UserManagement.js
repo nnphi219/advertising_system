@@ -50,7 +50,11 @@ function RenderBody(props) {
 
 class UserContents extends Component {
     render() {
-        var theader = ["User name", "Email", "Loại user"];
+        var theader = {
+            keys: [],
+            values: ["User name", "Email", "Loại user"]
+        };
+
         return (
             <div className="table-content">
                 <table className="table table-striped">
