@@ -21,12 +21,13 @@ import './frontend/assets/css/animate.css';
 import './frontend/assets/css/style.css';
 import './frontend/assets/color/default.css';
 
+var AllowedUrl = ["login", "register", "post", "marketing"];
 
 function RedirectUrl() {
     var currentURL = window.location.href.replace('http://', '').replace('https://', '');
     var currentPath = currentURL.split('/')[1];
 
-    if (currentPath !== "login" && currentPath !== "register") {
+    if (AllowedUrl.indexOf(currentPath) === -1) {
         window.location.href = '/login';
     }
     else{

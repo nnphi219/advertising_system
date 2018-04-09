@@ -41,8 +41,12 @@ class Header extends Component {
                                                             </li>
                                                         </ul>
                                                     </li>
+                                                    <li>
+                                                        <a href="/marketing">marketing</a>
+                                                        
+                                                    </li>
                                                     <li className="dropdown" id="UserLoginInfo">
-                                                       
+
                                                     </li>
                                                 </ul>
                                             </nav>
