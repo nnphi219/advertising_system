@@ -23,6 +23,7 @@ function RenderRow(props) {
 
     return (
         <tr>
+            <td>{props.trContentPriceFactor.ma_chi_so}</td>
             <td>{props.trContentPriceFactor.ten_chi_so}</td>
             <td>{props.trContentPriceFactor.ma_gia}</td>
             <td>{timeLot}</td>
@@ -65,7 +66,7 @@ class PriceFactorContents extends Component {
     render() {
         var theadPriceFactors = {
             keys: [],
-            values: ["Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"]
+            values: ["Mã nhân tố", "Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"]
         };
 
         return (

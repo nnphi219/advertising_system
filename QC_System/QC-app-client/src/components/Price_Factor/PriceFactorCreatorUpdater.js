@@ -26,6 +26,15 @@ class RenderProperties extends Component {
 
         return (
             <div>
+                ma_chi_so
+                <RenderInput
+                    nameId={"ma_chi_so"}
+                    title={"Mã chỉ số"}
+                    type={"text"}
+                    value={this.props.stateValues.ma_chi_so}
+                    className={"pricefactor--input"}
+                    OnChangeInput={this.props.OnChangeInput}
+                />
                 <div>
                     <label key={"ten_chi_so"} className="fullwidth">
                         {"Nhập tên chỉ số"}
@@ -281,6 +290,7 @@ class PriceFactorCreatorUpdater extends Component {
                 jsonState.tinh = editContents.loai_nhan_to.vi_tri.tinh;
                 jsonState.quan_huyen = editContents.loai_nhan_to.vi_tri.quan_huyen;
             }
+            jsonState.ma_chi_so = editContents.ma_chi_so;
             jsonState.ma_gia = editContents.ma_gia;
             jsonState.don_gia_co_ban = editContents.gia_tri_ap_dung;
             jsonState.khung_gio_ap_dung = editContents.loai_nhan_to.khung_gio;
@@ -303,6 +313,7 @@ class PriceFactorCreatorUpdater extends Component {
         var endDateJson = DateToJsonDate(state.end_date);
 
         var priceFactorContent = {
+            ma_chi_so: state.ma_chi_so,
             ten_chi_so: state.ten_chi_so,
             ma_gia: state.ma_gia,
             don_gia_co_ban: state.don_gia_co_ban,

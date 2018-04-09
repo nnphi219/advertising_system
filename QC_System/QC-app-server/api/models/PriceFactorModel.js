@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 
 var PriceFactorSchema = new Schema({
+    ma_chi_so: String,
     ten_chi_so: String,
     ma_gia: String, //get from ServicePrice
     don_vi_nhan_to: String, // table Factor's Unit
