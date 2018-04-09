@@ -189,7 +189,7 @@
         opacity: .7;
         padding: 8px;
         *padding: 0;
-        background: url(../img/black10.png);
+        background: url(../img/slides/refine/black10.png);
         background: rgba(0, 0, 0, .1);
         border-bottom: 1px solid #5e6266!important;
         border-bottom: 1px solid rgba(255, 255, 255, .1)!important;
@@ -238,7 +238,7 @@
         border: 1px solid rgba(0, 0, 0, .2);
         border-bottom: 1px solid #313437;
         border-bottom: 1px solid rgba(0, 0, 0, .35);
-        background: url(../img/black10.png);
+        background: url(../img/slides/refine/black10.png);
         background: rgba(0, 0, 0, .1);
         background: -webkit-linear-gradient(top, rgba(0, 0, 0, .1), rgba(0, 0, 0, .2));
         background: -moz-linear-gradient(top, rgba(0, 0, 0, .1), rgba(0, 0, 0, .2));

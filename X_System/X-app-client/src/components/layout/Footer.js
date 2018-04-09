@@ -40,31 +40,31 @@ class Footer extends Component {
                                 <div className="clear"></div>
                             </div>
                         </div>
-                        <div class="span3">
-                            <div class="widget">
+                        <div className="span3">
+                            <div className="widget">
                                 <h5>Keep updated</h5>
                                 <p>Enter your email to subcribe newsletter</p>
 
-                                <ul class="social-network">
-                                    <li><a href="#"><i class="icon-bg-light icon-facebook icon-circled icon-1x"></i></a></li>
-                                    <li><a href="#" title="Twitter"><i class="icon-bg-light icon-twitter icon-circled icon-1x"></i></a></li>
-                                    <li><a href="#" title="Linkedin"><i class="icon-bg-light icon-linkedin icon-circled icon-1x"></i></a></li>
-                                    <li><a href="#" title="Pinterest"><i class="icon-bg-light icon-pinterest icon-circled icon-1x"></i></a></li>
-                                    <li><a href="#" title="Google plus"><i class="icon-bg-light icon-google-plus icon-circled icon-1x"></i></a></li>
+                                <ul className="social-network">
+                                    <li><a href="#"><i className="icon-bg-light icon-facebook icon-circled icon-1x"></i></a></li>
+                                    <li><a href="#" title="Twitter"><i className="icon-bg-light icon-twitter icon-circled icon-1x"></i></a></li>
+                                    <li><a href="#" title="Linkedin"><i className="icon-bg-light icon-linkedin icon-circled icon-1x"></i></a></li>
+                                    <li><a href="#" title="Pinterest"><i className="icon-bg-light icon-pinterest icon-circled icon-1x"></i></a></li>
+                                    <li><a href="#" title="Google plus"><i className="icon-bg-light icon-google-plus icon-circled icon-1x"></i></a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="subfooter">
-                    <div class="container">
-                        <div class="row">
-                            <div class="span6">
+                <div className="subfooter">
+                    <div className="container">
+                        <div className="row">
+                            <div className="span6">
                                 <p>&copy; Plato - All right reserved</p>
                             </div>
-                            <div class="span6">
-                                <div class="pull-right">
-                                    <div class="credits">
+                            <div className="span6">
+                                <div className="pull-right">
+                                    <div className="credits">
                                         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
                                     </div>
                                 </div>

@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import './App.css';
 import { BrowserRouter, Route } from "react-router-dom";
 import Home from './components/Home/Home';
+import UserLogin from './components/User/UserLogin';
+import UserManagement from './components/User/UserManagement';
+import UserCreatorUpdater, {UserCreator, UserEditor } from './components/User/UserCreatorUpdater';
 
 class Title extends Component {
   render(){
@@ -23,6 +26,12 @@ class App extends Component {
       <BrowserRouter>
       <div>
           <Route exact={true} path={"/"} component={Home} />
+          <Route exact={true} path={"/login"} component={UserLogin} />
+          
+          <Route exact={true} path={"/users"} component={UserManagement} />
+          <Route exact={true} path={"/users/create"} component={UserCreator} />
+          <Route exact={true} path={"/users/edit/:id"} component={UserEditor} />
+
           <Route path={"/title"} component={Title} />
       </div>
       </BrowserRouter>
