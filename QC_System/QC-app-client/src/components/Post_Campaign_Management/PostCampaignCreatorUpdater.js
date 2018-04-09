@@ -4,14 +4,23 @@ import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { TransferSelectInputKeyToValue } from '../share/Mapper';
 
 function RenderLeftForm(props) {
     var stateValues = props.stateValues;
     
-    var lnt_khung_gio = TransferTimeLogJsonToString(stateValues.lnt_khung_gio);
+    var AdsAreaIdsKeys = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.keys;
+    var AdsAreaIdsValues = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.values;
+    var khung_gio_hien_thi = TransferTimeLogJsonToString(stateValues.khung_gio_hien_thi);
     var PromotionIdsKeys = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.keys;
     var PromotionIdsValues = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.values;
-
+    let PostIdKeys = stateValues.PostIds === undefined ? [] : stateValues.PostIds.keys;
+    let PostIdValues = stateValues.PostIds === undefined ? [] : stateValues.PostIds.values;
+    var trang_hien_thi = TransferSelectInputKeyToValue(
+        props.stateValues.trang_hien_thi,
+        ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
+        ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
+    );
 
     return (
         <div className="post_campaign--left-form">
@@ -27,26 +36,36 @@ function RenderLeftForm(props) {
             <RenderSelect
                 nameId={"ma_bai_dang"}
                 title={"Mã bài đăng"}
-                keys={["bd1", "bd2"]}
-                values={["bd1", "bd2"]}
+                keys={PostIdKeys}
+                values={PostIdValues}
                 selectedValue={stateValues.ma_bai_dang}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}
             />
 
             <RenderSelect
-                nameId={"ma_khuyen_mai"}
-                title={"Mã khuyến mãi"}
-                keys={PromotionIdsKeys}
-                values={PromotionIdsValues}
-                selectedValue={stateValues.ma_khuyen_mai}
+                nameId={"loai_dich_vu"}
+                title={"Loại dịch vụ"}
+                keys={AdsAreaIdsKeys}
+                values={AdsAreaIdsValues}
+                selectedValue={props.stateValues.loai_dich_vu}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}
             />
 
+            <RenderInput
+                nameId={"trang_hien_thi"}
+                title={"Trang hiển thị"}
+                type={"text"}
+                value={trang_hien_thi}
+                className={"post--input"}
+                isReadOnly={1}
+                OnChangeInput={props.OnChangeInput}
+            />
+
             <RenderSelect
                 nameId={"co_che_hien_thi"}
-                title={"Cơ chế hiện thị"}
+                title={"Cơ chế hiển thị"}
                 keys={["doc_quyen", "co_dinh_vi_tri", "chia_se_co_dinh", "ngau_nhien"]}
                 values={["Độc quyền", "Cố định vị trí", "Chia sẻ cố định", "Ngẫu nhiên"]}
                 selectedValue={stateValues.co_che_hien_thi}
@@ -57,28 +76,19 @@ function RenderLeftForm(props) {
             <RenderSelect
                 nameId={"tinh_gia_theo"}
                 title={"Tính giá theo"}
-                keys={["thoi_luong", "khung_gio", "vi_tri"]}
-                values={["Thời lượng", "Khung giờ", "Vị trí"]}
+                keys={["ngay", "click", "view"]}
+                values={["Ngày", "Click", "View"]}
                 selectedValue={stateValues.tinh_gia_theo}
-                OnChangeSelect={props.OnChangeInput}
+                OnChangeSelect={props.OPostCampaignCreatorUpdaternChangeInput}
                 className={"input--select"}
             />
 
-            <RenderInput
-                nameId={"lnt_thoi_luong"}
-                title={"Thời lượng"}
-                value={stateValues.lnt_thoi_luong}
-                type={"number"}
-                className={"post_campaign--input"}
-                OnChangeInput={props.OnChangeInput}
-            />
-
             <RenderSelect
-                nameId={"lnt_khung_gio"}
-                title={"Khung giờ"}
+                nameId={"khung_gio_hien_thi"}
+                title={"Khung giờ hiển thị"}
                 keys={["2h-4h", "4h-6h", "6h-8h"]}
                 values={["2h-4h", "4h-6h", "6h-8h"]}
-                selectedValue={lnt_khung_gio}
+                selectedValue={khung_gio_hien_thi}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}
             />
@@ -100,15 +110,33 @@ function RenderLeftForm(props) {
                 className={"post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
             />
-        </div>
-    );
-}
 
-function RenderRightForm(props) {
-    var stateValues = props.stateValues;
+            <RenderDate
+                nameId={"ngay_bat_dau"}
+                title={"Ngày bắt đầu chiến dịch"}
+                className={"input--date"}
+                value={stateValues.ngay_bat_dau}
+                OnchangeDate={props.OnchangeStartDate}
+            />
 
-    return (
-        <div className="post_campaign--right-form">
+            <RenderInput
+                nameId={"thoi_luong_ap_dung"}
+                title={"Thời lượng áp dụng"}
+                value={stateValues.thoi_luong_ap_dung}
+                type={"number"}
+                className={"post_campaign--input"}
+                OnChangeInput={props.OnChangeInput}
+                isReadOnly={1}
+            />
+
+            <RenderDate
+                nameId={"end_date"}
+                title={"Ngày kết thúc chiến dịch"}
+                className={"input--date"}
+                value={stateValues.ngay_ket_thuc}
+                OnchangeDate={props.OnchangeEndDate}
+            />
+
             <RenderInput
                 nameId={"don_gia_co_ban"}
                 title={"Đơn giá cơ bản"}
@@ -116,22 +144,6 @@ function RenderRightForm(props) {
                 type={"number"}
                 className={"post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
-            />
-
-            <RenderDate
-                nameId={"start_date"}
-                title={"Ngày bắt đầu"}
-                className={"input--date"}
-                value={stateValues.start_date}
-                OnchangeDate={props.OnchangeStartDate}
-            />
-
-            <RenderDate
-                nameId={"end_date"}
-                title={"Ngày kết thúc"}
-                className={"input--date"}
-                value={stateValues.end_date}
-                OnchangeDate={props.OnchangeEndDate}
             />
 
             <RenderInput
@@ -144,6 +156,16 @@ function RenderRightForm(props) {
                 isReadOnly={1}
             />
 
+            <RenderSelect
+                nameId={"ma_khuyen_mai"}
+                title={"Mã khuyến mãi"}
+                keys={PromotionIdsKeys}
+                values={PromotionIdsValues}
+                selectedValue={stateValues.ma_khuyen_mai}
+                OnChangeSelect={props.OnChangeInput}
+                className={"input--select"}
+            />
+
             <RenderInput
                 nameId={"tong_cong"}
                 title={"Tổng cộng"}
@@ -154,25 +176,42 @@ function RenderRightForm(props) {
                 isReadOnly={1}
             />
         </div>
-
     );
+}
+
+function RenderRightForm(props) {
+    return (
+        <div className="post_campaign--right-form">
+        {/* <RenderInput
+                nameId={"tong_cong"}
+                title={"Tổng cộng"}
+                type={"number"}
+                className={"post_campaign--input"}
+                OnChangeInput={props.OnChangeInput}
+                isReadOnly={1}
+            /> */}
+        </div>
+    )
 }
 
 class RenderProperties extends Component {
     render() {
         return (
             <div>
-                <RenderLeftForm
-                    OnChangeInput={this.props.OnChangeInput}
-                    stateValues={this.props.stateValues}
-                />
-                <RenderRightForm
-                    OnChangeInput={this.props.OnChangeInput}
-                    OnchangeStartDate={this.props.OnchangeStartDate}
-                    OnchangeEndDate={this.props.OnchangeEndDate}
+                <div className="left_border">
+                    <RenderLeftForm
+                        OnChangeInput={this.props.OnChangeInput}
+                        stateValues={this.props.stateValues}
+                        OnchangeStartDate={this.props.OnchangeStartDate}
+                        OnchangeEndDate={this.props.OnchangeEndDate}
+                    />
+                </div>
+                {/* <div className="vertical_line" style="height: 45px;"></div> */}
 
-                    stateValues={this.props.stateValues}
-                />
+                <div className="right_border">
+                    <RenderRightForm
+                    />
+                </div>
             </div>
         );
     }
@@ -183,48 +222,101 @@ class PostCampaignCreatorUpdaterForm extends Component {
         super(props);
 
         this.OnChangeInput = this.OnChangeInput.bind(this);
-
         this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
         this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
+        this.handleEscEvent = this.handleEscEvent.bind(this);
+    }
+
+    handleEscEvent(event) {
+        // console.log(event);
+        if(event.keyCode === 27) {
+            //Do whatever when esc is pressed
+            this.props.handleClosePopup();
+        }
     }
 
     OnChangeInput(e) {
         var name = e.target.name;
         var value = e.target.value;
+        var jsonState = { [name]: value };
 
-        if(name === "lnt_khung_gio") {
+        if(name === "khung_gio_hien_thi") {
             value = TransferTimeLogStringToJson(value);
         }
 
-        var jsonState = { [name]: value };
+        // if (name === "thoi_luong_ap_dung" ) {
+        //     if (value !== "") {
+        //         var ngay_bat_dau = this.props.stateValues.ngay_bat_dau;
+        //         let ngay_ket_thuc = new Date();
+        //         ngay_ket_thuc.setDate(ngay_bat_dau.getDate() + parseInt(value));
+        //         this.OnchangeEndDate(ngay_ket_thuc);
+        //     }
+        // }
+
+        if (name === "loai_dich_vu") {
+            var stateValues = this.props.stateValues;
+            var adsAreaKeys = stateValues.AdsAreaIds.keys;
+            var appliedPageTypeKeys = stateValues.AdsAreaIds.appliedPageTypeKeys;
+            var indexOfValueInKeys = adsAreaKeys.indexOf(value);
+
+            var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
+            jsonState.trang_hien_thi = appliedPageType;
+        }
+
+        
         this.props.UpdateState(jsonState);
     }
 
     OnchangeStartDate(date) {
-        var jsonState = { "start_date": date }
+        var jsonState = { "ngay_bat_dau": date }
         this.props.UpdateState(jsonState);
+        let ngay_ket_thuc = new Date();
+        let thoi_luong_ap_dung = this.props.stateValues.thoi_luong_ap_dung;
+        ngay_ket_thuc.setDate(this.props.stateValues.ngay_ket_thuc.getDate() + parseInt(thoi_luong_ap_dung));
+        this.OnchangeEndDate(ngay_ket_thuc);
     }
 
     OnchangeEndDate(date) {
-        var jsonState = { "end_date": date }
-        this.props.UpdateState(jsonState);
+        
+        let ngay_bat_dau = this.props.stateValues.ngay_bat_dau;
+        let thoi_luong = new Date(date - ngay_bat_dau).getDate();
+        console.log(thoi_luong);
+        if (parseInt(date.getTime() - ngay_bat_dau.getTime()) >= 0) {
+            var jsonState = { "ngay_ket_thuc": date, "thoi_luong_ap_dung": thoi_luong };
+            this.props.UpdateState(jsonState);
+        }
+        
+        // this.props.UpdateState({"thoi_luong_ap_dung": new Date(date - ngay_bat_dau).getDate()});
+    }
+
+    componentDidMount(){
+        document.addEventListener("keydown", this.handleEscEvent, false);
+    }
+
+    componentWillUnmount(){
+        document.removeEventListener("keydown", this.handleEscEvent, false);
     }
 
     render() {
         return (
             <div className='popup_inner postcampaign_createform_size div_scroll_bar'>
-                <h1>{this.props.titleForm}</h1>
-                <RenderProperties
-                    OnChangeInput={this.OnChangeInput}
-                    OnchangeStartDate={this.OnchangeStartDate}
-                    OnchangeEndDate={this.OnchangeEndDate}
-
-                    stateValues={this.props.stateValues}
-                />
-                <div className="submit">
-                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
-                    <button className="btn btn-primary" onClick={this.props.handleClosePopup}>Cancel</button>
+                <div className='pop_up_inner_header'>
+                    <h2>{this.props.titleForm}</h2>
                 </div>
+                <div className='pop_up_inner_body'>
+                    <RenderProperties
+                        OnChangeInput={this.OnChangeInput}
+                        OnchangeStartDate={this.OnchangeStartDate}
+                        OnchangeEndDate={this.OnchangeEndDate}
+                        stateValues={this.props.stateValues}
+                    />
+                </div>
+                <div className='pop_up_inner_footer'>
+                    <div className="submit">
+                        <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
+                        <button className="btn btn-primary" onClick={this.props.handleClosePopup}>Cancel</button>
+                    </div>
+                </div>   
             </div>
         );
     }
@@ -236,7 +328,41 @@ class PostCampaignCreatorUpdater extends Component {
 
         var jsonState = {};
         this.state = this.SetInitState(jsonState);
+        this.GetAdsAreaInfos();
+        this.GetPostId();
         this.GetPromotionIdInfos();
+    }
+
+    GetAdsAreaInfos() {
+        var $this = this;
+        Request.get(UrlApi.GetAdsAreaInfo)
+            .then((res) => {
+                var _ids = [];
+                var adsAreaIdkeys = [];
+                var adsAreaIdvalues = [];
+                var appliedPageTypeKeys = [];
+
+                res.body.map((adsArea) => {
+                    _ids.push(adsArea._id);
+                    adsAreaIdkeys.push(adsArea.ma_dich_vu);
+                    adsAreaIdvalues.push(adsArea.ten_hien_thi);
+                    appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
+                });
+
+                var jsonAdsAreaIds = {
+                    AdsAreaIds: {
+                        _ids: _ids,
+                        keys: adsAreaIdkeys,
+                        values: adsAreaIdvalues,
+                        appliedPageTypeKeys: appliedPageTypeKeys
+                    }
+                };
+                if (this.props.modeAction === "create") {
+                    jsonAdsAreaIds.ma_dich_vu = adsAreaIdkeys[0];
+                    jsonAdsAreaIds.trang_hien_thi = appliedPageTypeKeys[0];
+                }
+                $this.setState(jsonAdsAreaIds);
+            });
     }
 
     GetPromotionIdInfos() {
@@ -269,23 +395,41 @@ class PostCampaignCreatorUpdater extends Component {
             });
     }
 
+    GetPostId() {
+        // Hardcode here to test
+        this.setState({
+            PostIds: {
+                PostIdKeys: ["bd1", "bd2", "bd3"],
+                PostIdValues: ["Bài đăng 1", "Bài đăng 2", "Bài đăng 3"]
+            }
+        });
+    }
+
     SetInitState(jsonState) {
         if (this.props.modeAction === "create") {
+            jsonState.ma_chien_dich = "";
             jsonState.ma_bai_dang = "bd1";
+            // jsonState.loai_dich_vu = "";
             jsonState.co_che_hien_thi = "doc_quyen";
-            jsonState.tinh_gia_theo = "thoi_luong";
-            jsonState.lnt_thoi_luong = 0;
-            jsonState.lnt_khung_gio = {
+            jsonState.tinh_gia_theo = "ngay";
+            jsonState.vi_tri = {
+                tinh: "",
+                quan_huyen: ""
+            }
+            jsonState.khung_gio_hien_thi = {
                 bat_dau: 2,
                 ket_thuc: 4
             }
-
+            jsonState.thoi_luong_ap_dung = 1;
             jsonState.don_gia_co_ban = 0;
             var today = new Date();
-            jsonState.start_date = today;
-            jsonState.end_date = today;
+            let tomorrow = new Date();
+            tomorrow.setDate(today.getDate() + jsonState.thoi_luong_ap_dung);
+            jsonState.ngay_bat_dau = (today);
+            jsonState.ngay_ket_thuc = (tomorrow);
             jsonState.thanh_tien = 0;
             jsonState.tong_cong = 0;
+            jsonState.ma_khuyen_mai = "";
         }
         else {
             var editContents = this.props.editContents;
@@ -307,7 +451,7 @@ class PostCampaignCreatorUpdater extends Component {
                 if(loai_nhan_to.thoi_luong !== undefined && loai_nhan_to.thoi_luong !== null) {
                     jsonState.lnt_thoi_luong = loai_nhan_to.thoi_luong;
                 }
-                jsonState.lnt_khung_gio = loai_nhan_to.khung_gio;
+                jsonState.khung_gio_hien_thi = loai_nhan_to.khung_gio;
                 if(loai_nhan_to.vi_tri !== undefined && loai_nhan_to.vi_tri !== null) {
                     jsonState.lnt_tinh = loai_nhan_to.vi_tri.tinh;
                     jsonState.lnt_quan_huyen = loai_nhan_to.vi_tri.quan_huyen;
@@ -324,45 +468,52 @@ class PostCampaignCreatorUpdater extends Component {
 
     GetModelStateJson() {
         var state = this.state;
-
-        var startDateJson = DateToJsonDate(state.start_date);
-        var endDateJson = DateToJsonDate(state.end_date);
+        console.log(state);
+        
+        var startDateJson = DateToJsonDate(state.ngay_bat_dau);
+        var endDateJson = DateToJsonDate(state.ngay_ket_thuc);
 
         var loai_nhan_to = {
-            khung_gio: state.lnt_khung_gio
+            khung_gio: state.khung_gio_hien_thi
         };
         if (state.lnt_thoi_luong !== undefined && state.lnt_thoi_luong !== null && parseInt(state.lnt_thoi_luong) !== 0) {
             loai_nhan_to.thoi_luong = state.lnt_thoi_luong;
         }
        
-        if(state.lnt_tinh !== undefined && state.lnt_tinh !== null && state.lnt_tinh !== "") {
-            loai_nhan_to.vi_tri = {};
-            loai_nhan_to.vi_tri.tinh = state.lnt_tinh;
-            if(state.lnt_quan_huyen !== undefined && state.lnt_quan_huyen !== null && state.lnt_quan_huyen !== "") {
-                loai_nhan_to.vi_tri.quan_huyen = state.lnt_quan_huyen;
-            }
-        }
-
         var postCampaignContent = {
             ma_chien_dich: state.ma_chien_dich,
             ma_bai_dang: state.ma_bai_dang,
-            ma_khuyen_mai: state.ma_khuyen_mai,
+            loai_dich_vu: state.loai_dich_vu,
+            trang_hien_thi: state.trang_hien_thi,
             co_che_hien_thi: state.co_che_hien_thi,
             tinh_gia_theo: state.tinh_gia_theo,
-            loai_nhan_to: loai_nhan_to,
+            vi_tri: state.vi_tri,
+            khung_gio_hien_thi: state.khung_gio_hien_thi,
+            ngay_bat_dau: startDateJson,
+            ngay_ket_thuc: endDateJson,
             don_gia_co_ban: state.don_gia_co_ban,
-            start_date: startDateJson,
-            end_date: endDateJson,
             thanh_tien: state.thanh_tien,
-            tong_cong: state.tong_cong
+            ma_khuyen_mai: state.ma_khuyen_mai,
+            tong_cong: state.tong_cong,
+            dang_kich_hoat: 1
         };
+
+        if(state.lnt_tinh !== undefined && state.lnt_tinh !== null && state.lnt_tinh !== "") {
+            var vi_tri = {};
+            vi_tri.tinh = state.lnt_tinh;
+            if(state.lnt_quan_huyen !== undefined && state.lnt_quan_huyen !== null && state.lnt_quan_huyen !== "") {
+                vi_tri.quan_huyen = state.lnt_quan_huyen;
+            }
+
+            postCampaignContent["vi_tri"] = vi_tri;
+        }
 
         return postCampaignContent;
     }
 
     CreatePostCampaign() {
         var postCampaignContent = this.GetModelStateJson();
-
+ 
         var $this = this;
         Request.post(UrlApi.PostCampaignManagement)
             .set('Content-Type', 'application/x-www-form-urlencoded')
