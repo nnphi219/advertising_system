@@ -119,9 +119,6 @@ class NavbarDefault extends Component {
                 <div className="sidebar-nav navbar-collapse">
                     <ul className="nav" id="side-menu">
                         <li>
-                            <a href="/x-system/post-management"><i className="fa fa-dashboard fa-fw"></i>Bảng tin đăng</a>
-                        </li>
-                        <li>
                             <a href="/x-system/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>
                         </li>
                         <li>

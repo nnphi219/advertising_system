@@ -468,7 +468,8 @@ class PostCampaignCreatorUpdater extends Component {
 
     GetModelStateJson() {
         var state = this.state;
-
+        console.log(state);
+        
         var startDateJson = DateToJsonDate(state.ngay_bat_dau);
         var endDateJson = DateToJsonDate(state.ngay_ket_thuc);
 
@@ -479,14 +480,6 @@ class PostCampaignCreatorUpdater extends Component {
             loai_nhan_to.thoi_luong = state.lnt_thoi_luong;
         }
        
-        if(state.lnt_tinh !== undefined && state.lnt_tinh !== null && state.lnt_tinh !== "") {
-            loai_nhan_to.vi_tri = {};
-            loai_nhan_to.vi_tri.tinh = state.lnt_tinh;
-            if(state.lnt_quan_huyen !== undefined && state.lnt_quan_huyen !== null && state.lnt_quan_huyen !== "") {
-                loai_nhan_to.vi_tri.quan_huyen = state.lnt_quan_huyen;
-            }
-        }
-
         var postCampaignContent = {
             ma_chien_dich: state.ma_chien_dich,
             ma_bai_dang: state.ma_bai_dang,
@@ -505,12 +498,22 @@ class PostCampaignCreatorUpdater extends Component {
             dang_kich_hoat: 1
         };
 
+        if(state.lnt_tinh !== undefined && state.lnt_tinh !== null && state.lnt_tinh !== "") {
+            var vi_tri = {};
+            vi_tri.tinh = state.lnt_tinh;
+            if(state.lnt_quan_huyen !== undefined && state.lnt_quan_huyen !== null && state.lnt_quan_huyen !== "") {
+                vi_tri.quan_huyen = state.lnt_quan_huyen;
+            }
+
+            postCampaignContent["vi_tri"] = vi_tri;
+        }
+
         return postCampaignContent;
     }
 
     CreatePostCampaign() {
         var postCampaignContent = this.GetModelStateJson();
-
+ 
         var $this = this;
         Request.post(UrlApi.PostCampaignManagement)
             .set('Content-Type', 'application/x-www-form-urlencoded')

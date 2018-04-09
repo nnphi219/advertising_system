@@ -134,9 +134,6 @@ class NavbarDefault extends Component {
                             <a href="/price-factor"><i className="fa fa-dashboard fa-fw"></i>Chỉ số ảnh hưởng giá</a>
                         </li>
                         <li>
-                            <a href="/post-management"><i className="fa fa-dashboard fa-fw"></i>Bảng tin đăng</a>
-                        </li>
-                        <li>
                             <a href="/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>
                         </li>
                         <li>
