@@ -13,7 +13,8 @@ export const UrlRedirect = {
     Users : '/users',
     CreateUser: '/users/create',
     EditUser: '/users/edit',
-    UserLogin: '/users/login',
+    UserLogin: '/login',
+    UserRegister: '/register',
     UserTokenMe: '/users/me/token',
 
     Posts: '/posts',

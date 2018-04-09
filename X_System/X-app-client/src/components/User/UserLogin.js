@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import { UrlApi } from '../share/Url';
+import { UrlApi, UrlRedirect } from '../share/Url';
 import validator from 'validator';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 
@@ -18,7 +18,12 @@ class UserLogin extends Component {
 
         this.OnChangeInput = this.OnChangeInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+    }
+
+    handleRegister() {
+        window.location.href = UrlRedirect.UserRegister;
     }
 
     handleSubmit = event => {
@@ -44,7 +49,7 @@ class UserLogin extends Component {
             .send(postJson)
             .end(function (err, res) {
                 console.log(res);
-                localStorage.setItem('x-auth', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWNhZWM1Nzk1ZDhiZjFlOWNhZDFmYzQiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTIzMjU4MjE0fQ.j2XEPnqPpJEg_LmOts-zh9Cik9-406HS26DvXvCjlN8');
+                localStorage.setItem('x-auth', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWNiNDllY2IyNjg0NDQ5YThhZGE1ZjQiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTIzMjcyMTcyfQ.xEK6MBuHTWmITEmJIUy6JFIalhQ1w1BUdYn6pER20BI');
                 window.location.href = '/';
             });
     }
@@ -92,7 +97,8 @@ class UserLogin extends Component {
                             OnChangeInput={this.OnChangeInput}
                         />
                         <div className="submit">
-                            <button className="btn btn-primary login--button" onClick={this.handleSubmit}>Đăng nhập</button>
+                            <button className="btn btn-primary" onClick={this.handleSubmit}>Đăng nhập</button>
+                            <button className="btn btn-primary" onClick={this.handleRegister}>Đăng ký</button>
                         </div>
                     </div>
                 </div>

@@ -40,6 +40,7 @@ class RenderProperties extends Component {
                     OnChangeInput={this.props.OnChangeInput}
                 />
 
+
                 <RenderSelect
                     nameId={"user_type"}
                     title={"Loại user"}

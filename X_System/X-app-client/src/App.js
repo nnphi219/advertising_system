@@ -8,6 +8,7 @@ import UserCreatorUpdater, { UserCreator, UserEditor } from './components/User/U
 import PostManagement from './components/Post/PostManagement';
 import { PostCreator, PostEditor } from './components/Post/PostCreatorUpdater';
 import Banner from './components/layout/Banner';
+import UserRegister from './components/User/UserRegister';
 
 class Title extends Component {
     render() {
@@ -27,11 +28,11 @@ class App extends Component {
     render() {
         return (
             <div>
-                <Banner />
                 <BrowserRouter>
                     <div>
                         <Route exact={true} path={"/"} component={Home} />
                         <Route exact={true} path={"/login"} component={UserLogin} />
+                        <Route exact={true} path={"/register"} component={UserRegister} />
 
                         <Route exact={true} path={"/users"} component={UserManagement} />
                         <Route exact={true} path={"/users/create"} component={UserCreator} />

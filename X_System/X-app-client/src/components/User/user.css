@@ -17,10 +17,13 @@
 }
 
 .login--button {
-    float: right;
     margin-right: 5%;
     height: 55px;
     font-size: 25px;
+}
+
+.register--button {
+
 }
 
 .login--input {

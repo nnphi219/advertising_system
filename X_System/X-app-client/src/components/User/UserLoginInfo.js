@@ -10,11 +10,10 @@ class UserLoginInfo extends Component {
 
         this.state = {
             login: false,
-            usernamelogin: ''
+            usernamelogin: this.props.username
         }
 
         this.logout = this.logout.bind(this);
-        this.authenticate();
     }
 
     authenticate() {
@@ -39,15 +38,6 @@ class UserLoginInfo extends Component {
             });
     }
 
-    RedirectUrl() {
-        var currentURL = window.location.href.replace('http://', '').replace('https://', '');
-        var currentPath = currentURL.split('/')[1];
-
-        if (currentPath !== "login") {
-            window.location.href = 'login';
-        }
-    }
-
     logout() {
         var token = localStorage.getItem('x-auth');
         localStorage.setItem('x-auth', '');
@@ -62,7 +52,7 @@ class UserLoginInfo extends Component {
 
     render() {
         return (
-            this.state.login ?
+            this.props.login ?
                 <div>
                     <a className="userlogininfo--name">{this.state.usernamelogin}</a>
                     <ul className="dropdown-menu userlogininfo_menu">
