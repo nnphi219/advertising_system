@@ -1,0 +1,10 @@
+----------- post management
+
+{
+	"ma_bai_dang": "baidang1",
+	"tieu_de": "tieude1",
+	"noi_dung": "noi dung 1",
+	"url": "/abc",
+	"nguoi_tao": "ìeie"
+}
+miss: images

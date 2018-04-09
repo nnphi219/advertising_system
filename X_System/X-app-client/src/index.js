@@ -2,9 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import Layout from './components/layout/Layout';
+import UserLoginInfo from './components/User/UserLoginInfo';
 import registerServiceWorker from './registerServiceWorker';
 
 import './index.css';
+import './frontend/vendor/popup.css';
 import './frontend/assets/css/bootstrap.css';
 import './frontend/assets/css/bootstrap-responsive.css';
 import './frontend/assets/css/docs.css';
@@ -17,9 +19,13 @@ import './frontend/assets/css/animate.css';
 import './frontend/assets/css/style.css';
 import './frontend/assets/color/default.css';
 
+
+
 ReactDOM.render(<Layout />, window.document.getElementById('root'));
+ReactDOM.render(<UserLoginInfo />, window.document.getElementById('UserLoginInfo'));
 ReactDOM.render(
     <App />,
     document.getElementById('body'),
 );
+
 registerServiceWorker();

@@ -80,9 +80,9 @@ exports.delete_a_user = function (req, res) {
 };
 
 exports.UserLogin = function (req, res) {
-  var body = _.pick(req.body, ['username', 'password']);
+  var body = _.pick(req.body, ['email', 'password']);
 
-  User.findByCredentials(body.username, body.password)
+  User.findByCredentials(body.email, body.password)
     .then((user) => {
       user.generateAuthToken().then((token) => {
         res.header('x-auth', token).send(user);

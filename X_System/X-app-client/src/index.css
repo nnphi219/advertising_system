@@ -56,3 +56,23 @@ body {
   height: 40px;
   font-size: 20px;
 }
+
+.deleteform {
+  margin: 170px 35%;
+  width: 30%;
+  height: 150px;
+  text-align: center;
+}
+
+.deleteform--button {
+  margin: 0 5px;
+  font-size: 30px;
+}
+
+.banner {
+  font-size: 30px;
+}
+
+.banner--image {
+  width: 100%;
+}

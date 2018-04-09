@@ -1,14 +1,22 @@
-const hostName = "http://localhost:8081";
+const hostNameServer = "http://localhost:8081";
 
 export const UrlApi = {
-    UserManagement: hostName + "/users",
-    UserAuthen: hostName + "/users/me",
-    UserLogin: hostName + "/users/login",
-    UserLogout: hostName + "/users/me/token"
+    UserManagement: hostNameServer + "/users",
+    UserAuthen: hostNameServer + "/users/me",
+    UserLogin: hostNameServer + "/users/login",
+    UserLogout: hostNameServer + "/users/me/token",
+
+    PostManagement: hostNameServer + "/posts"
 }
 
 export const UrlRedirect = {
     Users : '/users',
     CreateUser: '/users/create',
-    EditUser: 'users/edit'
+    EditUser: '/users/edit',
+    UserLogin: '/users/login',
+    UserTokenMe: '/users/me/token',
+
+    Posts: '/posts',
+    CreatePost: '/posts/create',
+    EditPost: '/posts/edit',
 }

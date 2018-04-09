@@ -12,7 +12,7 @@ class Header extends Component {
 
                                 <div className="span4">
                                     <div className="logo">
-                                        <h1><a href="index.html">X System</a></h1>
+                                        <h1><a href="/">X System</a></h1>
                                     </div>
                                 </div>
 
@@ -40,6 +40,9 @@ class Header extends Component {
                                                                 </ul>
                                                             </li>
                                                         </ul>
+                                                    </li>
+                                                    <li className="dropdown" id="UserLoginInfo">
+                                                       
                                                     </li>
                                                 </ul>
                                             </nav>
