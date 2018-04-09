@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import DatePicker from 'react-date-picker';
-import UrlApi from '../share/UrlApi';
+import { UrlApi, UrlRedirect } from '../share/Url';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+
 import './user.css';
+
+var rp = require('request-promise');
 
 class RenderProperties extends Component {
     render() {
@@ -68,7 +71,7 @@ class UserCreatorUpdaterForm extends Component {
 
     render() {
         return (
-            <div className='popup_inner user_createform_size div_scroll_bar'>
+            <div>
                 <h1>{this.props.titleForm}</h1>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}
@@ -91,6 +94,7 @@ class UserCreatorUpdater extends Component {
         var jsonState = {};
         this.SetInitState(jsonState);
         this.state = jsonState;
+
     }
 
     SetInitState(jsonState) {
@@ -103,7 +107,6 @@ class UserCreatorUpdater extends Component {
             jsonState.username = editContents.username;
             jsonState.email = editContents.email;
             jsonState.user_type = editContents.user_type;
-            console.log(jsonState);
         }
     }
 
@@ -132,8 +135,7 @@ class UserCreatorUpdater extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(userContent)
             .end(function (err, res) {
-                $this.props.closeCreatorUpdaterPopup();
-                $this.props.resetContentState();
+                window.location.href = UrlRedirect.Users;
             });
     }
 
@@ -146,8 +148,7 @@ class UserCreatorUpdater extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(userContent)
             .end(function (err, res) {
-                $this.props.closeCreatorUpdaterPopup();
-                $this.props.resetContentState();
+                window.location.href = UrlRedirect.Users;
             });
     }
 
@@ -161,9 +162,9 @@ class UserCreatorUpdater extends Component {
     }
 
     render() {
-        var titleForm = this.props.modeAction === "create" ? "Tạo chiến dịch tin đăng" : "Chỉnh sửa chiến dịch tin đăng";
+        var titleForm = this.props.modeAction === "create" ? "Tạo user" : "Chỉnh sửa user";
         return (
-            <div className='popup'>
+            <div className='div_createform'>
                 <UserCreatorUpdaterForm
                     titleForm={titleForm}
                     stateValues={this.state}
@@ -179,6 +180,52 @@ var userInputsData = {
     user_type: {
         keys: ["user", "admin", "superadmin"],
         values: ["user", "admin", "superadmin"]
+    }
+}
+
+export class UserCreator extends Component {
+    render() {
+        return (
+            <UserCreatorUpdater
+                modeAction={"create"}
+            />
+        );
+    }
+}
+
+export class UserEditor extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isLoad: false,
+            editContents: null
+        };
+    }
+    render() {
+        var urlSplit = window.location.href.split('/');
+        var paraId = urlSplit[urlSplit.length - 1];
+
+        Request.get(UrlApi.UserManagement + "/" + paraId)
+            .then((res) => {
+                this.setState({
+                    editContents: res.body,
+                    isLoad: true
+                });
+
+            })
+            .catch((e) => {
+                // window.location.href = UrlRedirect.Users;
+            });
+
+        return (
+            this.state.isLoad ?
+                <UserCreatorUpdater
+                    modeAction={"edit"}
+                    editContents={this.state.editContents}
+                />
+                : null
+        );
     }
 }
 

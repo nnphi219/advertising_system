@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import '../Ads_Area/ads_area.css';
 
 class DeleteForm extends Component {
     constructor(props) {

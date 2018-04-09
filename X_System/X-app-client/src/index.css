@@ -4,6 +4,55 @@ body {
   font-family: sans-serif;
 }
 
+.div_form {
+  margin-left: 25%;
+  width: 40%;
+  padding-top: 25px;
+}
+
+.form-header {
+  font-size: 70px;
+}
+
 .contents-margin{
   margin-top: 110px;
+}
+
+.float-left {
+  float: left;
+}
+
+.button--transparent{
+  background: transparent;
+  border: none;
+}
+
+.button--transparent:hover  {
+  color: blue;
+}
+
+.input--select {
+  display: block;
+  width: auto;
+  height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.submit {
+  float: right;
+  margin-right: 20px;
+}
+
+.submit button {
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 40px;
+  font-size: 20px;
 }

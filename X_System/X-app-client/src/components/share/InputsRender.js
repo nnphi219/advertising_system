@@ -4,9 +4,11 @@ import DatePicker from 'react-date-picker';
 export class RenderInput extends Component {
     render() {
         var isReadOnly = parseInt(this.props.isReadOnly) === 1 ? true : false;
+        var cssLabel = "fullwidth" + ` ${this.props.cssLabel}`
+
         return (
             <div>
-                <label key={this.props.nameId} className="fullwidth">
+                <label key={this.props.nameId} className={cssLabel}>
                     {this.props.title}
                     <input type={this.props.type} key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={this.props.className} readOnly={isReadOnly}/>
                 </label>

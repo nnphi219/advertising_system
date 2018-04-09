@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import UrlApi from '../share/UrlApi';
+import {UrlApi} from '../share/Url';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 import './user.css';
 
@@ -43,8 +43,8 @@ class UserLogin extends Component {
 
         this.setState(jsonState);
     }
-    onKeyDown(e){
-        if(e.key === "Enter"){
+    onKeyDown(e) {
+        if (e.key === "Enter") {
             this.handleSubmit();
         }
     }
@@ -52,29 +52,31 @@ class UserLogin extends Component {
         return (
             < div className="div_loginform" onKeyDown={this.onKeyDown}>
                 <div>
-                    <h1>Login</h1>
-                        <div>
-                            <RenderInput
-                                nameId={"username"}
-                                title={"User name"}
-                                value={this.state.username}
-                                type={"text"}
-                                className={"login--input"}
-                                OnChangeInput={this.OnChangeInput}
-                            />
+                    <h1 className="login-header">Login</h1>
+                    <div className="login-form">
+                        <RenderInput
+                            nameId={"username"}
+                            title={"User name"}
+                            value={this.state.username}
+                            type={"text"}
+                            className={"login--input"}
+                            cssLabel={"login--text"}
+                            OnChangeInput={this.OnChangeInput}
+                        />
 
-                            <RenderInput
-                                nameId={"password"}
-                                title={"Password"}
-                                value={this.state.password}
-                                type={"password"}
-                                className={"login--input"}
-                                OnChangeInput={this.OnChangeInput}
-                            />
-                        </div>
+                        <RenderInput
+                            nameId={"password"}
+                            title={"Password"}
+                            value={this.state.password}
+                            type={"password"}
+                            className={"login--input"}
+                            cssLabel={"login--text"}
+                            OnChangeInput={this.OnChangeInput}
+                        />
                         <div className="submit">
-                            <button className="btn btn-primary" onClick={this.handleSubmit}>Đăng nhập</button>
+                            <button className="btn btn-primary login--button" onClick={this.handleSubmit}>Đăng nhập</button>
                         </div>
+                    </div>
                 </div>
             </div>
         );

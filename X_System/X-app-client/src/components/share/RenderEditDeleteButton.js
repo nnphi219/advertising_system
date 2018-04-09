@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import '../Ads_Area/ads_area.css';
 
 class RenderEditDeleteButton extends Component {
     render() {
