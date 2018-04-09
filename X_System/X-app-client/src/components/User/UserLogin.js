@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import {UrlApi} from '../share/Url';
+import { UrlApi } from '../share/Url';
+import validator from 'validator';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+
 import './user.css';
 
 class UserLogin extends Component {
@@ -9,8 +11,9 @@ class UserLogin extends Component {
         super(props);
 
         this.state = {
-            username: "",
-            password: ""
+            email: "",
+            password: "",
+            ErrorEmail: ""
         };
 
         this.OnChangeInput = this.OnChangeInput.bind(this);
@@ -19,11 +22,20 @@ class UserLogin extends Component {
     }
 
     handleSubmit = event => {
-        var username = this.state.username;
+        var email = this.state.email;
+
+        if (!validator.isEmail(email)) {
+            this.setState({
+                ErrorEmail: 'Email không đúng định dạng'
+            });
+            event.preventDefault();
+            return;
+        }
+
         var password = this.state.password;
 
         var postJson = {
-            username: username,
+            email: email,
             password: password
         };
 
@@ -31,7 +43,8 @@ class UserLogin extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postJson)
             .end(function (err, res) {
-                localStorage.setItem('x-auth', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWM4NmVlZDVjMGE3OTE1Mzg3Y2I2YTgiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTIzMDg1MDM4fQ.ktMP8PWMzYcw2SXeW7yeF6PEGpmuFusOMSJMtO5om6Q');
+                console.log(res);
+                localStorage.setItem('x-auth', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWNhZWM1Nzk1ZDhiZjFlOWNhZDFmYzQiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTIzMjU4MjE0fQ.j2XEPnqPpJEg_LmOts-zh9Cik9-406HS26DvXvCjlN8');
                 window.location.href = '/';
             });
     }
@@ -41,6 +54,10 @@ class UserLogin extends Component {
         var value = e.target.value;
         var jsonState = { [name]: value };
 
+        if(name === "email"){
+            jsonState.ErrorEmail = "";
+        }
+        
         this.setState(jsonState);
     }
     onKeyDown(e) {
@@ -55,9 +72,10 @@ class UserLogin extends Component {
                     <h1 className="login-header">Login</h1>
                     <div className="login-form">
                         <RenderInput
-                            nameId={"username"}
-                            title={"User name"}
-                            value={this.state.username}
+                            nameId={"email"}
+                            title={"Email"}
+                            errorTitle={this.state.ErrorEmail}
+                            value={this.state.email}
                             type={"text"}
                             className={"login--input"}
                             cssLabel={"login--text"}

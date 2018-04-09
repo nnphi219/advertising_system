@@ -10,9 +10,33 @@ export class RenderInput extends Component {
             <div>
                 <label key={this.props.nameId} className={cssLabel}>
                     {this.props.title}
-                    <input type={this.props.type} key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={this.props.className} readOnly={isReadOnly}/>
+                    <p style={{ color: "red", marginTop: "3px" }}>{this.props.errorTitle}</p>
+                    <input type={this.props.type} key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={this.props.className} readOnly={isReadOnly} />
                 </label>
             </div>
+        );
+    }
+}
+
+export class RenderTextArea extends Component {
+    render() {
+        var isReadOnly = parseInt(this.props.isReadOnly) === 1 ? true : false;
+        var cssLabel = "fullwidth" + ` ${this.props.cssLabel}`
+
+        return (
+            <div className={this.props.divClassName}>
+                <div className="">
+                    <label className="fullwidth">
+                        {this.props.title}
+                        <div>
+                            <textarea rows="4" cols="50" key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={this.props.className} readOnly={isReadOnly}>
+                                
+                            </textarea>         
+                        </div>
+                    </label>
+                </div>
+            </div>
+
         );
     }
 }

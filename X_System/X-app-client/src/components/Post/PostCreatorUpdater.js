@@ -3,9 +3,9 @@ import Request from 'superagent';
 import DatePicker from 'react-date-picker';
 import { UrlApi, UrlRedirect } from '../share/Url';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { RenderInput, RenderSelect, RenderRadioButon, RenderDate, RenderTextArea } from '../share/InputsRender';
 
-import './user.css';
+import './post.css';
 
 var rp = require('request-promise');
 
@@ -14,47 +14,37 @@ class RenderProperties extends Component {
         return (
             <div style={{ paddingLeft: "30px" }}>
                 <RenderInput
-                    nameId={"username"}
-                    title={"User name"}
-                    value={this.props.stateValues.username}
+                    nameId={"ma_bai_dang"}
+                    title={"Mã bài đăng"}
+                    value={this.props.stateValues.ma_bai_dang}
                     type={"text"}
                     className={"user--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
 
                 <RenderInput
-                    nameId={"email"}
-                    title={"Email"}
-                    value={this.props.stateValues.email}
+                    nameId={"tieu_de"}
+                    title={"Tiêu đề"}
+                    value={this.props.stateValues.tieu_de}
                     type={"text"}
                     className={"user--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
 
-                <RenderInput
-                    nameId={"password"}
-                    title={"Password"}
-                    value={this.props.stateValues.password}
-                    type={"password"}
-                    className={"user--input"}
+                <RenderTextArea
+                    nameId={"noi_dung"}
+                    title={"Nội dung"}
+                    value={this.props.stateValues.noi_dung}
+                    type={"text"}
+                    className={"textarea--input"}
                     OnChangeInput={this.props.OnChangeInput}
-                />
-
-                <RenderSelect
-                    nameId={"user_type"}
-                    title={"Loại user"}
-                    keys={userInputsData.user_type.keys}
-                    values={userInputsData.user_type.values}
-                    selectedValue={this.props.stateValues.user_type}
-                    OnChangeSelect={this.props.OnChangeInput}
-                    className={"input--select"}
                 />
             </div>
         );
     }
 }
 
-class UserCreatorUpdaterForm extends Component {
+class PostCreatorUpdaterForm extends Component {
     constructor(props) {
         super(props);
 
@@ -71,7 +61,7 @@ class UserCreatorUpdaterForm extends Component {
     }
 
     handleCancel(){
-        window.location.href = UrlRedirect.Users;
+        window.location.href = UrlRedirect.Posts;
     }
 
     render() {
@@ -92,7 +82,7 @@ class UserCreatorUpdaterForm extends Component {
     }
 }
 
-class UserCreatorUpdater extends Component {
+class PostCreatorUpdater extends Component {
     constructor(props) {
         super(props);
 
@@ -104,14 +94,15 @@ class UserCreatorUpdater extends Component {
 
     SetInitState(jsonState) {
         if (this.props.modeAction === "create") {
-            jsonState.user_type = userInputsData.user_type.keys[0];
+
         }
         else if (this.props.modeAction === "edit") {
             var editContents = this.props.editContents;
 
-            jsonState.username = editContents.username;
-            jsonState.email = editContents.email;
-            jsonState.user_type = editContents.user_type;
+            jsonState.ma_bai_dang = editContents.ma_bai_dang;
+            jsonState.tieu_de = editContents.tieu_de;
+            jsonState.noi_dung = editContents.noi_dung;
+
         }
     }
 
@@ -122,55 +113,67 @@ class UserCreatorUpdater extends Component {
     GetModelStateJson() {
         var state = this.state;
 
-        var userContent = {
-            username: state.username,
-            email: state.email,
-            password: state.password,
-            user_type: state.user_type
+        var content = {
+            ma_bai_dang: state.ma_bai_dang,
+            tieu_de: state.tieu_de,
+            noi_dung: state.noi_dung,
+            url: `/post/${state.ma_bai_dang}`
         };
 
-        return userContent;
+        return content;
     }
 
-    CreateUser() {
-        var userContent = this.GetModelStateJson();
+    CreatePost() {
+        var content = this.GetModelStateJson();
 
         var $this = this;
-        Request.post(UrlApi.UserManagement)
+        var token = localStorage.getItem('x-auth');
+
+        Request.post(UrlApi.PostManagement)
             .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send(userContent)
+            .set('x-auth', token)
+            .send(content)
             .end(function (err, res) {
-                window.location.href = UrlRedirect.Users;
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    window.location.href = UrlRedirect.Posts;
+                }
+
             });
     }
 
-    EditUser() {
-        var userContent = this.GetModelStateJson();
+    EditPost() {
+        var content = this.GetModelStateJson();
 
-        var url = UrlApi.UserManagement + "/" + this.props.editContents._id;
+        var url = UrlApi.PostManagement + "/" + this.props.editContents._id;
         var $this = this;
+        var token = localStorage.getItem('x-auth');
+        
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send(userContent)
+            .set('x-auth', token)
+            .send(content)
             .end(function (err, res) {
-                window.location.href = UrlRedirect.Users;
+                window.location.href = UrlRedirect.Posts;
             });
     }
 
     handleSubmit() {
         if (this.props.modeAction === "create") {
-            this.CreateUser();
+            this.CreatePost();
         }
         else {
-            this.EditUser();
+            this.EditPost();
         }
     }
 
     render() {
-        var titleForm = this.props.modeAction === "create" ? "Tạo user" : "Chỉnh sửa user";
+        var titleForm = this.props.modeAction === "create" ? "Tạo bài đăng" : "Chỉnh sửa bái đăng";
         return (
             <div className='div_createform'>
-                <UserCreatorUpdaterForm
+                <PostCreatorUpdaterForm
                     titleForm={titleForm}
                     stateValues={this.state}
                     handleSubmit={this.handleSubmit.bind(this)}
@@ -187,17 +190,17 @@ var userInputsData = {
     }
 }
 
-export class UserCreator extends Component {
+export class PostCreator extends Component {
     render() {
         return (
-            <UserCreatorUpdater
+            <PostCreatorUpdater
                 modeAction={"create"}
             />
         );
     }
 }
 
-export class UserEditor extends Component {
+export class PostEditor extends Component {
     constructor(props) {
         super(props);
 
@@ -210,7 +213,8 @@ export class UserEditor extends Component {
         var urlSplit = window.location.href.split('/');
         var paraId = urlSplit[urlSplit.length - 1];
 
-        Request.get(UrlApi.UserManagement + "/" + paraId)
+        Request.get(UrlApi.PostManagement + "/" + paraId)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({
                     editContents: res.body,
@@ -219,12 +223,12 @@ export class UserEditor extends Component {
 
             })
             .catch((e) => {
-                // window.location.href = UrlRedirect.Users;
+                // window.location.href = UrlRedirect.Posts;
             });
 
         return (
             this.state.isLoad ?
-                <UserCreatorUpdater
+                <PostCreatorUpdater
                     modeAction={"edit"}
                     editContents={this.state.editContents}
                 />
@@ -232,5 +236,3 @@ export class UserEditor extends Component {
         );
     }
 }
-
-export default UserCreatorUpdater;
