@@ -58,11 +58,11 @@ class RegisterForm extends Component {
                         value={stateValues.passwordconfirm}
                         type={"password"}
                         className={"user--input"}
-                        OnChangeInput={this.props.OnChangeInput}
+                        OnChangeInput={this.props.OnChangeInput}submit
                     />
                 </div>
                 <div className="submit">
-                    <button className="btn btn-primary" onClick={this.props.submit}>Save</button>
+                    <button className="btn btn-primary" onClick={this.props.submit}>Đăng ký</button>
                     <button className="btn btn-primary" onClick={this.handleCancel}>Cancel</button>
                 </div>
             </div>
@@ -130,6 +130,8 @@ class UserRegister extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(content)
             .end(function (err, res) {
+                console.log(res.body)
+                localStorage.setItem('x-auth', res.body.accessToken);
                 window.location.href = UrlRedirect.Users;
             });
     }

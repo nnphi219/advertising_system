@@ -10,7 +10,7 @@ class UserLoginInfo extends Component {
 
         this.state = {
             login: false,
-            usernamelogin: this.props.username
+            usernamelogin: this.props.usernamelogin
         }
 
         this.logout = this.logout.bind(this);
@@ -40,22 +40,22 @@ class UserLoginInfo extends Component {
 
     logout() {
         var token = localStorage.getItem('x-auth');
-        localStorage.setItem('x-auth', '');
-        window.location.href = '/login';
-        // Request.delete(UrlApi.UserLogout)
-        //     .set('x-auth', token)
-        //     .end(function (err, res) {
-        //         localStorage.setItem('x-auth', '');
-        //         window.location.href = '/login';
-        //     });
+        
+        Request.delete(UrlApi.UserLogout)
+            .set('x-auth', token)
+            .end(function (err, res) {
+                localStorage.setItem('x-auth', '');
+                window.location.href = '/login';
+            });
     }
 
     render() {
         return (
             this.props.login ?
                 <div>
-                    <a className="userlogininfo--name">{this.state.usernamelogin}</a>
-                    <ul className="dropdown-menu userlogininfo_menu">
+                    <a className="userlogininfo--name" >{this.state.usernamelogin}</a>
+                    <button className="user--logout" onClick={this.logout}><i className="fa fa-sign-out fa-fw"></i>Logout</button>
+                    <ul className="dropdown-menu userlogininfo_menu" >
                         <li><a onClick={this.logout}><i className="fa fa-sign-out fa-fw"></i>Logout</a></li>
                     </ul>
                 </div>

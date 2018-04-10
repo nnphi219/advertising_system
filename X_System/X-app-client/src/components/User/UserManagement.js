@@ -159,6 +159,7 @@ class UserManagement extends Component {
                     this.state.ShowDeletePopup ?
                         <DeleteForm
                             url={UrlApi.UserManagement}
+                            urlRedirect={UrlRedirect.Users}
                             SelectedItemId={this.state.SelectedItemId}
                             closeDeletePopup={this.handleCloseDeletePop}
                             resetContentState={this.handleResetContentsState}

@@ -33,7 +33,6 @@ class RenderPosts extends Component {
             elements.push(<RenderAPost post={post} />);
         });
 
-        console.log(posts);
         return (
             <div className="row">
                 {elements}

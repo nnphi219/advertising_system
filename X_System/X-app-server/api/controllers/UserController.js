@@ -27,7 +27,14 @@ exports.create_a_user = function (req, res) {
       return new_user.generateAuthToken(new_user.password);
     })
     .then((token) => {
-      res.header('x-auth', token).json(new_user);
+      var userRes = {
+        _id: new_user._id,
+        email: new_user.email,
+        username: new_user.username,
+        accessToken: token
+      };
+
+      res.header('x-auth', token).json(userRes);
     })
     .catch((e) => {
       res.status(400).send(e);
@@ -85,7 +92,14 @@ exports.UserLogin = function (req, res) {
   User.findByCredentials(body.email, body.password)
     .then((user) => {
       user.generateAuthToken().then((token) => {
-        res.header('x-auth', token).send(user);
+        var userRes = {
+          _id: user._id,
+          email: user.email,
+          username: user.username,
+          accessToken: token
+        };
+
+        res.header('x-auth', token).send(userRes);
       });
     }).catch((e) => {
       res.status(400).send();

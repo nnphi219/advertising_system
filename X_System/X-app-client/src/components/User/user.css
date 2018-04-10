@@ -111,3 +111,11 @@
     min-width: 0 !important;
     margin-left: 50px !important;
 }
+
+.user--logout {
+    background: transparent;
+    color: white;
+    border: 0;
+    font-size: 17px;
+    margin-left: 5px;
+}

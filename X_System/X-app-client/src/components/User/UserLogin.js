@@ -48,8 +48,7 @@ class UserLogin extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postJson)
             .end(function (err, res) {
-                console.log(res);
-                localStorage.setItem('x-auth', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWNiNDllY2IyNjg0NDQ5YThhZGE1ZjQiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTIzMjcyMTcyfQ.xEK6MBuHTWmITEmJIUy6JFIalhQ1w1BUdYn6pER20BI');
+                localStorage.setItem('x-auth', res.body.accessToken);
                 window.location.href = '/';
             });
     }
