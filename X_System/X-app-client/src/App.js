@@ -9,6 +9,8 @@ import PostManagement from './components/Post/PostManagement';
 import { PostCreator, PostEditor } from './components/Post/PostCreatorUpdater';
 import Banner from './components/layout/Banner';
 import UserRegister from './components/User/UserRegister';
+import PostDetail from './components/Post/PostDetail';
+import Marketing from './components/Marketing/Marketing';
 
 class Title extends Component {
     render() {
@@ -39,8 +41,10 @@ class App extends Component {
                         <Route exact={true} path={"/users/edit/:id"} component={UserEditor} />
 
                         <Route exact={true} path={"/posts"} component={PostManagement} />
+                        <Route exact={true} path={"/post/:id"} component={PostDetail} />
                         <Route exact={true} path={"/posts/create"} component={PostCreator} />
                         <Route exact={true} path={"/posts/edit/:id"} component={PostEditor} />
+                        <Route exact={true} path={"/marketing"} component={Marketing} />
 
                         <Route path={"/title"} component={Title} />
                     </div>

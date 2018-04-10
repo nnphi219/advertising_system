@@ -4,8 +4,15 @@ var mongoose = require('mongoose'),
   Post = mongoose.model('Posts');
 
 exports.list_all_posts = function(req, res) {
-  console.log(req.user._id);
     Post.find({nguoi_tao : req.user._id}, function(err, post) {
+    if (err)
+      res.send(err);
+    res.json(post);
+  });
+};
+
+exports.list_all_posts_for_marketing = function(req, res) {
+    Post.find({}, function(err, post) {
     if (err)
       res.send(err);
     res.json(post);

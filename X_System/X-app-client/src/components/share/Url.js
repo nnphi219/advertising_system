@@ -6,7 +6,9 @@ export const UrlApi = {
     UserLogin: hostNameServer + "/users/login",
     UserLogout: hostNameServer + "/users/me/token",
 
-    PostManagement: hostNameServer + "/posts"
+    PostManagement: hostNameServer + "/posts",
+    Post: hostNameServer + '/post',
+    Marketing: hostNameServer + "/marketing"
 }
 
 export const UrlRedirect = {
@@ -19,5 +21,5 @@ export const UrlRedirect = {
 
     Posts: '/posts',
     CreatePost: '/posts/create',
-    EditPost: '/posts/edit',
+    EditPost: '/posts/edit'
 }
