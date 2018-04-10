@@ -25,4 +25,13 @@ const UrlApi = {
     Upload: `http://${HOST}:${PORT}/postmanagement/upload`
 }
 
+export const UrlRedirect = {
+    Users : '/users',
+    CreateUser: '/users/create',
+    EditUser: '/users/edit',
+    UserLogin: '/login',
+    UserRegister: '/register',
+    UserTokenMe: '/users/me/token'
+}
+
 export default UrlApi;

@@ -25,14 +25,13 @@ class NavTopLinks extends Component {
 
     logout() {
         var token = localStorage.getItem('x-auth');
-        localStorage.setItem('x-auth', '');
-        window.location.href = '/user-login';
-        // Request.delete(UrlApi.UserLogout)
-        //     .set('x-auth', token)
-        //     .end(function (err, res) {
-        //         localStorage.setItem('x-auth', '');
-        //         window.location.href = '/user-login';
-        //     });
+
+        Request.delete(UrlApi.UserLogout)
+            .set('x-auth', token)
+            .end(function (err, res) {
+                localStorage.setItem('x-auth', '');
+                window.location.href = '/login';
+            });
     }
 
     render() {

@@ -11,6 +11,7 @@ import PostCampaignManagement from './components/Post_Campaign_Management/PostCa
 import PaymentManagement from './components/Payment_Management/PaymentManagement';
 import UserManagement from './components/User/UserManagement';
 import UserLogin from './components/User/UserLogin';
+import UserRegister from './components/User/UserRegister';
 
 class AdminTitle extends Component {
     render() {
@@ -50,25 +51,7 @@ class XSystemTitle extends Component {
 
 function requireAuth() {
     console.log("a");
-    window.location.href = '/user-login';
-}
-
-export class PrivateRoute extends Component {
-    render() {
-        var loggedIn = true;
-        var path = this.props.path;
-        var component = this.props.component;
-
-        return (
-            <Route path={"/"} render={() => (
-                loggedIn ? (
-                    <Redirect to={"/ads-area"} />
-                ) : (
-                        <Redirect to={"/user-login"} />
-                    )
-            )} />
-        );
-    }
+    window.location.href = '/login';
 }
 
 export class AppAdmin extends Component {
@@ -77,7 +60,10 @@ export class AppAdmin extends Component {
             <BrowserRouter>
                 <div>
                     <Route exact={true} path={"/"} component={AdminTitle} />
-                    <Route path={"/user-login"} component={UserLogin} />
+                    
+                    <Route exact={true} path={"/login"} component={UserLogin} />
+                    <Route exact={true} path={"/register"} component={UserRegister} />
+                    
                     <Route path={"/users-management"} component={UserManagement} />
                     <Route path={"/ads-area"} component={AdsArea} />
                     <Route path={"/service-price"} component={ServicePrice} />
