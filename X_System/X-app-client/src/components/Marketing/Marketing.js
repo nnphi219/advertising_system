@@ -1,6 +1,46 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import { UrlApi } from '../share/Url';
+import './marketing_boostrap.css';
+
+class RenderAPost extends Component {
+    render() {
+        var post = this.props.post;
+        var imgUrl = post.imageUrls !== [] ? post.imageUrls[0] : "http://placehold.it/700x400";
+        return (
+            <div className="col-lg-3 col-md-6 mb-4">
+                <div className="card h-100">
+                    <a href={`/post/${post._id}`}><img className="card-img-top" src={imgUrl} alt="" /></a>
+                    <div className="card-body">
+                        <h4 className="card-title">
+                            <a href={`/post/${post._id}`}>{post.tieu_de}</a>
+                        </h4>
+                    </div>
+                    <div className="card-footer">
+                        <small className="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+class RenderPosts extends Component {
+    render() {
+        var posts = this.props.posts !== null ? this.props.posts: [];
+        var elements = [];
+        posts.forEach(post => {
+            elements.push(<RenderAPost post={post} />);
+        });
+
+        console.log(posts);
+        return (
+            <div className="row">
+                {elements}
+            </div>
+        );
+    }
+}
 
 class Marketing extends Component {
     constructor(props) {
@@ -9,9 +49,10 @@ class Marketing extends Component {
         this.state = ({
             postContents: null
         });
-        
+
         Request.get(UrlApi.Marketing)
-            .then((res) => {console.log(res.body);
+            .then((res) => {
+                console.log(res.body);
                 this.setState({
                     postContents: res.body
                 });
@@ -23,8 +64,12 @@ class Marketing extends Component {
     render() {
         return (
             <div>
-                fefwef
+                <h1>Tin rao vặt</h1>
+                <RenderPosts
+                    posts={this.state.postContents}
+                />
             </div>
+
         );
     }
 }
