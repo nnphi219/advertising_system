@@ -130,7 +130,6 @@ class UserRegister extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(content)
             .end(function (err, res) {
-                console.log(res.body)
                 localStorage.setItem('x-auth', res.body.accessToken);
                 window.location.href = UrlRedirect.Users;
             });
