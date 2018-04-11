@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { RenderInput, RenderSelect } from '../share/InputsRender';
 import validator from 'validator';
 import Request from 'superagent';
-import { UrlRedirect, UrlApi } from '../share/Url';
+import UrlApi, { UrlRedirect } from '../share/UrlApi';
+import './user.css';
 
 class RegisterForm extends Component {
     constructor(props) {
@@ -20,7 +21,6 @@ class RegisterForm extends Component {
 
         return (
             <div>
-
                 <div style={{ paddingLeft: "30px" }}>
                     <RenderInput
                         nameId={"username"}
@@ -61,7 +61,7 @@ class RegisterForm extends Component {
                         OnChangeInput={this.props.OnChangeInput}submit
                     />
                 </div>
-                <div className="submit">
+                <div className="register--submit">
                     <button className="btn btn-primary" onClick={this.props.submit}>Đăng ký</button>
                     <button className="btn btn-primary" onClick={this.handleCancel}>Cancel</button>
                 </div>
@@ -75,6 +75,9 @@ class UserRegister extends Component {
         super(props);
 
         this.state = {
+            username: '',
+            email: '',
+            password: '',
             usernameError: '',
             emailError: '',
             passwordError: ''
@@ -98,13 +101,13 @@ class UserRegister extends Component {
 
         if (state.username === "") {
             submitValid = false;
-            jsonError.usernameError = "error";
+            jsonError.usernameError = "Username chưa được nhập";
         }
-        if (!validator.isEmail(state.email)) {
+        if (state.email === "" || !validator.isEmail(state.email)) {
             submitValid = false;
             jsonError.emailError = "Email không hợp lệ";
         }
-        if (state.password !== state.passwordconfirm) {
+        if (state.password === "" || state.password !== state.passwordconfirm) {
             submitValid = false;
             jsonError.passwordError = "Password không giống nhau";
         }
@@ -124,20 +127,20 @@ class UserRegister extends Component {
 
     submit() {
         var content = this.GetStateModel();
-
+      
         var $this = this;
         Request.post(UrlApi.UserManagement)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(content)
             .end(function (err, res) {
                 localStorage.setItem('x-auth', res.body.accessToken);
-                window.location.href = UrlRedirect.Users;
+                window.location.href = '/';
             });
     }
 
     render() {
         return (
-            <div>
+            <div className="register">
                 <h1>Đăng ký</h1>
                 <RegisterForm
                     submit={this.submit}

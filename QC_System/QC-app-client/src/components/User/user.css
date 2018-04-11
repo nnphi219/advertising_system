@@ -23,6 +23,20 @@
     
 }
 
+.register {
+    margin: 100px 30%;
+}
+
+.register--submit {
+    margin-right: 120px;
+    float: right;
+}
+
+.register--submit button {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 .user_createform_size {
     left: 30%;
     right: 30%;

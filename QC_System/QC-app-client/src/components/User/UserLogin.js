@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import UrlApi from '../share/UrlApi';
+import UrlApi, { UrlRedirect } from '../share/UrlApi';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 import './user.css';
 
@@ -15,7 +15,12 @@ class UserLogin extends Component {
 
         this.OnChangeInput = this.OnChangeInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+    }
+
+    handleRegister(){
+        window.location.href = UrlRedirect.UserRegister;
     }
 
     handleSubmit = event => {
@@ -31,7 +36,7 @@ class UserLogin extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postJson)
             .end(function (err, res) {
-                localStorage.setItem('x-auth', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YWM4NmVlZDVjMGE3OTE1Mzg3Y2I2YTgiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTIzMDg1MDM4fQ.ktMP8PWMzYcw2SXeW7yeF6PEGpmuFusOMSJMtO5om6Q');
+                localStorage.setItem('x-auth', res.body.accessToken);
                 window.location.href = '/';
             });
     }
@@ -74,6 +79,7 @@ class UserLogin extends Component {
                         </div>
                         <div className="submit">
                             <button className="btn btn-primary" onClick={this.handleSubmit}>Đăng nhập</button>
+                            <button className="btn btn-primary" onClick={this.handleRegister}>Đăng ký</button>
                         </div>
                 </div>
             </div>

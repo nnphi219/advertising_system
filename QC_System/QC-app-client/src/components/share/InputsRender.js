@@ -8,6 +8,7 @@ export class RenderInput extends Component {
             <div>
                 <label key={this.props.nameId} className="fullwidth">
                     {this.props.title}
+                    <p style={{ color: "red", marginTop: "3px" }}>{this.props.errorTitle}</p>
                     <input type={this.props.type} key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={this.props.className} readOnly={isReadOnly}/>
                 </label>
             </div>
