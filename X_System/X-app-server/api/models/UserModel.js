@@ -88,6 +88,24 @@ UserSchema.statics.findByToken = function (token) {
     });
 };
 
+UserSchema.statics.findByUserType = function (token, user_type) {
+    var User = this;
+    var decoded;
+
+    try {
+        decoded = jwt.verify(token, 'abc123');
+    } catch (e) {
+        return Promise.reject();
+    }
+
+    return User.findOne({
+        '_id': decoded._id,
+        'tokens.token': token,
+        'tokens.access': 'auth',
+        'user_type': user_type
+    });
+};
+
 UserSchema.statics.findByCredentials = function (email, password) {
     var User = this;
 

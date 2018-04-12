@@ -6,6 +6,7 @@ var express = require('express'),
     Task = require('./api/models/todoListModel'), //created model loading here
     User = require('./api/models/UserModel'),
     Post = require('./api/models/PostModel'),
+    Page = require('./api/models/PageModel'),
 
     bodyParser = require('body-parser');
 var cors = require('cors');
@@ -22,13 +23,13 @@ app.use(bodyParser.json());
 var todoListRoute = require('./api/routes/todoListRoute'); //importing route
 var userRoute = require('./api/routes/UserRoute');
 var postRoute = require('./api/routes/PostRoute');
+var pageRoute = require('./api/routes/PageRoute');
 
 todoListRoute(app); //register the route
 userRoute(app);
 postRoute(app);
+pageRoute(app);
 
 app.listen(port);
-
-
 
 console.log('todo list RESTful API server started on: ' + port);

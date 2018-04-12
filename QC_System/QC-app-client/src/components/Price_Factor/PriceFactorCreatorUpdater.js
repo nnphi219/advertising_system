@@ -26,7 +26,6 @@ class RenderProperties extends Component {
 
         return (
             <div>
-                ma_chi_so
                 <RenderInput
                     nameId={"ma_chi_so"}
                     title={"Mã chỉ số"}

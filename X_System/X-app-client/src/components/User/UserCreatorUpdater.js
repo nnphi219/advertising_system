@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import DatePicker from 'react-date-picker';
 import { UrlApi, UrlRedirect } from '../share/Url';
-import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 
 import './user.css';
 

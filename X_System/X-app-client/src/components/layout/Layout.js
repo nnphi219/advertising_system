@@ -11,7 +11,9 @@ class Layout extends Component {
     render() {
         return (
             <div>
-                <Header />
+                <Header
+                    isAdmin={this.props.isAdmin}
+                />
                 <div id="body" />
                 <Footer />
             </div>

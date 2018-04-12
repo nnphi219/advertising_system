@@ -24,10 +24,10 @@ class Footer extends Component {
                             <div className="widget">
                                 <h5>Browse pages</h5>
                                 <ul className="list list-ok">
-                                    <li><a href="#">Lorem ipsum dolor sit amet</a></li>
-                                    <li><a href="#">Tamquam ponderum at eum, nibh dicta offendit mei</a></li>
-                                    <li><a href="#">Vix no vidisse dolores intellegam</a></li>
-                                    <li><a href="#">Est virtute feugiat accommodare eu</a></li>
+                                    <li><a href="#1">Lorem ipsum dolor sit amet</a></li>
+                                    <li><a href="#2">Tamquam ponderum at eum, nibh dicta offendit mei</a></li>
+                                    <li><a href="#3">Vix no vidisse dolores intellegam</a></li>
+                                    <li><a href="#4">Est virtute feugiat accommodare eu</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -46,11 +46,11 @@ class Footer extends Component {
                                 <p>Enter your email to subcribe newsletter</p>
 
                                 <ul className="social-network">
-                                    <li><a href="#"><i className="icon-bg-light icon-facebook icon-circled icon-1x"></i></a></li>
-                                    <li><a href="#" title="Twitter"><i className="icon-bg-light icon-twitter icon-circled icon-1x"></i></a></li>
-                                    <li><a href="#" title="Linkedin"><i className="icon-bg-light icon-linkedin icon-circled icon-1x"></i></a></li>
-                                    <li><a href="#" title="Pinterest"><i className="icon-bg-light icon-pinterest icon-circled icon-1x"></i></a></li>
-                                    <li><a href="#" title="Google plus"><i className="icon-bg-light icon-google-plus icon-circled icon-1x"></i></a></li>
+                                    <li><a href="#5"><i className="icon-bg-light icon-facebook icon-circled icon-1x"></i></a></li>
+                                    <li><a href="#6" title="Twitter"><i className="icon-bg-light icon-twitter icon-circled icon-1x"></i></a></li>
+                                    <li><a href="#7" title="Linkedin"><i className="icon-bg-light icon-linkedin icon-circled icon-1x"></i></a></li>
+                                    <li><a href="#8" title="Pinterest"><i className="icon-bg-light icon-pinterest icon-circled icon-1x"></i></a></li>
+                                    <li><a href="#9" title="Google plus"><i className="icon-bg-light icon-google-plus icon-circled icon-1x"></i></a></li>
                                 </ul>
                             </div>
                         </div>

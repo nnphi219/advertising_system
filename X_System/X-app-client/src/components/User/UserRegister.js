@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { RenderInput, RenderSelect } from '../share/InputsRender';
+import { RenderInput } from '../share/InputsRender';
 import validator from 'validator';
 import Request from 'superagent';
 import { UrlRedirect, UrlApi } from '../share/Url';
+import './user.css';
 
 class RegisterForm extends Component {
     constructor(props) {
@@ -20,7 +21,6 @@ class RegisterForm extends Component {
 
         return (
             <div>
-
                 <div style={{ paddingLeft: "30px" }}>
                     <RenderInput
                         nameId={"username"}
@@ -75,6 +75,7 @@ class UserRegister extends Component {
         super(props);
 
         this.state = {
+            email: '',
             usernameError: '',
             emailError: '',
             passwordError: ''
@@ -130,14 +131,20 @@ class UserRegister extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(content)
             .end(function (err, res) {
-                localStorage.setItem('x-auth', res.body.accessToken);
-                window.location.href = UrlRedirect.Users;
+                if(err){
+
+                }
+                else {
+                    localStorage.setItem('x-auth', res.body.accessToken);
+                    window.location.href = UrlRedirect.Users;
+                }
+               
             });
     }
 
     render() {
         return (
-            <div>
+            <div className="registerform">
                 <h1>Đăng ký</h1>
                 <RegisterForm
                     submit={this.submit}

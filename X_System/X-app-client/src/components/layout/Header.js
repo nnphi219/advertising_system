@@ -24,7 +24,7 @@ class Header extends Component {
                                                     <li className="dropdown active">
                                                         <a href="index.html">Home</a>
                                                     </li>
-                                                    <li className="dropdown">
+                                                    {/* <li className="dropdown">
                                                         <a href="#1">Features</a>
                                                         <ul className="dropdown-menu">
                                                             <li><a href="scaffolding.html">Scaffolding</a></li>
@@ -40,10 +40,16 @@ class Header extends Component {
                                                                 </ul>
                                                             </li>
                                                         </ul>
-                                                    </li>
+                                                    </li> */}
+                                                    {
+                                                        this.props.isAdmin ?
+                                                            <li>
+                                                                <a href="/pages">Trang quảng cáo</a>
+                                                            </li>
+                                                            : null
+                                                    }
                                                     <li>
                                                         <a href="/marketing">marketing</a>
-                                                        
                                                     </li>
                                                     <li className="dropdown" id="UserLoginInfo">
 

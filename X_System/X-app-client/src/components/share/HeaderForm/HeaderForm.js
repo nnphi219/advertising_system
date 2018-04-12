@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 
 import './headerform.css';
 
-// <HeaderForm title={} showCreatorUpdaterPopup={} />
-
 class HeaderForm extends Component {
   render() {
-    var buttonTitle = "Tạo " + this.props.title;
+    var buttonTitle = "Tạo " + this.props.buttonTitle;
     return (
       <div className="header">
         <h2 className="header-title float-left">

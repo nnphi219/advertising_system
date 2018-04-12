@@ -5,7 +5,7 @@ import Layout from './components/layout/Layout';
 import UserLoginInfo from './components/User/UserLoginInfo';
 import registerServiceWorker from './registerServiceWorker';
 import Request from 'superagent';
-import { UrlApi } from './components/share/Url';
+import { UrlApi, UrlRedirect } from './components/share/Url';
 
 import './index.css';
 import './frontend/vendor/popup.css';
@@ -22,6 +22,7 @@ import './frontend/assets/css/style.css';
 import './frontend/assets/color/default.css';
 
 var AllowedUrl = ["login", "register", "post", "marketing"];
+var AllowedUrlAdmin = ['pages'];
 
 function RedirectUrl() {
     var currentURL = window.location.href.replace('http://', '').replace('https://', '');
@@ -30,13 +31,28 @@ function RedirectUrl() {
     if (AllowedUrl.indexOf(currentPath) === -1) {
         window.location.href = '/login';
     }
-    else{
-        ReactRender("", false);
+    else {
+        ReactRender("", "", false);
     }
 }
 
-function ReactRender(username, isLogin) {
-    ReactDOM.render(<Layout />, window.document.getElementById('root'));
+function ReactRender(username, user_type, isLogin) {
+    var currentURL = window.location.href.replace('http://', '').replace('https://', '');
+    var currentPath = currentURL.split('/')[1];
+    var isAdmin = user_type === 'admin' ? true : false;
+    if (AllowedUrlAdmin.indexOf(currentPath) !== -1) {
+        if (!isAdmin) {
+            // 404
+            window.location.href = UrlRedirect.NotFound;
+            return;
+        }
+    }
+
+    ReactDOM.render(
+        <Layout
+            isAdmin={isAdmin}
+        />,
+        window.document.getElementById('root'));
     ReactDOM.render(
         <UserLoginInfo
             login={isLogin}
@@ -57,7 +73,7 @@ Request.get(UrlApi.UserAuthen)
     .then((res) => {
         var user = res.body;
         if (user) {
-            ReactRender(user.username, true);
+            ReactRender(user.username, user.user_type, true);
         }
         else {
             RedirectUrl();

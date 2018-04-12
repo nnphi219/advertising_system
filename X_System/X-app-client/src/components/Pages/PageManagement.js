@@ -6,16 +6,15 @@ import DeleteForm from '../share/DeleteForm';
 import HeaderForm from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import { UrlApi, UrlRedirect } from '../share/Url';
+// import { PageCreator, PageEditor } from './PageCreatorUpdater';
 
-import './user.css';
-import UserCreatorUpdater from './UserCreatorUpdater';
+import './page.css';
 
 function RenderRow(props) {
     return (
         <tr>
-            <td>{props.trContent.username}</td>
-            <td>{props.trContent.email}</td>
-            <td>{props.trContent.user_type}</td>
+            <td>{props.trContent.ma_trang_quang_cao}</td>
+            <td>{props.trContent.ten_trang_quang_cao}</td>
             <td>
                 <RenderEditDeleteButton
                     nameId={props.trContent._id}
@@ -47,11 +46,11 @@ function RenderBody(props) {
     );
 }
 
-class UserContents extends Component {
+class PageContents extends Component {
     render() {
         var theader = {
-            keys: [],
-            values: ["User name", "Email", "Loại user"]
+            keys: ["ma_trang_quang_cao", "ten_trang_quang_cao"],
+            values: ["Mã trang quảng cáo", "Tên trang quảng cáo"]
         };
 
         return (
@@ -69,32 +68,30 @@ class UserContents extends Component {
     }
 }
 
-class UserManagement extends Component {
+class PageManagement extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             ModeAction: "",
             EditContents: null,
-            ShowCreatorUpdaterPopup: false,
-            ShowDeletePopup: false,
             tbodyContents: []
         };
 
-        this.CreateUser = this.CreateUser.bind(this);
-        this.EditUser = this.EditUser.bind(this);
+        this.CreatePage = this.CreatePage.bind(this);
+        this.EditPage = this.EditPage.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
-        this.handleClosePopup = this.handleClosePopup.bind(this);
     }
 
     componentDidMount() {
-        this.getUsers();
+        this.getPages();
     }
 
-    getUsers() {
-        Request.get(UrlApi.UserManagement)
+    getPages() {
+        Request.get(UrlApi.Pages)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({
                     tbodyContents: res.body
@@ -102,12 +99,12 @@ class UserManagement extends Component {
             });
     }
 
-    CreateUser() {
-        window.location.href = UrlRedirect.CreateUser;
+    CreatePage() {
+        window.location.href = UrlRedirect.CreatePage;
     }
 
-    EditUser(event) {
-        window.location.href = UrlRedirect.EditUser + `/${event.target.name}`;
+    EditPage(event) {
+        window.location.href = UrlRedirect.EditPage + `/${event.target.name}`;
     }
 
     handleDeleteClick(event) {
@@ -127,38 +124,21 @@ class UserManagement extends Component {
         this.getUsers();
     }
 
-    handleClosePopup() {
-        this.setState({
-            ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
-        });
-    }
-
     render() {
         return (
             <div>
-                <HeaderForm title={"Users"} buttonTitle={"user"} CreateItem={this.CreateUser} />
-                <UserContents
+                <HeaderForm title={"Trang áp dụng cho quảng cáo"} buttonTitle={"trang"} CreateItem={this.CreatePage} />
+                <PageContents
                     tbodyContents={this.state.tbodyContents}
-                    handleEditClick={this.EditUser}
+                    handleEditClick={this.EditPage}
                     handleDeleteClick={this.handleDeleteClick}
                 />
 
                 {
-                    this.state.ShowCreatorUpdaterPopup ?
-                        <UserCreatorUpdater
-                            modeAction={this.state.ModeAction}
-                            editContents={this.state.EditContents}
-                            resetContentState={this.handleResetContentsState}
-                            closeCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup}
-                        />
-                        : null
-                }
-
-                {
                     this.state.ShowDeletePopup ?
                         <DeleteForm
-                            url={UrlApi.UserManagement}
-                            urlRedirect={UrlRedirect.Users}
+                            url={UrlApi.Pages}
+                            urlRedirect={UrlRedirect.Pages}
                             SelectedItemId={this.state.SelectedItemId}
                             closeDeletePopup={this.handleCloseDeletePop}
                             resetContentState={this.handleResetContentsState}
@@ -170,4 +150,4 @@ class UserManagement extends Component {
     }
 }
 
-export default UserManagement;
+export default PageManagement;

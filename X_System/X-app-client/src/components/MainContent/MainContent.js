@@ -16,7 +16,7 @@ class MainContent extends Component {
                                     <p className="left">
                                         Dolorem adipiscing definiebas ut nec. Dolore consectetuer eu vim, elit molestie ei has, petentium imperdiet in pri mel virtute nam.
               </p>
-                                    <a href="#" className="btn btn-color btn-rounded"><i className="icon-angle-right"></i> Read more</a>
+                                    <a href="#1" className="btn btn-color btn-rounded"><i className="icon-angle-right"></i> Read more</a>
                                 </div>
                             </div>
                         </div>
@@ -30,7 +30,7 @@ class MainContent extends Component {
                                     <p className="left">
                                         Dolorem adipiscing definiebas ut nec. Dolore consectetuer eu vim, elit molestie ei has, petentium imperdiet in pri mel virtute nam.
               </p>
-                                    <a href="#" className="btn btn-color btn-rounded"><i className="icon-angle-right"></i> Read more</a>
+                                    <a href="#2" className="btn btn-color btn-rounded"><i className="icon-angle-right"></i> Read more</a>
                                 </div>
                             </div>
                         </div>
@@ -44,7 +44,7 @@ class MainContent extends Component {
                                     <p className="left">
                                         Dolorem adipiscing definiebas ut nec. Dolore consectetuer eu vim, elit molestie ei has, petentium imperdiet in pri mel virtute nam.
               </p>
-                                    <a href="#" className="btn btn-color btn-rounded"><i className="icon-angle-right"></i> Read more</a>
+                                    <a href="#3" className="btn btn-color btn-rounded"><i className="icon-angle-right"></i> Read more</a>
                                 </div>
                             </div>
                         </div>
@@ -111,17 +111,17 @@ class MainContent extends Component {
                             <h4>Our satisfied clients</h4>
                             <ul className="clients">
                                 <li>
-                                    <a href="#">
+                                    <a href="#4">
                                         <img src="./assets/img/dummies/clients/client1.png" className="client-logo" alt="" />
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="#5">
                                         <img src="./assets/img/dummies/clients/client2.png" className="client-logo" alt="" />
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="#6">
                                         <img src="./assets/img/dummies/clients/client3.png" className="client-logo" alt="" />
                                     </a>
                                 </li>
@@ -135,7 +135,7 @@ class MainContent extends Component {
                             <div className="accordion" id="accordion2">
                                 <div className="accordion-group">
                                     <div className="accordion-heading">
-                                        <a className="accordion-toggle active" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                                        <a className="accordion-toggle active" data-toggle="collapse" data-parent="#accordion23" href="#collapseOne">
                                             <i className="icon-caret-down"></i> Social media optimization </a>
                                     </div>
                                     <div id="collapseOne" className="accordion-body collapse in">
@@ -148,7 +148,7 @@ class MainContent extends Component {
                                 </div>
                                 <div className="accordion-group">
                                     <div className="accordion-heading">
-                                        <a className="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                                        <a className="accordion-toggle" data-toggle="collapse" data-parent="#accordion22" href="#collapseTwo">
                                             <i className="icon-caret-right"></i> Web design and development </a>
                                     </div>
                                     <div id="collapseTwo" className="accordion-body collapse">
@@ -161,7 +161,7 @@ class MainContent extends Component {
                                 </div>
                                 <div className="accordion-group">
                                     <div className="accordion-heading">
-                                        <a className="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                                        <a className="accordion-toggle" data-toggle="collapse" data-parent="#accordion21" href="#collapseThree">
                                             <i className="icon-caret-right"></i> Business strategy and management </a>
                                     </div>
                                     <div id="collapseThree" className="accordion-body collapse">

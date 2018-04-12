@@ -4,13 +4,16 @@ import { BrowserRouter, Route } from "react-router-dom";
 import Home from './components/Home/Home';
 import UserLogin from './components/User/UserLogin';
 import UserManagement from './components/User/UserManagement';
-import UserCreatorUpdater, { UserCreator, UserEditor } from './components/User/UserCreatorUpdater';
+import { UserCreator, UserEditor } from './components/User/UserCreatorUpdater';
 import PostManagement from './components/Post/PostManagement';
 import { PostCreator, PostEditor } from './components/Post/PostCreatorUpdater';
-import Banner from './components/layout/Banner';
+import { PageCreator, PageEditor } from './components/Pages/PageCreatorUpdater';
 import UserRegister from './components/User/UserRegister';
 import PostDetail from './components/Post/PostDetail';
+import PageDetail from './components/Pages/PageDetail';
 import Marketing from './components/Marketing/Marketing';
+import PageManagement from './components/Pages/PageManagement';
+import ErrorPage from './components/ErrorPage/ErrorPage';
 
 class Title extends Component {
     render() {
@@ -45,6 +48,13 @@ class App extends Component {
                         <Route exact={true} path={"/posts/create"} component={PostCreator} />
                         <Route exact={true} path={"/posts/edit/:id"} component={PostEditor} />
                         <Route exact={true} path={"/marketing"} component={Marketing} />
+
+                        <Route exact={true} path={"/pages"} component={PageManagement} />
+                        <Route exact={true} path={"/page/:id"} component={PageDetail} />
+                        <Route exact={true} path={"/pages/create"} component={PageCreator} />
+                        <Route exact={true} path={"/pages/edit/:id"} component={PageEditor} />
+
+                        <Route exact={true} path={"/notfound"} component={ErrorPage} />
 
                         <Route path={"/title"} component={Title} />
                     </div>

@@ -6,8 +6,6 @@ import DeleteForm from '../share/DeleteForm';
 import HeaderForm from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import { UrlApi, UrlRedirect } from '../share/Url';
-import { TransferFactorUnitKeyToText, JsonDateToDate, TransferdisplayMechanismToText } from '../share/Mapper';
-import { PostCreator, PostEditor } from './PostCreatorUpdater';
 
 import './post.css';
 
@@ -139,7 +137,7 @@ class PostManagement extends Component {
     render() {
         return (
             <div>
-                <HeaderForm title={"tin đăng"} CreateItem={this.CreatePost} />
+                <HeaderForm title={"Tin đăng"} buttonTitle={"tin đăng"} CreateItem={this.CreatePost} />
                 <PostContents
                     tbodyContents={this.state.tbodyContents}
                     handleEditClick={this.EditPost}

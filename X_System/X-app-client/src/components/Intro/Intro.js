@@ -24,12 +24,12 @@ class Intro extends Component {
                                 <div className="section-2 group">
                                     <ul id="images" className="rs-slider">
                                         <li className="group">
-                                            <a href="#">
+                                            <a href="#1">
                                                 <img src="./assets/img/slides/refine/slide1.png" alt="" />
                                             </a>
                                         </li>
                                         <li className="group">
-                                            <a href="#" className="slide-parent">
+                                            <a href="#2" className="slide-parent">
                                                 <img src="./assets/img/slides/refine/slide2.png" alt="" />
                                             </a>
                                         </li>

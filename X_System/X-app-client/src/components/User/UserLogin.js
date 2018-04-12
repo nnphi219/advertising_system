@@ -13,7 +13,8 @@ class UserLogin extends Component {
         this.state = {
             email: "",
             password: "",
-            ErrorEmail: ""
+            ErrorEmail: "",
+            errorLogin: ""
         };
 
         this.OnChangeInput = this.OnChangeInput.bind(this);
@@ -33,7 +34,6 @@ class UserLogin extends Component {
             this.setState({
                 ErrorEmail: 'Email không đúng định dạng'
             });
-            event.preventDefault();
             return;
         }
 
@@ -44,24 +44,36 @@ class UserLogin extends Component {
             password: password
         };
 
+        var $this = this;
         Request.post(UrlApi.UserLogin)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postJson)
             .end(function (err, res) {
-                localStorage.setItem('x-auth', res.body.accessToken);
-                window.location.href = '/';
+                if (err) {
+                    $this.setState({
+                        errorLogin: "Email hoặc mật khẩu không đúng!"
+                    });
+                }
+                else {
+                    localStorage.setItem('x-auth', res.body.accessToken);
+                    window.location.href = '/';
+                }
+
             });
     }
 
     OnChangeInput(e) {
         var name = e.target.name;
         var value = e.target.value;
-        var jsonState = { [name]: value };
+        var jsonState = { 
+            errorLogin: "",
+            [name]: value 
+        };
 
-        if(name === "email"){
+        if (name === "email") {
             jsonState.ErrorEmail = "";
         }
-        
+
         this.setState(jsonState);
     }
     onKeyDown(e) {
@@ -74,6 +86,7 @@ class UserLogin extends Component {
             < div className="div_loginform" onKeyDown={this.onKeyDown}>
                 <div>
                     <h1 className="login-header">Login</h1>
+                    <h3 style={{ color: "red", marginTop: "3px" }}>{this.state.errorLogin}</h3>
                     <div className="login-form">
                         <RenderInput
                             nameId={"email"}
