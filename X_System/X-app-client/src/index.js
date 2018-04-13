@@ -22,7 +22,7 @@ import './frontend/assets/css/style.css';
 import './frontend/assets/color/default.css';
 
 var AllowedUrl = ["login", "register", "post", "marketing"];
-var AllowedUrlAdmin = ['pages'];
+var AllowedUrlAdmin = ['pages', 'posttypes'];
 
 function RedirectUrl() {
     var currentURL = window.location.href.replace('http://', '').replace('https://', '');

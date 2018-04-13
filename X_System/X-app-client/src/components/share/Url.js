@@ -11,7 +11,10 @@ export const UrlApi = {
     Marketing: hostNameServer + "/marketing",
 
     Pages: hostNameServer + "/pages",
-    ReadAPage: hostNameServer + '/pages/check'
+    ReadAPage: hostNameServer + '/pages/check',
+
+    PostTypes: hostNameServer + "/posttypes",
+    ReadAPostType: hostNameServer + "/posttypes/check"
 }
 
 export const UrlRedirect = {
@@ -25,10 +28,14 @@ export const UrlRedirect = {
     Posts: '/posts',
     CreatePost: '/posts/create',
     EditPost: '/posts/edit',
-
+    
     Pages: '/pages',
     CreatePage: '/pages/create',
     EditPage: '/pages/edit',
+
+    PostTypes: '/posttypes',
+    CreatePostType: '/posttypes/create',
+    EditPostType: '/posttypes/edit',
 
     NotFound: '/notfound'
 }

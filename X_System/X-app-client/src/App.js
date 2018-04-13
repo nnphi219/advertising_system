@@ -14,6 +14,9 @@ import PageDetail from './components/Pages/PageDetail';
 import Marketing from './components/Marketing/Marketing';
 import PageManagement from './components/Pages/PageManagement';
 import ErrorPage from './components/ErrorPage/ErrorPage';
+import PostTypeManagement from './components/PostTypes/PostTypeManagement';
+import { PostTypeCreator, PostTypeEditor } from './components/PostTypes/PostTypeCreatorUpdater';
+import PostTypeDetail from './components/PostTypes/PostTypeDetail';
 
 class Title extends Component {
     render() {
@@ -54,6 +57,11 @@ class App extends Component {
                         <Route exact={true} path={"/pages/create"} component={PageCreator} />
                         <Route exact={true} path={"/pages/edit/:id"} component={PageEditor} />
 
+                        <Route exact={true} path={"/posttypes"} component={PostTypeManagement} />
+                        <Route exact={true} path={"/posttypes/:id"} component={PostTypeDetail} />
+                        <Route exact={true} path={"/posttypes/create"} component={PostTypeCreator} />
+                        <Route exact={true} path={"/posttypes/edit/:id"} component={PostTypeEditor} />
+                        
                         <Route exact={true} path={"/notfound"} component={ErrorPage} />
 
                         <Route path={"/title"} component={Title} />
