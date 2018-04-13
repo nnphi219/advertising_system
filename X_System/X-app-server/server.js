@@ -6,6 +6,7 @@ var express = require('express'),
     Task = require('./api/models/todoListModel'), //created model loading here
     User = require('./api/models/UserModel'),
     Post = require('./api/models/PostModel'),
+    PostType = require('./api/models/PostTypeModel'),
     Page = require('./api/models/PageModel'),
 
     bodyParser = require('body-parser');
@@ -24,10 +25,12 @@ var todoListRoute = require('./api/routes/todoListRoute'); //importing route
 var userRoute = require('./api/routes/UserRoute');
 var postRoute = require('./api/routes/PostRoute');
 var pageRoute = require('./api/routes/PageRoute');
+var postTypeRoute = require('./api/routes/PostTypeRoute');
 
-todoListRoute(app); //register the route
+todoListRoute(app);
 userRoute(app);
 postRoute(app);
+postTypeRoute(app);
 pageRoute(app);
 
 app.listen(port);
