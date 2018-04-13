@@ -245,8 +245,8 @@ class PageCreatorUpdater extends Component {
 }
 var userInputsData = {
     user_type: {
-        keys: ["user", "admin", "superadmin"],
-        values: ["user", "admin", "superadmin"]
+        keys: ["user", "admin"],
+        values: ["user", "admin"]
     }
 }
 

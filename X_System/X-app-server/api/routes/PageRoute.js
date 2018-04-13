@@ -1,7 +1,7 @@
 'use strict';
-var {  authenticateAdmin } = require('../../middleware/authenticate');
+var { authenticateAdmin } = require('../../middleware/authenticate');
 
-module.exports = function(app) {
+module.exports = function (app) {
     var pageList = require('../controllers/PageController');
 
     app.route('/pages')
@@ -14,5 +14,8 @@ module.exports = function(app) {
         .delete(authenticateAdmin, pageList.delete_a_page);
 
     app.route('/pages/check/:pageId')
-        .get(authenticateAdmin, pageList.read_a_page_by_PageId)
+        .get(authenticateAdmin, pageList.read_a_page_by_PageId);
+
+    app.route('/getPages')
+        .get(pageList.list_all_pages_for_qc);
 };

@@ -15,4 +15,7 @@ module.exports = function(app) {
 
     app.route('/postTypes/check/:postTypeId')
         .get(authenticateAdmin, postTypeList.read_a_postType_by_PostTypeId)
+
+    app.route('/getPostTypes')
+        .get(postTypeList.list_all_postTypes_for_qc);
 };

@@ -1,6 +1,12 @@
 const HOST = "localhost";
 const PORT = "8080";
 const hostName = "http://localhost:8080";
+const hostNameXSystem = "http://localhost:8081";
+
+export const XsystemUrlApi = {
+    GetPages: hostNameXSystem + "getPages",
+    GetPostTypes: hostNameXSystem + "getPostTypes"
+}
 
 const UrlApi = {
     AdsArea: hostName + "/adsareas",

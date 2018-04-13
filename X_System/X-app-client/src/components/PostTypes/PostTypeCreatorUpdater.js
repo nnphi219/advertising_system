@@ -243,12 +243,6 @@ class PostTypeCreatorUpdater extends Component {
         );
     }
 }
-var userInputsData = {
-    user_type: {
-        keys: ["user", "admin", "superadmin"],
-        values: ["user", "admin", "superadmin"]
-    }
-}
 
 export class PostTypeCreator extends Component {
     render() {
