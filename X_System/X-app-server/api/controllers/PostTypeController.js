@@ -30,7 +30,7 @@ exports.read_a_postType = function (req, res) {
 };
 
 exports.read_a_postType_by_PostTypeId = function (req, res) {
-    PostType.findOne({ma_trang_quang_cao: req.params.postTypeId}, function (err, postType) {
+    PostType.findOne({ma_loai_bai_dang: req.params.postTypeId}, function (err, postType) {
         if (err)
             res.send(err);
         res.json(postType);

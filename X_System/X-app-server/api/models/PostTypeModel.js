@@ -13,9 +13,6 @@ var PostTypeSchema = new mongoose.Schema({
         required: true,
         trim: true,
         minlength: 1
-    },
-    trang_quang_cao_ids: {
-        type: String
     }
 });
 

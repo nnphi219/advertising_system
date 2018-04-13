@@ -1,36 +1,36 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import { UrlApi, UrlRedirect } from '../share/Url';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate, RenderTextArea } from '../share/InputsRender';
+import { RenderInput, RenderSelect } from '../share/InputsRender';
 
-import './page.css';
+import './post_type.css';
 
 var rp = require('request-promise');
 
 class RenderProperties extends Component {
     render() {
-        var ma_trang_quang_cao_isReadOnly = this.props.modeAction === 'edit' ? 1 : 0;
+        var ma_loai_bai_dang_isReadOnly = this.props.modeAction === 'edit' ? 1 : 0;
 
         return (
             <div style={{ paddingLeft: "30px" }}>
                 <RenderInput
-                    nameId={"ma_trang_quang_cao"}
-                    title={"Mã trang quảng cáo"}
-                    value={this.props.stateValues.ma_trang_quang_cao}
+                    nameId={"ma_loai_bai_dang"}
+                    title={"Mã loại bài đăng"}
+                    value={this.props.stateValues.ma_loai_bai_dang}
                     type={"text"}
                     className={"user--input"}
-                    isReadOnly={ma_trang_quang_cao_isReadOnly}
-                    errorTitle={this.props.stateValues.error_ma_trang_quang_cao}
+                    isReadOnly={ma_loai_bai_dang_isReadOnly}
+                    errorTitle={this.props.stateValues.error_ma_loai_bai_dang}
                     OnChangeInput={this.props.OnChangeInput}
                 />
 
                 <RenderInput
-                    nameId={"ten_trang_quang_cao"}
-                    title={"Tên trang quảng cáo"}
-                    value={this.props.stateValues.ten_trang_quang_cao}
+                    nameId={"ten_loai_bai_dang"}
+                    title={"Tên loại bài đăng"}
+                    value={this.props.stateValues.ten_loai_bai_dang}
                     type={"text"}
                     className={"user--input"}
-                    errorTitle={this.props.stateValues.error_ten_trang_quang_cao}
+                    errorTitle={this.props.stateValues.error_ten_loai_bai_dang}
                     OnChangeInput={this.props.OnChangeInput}
                 />
             </div>
@@ -38,7 +38,7 @@ class RenderProperties extends Component {
     }
 }
 
-class PageCreatorUpdaterForm extends Component {
+class PostTypeCreatorUpdaterForm extends Component {
     constructor(props) {
         super(props);
 
@@ -51,15 +51,15 @@ class PageCreatorUpdaterForm extends Component {
         var value = e.target.value;
         var jsonState = {
             [name]: value,
-            error_ma_trang_quang_cao: '',
-            error_ten_trang_quang_cao: ''
+            error_ma_loai_bai_dang: '',
+            error_ten_loai_bai_dang: ''
         };
 
         this.props.UpdateState(jsonState);
     }
 
     handleCancel() {
-        window.location.href = UrlRedirect.Pages;
+        window.location.href = UrlRedirect.PostTypes;
     }
 
     render() {
@@ -80,7 +80,7 @@ class PageCreatorUpdaterForm extends Component {
     }
 }
 
-class PageCreatorUpdater extends Component {
+class PostTypeCreatorUpdater extends Component {
     constructor(props) {
         super(props);
 
@@ -91,18 +91,18 @@ class PageCreatorUpdater extends Component {
     }
 
     SetInitState(jsonState) {
-        jsonState.error_ma_trang_quang_cao = '';
-        jsonState.error_ten_trang_quang_cao = '';
+        jsonState.error_ma_loai_bai_dang = '';
+        jsonState.error_ten_loai_bai_dang = '';
 
         if (this.props.modeAction === "create") {
-            jsonState.ma_trang_quang_cao = '';
-            jsonState.ten_trang_quang_cao = '';
+            jsonState.ma_loai_bai_dang = '';
+            jsonState.ten_loai_bai_dang = '';
         }
         else if (this.props.modeAction === "edit") {
             var editContents = this.props.editContents;
 
-            jsonState.ma_trang_quang_cao = editContents.ma_trang_quang_cao;
-            jsonState.ten_trang_quang_cao = editContents.ten_trang_quang_cao;
+            jsonState.ma_loai_bai_dang = editContents.ma_loai_bai_dang;
+            jsonState.ten_loai_bai_dang = editContents.ten_loai_bai_dang;
         }
     }
 
@@ -115,13 +115,13 @@ class PageCreatorUpdater extends Component {
 
         var isValid = true;
         var jsonError = {};
-        if (state.ma_trang_quang_cao === "" || state.ma_trang_quang_cao.trim().includes(' ')) {
-            jsonError.error_ma_trang_quang_cao = "Mã trang quảng cáo không hợp lệ";
+        if (state.ma_loai_bai_dang === "" || state.ma_loai_bai_dang.trim().includes(' ')) {
+            jsonError.error_ma_loai_bai_dang = "Mã này không hợp lệ";
             isValid = false;
         }
 
-        if (state.ten_trang_quang_cao === "") {
-            jsonError.error_ten_trang_quang_cao = "Chưa nhập tên trang quảng cáo";
+        if (state.ten_loai_bai_dang === "") {
+            jsonError.error_ten_loai_bai_dang = "Chưa nhập tên";
             isValid = false;
         }
 
@@ -134,8 +134,8 @@ class PageCreatorUpdater extends Component {
         if (this.props.modeAction === 'edit') {
             if (isValid) {
                 return {
-                    ma_trang_quang_cao: state.ma_trang_quang_cao,
-                    ten_trang_quang_cao: state.ten_trang_quang_cao
+                    ma_loai_bai_dang: state.ma_loai_bai_dang,
+                    ten_loai_bai_dang: state.ten_loai_bai_dang
                 };
             }
             else {
@@ -144,20 +144,20 @@ class PageCreatorUpdater extends Component {
         }
 
         if (isValid) {
-            return Request.get(UrlApi.ReadAPage + '/' + state.ma_trang_quang_cao)
+            return Request.get(UrlApi.ReadAPostType + '/' + state.ma_loai_bai_dang)
                 .set('x-auth', localStorage.getItem('x-auth'))
                 .then((res) => {
                     if (res.body) {
                         isValid = false;
                         this.setState({
-                            error_ma_trang_quang_cao: "Mã trang đã tồn tại!"
+                            error_ma_loai_bai_dang: "Mã loại bài đăng đã tồn tại!"
                         });
                         return 'error';
                     }
                     else {
                         content = {
-                            ma_trang_quang_cao: state.ma_trang_quang_cao,
-                            ten_trang_quang_cao: state.ten_trang_quang_cao
+                            ma_loai_bai_dang: state.ma_loai_bai_dang,
+                            ten_loai_bai_dang: state.ten_loai_bai_dang
                         };
                         return content;
                     }
@@ -171,7 +171,7 @@ class PageCreatorUpdater extends Component {
         }
     }
 
-    CreatePage() {
+    CreatePostType() {
         this.GetModelStateJson().then((content) => {
             if (content === 'error') {
                 return;
@@ -180,7 +180,7 @@ class PageCreatorUpdater extends Component {
             var $this = this;
             var token = localStorage.getItem('x-auth');
 
-            Request.post(UrlApi.Pages)
+            Request.post(UrlApi.PostTypes)
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .set('x-auth', token)
                 .send(content)
@@ -189,24 +189,24 @@ class PageCreatorUpdater extends Component {
                         console.log(err);
                     }
                     else {
-                        window.location.href = UrlRedirect.Pages;
+                        window.location.href = UrlRedirect.PostTypes;
                     }
 
                 });
         }).catch((e) => {
             this.setState({
-                error_ma_trang_quang_cao: "Mã trang đã tồn tại!"
+                error_ma_loai_bai_dang: "Mã này đã tồn tại!"
             });
         });
     }
 
-    EditPage() {
+    EditPostType() {
         var content = this.GetModelStateJson();
         if (content === 'error') {
             return;
         }
 
-        var url = UrlApi.Pages + "/" + this.props.editContents._id;
+        var url = UrlApi.PostTypes + "/" + this.props.editContents._id;
         var $this = this;
         var token = localStorage.getItem('x-auth');
 
@@ -215,24 +215,24 @@ class PageCreatorUpdater extends Component {
             .set('x-auth', token)
             .send(content)
             .end(function (err, res) {
-                window.location.href = UrlRedirect.Pages;
+                window.location.href = UrlRedirect.PostTypes;
             });
     }
 
     handleSubmit() {
         if (this.props.modeAction === "create") {
-            this.CreatePage();
+            this.CreatePostType();
         }
         else {
-            this.EditPage();
+            this.EditPostType();
         }
     }
 
     render() {
-        var titleForm = this.props.modeAction === "create" ? "Tạo trang áp dụng quảng cáo" : "Chỉnh sửa trang áp dụng quảng cáo";
+        var titleForm = this.props.modeAction === "create" ? "Tạo loại bài đăng" : "Chỉnh loại bài đăng";
         return (
             <div className='div_createform'>
-                <PageCreatorUpdaterForm
+                <PostTypeCreatorUpdaterForm
                     titleForm={titleForm}
                     stateValues={this.state}
                     handleSubmit={this.handleSubmit.bind(this)}
@@ -250,17 +250,17 @@ var userInputsData = {
     }
 }
 
-export class PageCreator extends Component {
+export class PostTypeCreator extends Component {
     render() {
         return (
-            <PageCreatorUpdater
+            <PostTypeCreatorUpdater
                 modeAction={"create"}
             />
         );
     }
 }
 
-export class PageEditor extends Component {
+export class PostTypeEditor extends Component {
     constructor(props) {
         super(props);
 
@@ -273,7 +273,7 @@ export class PageEditor extends Component {
         var urlSplit = window.location.href.split('/');
         var paraId = urlSplit[urlSplit.length - 1];
 
-        Request.get(UrlApi.Pages + "/" + paraId)
+        Request.get(UrlApi.PostTypes + "/" + paraId)
             .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({
@@ -283,12 +283,12 @@ export class PageEditor extends Component {
 
             })
             .catch((e) => {
-                // window.location.href = UrlRedirect.Pages;
+                // window.location.href = UrlRedirect.PostTypes;
             });
 
         return (
             this.state.isLoad ?
-                <PageCreatorUpdater
+                <PostTypeCreatorUpdater
                     modeAction={"edit"}
                     editContents={this.state.editContents}
                 />

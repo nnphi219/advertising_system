@@ -48,6 +48,13 @@ class Header extends Component {
                                                             </li>
                                                             : null
                                                     }
+                                                    {
+                                                        this.props.isAdmin ?
+                                                            <li>
+                                                                <a href="/posttypes">Loại bài đăng</a>
+                                                            </li>
+                                                            : null
+                                                    }
                                                     <li>
                                                         <a href="/marketing">marketing</a>
                                                     </li>
