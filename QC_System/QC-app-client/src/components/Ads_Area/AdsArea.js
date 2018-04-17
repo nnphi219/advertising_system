@@ -16,7 +16,10 @@ function RenderEditDeleteButton(props) {
 }
 
 function RenderRow(props) {
-  var areaSize = props.trContentAdsArea.kich_thuoc_vung.width.toString() + "x" + props.trContentAdsArea.kich_thuoc_vung.height.toString();
+  var areaSize = "";
+  if (props.trContentAdsArea.kich_thuoc_vung) {
+    areaSize = props.trContentAdsArea.kich_thuoc_vung.width.toString() + "x" + props.trContentAdsArea.kich_thuoc_vung.height.toString();
+  }
   var status = (props.trContentAdsArea.status === 1) ? "Kích hoạt" : "Đã hủy";
   var loai_trang_ap_dung = TransferSelectInputKeyToValue(
     props.trContentAdsArea.loai_trang_ap_dung,

@@ -10,7 +10,8 @@ class UserLogin extends Component {
 
         this.state = {
             username: "",
-            password: ""
+            password: "",
+            ErrorLogin: ""
         };
 
         this.OnChangeInput = this.OnChangeInput.bind(this);
@@ -32,19 +33,31 @@ class UserLogin extends Component {
             password: password
         };
 
+        var $this = this;
         Request.post(UrlApi.UserLogin)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postJson)
             .end(function (err, res) {
-                localStorage.setItem('x-auth', res.body.accessToken);
-                window.location.href = '/';
+                if (err) {
+                    $this.setState({
+                        ErrorLogin: "username hoặc mật khẩu không đúng!"
+                    });
+                }
+                else {
+                    localStorage.setItem('x-auth', res.body.accessToken);
+                    localStorage.setItem('x-urlapi', res.body.UrlApi);
+                    window.location.href = '/';
+                }
             });
     }
 
     OnChangeInput(e) {
         var name = e.target.name;
         var value = e.target.value;
-        var jsonState = { [name]: value };
+        var jsonState = { 
+            ErrorLogin: "",
+            [name]: value 
+        };
 
         this.setState(jsonState);
     }
@@ -57,7 +70,8 @@ class UserLogin extends Component {
         return (
             < div className="div_loginform" onKeyDown={this.onKeyDown}>
                 <div>
-                    <h1>Login</h1>
+                    <h1 className="login-header">Login</h1>
+                    <h3 style={{ color: "red", marginTop: "3px" }}>{this.state.ErrorLogin}</h3>
                         <div>
                             <RenderInput
                                 nameId={"username"}

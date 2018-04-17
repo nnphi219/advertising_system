@@ -34,6 +34,10 @@ exports.create_a_user = function (req, res) {
         accessToken: token
       };
 
+      if(new_user.UrlApi !== undefined && new_user.UrlApi !== null) {
+        userRes.UrlApi = new_user.UrlApi;
+      }
+
       res.header('x-auth', token).json(userRes);
     })
     .catch((e) => {
@@ -98,6 +102,10 @@ exports.UserLogin = function (req, res) {
           username: user.username,
           accessToken: token
         };
+
+        if(user.UrlApi !== undefined && user.UrlApi !== null) {
+          userRes.UrlApi = user.UrlApi;
+        }
 
         res.header('x-auth', token).send(userRes);
       });

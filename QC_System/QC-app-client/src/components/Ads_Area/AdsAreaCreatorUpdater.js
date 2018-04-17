@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 import ColorPickerInput from '../share/color_picker_input';
 import UrlApi from '../share/UrlApi';
-import { RenderSelect } from '../share/InputsRender';
+import { RenderSelect, RenderInput } from '../share/InputsRender';
 
 function TransferSizeToString(size) {
     return size.width + "x" + size.height;
 }
 
-function RenderInput(props) {
+function AdsAreaRenderInput(props) {
     var classNameInput = "adsarea--input";
     if (props.inputData.required && (props.valueInput === "" || props.valueInput === undefined)) {
         classNameInput += " input--required";
     }
-    else if(props.inputData.required && props.inputData.type === "number"){
-        if(parseFloat(props.valueInput) <= 0){
+    else if (props.inputData.required && props.inputData.type === "number") {
+        if (parseFloat(props.valueInput) <= 0) {
             classNameInput += " input--required";
         }
     }
@@ -29,25 +29,69 @@ function RenderInput(props) {
     );
 }
 
+function RenderDoubleInputs(props) {
+    var sub_ids = props.inputData.sub_ids;
+    var sub_titles = props.inputData.sub_titles;
+    var sub_types = props.inputData.sub_types;
+    var stateValues = props.stateValues;
+
+    return (
+        <div>
+            <label key={props.inputData.id} className="fullwidth">
+                {props.inputData.description}
+                <div>
+                    <RenderInput
+                        nameId={sub_ids[0]}
+                        title={sub_titles[0]}
+                        type={sub_types[0]}
+                        value={stateValues[sub_ids[0]]}
+                        divClass={"float-left"}
+                        className={"adsarea--input"}
+                        OnChangeInput={props.OnChangeInput}
+                    />
+                    <RenderInput
+                        nameId={sub_ids[1]}
+                        title={sub_titles[1]}
+                        type={sub_types[1]}
+                        value={stateValues[sub_ids[1]]}
+                        divClass={"float-left"}
+                        className={"adsarea--input"}
+                        OnChangeInput={props.OnChangeInput}
+                    />
+                </div>
+            </label>
+        </div>
+    );
+}
+
 function RenderCombobox(props) {
-    var tags = [];
     var count = 0;
-    var selectedValue = props.valueCombobox;
+
+    var selectedValue = props.stateValues[props.inputData.id];
     if (AreaCombobox.includes(props.inputData.id)) {
         selectedValue = TransferSizeToString(selectedValue);
     }
+    var keys = [];
+    var values = [];
 
-    props.inputData.values.forEach(value => {
-        tags.push(<option key={count} value={value} >{value}</option>);
-        count++;
-    });
+    if (props.inputData.id === "loai_trang_ap_dung") {
+        keys = props.stateValues.AppliedPages.keys;
+        values = props.stateValues.AppliedPages.values;
+    } else if (props.inputData.id === "loai_bai_dang_ap_dung") {
+        keys = props.stateValues.AppliedPostTypes.keys;
+        values = props.stateValues.AppliedPostTypes.values;
+    }
+    else {
+        keys = props.inputData.keys;
+        values = props.inputData.values;
+    }
 
     return (
         <RenderSelect
             nameId={props.inputData.id}
             title={props.inputData.description}
-            keys={props.inputData.keys}
-            values={props.inputData.values}
+            keys={keys}
+            values={values}
             selectedValue={selectedValue}
             OnChangeSelect={props.handleOnchangeSelect}
             className={"adsarea--select"}
@@ -97,16 +141,18 @@ function RenderProperties(props) {
             inputs.push(<ColorPickerInput key={element.id} valueColor={valueColor} inputData={element} handleOnchangeColor={props.handleOnchangeColor} />);
         }
         else if (element.type === "combobox") {
-            var valueCombobox = props.stateValues[element.id];
-            inputs.push(<RenderCombobox key={element.id} inputData={element} valueCombobox={valueCombobox} handleOnchangeSelect={props.handleOnchangeSelect} />);
+            inputs.push(<RenderCombobox key={element.id} inputData={element} stateValues={props.stateValues} handleOnchangeSelect={props.handleOnchangeSelect} />);
         }
         else if (element.type === "radio") {
             var keySelectedItem = props.stateValues[element.id];
             inputs.push(<RenderRadioButton key={element.id} inputData={element} keySelectedItem={keySelectedItem} handleOnchangeRadioButton={props.handleOnchangeRadioButton} />);
         }
+        else if (element.type === "double_inputs") {
+            inputs.push(<RenderDoubleInputs inputData={element} stateValues={props.stateValues} OnChangeInput={props.handleOnchangeInput} />);
+        }
         else {
             var valueInput = props.stateValues[element.id];
-            inputs.push(<RenderInput key={element.id} inputData={element} valueInput={valueInput} handleOnchangeInput={props.handleOnchangeInput} />);
+            inputs.push(<AdsAreaRenderInput key={element.id} inputData={element} valueInput={valueInput} handleOnchangeInput={props.handleOnchangeInput} />);
         }
     });
 
@@ -135,6 +181,7 @@ class AdsAreaCreatorForm extends Component {
     handleOnchangeInput(e) {
         var name = e.target.name;
         var value = e.target.value;
+        console.log(name);
         this.props.handleUpdateState({ [name]: value });
     }
 
@@ -142,10 +189,6 @@ class AdsAreaCreatorForm extends Component {
         var name = e.target.name;
         var value = e.target.value;
 
-        if (name === "kich_thuoc_vung") {
-            var areaSizeArray = value.split('x');
-            value = { width: areaSizeArray[0], height: areaSizeArray[1] };
-        }
         this.props.handleUpdateState({ [name]: value });
     }
 
@@ -202,13 +245,89 @@ class AdsAreaCreatorForm extends Component {
 class AdsAreaCreatorUpdater extends Component {
     constructor(props) {
         super(props);
-        var jsonState = {};
-        this.SetInitState(adsAreaInformationInputs, jsonState);
-        this.SetInitState(adsAreaDescriptionInputs, jsonState);
-        this.state = jsonState;
+        var jsonState = {
+            AppliedPages: {
+                keys: [],
+                values: []
+            },
+            AppliedPostTypes: {
+                keys: [],
+                values: []
+            }
+        };
+
+        jsonState = this.SetInitState(adsAreaInformationInputs, jsonState);
+        this.state = this.SetInitState(adsAreaDescriptionInputs, jsonState);
+
+        this.GetAppliedPages();
+        this.GetAppliedPostTypes();
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUpdateState = this.handleUpdateState.bind(this);
+    }
+
+    GetAppliedPages() {
+        var $this = this;
+        var x_urlapi = localStorage.getItem("x-urlapi");
+
+        Request.get(x_urlapi + "/getPages")
+            .then((res) => {
+                var _ids = [];
+                var keys = [];
+                var values = [];
+
+                res.body.map((appliedPage) => {
+                    _ids.push(appliedPage._id);
+                    keys.push(appliedPage.ma_trang_quang_cao);
+                    values.push(appliedPage.ten_trang_quang_cao);
+                });
+
+                var jsonAppliedPages = {
+                    AppliedPages: {
+                        _ids: _ids,
+                        keys: keys,
+                        values: values
+                    },
+
+                };
+                if (this.props.modeAction === "create") {
+                    jsonAppliedPages.loai_trang_ap_dung = keys[0];
+                }
+
+                $this.setState(jsonAppliedPages);
+            });
+    }
+
+    GetAppliedPostTypes() {
+        var $this = this;
+        var x_urlapi = localStorage.getItem("x-urlapi");
+
+        Request.get(x_urlapi + "/getPostTypes")
+            .then((res) => {
+                var _ids = [];
+                var keys = [];
+                var values = [];
+
+                res.body.map((appliedPostType) => {
+                    _ids.push(appliedPostType._id);
+                    keys.push(appliedPostType.ma_loai_bai_dang);
+                    values.push(appliedPostType.ten_loai_bai_dang);
+                });
+
+                var jsonAppliedPostTypes = {
+                    AppliedPostTypes: {
+                        _ids: _ids,
+                        keys: keys,
+                        values: values
+                    },
+
+                };
+                if (this.props.modeAction === "create") {
+                    jsonAppliedPostTypes.loai_bai_dang_ap_dung = keys[0];
+                }
+
+                $this.setState(jsonAppliedPostTypes);
+            });
     }
 
     SetInitState(inputs, jsonState) {
@@ -218,10 +337,6 @@ class AdsAreaCreatorUpdater extends Component {
                     var theFirstValue = element.keys[0];
                     var valueState = theFirstValue;
 
-                    if (element.id === "kich_thuoc_vung") {
-                        var areaSizeArray = theFirstValue.split('x');
-                        valueState = { width: areaSizeArray[0], height: areaSizeArray[1] };
-                    }
                     jsonState[element.id] = valueState;
                 }
                 else if (element.type === "radio") {
@@ -246,32 +361,77 @@ class AdsAreaCreatorUpdater extends Component {
                     jsonState[element.id] = keySelectedItem;
                 }
                 else { //color & input
-                    jsonState[element.id] = this.props.editContents[element.id];
+                    if (element.id === "kich_thuoc_vung") {
+                        if(this.props.editContents.kich_thuoc_vung){
+                            jsonState.ktv_chieu_rong = this.props.editContents.kich_thuoc_vung.width;
+                            jsonState.ktv_chieu_cao = this.props.editContents.kich_thuoc_vung.height;
+                        }
+                    }
+                    else {
+                        jsonState[element.id] = this.props.editContents[element.id];
+                    }
                 }
             });
         }
 
+        return jsonState;
     }
 
     handleUpdateState(jsonState) {
         this.setState(jsonState);
     }
 
-    CreateAdsArea() {
-        var adsAreaContent = this.state;
+    GetModelStateJson() {
+        var state = this.state;
+        console.log(state);
 
+        var adsAreaContent = {
+            ma_dich_vu: state.ma_dich_vu,
+            ten_hien_thi: state.ten_hien_thi,
+            loai_quang_cao: state.loai_quang_cao,
+            loai_trang_ap_dung: state.loai_trang_ap_dung,
+            loai_bai_dang_ap_dung: state.loai_bai_dang_ap_dung,
+            kich_thuoc_vung: {
+                width: parseInt(state.ktv_chieu_rong),
+                height: parseInt(state.ktv_chieu_cao)
+            },
+            so_luong_chia_se_vung: state.so_luong_chia_se_vung,
+            so_luong_tin_toi_da: state.so_luong_tin_toi_da,
+            mau_chu_tieu_de: state.mau_chu_tieu_de,
+            font_tieu_de: state.font_tieu_de,
+            font_size_tieu_de: state.font_size_tieu_de,
+            hieu_ung_tieu_de: state.hieu_ung_tieu_de,
+            so_luong_chu_mo_ta: state.so_luong_chu_mo_ta,
+            co_vien: state.co_vien,
+            mau_vien: state.mau_vien,
+            kich_thuoc_vien: state.kich_thuoc_vien,
+            so_luong_chu_xem_truoc: state.so_luong_chu_xem_truoc,
+            hien_thi_video_thay_the_anh: state.hien_thi_video_thay_the_anh
+        };
+
+        return adsAreaContent;
+    }
+
+    CreateAdsArea() {
+        var adsAreaContent = this.GetModelStateJson();
+        
         var $this = this;
         Request.post(UrlApi.AdsArea)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(adsAreaContent)
             .end(function (err, res) {
-                $this.props.closeCreatorPopup();
-                $this.props.resetContentState();
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    $this.props.closeCreatorPopup();
+                    $this.props.resetContentState();
+                }
             });
     }
 
     EditAdsArea() {
-        var adsAreaContent = this.state;
+        var adsAreaContent = this.GetModelStateJson();
 
         var url = UrlApi.AdsArea + "/" + this.props.editContents._id;
         var $this = this;
@@ -325,6 +485,13 @@ var adsAreaInformationInputs = [
         "required": true
     },
     {
+        "description": "Loại quảng cáo",
+        "id": "loai_quang_cao",
+        "type": "combobox",
+        "keys": ["banner", "tin_rao"],
+        "values": ["banner", "Tin rao"]
+    },
+    {
         "description": "Trang áp dụng quảng cáo",
         "id": "loai_trang_ap_dung",
         "type": "combobox",
@@ -341,9 +508,11 @@ var adsAreaInformationInputs = [
     {
         "description": "Kích thước vùng quảng cáo",
         "id": "kich_thuoc_vung",
-        "type": "combobox",
-        "keys": ["180x30", "260x60"],
-        "values": ["180x30", "260x60"]
+        "type": "double_inputs",
+        "sub_ids": ["ktv_chieu_rong", "ktv_chieu_cao"],
+        "sub_titles": ["Chiều rộng", "Chiều cao"],
+        "sub_types": ["number", "number"],
+        "required": true
     },
     {
         "description": "Số chia sẻ của vùng",

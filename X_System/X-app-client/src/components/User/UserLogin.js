@@ -58,7 +58,6 @@ class UserLogin extends Component {
                     localStorage.setItem('x-auth', res.body.accessToken);
                     window.location.href = '/';
                 }
-
             });
     }
 

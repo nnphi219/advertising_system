@@ -30,6 +30,7 @@ class NavTopLinks extends Component {
             .set('x-auth', token)
             .end(function (err, res) {
                 localStorage.setItem('x-auth', '');
+                localStorage.setItem('x-urlapi', '');
                 window.location.href = '/login';
             });
     }

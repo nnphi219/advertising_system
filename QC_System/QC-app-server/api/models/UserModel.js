@@ -27,6 +27,9 @@ var UserSchema = new mongoose.Schema({
         require: true,
         minlength: 6
     },
+    UrlApi: {
+        type: String
+    },
     tokens: [{
         access: {
             type: String,

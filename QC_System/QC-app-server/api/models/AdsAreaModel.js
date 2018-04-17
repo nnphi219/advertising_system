@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var AdsAreaSchema = new Schema({
     ma_dich_vu: String,
     ten_hien_thi: String,
+    loai_quang_cao: String,
     mo_ta_dich_vu: String,
     loai_bai_dang_ap_dung: String,
     mau_chu_tieu_de: String,
