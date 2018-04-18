@@ -127,3 +127,9 @@ body {
 .input-date {
   font-size: 15px;
 }
+
+.popup-button-close {
+  font-size: 60px !important;
+  position: absolute;
+  right: 0;
+}

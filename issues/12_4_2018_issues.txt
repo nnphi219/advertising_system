@@ -5,6 +5,7 @@ vung quang cao:
 -- kich thuoc vung quang cao: admin he thong x dinh nghia					--- done
 -- field required.															--- done
 -- Creator.																	--- done
+-- kich hoat --- huy
 
 gia dich vu:
 --- thoi diem dau gia(sai ten)

@@ -181,6 +181,7 @@ class AdsArea extends Component {
     this.handleResetContentsState = this.handleResetContentsState.bind(this);
 
     this.OnchangeSort = this.OnchangeSort.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -262,6 +263,14 @@ class AdsArea extends Component {
     e.preventDefault();
   }
 
+  onKeyDown(e) {
+    console.log(e.key);
+    if (e.key === "Escape") {
+      console.log(1);
+      this.handleShowCreatorPopup();
+    }
+  }
+
   render() {
     var currentState = this.state;
     var KeySort = currentState.KeySort;
@@ -277,7 +286,7 @@ class AdsArea extends Component {
     }
 
     return (
-      <div id="page-wrapper">
+      <div id="page-wrapper" onKeyDown={this.onKeyDown}>
         <div className="row">
           <div>
             <AdsAreaHeader showCreatorPopup={this.handleShowCreatorPopup} />

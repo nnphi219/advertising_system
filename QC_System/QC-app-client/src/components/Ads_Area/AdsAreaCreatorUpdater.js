@@ -231,7 +231,10 @@ class AdsAreaCreatorForm extends Component {
         return (
             <div className='popup_inner adsarea_createform_size'>
                 <div>
-                    <h1>{this.props.titleForm}</h1>
+                    <div>
+                        <a class="close popup-button-close" onClick={this.handleClosePopup}>×</a>
+                        <h1>{this.props.titleForm}</h1>
+                    </div>
                     <div key="left" className="adsarea_information_left">
                         <h2>Thông tin vùng quảng cáo</h2>
                         <RenderProperties
