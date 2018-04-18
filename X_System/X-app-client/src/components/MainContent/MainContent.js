@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
+import Request from 'superagent';
 
 class MainContent extends Component {
+
     render() {
+        Request.get("http://localhost:8081/getfontfamilies")
+        .then((err, res) => {
+
+        });
         return (
             <section id="maincontent">
                 <div className="container">
@@ -15,7 +21,7 @@ class MainContent extends Component {
                                     <h3>Valid Coding</h3>
                                     <p className="left">
                                         Dolorem adipiscing definiebas ut nec. Dolore consectetuer eu vim, elit molestie ei has, petentium imperdiet in pri mel virtute nam.
-              </p>
+                                    </p>
                                     <a href="#1" className="btn btn-color btn-rounded"><i className="icon-angle-right"></i> Read more</a>
                                 </div>
                             </div>
@@ -29,7 +35,7 @@ class MainContent extends Component {
                                     <h3>Bug free</h3>
                                     <p className="left">
                                         Dolorem adipiscing definiebas ut nec. Dolore consectetuer eu vim, elit molestie ei has, petentium imperdiet in pri mel virtute nam.
-              </p>
+                                    </p>
                                     <a href="#2" className="btn btn-color btn-rounded"><i className="icon-angle-right"></i> Read more</a>
                                 </div>
                             </div>
@@ -80,7 +86,7 @@ class MainContent extends Component {
                                         <div className="testimonial_item">
                                             <p>
                                                 Lorem ipsum dolor sit amet nec, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.
-                  </p>
+                                            </p>
                                             <span className="author">Johny doe</span>
                                             <span className="occupation">Graphic and HTML Web Designer</span>
 
@@ -90,7 +96,7 @@ class MainContent extends Component {
                                         <div className="testimonial_item">
                                             <p>
                                                 Aenean commodo ligula eget dolor. Aenean massa.
-                  </p>
+                                            </p>
                                             <span className="author">John Doe</span>
                                             <span className="occupation">CEO Engineer</span>
                                         </div>
