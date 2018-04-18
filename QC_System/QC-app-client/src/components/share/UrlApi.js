@@ -10,6 +10,7 @@ export const XsystemUrlApi = {
 
 const UrlApi = {
     AdsArea: hostName + "/adsareas",
+    ReadA_AdsArea: hostName + "/adsareas/check",
     GetAdsAreaInfo: hostName + "/getadsAreasInfo",
 
     PriceFactor: hostName + "/pricefactors",

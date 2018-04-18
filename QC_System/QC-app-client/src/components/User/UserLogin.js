@@ -39,9 +39,11 @@ class UserLogin extends Component {
             .send(postJson)
             .end(function (err, res) {
                 if (err) {
+                    console.log(err);
                     $this.setState({
                         ErrorLogin: "username hoặc mật khẩu không đúng!"
                     });
+                    Promise.reject();
                 }
                 else {
                     localStorage.setItem('x-auth', res.body.accessToken);

@@ -22,9 +22,14 @@ export class RenderSelect extends Component {
     render() {
         var values = this.props.values;
         var keys = this.props.keys;
+        var valuesCss = this.props.valuesCss;
+        var stylesCss = this.props.stylesCss;
         var elements = [];
+        
         values.forEach((value, index) => {
-            elements.push(<option key={keys[index]} value={keys[index]} >{value}</option>);
+            var valueCss = valuesCss !== undefined && valuesCss !== null && valuesCss !== [] ? valuesCss[index]: "";
+            var styleCss = stylesCss !== undefined && stylesCss !== null && stylesCss !== [] ? stylesCss[index]: {};
+            elements.push(<option className={valueCss} style={styleCss} key={keys[index]} value={keys[index]} >{value}</option>);
         });
         return (
             <div>

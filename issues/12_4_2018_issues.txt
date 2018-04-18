@@ -1,10 +1,10 @@
 vung quang cao:
 -- thieu chon loai vung quang cao: banner, tin rao							--- done
 -- trang ap dung quang cao va loai bai dang ap dung: lay api tu he thong x 	--- done
--- font chu tieu de: lay tu he thong x										
+-- font chu tieu de: lay tu he thong x										--- done	
 -- kich thuoc vung quang cao: admin he thong x dinh nghia					--- done
--- field required.
--- Creator.
+-- field required.															--- done
+-- Creator.																	--- done
 
 gia dich vu:
 --- thoi diem dau gia(sai ten)

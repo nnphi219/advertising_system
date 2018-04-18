@@ -43,6 +43,10 @@ var PriceFactorSchema = new Schema({
     updated_date: {
         type: Date,
         default: Date.now
+    },
+    nguoi_tao: {
+        type: String,
+        require: true
     }
 });
 

@@ -2,12 +2,28 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 
 class MainContent extends Component {
+        constructor(props) {
+        super(props);
+        this.state = {
+            fontFamily: ""
+        }
+
+        this.GetFontFamilies();
+    }
+    
+    GetFontFamilies() {
+        Request.get("http://localhost:8081/getfontfamilies")
+            .then((res) => {
+                console.log(res.body.FontFamilies[0]);
+                this.setState({
+                    fontFamily: res.body.FontFamilies[0]
+                });
+            }).catch((e) => {
+                console.log("err");
+            });
+    }
 
     render() {
-        Request.get("http://localhost:8081/getfontfamilies")
-        .then((err, res) => {
-
-        });
         return (
             <section id="maincontent">
                 <div className="container">
@@ -19,7 +35,7 @@ class MainContent extends Component {
                                 </div>
                                 <div className="features_content">
                                     <h3>Valid Coding</h3>
-                                    <p className="left">
+                                    <p className="left" style={{fontFamily: this.state.fontFamily}}>
                                         Dolorem adipiscing definiebas ut nec. Dolore consectetuer eu vim, elit molestie ei has, petentium imperdiet in pri mel virtute nam.
                                     </p>
                                     <a href="#1" className="btn btn-color btn-rounded"><i className="icon-angle-right"></i> Read more</a>

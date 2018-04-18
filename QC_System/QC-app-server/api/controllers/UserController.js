@@ -92,7 +92,7 @@ exports.delete_a_user = function (req, res) {
 
 exports.UserLogin = function (req, res) {
   var body = _.pick(req.body, ['username', 'password']);
-
+  
   User.findByCredentials(body.username, body.password)
     .then((user) => {
       user.generateAuthToken().then((token) => {

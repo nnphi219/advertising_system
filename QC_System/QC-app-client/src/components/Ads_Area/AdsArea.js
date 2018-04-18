@@ -190,6 +190,7 @@ class AdsArea extends Component {
   getAdsAreas() {
     var url = "http://localhost:8080/adsareas";
     Request.get(url)
+      .set('x-auth', localStorage.getItem('x-auth'))
       .then((res) => {
         this.setState({
           tbodyAdsAreas: res.body
