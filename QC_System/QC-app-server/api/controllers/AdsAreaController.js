@@ -42,6 +42,7 @@ exports.create_a_adsArea = function (req, res) {
     var creator = req.user.username;
     var new_adsArea = new AdsArea(req.body);
     new_adsArea.nguoi_tao = creator;
+    new_adsArea.trang_thai = 1;
 
     new_adsArea.save(function (err, adsArea) {
         if (err) {

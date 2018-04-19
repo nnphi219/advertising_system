@@ -62,6 +62,10 @@
     margin-right: 5px;
 }
 
+.adsarea--button-active {
+    margin-right: 5px;
+}
+
 .adsarea-radio {
     display: inline-block;
     margin-right: 10px;

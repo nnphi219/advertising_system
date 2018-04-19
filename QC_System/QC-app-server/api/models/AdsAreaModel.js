@@ -31,7 +31,7 @@ var AdsAreaSchema = new Schema({
         width: Number,
         height: Number
     },
-    status: Number,
+    trang_thai: Number,
     so_luong_chu_xem_truoc: Number,
     hien_thi_video_thay_the_anh: Boolean,
     created_date: {
