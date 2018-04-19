@@ -16,6 +16,8 @@ exports.list_all_postCampaignManagement = function (req, res) {
 
 exports.create_a_postCampaignManagement = function (req, res) {
     var new_postCampaignManagement = new PostCampaignManagement(req.body);
+    new_postCampaignManagement.trang_thai = 1;
+
     new_postCampaignManagement.save(function (err, postCampaignManagement) {
         if (err) {
             res.send(err);

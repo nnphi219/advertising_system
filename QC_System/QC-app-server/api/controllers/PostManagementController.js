@@ -17,6 +17,8 @@ exports.list_all_postManagement = function (req, res) {
 
 exports.create_a_postManagement = function (req, res) {
     var new_postManagement = new PostManagement(req.body);
+    new_postManagement.trang_thai = 1;
+    
     new_postManagement.save(function (err, postManagement) {
         if (err) {
             res.send(err);

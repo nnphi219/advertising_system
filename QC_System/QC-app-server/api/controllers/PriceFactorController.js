@@ -16,6 +16,8 @@ exports.list_all_priceFactor = function(req, res) {
 
 exports.create_a_priceFactor = function(req, res) {
     var new_priceFactor = new PriceFactor(req.body);
+    new_priceFactor.trang_thai = 1;
+    
     new_priceFactor.save(function(err, priceFactor) {
         if(err) {
             res.send(err);

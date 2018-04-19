@@ -39,7 +39,7 @@ class RenderLeftForm extends Component {
                     <div>
                         <div className="">
                             <label className="fullwidth">
-                                {"Thời điểm đấu giá"}
+                                {"Thời điểm bắt đầu giá"}
                                 <div>
                                     <DatePicker name="start_date" value={this.props.stateValues.start_date} onChange={this.props.OnchangeStartDate} className="input-date" />
                                 </div>

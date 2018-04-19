@@ -3,21 +3,29 @@ import Request from 'superagent';
 import AdsAreaCreatorUpdater from './AdsAreaCreatorUpdater';
 import AdsAreaDeleteForm from './AdsAreaDelete';
 import './ads_area.css';
+import UrlApi from '../share/UrlApi';
 import { TransferSelectInputKeyToValue, JsonSortDateType, JsonSort } from '../share/Mapper';
 import RenderHeader from '../share/RenderHeader';
 
 function RenderEditDeleteButton(props) {
+  var activeTitle = (props.trang_thai === 1) ? "Hủy" : "Kích hoạt";
+  
   return (
     <div>
       <button key="Edit" id="Edit" name={props.nameId} type="button" className="btn btn-warning adsarea--button-edit" onClick={props.handleEditClick}>Edit</button>
       <button key="Delete" id="Delete" name={props.nameId} type="button" className="btn btn-danger adsarea--button-delete" onClick={props.handleDeleteClick}>Delete</button>
+      <button key="Active" id={props.trang_thai} name={props.nameId} type="button" className="btn btn-primary adsarea--button-active" onClick={props.handleActiveClick}>{activeTitle}</button>
     </div>
   );
 }
 
 function RenderRow(props) {
-  var areaSize = props.trContentAdsArea.kich_thuoc_vung.width.toString() + "x" + props.trContentAdsArea.kich_thuoc_vung.height.toString();
-  var status = (props.trContentAdsArea.status === 1) ? "Kích hoạt" : "Đã hủy";
+  var areaSize = "";
+  if (props.trContentAdsArea.kich_thuoc_vung) {
+    areaSize = props.trContentAdsArea.kich_thuoc_vung.width.toString() + "x" + props.trContentAdsArea.kich_thuoc_vung.height.toString();
+  }
+  var status = (props.trContentAdsArea.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
+
   var loai_trang_ap_dung = TransferSelectInputKeyToValue(
     props.trContentAdsArea.loai_trang_ap_dung,
     ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
@@ -44,6 +52,8 @@ function RenderRow(props) {
           nameId={props.trContentAdsArea._id}
           handleEditClick={props.handleEditClick}
           handleDeleteClick={props.handleDeleteClick}
+          handleActiveClick={props.handleActiveClick}
+          trang_thai={props.trContentAdsArea.trang_thai}
         />
       </td>
     </tr>
@@ -73,6 +83,7 @@ function RenderBody(props) {
         key={id}
         handleEditClick={props.handleEditClick}
         handleDeleteClick={props.handleDeleteClick}
+        handleActiveClick={props.handleActiveClick}
       />
     );
   });
@@ -129,6 +140,7 @@ class AdsAreaContents extends Component {
             tbodyAdsAreas={this.props.tbodyAdsAreas}
             handleEditClick={this.props.handleEditClick}
             handleDeleteClick={this.props.handleDeleteClick}
+            handleActiveClick={this.props.handleActiveClick}
           />
         </table>
       </div>
@@ -174,10 +186,12 @@ class AdsArea extends Component {
     this.handleShowCreatorPopup = this.handleShowCreatorPopup.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleActiveClick = this.handleActiveClick.bind(this);
     this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
     this.handleResetContentsState = this.handleResetContentsState.bind(this);
 
     this.OnchangeSort = this.OnchangeSort.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   componentDidMount() {
@@ -187,6 +201,7 @@ class AdsArea extends Component {
   getAdsAreas() {
     var url = "http://localhost:8080/adsareas";
     Request.get(url)
+      .set('x-auth', localStorage.getItem('x-auth'))
       .then((res) => {
         this.setState({
           tbodyAdsAreas: res.body
@@ -230,6 +245,22 @@ class AdsArea extends Component {
     });
   }
 
+  handleActiveClick(event) {
+    var url = UrlApi.AdsArea + "/" + event.target.name;
+    var $this = this;
+    var updateAdsAreaJson = {
+      trang_thai : parseInt(event.target.id) === 1 ? 0: 1
+    };
+
+    Request.put(url)
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('x-auth', localStorage.getItem('x-auth'))
+      .send(updateAdsAreaJson)
+      .end(function (err, res) {
+        $this.getAdsAreas();
+      });
+  }
+
   handleCloseDeletePop() {
     this.setState({
       ShowDeletePopup: !this.state.ShowDeletePopup
@@ -258,6 +289,14 @@ class AdsArea extends Component {
     e.preventDefault();
   }
 
+  onKeyDown(e) {
+    console.log(e.key);
+    if (e.key === "Escape") {
+      console.log(1);
+      this.handleShowCreatorPopup();
+    }
+  }
+
   render() {
     var currentState = this.state;
     var KeySort = currentState.KeySort;
@@ -273,7 +312,7 @@ class AdsArea extends Component {
     }
 
     return (
-      <div id="page-wrapper">
+      <div id="page-wrapper" onKeyDown={this.onKeyDown}>
         <div className="row">
           <div>
             <AdsAreaHeader showCreatorPopup={this.handleShowCreatorPopup} />
@@ -281,6 +320,7 @@ class AdsArea extends Component {
               tbodyAdsAreas={tbody}
               handleEditClick={this.handleEditClick}
               handleDeleteClick={this.handleDeleteClick}
+              handleActiveClick={this.handleActiveClick}
               OnchangeSort={this.OnchangeSort}
             />
 

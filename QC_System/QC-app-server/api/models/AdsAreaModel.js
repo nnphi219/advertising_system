@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var AdsAreaSchema = new Schema({
     ma_dich_vu: String,
     ten_hien_thi: String,
+    loai_quang_cao: String,
     mo_ta_dich_vu: String,
     loai_bai_dang_ap_dung: String,
     mau_chu_tieu_de: String,
@@ -30,7 +31,7 @@ var AdsAreaSchema = new Schema({
         width: Number,
         height: Number
     },
-    status: Number,
+    trang_thai: Number,
     so_luong_chu_xem_truoc: Number,
     hien_thi_video_thay_the_anh: Boolean,
     created_date: {
@@ -40,6 +41,10 @@ var AdsAreaSchema = new Schema({
     updated_date: {
         type: Date,
         default: Date.now
+    },
+    nguoi_tao: {
+        type: String,
+        require: true
     }
 });
 

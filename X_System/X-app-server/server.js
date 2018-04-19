@@ -26,12 +26,14 @@ var userRoute = require('./api/routes/UserRoute');
 var postRoute = require('./api/routes/PostRoute');
 var pageRoute = require('./api/routes/PageRoute');
 var postTypeRoute = require('./api/routes/PostTypeRoute');
+var commonRoute = require('./api/routes/CommonRoute');
 
 todoListRoute(app);
 userRoute(app);
 postRoute(app);
 postTypeRoute(app);
 pageRoute(app);
+commonRoute(app);
 
 app.listen(port);
 

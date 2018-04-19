@@ -31,6 +31,8 @@ exports.read_PromotionId_Info = function (req, res) {
 
 exports.create_a_promotionManagement = function(req, res) {
     var new_promotionManagement = new PromotionManagement(req.body);
+    new_promotionManagement.trang_thai = 1;
+    
     new_promotionManagement.save(function(err, promotionManagement) {
         if(err) {
             res.send(err);

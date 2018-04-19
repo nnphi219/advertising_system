@@ -6,8 +6,8 @@ const { User } = require('../api/models/UserModel');
 const userOneId = new ObjectId();
 const users = [{
     _id: userOneId,
-    email: 'superadmin@gmail.com',
-    password: 'superadmin',
+    email: 'admin@gmail.com',
+    password: 'admin',
     tokens: [{
         access: 'auth',
         token: jwt.sign({ _id: userOneId, access: 'auth' }, "abc123").toString()

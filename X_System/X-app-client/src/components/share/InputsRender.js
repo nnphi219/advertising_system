@@ -7,7 +7,7 @@ export class RenderInput extends Component {
         var cssLabel = "fullwidth" + ` ${this.props.cssLabel}`
 
         return (
-            <div>
+            <div className={this.props.divClass}>
                 <label key={this.props.nameId} className={cssLabel}>
                     {this.props.title}
                     <p style={{ color: "red", marginTop: "3px" }}>{this.props.errorTitle}</p>

@@ -17,6 +17,7 @@ class AdsAreaDeleteForm extends Component {
         Request.delete(url)
         .send({ id: this.props.SelectedItemId })
         .set('Accept', 'application/json')
+        .set('x-auth', localStorage.getItem('x-auth'))
         .end(function(err, res){
             $this.props.resetContentState();
             $this.props.closeDeletePopup();

@@ -31,6 +31,8 @@ exports.read_servicePriceId_Info = function (req, res) {
 
 exports.create_a_servicePrice = function(req, res) {
     var new_servicePrice = new ServicePrice(req.body);
+    new_servicePrice.trang_thai = 1;
+    
     new_servicePrice.save(function(err, servicePrice) {
         if(err) {
             res.send(err);
