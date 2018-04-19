@@ -9,7 +9,7 @@ import RenderHeader from '../share/RenderHeader';
 
 function RenderEditDeleteButton(props) {
   var activeTitle = (props.trang_thai === 1) ? "Hủy" : "Kích hoạt";
-  
+
   return (
     <div>
       <button key="Edit" id="Edit" name={props.nameId} type="button" className="btn btn-warning adsarea--button-edit" onClick={props.handleEditClick}>Edit</button>
@@ -26,23 +26,12 @@ function RenderRow(props) {
   }
   var status = (props.trContentAdsArea.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
-  var loai_trang_ap_dung = TransferSelectInputKeyToValue(
-    props.trContentAdsArea.loai_trang_ap_dung,
-    ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
-    ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
-  );
-  var loai_bai_dang_ap_dung = TransferSelectInputKeyToValue(
-    props.trContentAdsArea.loai_bai_dang_ap_dung,
-    ["tin_bds", "du_an"],
-    ["Tin bds", "Dự án"]
-  );
-
   return (
     <tr>
       <td>{props.trContentAdsArea.ma_dich_vu}</td>
       <td>{props.trContentAdsArea.ten_hien_thi}</td>
-      <td>{loai_bai_dang_ap_dung}</td>
-      <td>{loai_trang_ap_dung}</td>
+      <td>{props.trContentAdsArea.loai_bai_dang_ap_dung.value}</td>
+      <td>{props.trContentAdsArea.loai_trang_ap_dung.value}</td>
       <td>{props.trContentAdsArea.so_luong_chia_se_vung}</td>
       <td>{props.trContentAdsArea.so_luong_tin_toi_da}</td>
       <td>{areaSize}</td>
@@ -249,7 +238,7 @@ class AdsArea extends Component {
     var url = UrlApi.AdsArea + "/" + event.target.name;
     var $this = this;
     var updateAdsAreaJson = {
-      trang_thai : parseInt(event.target.id) === 1 ? 0: 1
+      trang_thai: parseInt(event.target.id) === 1 ? 0 : 1
     };
 
     Request.put(url)
@@ -290,9 +279,7 @@ class AdsArea extends Component {
   }
 
   onKeyDown(e) {
-    console.log(e.key);
     if (e.key === "Escape") {
-      console.log(1);
       this.handleShowCreatorPopup();
     }
   }

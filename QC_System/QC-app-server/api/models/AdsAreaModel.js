@@ -7,7 +7,10 @@ var AdsAreaSchema = new Schema({
     ten_hien_thi: String,
     loai_quang_cao: String,
     mo_ta_dich_vu: String,
-    loai_bai_dang_ap_dung: String,
+    loai_bai_dang_ap_dung: {
+        key: String,
+        value: String
+    },
     mau_chu_tieu_de: String,
     font_tieu_de: String,
     font_size_tieu_de: Number,
@@ -19,15 +22,18 @@ var AdsAreaSchema = new Schema({
     so_luong_anh: Number,
     kich_thuoc_anh: Number,
     kich_thuoc_video: Number,
-    loai_trang_ap_dung: String, //
+    loai_trang_ap_dung: {
+        key: String,
+        value: String
+    }, //
     so_luong_tin_toi_da: Number,
     so_luong_chia_se_vung: Number,
     hieu_ung_tieu_de: String, // hiệu ứng tiêu đề.
-    kich_thuoc_vung: { 
+    kich_thuoc_vung: {
         width: Number,
         height: Number
     },
-    kich_thuoc_tin: { 
+    kich_thuoc_tin: {
         width: Number,
         height: Number
     },

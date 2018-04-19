@@ -44,6 +44,9 @@ function RenderRow(props) {
                     nameId={props.trContent._id}
                     handleEditClick={props.handleEditClick}
                     handleDeleteClick={props.handleDeleteClick}
+                    handleActiveClick={props.handleActiveClick}
+
+                    trang_thai={props.trContent.trang_thai}
                 />
             </td>
         </tr>
@@ -59,6 +62,7 @@ function RenderBody(props) {
                 key={id}
                 handleEditClick={props.handleEditClick}
                 handleDeleteClick={props.handleDeleteClick}
+                handleActiveClick={props.handleActiveClick}
             />
         );
     });
@@ -74,22 +78,23 @@ class ServicePriceContents extends Component {
 
     render() {
         var theadServicePrices = {
-            keys:   ["ma_dich_vu_ap_dung", "ma_gia", "gia_tri", "loai_gia", "so_luong_don_vi_ap_dung.so_ngay_ap_dung", "so_luong_don_vi_ap_dung.so_click_tren_view", "loai_co_che", "start_date", "end_date", "trang_thai"],
+            keys: ["ma_dich_vu_ap_dung", "ma_gia", "gia_tri", "loai_gia", "so_luong_don_vi_ap_dung.so_ngay_ap_dung", "so_luong_don_vi_ap_dung.so_click_tren_view", "loai_co_che", "start_date", "end_date", "trang_thai"],
             values: ["Mã dịch vụ áp dụng", "Mã giá", "Giá", "Mô hình giá", "Số ngày hiệu lực", "Số lượng click/view", "Cơ chế hiện thị", "Bắt đầu", "Kết thúc", "Trạng thái"]
         };
-        
+
         var props = this.props;
         return (
             <div className="table-content">
                 <table className="table table-striped">
-                    <RenderHeader 
-                        theader={theadServicePrices} 
+                    <RenderHeader
+                        theader={theadServicePrices}
                         OnchangeSort={props.OnchangeSort}
                     />
                     <RenderBody
                         tbody={props.tbodyServicePrices}
                         handleEditClick={props.handleEditClick}
                         handleDeleteClick={props.handleDeleteClick}
+                        handleActiveClick={props.handleActiveClick}
                     />
                 </table>
             </div>
@@ -114,6 +119,7 @@ class ServicePrice extends Component {
         this.handleShowCreatorUpdaterPopup = this.handleShowCreatorUpdaterPopup.bind(this);
         this.handleEditClick = this.handleEditClick.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleActiveClick = this.handleActiveClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
         this.handleClosePopup = this.handleClosePopup.bind(this);
@@ -134,6 +140,7 @@ class ServicePrice extends Component {
 
     getServicePrices() {
         Request.get(UrlApi.ServicePrice)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({
                     tbodyServicePrices: res.body
@@ -170,6 +177,22 @@ class ServicePrice extends Component {
         });
     }
 
+    handleActiveClick(event) {
+        var url = UrlApi.ServicePrice + "/" + event.target.name;
+        var $this = this;
+        var updateServicePriceJson = {
+          trang_thai: parseInt(event.target.id) === 1 ? 0 : 1
+        };
+    
+        Request.put(url)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .set('x-auth', localStorage.getItem('x-auth'))
+          .send(updateServicePriceJson)
+          .end(function (err, res) {
+            $this.getServicePrices();
+          });
+    }
+
     handleCloseDeletePop() {
         this.setState({
             ShowDeletePopup: !this.state.ShowDeletePopup
@@ -186,14 +209,14 @@ class ServicePrice extends Component {
         });
     }
 
-    OnchangeSort(e){
+    OnchangeSort(e) {
         var newKeySort = e.target.name;
         var KeySort = this.state.KeySort;
         var jsonStateSort = {
             KeySort: newKeySort
         };
 
-        if( newKeySort === KeySort){
+        if (newKeySort === KeySort) {
             jsonStateSort.IsASC = !this.state.IsASC;
         }
         else {
@@ -208,16 +231,16 @@ class ServicePrice extends Component {
         var currentState = this.state;
         var KeySort = currentState.KeySort;
         var tbody = null;
-        if(KeySort === ''){
+        if (KeySort === '') {
             tbody = currentState.tbodyServicePrices;
         }
-        else if(KeySort === 'start_date' || KeySort === 'end_date'){
+        else if (KeySort === 'start_date' || KeySort === 'end_date') {
             tbody = JsonSortDateType(currentState.tbodyServicePrices, KeySort, currentState.IsASC);
         }
         else {
             tbody = JsonSort(currentState.tbodyServicePrices, KeySort, currentState.IsASC);
         }
-        
+
         return (
             <div id="page-wrapper">
                 <div className="row">
@@ -230,6 +253,7 @@ class ServicePrice extends Component {
                             tbodyServicePrices={tbody}
                             handleEditClick={this.handleEditClick}
                             handleDeleteClick={this.handleDeleteClick}
+                            handleActiveClick={this.handleActiveClick}
                             OnchangeSort={this.OnchangeSort}
                         />
 
@@ -255,8 +279,6 @@ class ServicePrice extends Component {
                                 />
                                 : null
                         }
-
-
                     </div>
                 </div>
             </div>

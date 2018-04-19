@@ -133,3 +133,9 @@ body {
   position: absolute;
   right: 0;
 }
+
+.div__description {
+  padding-left: 10px;
+  color: red;
+  width: auto;
+}

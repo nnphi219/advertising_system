@@ -5,10 +5,16 @@ vung quang cao:
 -- kich thuoc vung quang cao: admin he thong x dinh nghia					--- done
 -- field required.															--- done
 -- Creator.																	--- done
--- kich hoat --- huy
+-- kich hoat --- huy														--- done
+--- chỉnh sửa nút tắt.
 
 gia dich vu:
---- thoi diem dau gia(sai ten)
+--- thoi diem dau gia(sai ten) --- done
+--- mô tả cho dịch vụ quảng cáo. --- done
+-- field required. --- done															
+-- Creator.	--- done	 															
+-- kich hoat --- huy --- done
+--- tạo nút tắt.
 
 chi so anh huong gia:
 --- ca ngay(sai ten)
