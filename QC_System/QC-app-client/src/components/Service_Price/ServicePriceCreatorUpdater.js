@@ -3,7 +3,7 @@ import Request from 'superagent';
 import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './service_price.css';
-import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
+import { JsonDateToDate, DateToJsonDate, TransferSelectInputKeyToValue } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 import { DescriptionDetail } from '../share/CommonComponent';
 
@@ -94,24 +94,25 @@ class RenderLeftForm extends Component {
 
 class RenderRightForm extends Component {
     render() {
-        var loai_co_che = this.props.stateValues.loai_co_che === undefined ? "" : this.props.stateValues.loai_co_che;
+        var loai_co_che = {};
+        loai_co_che.selectedValue = this.props.stateValues.loai_co_che === undefined ? "" : this.props.stateValues.loai_co_che;
+        loai_co_che.keys = servicePriceInputs.loai_co_che.keys;
+        loai_co_che.values = servicePriceInputs.loai_co_che.values;
 
         var props = this.props;
         return (
             <div key="right" className="serviceprice_information_right">
                 <h2>Thông số giá</h2>
                 <div>
-                    <div>
-                        <label className="fullwidth" >
-                            {"Cơ chế hiển thị"}
-                            <select name={"loai_co_che"} key={"loai_co_che"} value={loai_co_che} onChange={this.props.OnChangeSelect} className="serviceprice--select">
-                                <option value={"doc_quyen"} >{"Độc quyền"}</option>
-                                <option value={"co_dinh_vi_tri"} >{"Cố định vị trí"}</option>
-                                <option value={"chia_se_co_dinh"} >{"Chia sẻ cố định"}</option>
-                                <option value={"ngau_nhien"} >{"Ngẫu nhiên"}</option>
-                            </select>
-                        </label>
-                    </div>
+                    <RenderSelect
+                        nameId={"loai_co_che"}
+                        title={"Cơ chế hiển thị"}
+                        keys={loai_co_che.keys}
+                        values={loai_co_che.values}
+                        selectedValue={loai_co_che.selectedValue}
+                        OnChangeSelect={this.props.OnChangeSelect}
+                        className={"serviceprice--select"}
+                    />
                     <RenderRadioButon
                         nameId={"loai_gia"}
                         title={"Mô hình giá"}
@@ -225,7 +226,7 @@ class ServicePriceCreatorUpdaterForm extends Component {
         return (
             <div className='popup_inner serviceprice_createform_size div_scroll_bar'>
                 <div>
-                    <a class="close popup-button-close serviceprice_margin_button-close" onClick={this.handleClosePopup}>×</a>
+                    <a class="close popup-button-close serviceprice_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
                     <h1>{this.props.titleForm}</h1>
                 </div>
                 <RenderProperties
@@ -314,7 +315,7 @@ class ServicePriceCreatorUpdater extends Component {
 
             jsonState.ma_gia = editContents.ma_gia;
             jsonState.ma_dich_vu_ap_dung = editContents.ma_dich_vu_ap_dung;
-            jsonState.loai_co_che = editContents.loai_co_che;
+            jsonState.loai_co_che = editContents.loai_co_che.key;
             jsonState.loai_gia = editContents.loai_gia;
             jsonState.gia_tri = editContents.gia_tri;
             jsonState.so_ngay_ap_dung = editContents.so_luong_don_vi_ap_dung.so_ngay_ap_dung;
@@ -391,13 +392,16 @@ class ServicePriceCreatorUpdater extends Component {
                 ma_gia: state.ma_gia,
                 start_date: startDateJson,
                 end_date: endDateJson,
-                loai_co_che: state.loai_co_che,
                 loai_gia: state.loai_gia,
                 gia_tri: state.gia_tri,
                 so_luong_don_vi_ap_dung: {
                     so_ngay_ap_dung: state.so_ngay_ap_dung
                 }
             };
+            servicePriceContent.loai_co_che = {
+                key: state.loai_co_che,
+                value: TransferSelectInputKeyToValue(state.loai_co_che, servicePriceInputs.loai_co_che.keys, servicePriceInputs.loai_co_che.values)
+            }
 
             var so_click_tren_view = parseInt(state.so_click_tren_view);
 
@@ -515,6 +519,10 @@ var servicePriceInputs = {
     co_thoi_diem_ket_thuc: {
         values: ["Có", "Không"],
         keys: [1, 0]
+    },
+    loai_co_che: {
+        keys: ["doc_quyen", "co_dinh_vi_tri", "chia_se_co_dinh", "ngau_nhien"],
+        values: ["Độc quyền", "Cố định vị trí", "Chia sẻ cố định", "Ngẫu nhiên"]
     }
 };
 

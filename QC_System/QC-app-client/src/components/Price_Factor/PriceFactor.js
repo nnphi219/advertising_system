@@ -35,6 +35,9 @@ function RenderRow(props) {
                     nameId={props.trContentPriceFactor._id}
                     handleEditClick={props.handleEditClick}
                     handleDeleteClick={props.handleDeleteClick}
+                    handleActiveClick={props.handleActiveClick}
+
+                    trang_thai={props.trContentPriceFactor.trang_thai}
                 />
             </td>
         </tr>
@@ -50,6 +53,7 @@ function RenderBody(props) {
                 key={id}
                 handleEditClick={props.handleEditClick}
                 handleDeleteClick={props.handleDeleteClick}
+                handleActiveClick={props.handleActiveClick}
             />
         );
     });
@@ -69,14 +73,17 @@ class PriceFactorContents extends Component {
             values: ["Mã nhân tố", "Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"]
         };
 
+        var props = this.props;
+
         return (
             <div className="adsarea-content">
                 <table className="table table-striped">
                     <RenderHeader theader={theadPriceFactors} />
                     <RenderBody
-                        tbody={this.props.tbodyPriceFactors}
-                        handleEditClick={this.props.handleEditClick}
-                        handleDeleteClick={this.props.handleDeleteClick}
+                        tbody={props.tbodyPriceFactors}
+                        handleEditClick={props.handleEditClick}
+                        handleDeleteClick={props.handleDeleteClick}
+                        handleActiveClick={props.handleActiveClick}
                     />
                 </table>
             </div>
@@ -99,6 +106,7 @@ class PriceFactor extends Component {
         this.handleShowCreatorUpdaterPopup = this.handleShowCreatorUpdaterPopup.bind(this);
         this.handleEditClick = this.handleEditClick.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleActiveClick = this.handleActiveClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
 
@@ -127,6 +135,7 @@ class PriceFactor extends Component {
 
     getPriceFactors() {
         Request.get(UrlApi.PriceFactor)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({
                     tbodyPriceFactors: res.body
@@ -154,6 +163,22 @@ class PriceFactor extends Component {
             EditContents: editContents,
             ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
         });
+    }
+
+    handleActiveClick(event) {
+        var url = UrlApi.PriceFactor + "/" + event.target.name;
+        var $this = this;
+        var updatePriceFactorJson = {
+          trang_thai: parseInt(event.target.id) === 1 ? 0 : 1
+        };
+    
+        Request.put(url)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .set('x-auth', localStorage.getItem('x-auth'))
+          .send(updatePriceFactorJson)
+          .end(function (err, res) {
+            $this.getPriceFactors();
+          });
     }
 
     handleDeleteClick(event) {
@@ -190,6 +215,7 @@ class PriceFactor extends Component {
                             tbodyPriceFactors={this.state.tbodyPriceFactors}
                             handleEditClick={this.handleEditClick}
                             handleDeleteClick={this.handleDeleteClick}
+                            handleActiveClick={this.handleActiveClick}
                         />
 
                         {

@@ -7,6 +7,7 @@ export class RenderInput extends Component {
         var cssLabel = "fullwidth" + ` ${this.props.cssLabel}`;
         var props = this.props;
         var classNameInput = props.className;
+        var styleCss = props.styleCss;
         classNameInput += (props.errorTitle !== undefined && props.errorTitle !== "") ? " input--required" : "";
      
         return (
@@ -14,7 +15,7 @@ export class RenderInput extends Component {
                 <label key={this.props.nameId} className={cssLabel}>
                     {this.props.title}
                     <p style={{ color: "red", marginTop: "3px" }}>{this.props.errorTitle}</p>
-                    <input type={this.props.type} key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={classNameInput} readOnly={isReadOnly} />
+                    <input type={this.props.type} key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={classNameInput} style={styleCss} readOnly={isReadOnly} />
                 </label>
             </div>
         );

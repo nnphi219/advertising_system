@@ -6,7 +6,7 @@ vung quang cao:
 -- field required.															--- done
 -- Creator.																	--- done
 -- kich hoat --- huy														--- done
---- chỉnh sửa nút tắt.
+--- chỉnh sửa nút tắt.														--- done
 
 gia dich vu:
 --- thoi diem dau gia(sai ten) --- done
@@ -14,12 +14,13 @@ gia dich vu:
 -- field required. --- done															
 -- Creator.	--- done	 															
 -- kich hoat --- huy --- done
---- tạo nút tắt.
+--- tạo nút tắt.	--- done
 
 chi so anh huong gia:
---- ca ngay(sai ten)
+--- ca ngay(sai ten) --- done
 --- khung gio ap dung: cho nhap tat ca
---- tinh tong tien
+--- tinh tong tien --- done
+--- tạo nút tắt.	--- done
 
 chien dich tin dang
 --- lay trang ap dung quang cao va loai bai dang ap dung: lay api tu he thong x

@@ -14,6 +14,7 @@ const UrlApi = {
     GetAdsAreaInfo: hostName + "/getadsAreasInfo",
 
     PriceFactor: hostName + "/pricefactors",
+    ReadA_PriceFactor: hostName + "/pricefactors/check",
 
     ServicePrice: hostName + "/serviceprices",
     ReadA_ServicePrice: hostName + "/serviceprices/check",

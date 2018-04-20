@@ -35,7 +35,7 @@ function RenderRow(props) {
             <td>{props.trContent.loai_gia}</td>
             <td>{availableQuantityDay}</td>
             <td>{quantityClickOnView}</td>
-            <td>{props.trContent.loai_co_che}</td>
+            <td>{props.trContent.loai_co_che.value}</td>
             <td>{startDate}</td>
             <td>{endDate}</td>
             <td>{status}</td>
@@ -78,7 +78,7 @@ class ServicePriceContents extends Component {
 
     render() {
         var theadServicePrices = {
-            keys: ["ma_dich_vu_ap_dung", "ma_gia", "gia_tri", "loai_gia", "so_luong_don_vi_ap_dung.so_ngay_ap_dung", "so_luong_don_vi_ap_dung.so_click_tren_view", "loai_co_che", "start_date", "end_date", "trang_thai"],
+            keys: ["ma_dich_vu_ap_dung", "ma_gia", "gia_tri", "loai_gia", "so_luong_don_vi_ap_dung.so_ngay_ap_dung", "so_luong_don_vi_ap_dung.so_click_tren_view", "loai_co_che.value", "start_date", "end_date", "trang_thai"],
             values: ["Mã dịch vụ áp dụng", "Mã giá", "Giá", "Mô hình giá", "Số ngày hiệu lực", "Số lượng click/view", "Cơ chế hiện thị", "Bắt đầu", "Kết thúc", "Trạng thái"]
         };
 
