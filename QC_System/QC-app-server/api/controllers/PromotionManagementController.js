@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
     PromotionManagement = mongoose.model('PromotionManagements');
 
 exports.list_all_promotionManagement = function(req, res) {
-    PromotionManagement.find({}, function(err, promotionManagement) {
+    PromotionManagement.find({nguoi_tao: req.user.username}, function(err, promotionManagement) {
         if(err) {
             res.send(err);
         }
@@ -15,8 +15,17 @@ exports.list_all_promotionManagement = function(req, res) {
     });
 };
 
+exports.read_a_promotion_by_promotionId = function( req, res) {
+    var username = req.user.username;
+    PromotionManagement.findOne({ma_khuyen_mai: req.params.promotionManagementId, nguoi_tao: username}, function (err, promotion) {
+        if (err)
+            res.send(err);
+        res.json(promotion);
+    });
+};
+
 exports.read_PromotionId_Info = function (req, res) {
-    PromotionManagement.find({}, function (err, promotions) {
+    PromotionManagement.find({nguoi_tao: req.user.username}, function (err, promotions) {
         if (err) {
             res.send(err);
         }
@@ -31,6 +40,7 @@ exports.read_PromotionId_Info = function (req, res) {
 
 exports.create_a_promotionManagement = function(req, res) {
     var new_promotionManagement = new PromotionManagement(req.body);
+    new_promotionManagement.nguoi_tao = req.user.username;
     new_promotionManagement.trang_thai = 1;
     
     new_promotionManagement.save(function(err, promotionManagement) {

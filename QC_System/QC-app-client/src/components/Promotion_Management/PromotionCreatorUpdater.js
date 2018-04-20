@@ -4,6 +4,7 @@ import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { DescriptionDetail } from '../share/CommonComponent';
 
 class RenderProperties extends Component {
     constructor(props) {
@@ -11,17 +12,29 @@ class RenderProperties extends Component {
     }
 
     render() {
+        var props = this.props;
+        var stateValues = this.props.stateValues;
         var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
         var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
 
+        var arrayAdsAreaTitles = [];
+        if (stateValues.AdsAreaIds !== undefined) {
+            var indexOfAdsArea = stateValues.AdsAreaIds.keys.indexOf(stateValues.ma_dich_vu_ap_dung);
+            arrayAdsAreaTitles.push("Loại quảng cáo: " + stateValues.AdsAreaIds.list_loai_quang_cao[indexOfAdsArea]);
+            arrayAdsAreaTitles.push("Trang áp dụng: " + stateValues.AdsAreaIds.list_loai_trang_ap_dung[indexOfAdsArea]);
+        }
+
+        var ma_khuyen_mai_isReadOnly = this.props.modeAction === 'edit' ? 1 : 0;
         return (
             <div className="promotion_information">
                 <RenderInput
                     nameId={"ma_khuyen_mai"}
                     title={"Nhập mã khuyến mãi"}
                     type={"text"}
-                    value={this.props.stateValues.ma_khuyen_mai}
+                    value={stateValues.ma_khuyen_mai}
+                    errorTitle={stateValues.error_ma_khuyen_mai}
                     className={"promotion--input"}
+                    isReadOnly={ma_khuyen_mai_isReadOnly}
                     OnChangeInput={this.props.OnChangeInput}
                 />
 
@@ -29,7 +42,8 @@ class RenderProperties extends Component {
                     nameId={"mo_ta"}
                     title={"Mô tả khuyến mãi"}
                     type={"text"}
-                    value={this.props.stateValues.mo_ta}
+                    value={stateValues.mo_ta}
+                    errorTitle={stateValues.error_mo_ta}
                     className={"promotion--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
@@ -43,7 +57,9 @@ class RenderProperties extends Component {
                     OnChangeSelect={this.props.OnChangeSelect}
                     className={"input--select"}
                 />
-
+                <DescriptionDetail
+                    arrayTitles={arrayAdsAreaTitles}
+                />
                 <RenderRadioButon
                     nameId={"loai_gia"}
                     title={"Mức giá áp dụng"}
@@ -55,7 +71,8 @@ class RenderProperties extends Component {
                 />
                 <RenderInput
                     nameId={"gia_tri"}
-                    value={this.props.stateValues.gia_tri}
+                    value={stateValues.gia_tri}
+                    errorTitle={stateValues.error_gia_tri}
                     type={"number"}
                     className={"promotion--input"}
                     OnChangeInput={this.props.OnChangeInput}
@@ -121,7 +138,10 @@ class PromotionCreatorUpdaterForm extends Component {
     render() {
         return (
             <div className='popup_inner promotion_createform_size div_scroll_bar'>
-                <h1>{this.props.titleForm}</h1>
+                <div>
+                    <a class="close popup-button-close promotion_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
+                    <h1>{this.props.titleForm}</h1>
+                </div>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}
                     OnChangeSelect={this.OnChangeSelect}
@@ -130,6 +150,7 @@ class PromotionCreatorUpdaterForm extends Component {
                     OnchangeEndDate={this.OnchangeEndDate}
 
                     stateValues={this.props.stateValues}
+                    modeAction={this.props.modeAction}
                 />
                 <div className="submit">
                     <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
@@ -145,42 +166,53 @@ class PromotionCreatorUpdater extends Component {
         super(props);
 
         var jsonState = {};
-        this.state = this.SetInitState(jsonState);
-        this.GetAdsAreaIdInfos();
+        jsonState = this.SetInitState(jsonState);
+        this.state = this.SetInitError(jsonState);
+
+        this.GetAdsAreasByUser();
     }
 
-    GetAdsAreaIdInfos() {
+    GetAdsAreasByUser() {
         var $this = this;
         Request.get(UrlApi.GetAdsAreaInfo)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 var _ids = [];
                 var keys = [];
                 var values = [];
+                var list_loai_trang_ap_dung = [];
+                var list_loai_quang_cao = [];
 
                 res.body.map((adsArea) => {
                     _ids.push(adsArea._id);
                     keys.push(adsArea.ma_dich_vu);
                     values.push(adsArea.ten_hien_thi);
+                    list_loai_trang_ap_dung.push(adsArea.loai_trang_ap_dung.value);
+                    list_loai_quang_cao.push(adsArea.loai_quang_cao);
                 });
 
                 var jsonAdsAreaIds = {
                     AdsAreaIds: {
                         _ids: _ids,
                         keys: keys,
-                        values: values
+                        values: values,
+                        list_loai_trang_ap_dung: list_loai_trang_ap_dung,
+                        list_loai_quang_cao: list_loai_quang_cao
                     },
 
                 };
                 if (this.props.modeAction === "create") {
                     jsonAdsAreaIds.ma_dich_vu_ap_dung = keys[0];
                 }
-             
+
                 $this.setState(jsonAdsAreaIds);
             });
     }
 
     SetInitState(jsonState) {
         if (this.props.modeAction === "create") {
+            jsonState.ma_khuyen_mai = '';
+            jsonState.mo_ta = '';
             jsonState.loai_gia = 1;
             jsonState.gia_tri = 0;
 
@@ -204,41 +236,122 @@ class PromotionCreatorUpdater extends Component {
     }
 
     handleUpdateState(jsonState) {
+        jsonState = this.SetInitError(jsonState);
         this.setState(jsonState);
+    }
+
+    SetInitError(jsonState) {
+        jsonState.error_ma_khuyen_mai = '';
+        jsonState.error_gia_tri = '';
+        jsonState.error_mo_ta = '';
+
+        return jsonState;
+    }
+
+    CheckValid(state) {
+        var isValid = true;
+        var jsonError = {};
+
+        if (state.ma_khuyen_mai === "" || state.ma_khuyen_mai.trim().includes(' ')) {
+            jsonError.error_ma_khuyen_mai = "Mã không hợp lệ";
+            isValid = false;
+        }
+
+        if (state.mo_ta === "") {
+            jsonError.error_mo_ta = "Mô tả không thể rỗng";
+            isValid = false;
+        }
+
+        if (parseInt(state.gia_tri) <= 0) {
+            jsonError.error_gia_tri = "Yêu cầu lớn hơn 0";
+            isValid = false;
+        }
+
+        if (!isValid) {
+            this.setState(jsonError);
+        }
+
+        return isValid;
     }
 
     GetModelStateJson() {
         var state = this.state;
+        var isValid = this.CheckValid(state);
 
-        var startDateJson = DateToJsonDate(state.start_date);
-        var endDateJson = DateToJsonDate(state.end_date);
+        if (isValid) {
+            var startDateJson = DateToJsonDate(state.start_date);
+            var endDateJson = DateToJsonDate(state.end_date);
 
-        var promotionContent = {
-            ma_khuyen_mai: state.ma_khuyen_mai,
-            mo_ta: state.mo_ta,
-            ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
-            muc_gia_ap_dung: {
-                loai_gia: state.loai_gia,
-                gia_tri: state.gia_tri
-            },
-            start_date: startDateJson,
-            end_date: endDateJson
-        };
+            var promotionContent = {
+                ma_khuyen_mai: state.ma_khuyen_mai,
+                mo_ta: state.mo_ta,
+                ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
+                muc_gia_ap_dung: {
+                    loai_gia: state.loai_gia,
+                    gia_tri: state.gia_tri
+                },
+                start_date: startDateJson,
+                end_date: endDateJson
+            };
 
-        return promotionContent;
+            if (this.props.modeAction === 'edit') {
+                return promotionContent;
+            }
+            else {
+                return Request.get(UrlApi.ReadA_Promotion + '/' + state.ma_khuyen_mai)
+                    .set('x-auth', localStorage.getItem('x-auth'))
+                    .then((res) => {
+                        if (res.body) {
+                            isValid = false;
+                            this.setState({
+                                error_ma_khuyen_mai: "Mã này đã tồn tại!"
+                            });
+                            return 'error';
+                        }
+                        else {
+                            return promotionContent;
+                        }
+
+                    }).catch((e) => {
+                        return 'error';
+                    });
+            }
+        }
+        else {
+            if (this.props.modeAction === 'edit') {
+                return "error";
+            }
+            else {
+                return Promise.reject();
+            }
+        }
     }
 
     CreatePromotion() {
-        var promotionContent = this.GetModelStateJson();
+        this.GetModelStateJson().then((promotionContent) => {
+            if (promotionContent === "error") {
+                return;
+            }
 
-        var $this = this;
-        Request.post(UrlApi.PromotionManagement)
-            .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send(promotionContent)
-            .end(function (err, res) {
-                $this.props.closeCreatorUpdaterPopup();
-                $this.props.resetContentState();
-            });
+            var $this = this;
+            Request.post(UrlApi.PromotionManagement)
+                .set('Content-Type', 'application/x-www-form-urlencoded')
+                .set('x-auth', localStorage.getItem('x-auth'))
+                .send(promotionContent)
+                .end(function (err, res) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        $this.props.closeCreatorUpdaterPopup();
+                        $this.props.resetContentState();
+                    }
+                });
+        }).catch((e) => {
+            // this.setState({
+            //     error_ma_gia: "Mã này đã tồn tại!"
+            // });
+        });
     }
 
     EditPromotion() {
@@ -248,6 +361,7 @@ class PromotionCreatorUpdater extends Component {
         var $this = this;
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
+            .set('x-auth', localStorage.getItem('x-auth'))
             .send(promotionContent)
             .end(function (err, res) {
                 $this.props.closeCreatorUpdaterPopup();
@@ -274,6 +388,7 @@ class PromotionCreatorUpdater extends Component {
                     handleClosePopup={this.props.closeCreatorUpdaterPopup}
                     handleSubmit={this.handleSubmit.bind(this)}
                     UpdateState={this.handleUpdateState.bind(this)}
+                    modeAction={this.props.modeAction}
                 />
             </div>
         );

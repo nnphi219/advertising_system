@@ -135,7 +135,8 @@ class ServicePrice extends Component {
     _onKeyDown(e) {
         if (e.key === "Escape") {
             this.setState({
-                ShowCreatorUpdaterPopup: false
+                ShowCreatorUpdaterPopup: false,
+                ShowDeletePopup: false
             });
         }
     }

@@ -190,7 +190,8 @@ class AdsArea extends Component {
   _onKeyDown(e) {
     if (e.key === "Escape") {
       this.setState({
-        ShowCreatorPopup: false
+        ShowCreatorPopup: false,
+        ShowDeletePopup: false
       });
     }
   }
