@@ -19,8 +19,25 @@ class NavTopLinks extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            username: ""
+        }
+
+        this.GetCurrentUser();
+
         this.logout = this.logout.bind(this);
-        
+    }
+
+    GetCurrentUser(){
+        var $this = this;
+
+        Request.get(UrlApi.UserAuthen)
+        .set('x-auth', localStorage.getItem('x-auth'))
+        .then((res) => {
+            $this.setState({
+                username: res.body.username
+            });
+        });
     }
 
     logout() {
@@ -97,7 +114,7 @@ class NavTopLinks extends Component {
                         <i className="fa fa-user fa-fw"></i> <i className="fa fa-caret-down"></i>
                     </a>
                     <ul className="dropdown-menu dropdown-user">
-                        <li><a href="#8"><i className="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a href="#8"><i className="fa fa-user fa-fw"></i> {this.state.username}</a>
                         </li>
                         <li><a href="#9"><i className="fa fa-gear fa-fw"></i> Settings</a>
                         </li>

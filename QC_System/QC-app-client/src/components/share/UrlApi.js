@@ -16,6 +16,7 @@ const UrlApi = {
     PriceFactor: hostName + "/pricefactors",
 
     ServicePrice: hostName + "/serviceprices",
+    ReadA_ServicePrice: hostName + "/serviceprices/check",
     GetServicePriceIdInfo: hostName + "/getservicePricesIdInfo",
 
     PromotionManagement: hostName + "/promotionmanagements",

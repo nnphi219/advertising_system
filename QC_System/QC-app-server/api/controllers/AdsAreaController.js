@@ -31,7 +31,7 @@ exports.read_adsArea_Info = function (req, res) {
         }
         else {
             var adsareaIdInfo = adsAreas.map((adsArea) =>
-             _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung'])
+             _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung', 'loai_quang_cao'])
             );
             res.json(adsareaIdInfo);
         }

@@ -4,14 +4,17 @@ import DatePicker from 'react-date-picker';
 export class RenderInput extends Component {
     render() {
         var isReadOnly = parseInt(this.props.isReadOnly) === 1 ? true : false;
-        var cssLabel = "fullwidth" + ` ${this.props.cssLabel}`
-
+        var cssLabel = "fullwidth" + ` ${this.props.cssLabel}`;
+        var props = this.props;
+        var classNameInput = props.className;
+        classNameInput += (props.errorTitle !== undefined && props.errorTitle !== "") ? " input--required" : "";
+     
         return (
             <div className={this.props.divClass}>
                 <label key={this.props.nameId} className={cssLabel}>
                     {this.props.title}
                     <p style={{ color: "red", marginTop: "3px" }}>{this.props.errorTitle}</p>
-                    <input type={this.props.type} key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={this.props.className} readOnly={isReadOnly} />
+                    <input type={this.props.type} key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={classNameInput} readOnly={isReadOnly} />
                 </label>
             </div>
         );
@@ -25,10 +28,10 @@ export class RenderSelect extends Component {
         var valuesCss = this.props.valuesCss;
         var stylesCss = this.props.stylesCss;
         var elements = [];
-        
+
         values.forEach((value, index) => {
-            var valueCss = valuesCss !== undefined && valuesCss !== null && valuesCss !== [] ? valuesCss[index]: "";
-            var styleCss = stylesCss !== undefined && stylesCss !== null && stylesCss !== [] ? stylesCss[index]: {};
+            var valueCss = valuesCss !== undefined && valuesCss !== null && valuesCss !== [] ? valuesCss[index] : "";
+            var styleCss = stylesCss !== undefined && stylesCss !== null && stylesCss !== [] ? stylesCss[index] : {};
             elements.push(<option className={valueCss} style={styleCss} key={keys[index]} value={keys[index]} >{value}</option>);
         });
         return (

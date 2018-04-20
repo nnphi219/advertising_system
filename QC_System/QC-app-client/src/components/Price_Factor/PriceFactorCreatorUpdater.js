@@ -203,7 +203,10 @@ class PriceFactorCreatorUpdaterForm extends Component {
     render() {
         return (
             <div className='popup_inner pricefactor_createform_size div_scroll_bar'>
-                <h1>{this.props.titleForm}</h1>
+                <div>
+                    <a class="close popup-button-close pricefactor_margin_button-close" onClick={this.handleClosePopup}>×</a>
+                    <h1>{this.props.titleForm}</h1>
+                </div>
                 <div className="pricefactor_information">
                     <h2>Chỉ số ảnh hưởng giá</h2>
                     <RenderProperties

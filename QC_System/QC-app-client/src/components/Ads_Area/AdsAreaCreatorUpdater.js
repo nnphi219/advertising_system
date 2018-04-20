@@ -3,6 +3,7 @@ import Request from 'superagent';
 import ColorPickerInput from '../share/color_picker_input';
 import UrlApi from '../share/UrlApi';
 import { RenderSelect, RenderInput } from '../share/InputsRender';
+import './ads_area.css';
 
 function TransferSizeToString(size) {
     return size.width + "x" + size.height;
@@ -10,21 +11,21 @@ function TransferSizeToString(size) {
 
 function AdsAreaRenderInput(props) {
     var classNameInput = "adsarea--input";
-    if (props.inputData.required && (props.valueInput === "" || props.valueInput === undefined)) {
-        classNameInput += props.errorTitle !== "" ? " input--required" : "";
+    if (props.inputData.type === "textbox") {
+        classNameInput += (props.errorTitle !== undefined && props.errorTitle !== "") ? " input--required" : "";
     }
-    else if (props.inputData.required && props.inputData.type === "number") {
+    if (props.inputData.type === "number") {
         if (parseFloat(props.valueInput) <= 0) {
-            classNameInput += props.errorTitle !== "" ? " input--required" : "";
+            classNameInput += (props.errorTitle !== undefined && props.errorTitle !== "") ? " input--required" : "";
         }
     }
-
+    console.log(props.inputData.id + " " + props.isReadOnly);
     return (
         <div>
             <label key={props.inputData.id} className="fullwidth">
                 {props.inputData.description}
                 <p style={{ color: "red", marginTop: "3px" }}>{props.errorTitle}</p>
-                <input type={props.inputData.type} id={props.inputData.id} key={props.inputData.id} value={props.valueInput} className={classNameInput} name={props.inputData.id} onChange={props.handleOnchangeInput} />
+                <input type={props.inputData.type} id={props.inputData.id} key={props.inputData.id} value={props.valueInput} className={classNameInput} name={props.inputData.id} onChange={props.handleOnchangeInput} readOnly={props.isReadOnly} />
             </label>
         </div>
     );
@@ -176,7 +177,19 @@ function RenderProperties(props) {
         else {
             var valueInput = props.stateValues[element.id];
             var errorTitle = props.stateValues[element.errorTitleName];
-            inputs.push(<AdsAreaRenderInput key={element.id} inputData={element} valueInput={valueInput} errorTitle={errorTitle} handleOnchangeInput={props.handleOnchangeInput} />);
+            var isReadOnly = false;
+            if (element.id === "ma_dich_vu") {
+                isReadOnly = props.stateValues.ma_dich_vu_isReadOnly;
+            }
+            inputs.push(<AdsAreaRenderInput
+                key={element.id}
+                inputData={element}
+                valueInput={valueInput}
+                errorTitle={errorTitle}
+                isReadOnly={isReadOnly}
+
+                handleOnchangeInput={props.handleOnchangeInput}
+            />);
         }
     });
 
@@ -232,7 +245,7 @@ class AdsAreaCreatorForm extends Component {
             <div className='popup_inner adsarea_createform_size'>
                 <div>
                     <div>
-                        <a class="close popup-button-close" onClick={this.handleClosePopup}>×</a>
+                        <a class="close popup-button-close adsarea_margin_button-close" onClick={this.handleClosePopup}>×</a>
                         <h1>{this.props.titleForm}</h1>
                     </div>
                     <div key="left" className="adsarea_information_left">
@@ -436,11 +449,18 @@ class AdsAreaCreatorUpdater extends Component {
                     jsonState[element.id] = "";
                 }
             });
+
+            jsonState.ma_dich_vu_isReadOnly = false;
         }
         else {
             inputs.forEach(element => {
                 if (element.type === "combobox") {
-                    jsonState[element.id] = this.props.editContents[element.id];
+                    if(element.id === "loai_trang_ap_dung" || element.id === "loai_bai_dang_ap_dung"){
+                        jsonState[element.id] = this.props.editContents[element.id].key;
+                    }
+                    else{
+                        jsonState[element.id] = this.props.editContents[element.id];
+                    }
                 }
                 else if (element.type === "radio") {
                     var keySelectedItem = this.props.editContents[element.id];
@@ -459,6 +479,8 @@ class AdsAreaCreatorUpdater extends Component {
                     }
                 }
             });
+
+            jsonState.ma_dich_vu_isReadOnly = true;
         }
 
         return jsonState;
@@ -530,12 +552,21 @@ class AdsAreaCreatorUpdater extends Component {
         var isValid = this.CheckValid(state);
 
         if (isValid) {
+            var indexOfAppliedPage = state.AppliedPages.keys.indexOf(state.loai_trang_ap_dung);
+            var indexOfAppliedPostType = state.AppliedPostTypes.keys.indexOf(state.loai_bai_dang_ap_dung);
+
             var adsAreaContent = {
                 ma_dich_vu: state.ma_dich_vu,
                 ten_hien_thi: state.ten_hien_thi,
                 loai_quang_cao: state.loai_quang_cao,
-                loai_trang_ap_dung: state.loai_trang_ap_dung,
-                loai_bai_dang_ap_dung: state.loai_bai_dang_ap_dung,
+                loai_trang_ap_dung: {
+                    key: state.loai_trang_ap_dung,
+                    value: state.AppliedPages.values[indexOfAppliedPage]
+                },
+                loai_bai_dang_ap_dung: {
+                    key: state.loai_bai_dang_ap_dung,
+                    value: state.AppliedPostTypes.values[indexOfAppliedPostType]
+                },
                 kich_thuoc_vung: {
                     width: parseInt(state.ktv_chieu_rong),
                     height: parseInt(state.ktv_chieu_cao)
@@ -553,7 +584,7 @@ class AdsAreaCreatorUpdater extends Component {
                 so_luong_chu_xem_truoc: state.so_luong_chu_xem_truoc,
                 hien_thi_video_thay_the_anh: state.hien_thi_video_thay_the_anh
             };
-            console.log(adsAreaContent);
+
             if (this.props.modeAction === 'edit') {
                 return adsAreaContent;
             }
@@ -608,9 +639,9 @@ class AdsAreaCreatorUpdater extends Component {
                     }
                 });
         }).catch((e) => {
-            this.setState({
-                error_ma_dich_vu: "Mã này đã tồn tại!"
-            });
+            // this.setState({
+            //     error_ma_dich_vu: "Mã này đã tồn tại!"
+            // });
         });
     }
 
@@ -647,6 +678,7 @@ class AdsAreaCreatorUpdater extends Component {
                     stateValues={this.state}
                     adsAreaInformationInputs={adsAreaInformationInputs}
                     adsAreaDescriptionInputs={adsAreaDescriptionInputs}
+
                     handleClosePopup={this.props.closeCreatorPopup}
                     handleSubmit={this.handleSubmit}
                     handleUpdateState={this.handleUpdateState}

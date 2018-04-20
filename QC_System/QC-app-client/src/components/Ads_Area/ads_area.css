@@ -100,3 +100,8 @@
 .errorClass--text {
     border: 1px solid #d20f0f;
 }
+
+.adsarea_margin_button-close {
+    margin-right: 11%;
+    padding: 0;
+}
