@@ -101,10 +101,28 @@ class PriceFactor extends Component {
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
+
+        this._onKeyDown = this._onKeyDown.bind(this);
     }
 
     componentDidMount() {
         this.getPriceFactors();
+    }
+
+    _onKeyDown(e) {
+        if (e.key === "Escape") {
+            this.setState({
+                ShowCreatorUpdaterPopup: false
+            });
+        }
+    }
+
+    componentWillMount() {
+        document.addEventListener("keydown", this._onKeyDown);
+    }
+
+    componentWillUnmount() {
+        document.addEventListener("keydown", this._onKeyDown);
     }
 
     getPriceFactors() {
@@ -145,7 +163,6 @@ class PriceFactor extends Component {
         });
     }
 
-
     handleShowCreatorUpdaterPopup() {
         this.setState({
             ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup,
@@ -165,7 +182,7 @@ class PriceFactor extends Component {
 
     render() {
         return (
-            <div id="page-wrapper">
+            <div id="page-wrapper" onKeyDown={this.onKeyDown}>
                 <div className="row">
                     <div>
                         <HeadForm title={"chỉ số ảnh hưởng"} showCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup} />

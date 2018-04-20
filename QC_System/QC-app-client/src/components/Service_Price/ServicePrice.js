@@ -125,10 +125,27 @@ class ServicePrice extends Component {
         this.handleClosePopup = this.handleClosePopup.bind(this);
 
         this.OnchangeSort = this.OnchangeSort.bind(this);
+        this._onKeyDown = this._onKeyDown.bind(this);
     }
 
     componentDidMount() {
         this.getServicePrices();
+    }
+
+    _onKeyDown(e) {
+        if (e.key === "Escape") {
+            this.setState({
+                ShowCreatorUpdaterPopup: false
+            });
+        }
+    }
+
+    componentWillMount() {
+        document.addEventListener("keydown", this._onKeyDown);
+    }
+
+    componentWillUnmount() {
+        document.addEventListener("keydown", this._onKeyDown);
     }
 
     handleShowCreatorUpdaterPopup() {
@@ -242,7 +259,7 @@ class ServicePrice extends Component {
         }
 
         return (
-            <div id="page-wrapper">
+            <div id="page-wrapper" onKeyDown={this.onKeyDown}>
                 <div className="row">
                     <div>
                         <HeadForm title={"giá dịch vụ"}

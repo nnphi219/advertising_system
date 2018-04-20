@@ -180,11 +180,27 @@ class AdsArea extends Component {
     this.handleResetContentsState = this.handleResetContentsState.bind(this);
 
     this.OnchangeSort = this.OnchangeSort.bind(this);
-    this.onKeyDown = this.onKeyDown.bind(this);
+    this._onKeyDown = this._onKeyDown.bind(this);
   }
 
   componentDidMount() {
     this.getAdsAreas();
+  }
+
+  _onKeyDown(e) {
+    if (e.key === "Escape") {
+      this.setState({
+        ShowCreatorPopup: false
+      });
+    }
+  }
+
+  componentWillMount(){
+    document.addEventListener("keydown", this._onKeyDown);
+  }
+
+  componentWillUnmount(){
+    document.addEventListener("keydown", this._onKeyDown);
   }
 
   getAdsAreas() {
@@ -276,12 +292,6 @@ class AdsArea extends Component {
 
     this.setState(jsonStateSort);
     e.preventDefault();
-  }
-
-  onKeyDown(e) {
-    if (e.key === "Escape") {
-      this.handleShowCreatorPopup();
-    }
   }
 
   render() {

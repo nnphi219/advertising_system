@@ -224,7 +224,10 @@ class ServicePriceCreatorUpdaterForm extends Component {
     render() {
         return (
             <div className='popup_inner serviceprice_createform_size div_scroll_bar'>
-                <h1>{this.props.titleForm}</h1>
+                <div>
+                    <a class="close popup-button-close serviceprice_margin_button-close" onClick={this.handleClosePopup}>×</a>
+                    <h1>{this.props.titleForm}</h1>
+                </div>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}
                     OnChangeSelect={this.OnChangeSelect}

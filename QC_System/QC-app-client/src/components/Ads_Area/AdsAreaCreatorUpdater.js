@@ -3,6 +3,7 @@ import Request from 'superagent';
 import ColorPickerInput from '../share/color_picker_input';
 import UrlApi from '../share/UrlApi';
 import { RenderSelect, RenderInput } from '../share/InputsRender';
+import './ads_area.css';
 
 function TransferSizeToString(size) {
     return size.width + "x" + size.height;
@@ -244,7 +245,7 @@ class AdsAreaCreatorForm extends Component {
             <div className='popup_inner adsarea_createform_size'>
                 <div>
                     <div>
-                        <a class="close popup-button-close" onClick={this.handleClosePopup}>×</a>
+                        <a class="close popup-button-close adsarea_margin_button-close" onClick={this.handleClosePopup}>×</a>
                         <h1>{this.props.titleForm}</h1>
                     </div>
                     <div key="left" className="adsarea_information_left">
