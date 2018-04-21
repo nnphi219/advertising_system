@@ -4,11 +4,20 @@ import { UrlApi, UrlRedirect } from '../share/Url';
 import { RenderInput, RenderDate, RenderTextArea } from '../share/InputsRender';
 
 import './post.css';
+import Img from 'react-image';
 
 var rp = require('request-promise');
+var FileSaver = require('file-saver');
 
 class RenderProperties extends Component {
     render() {
+        var props = this.props;
+        var imageUrls = props.stateValues.imageUrls;
+        var renderImages = [];
+        imageUrls.forEach(imageUrl => {
+            renderImages.push(<Img key={imageUrl} src={imageUrl} style={{ marginRight: "5px" }} />);
+        });
+
         return (
             <div style={{ paddingLeft: "30px" }}>
                 <RenderInput
@@ -28,7 +37,16 @@ class RenderProperties extends Component {
                     className={"user--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
+                <div>
+                    <div>
+                        {"Hình ảnh"}
+                    </div>
+                    <div>
+                        <input type="file" id="file" ref="fileUploader" onChange={props.OnChangeImageFile} />
+                    </div>
 
+                    {renderImages}
+                </div>
                 <RenderTextArea
                     nameId={"noi_dung"}
                     title={"Nội dung"}
@@ -58,21 +76,23 @@ class PostCreatorUpdaterForm extends Component {
         this.props.UpdateState(jsonState);
     }
 
-    handleCancel(){
+    handleCancel() {
         window.location.href = UrlRedirect.Posts;
     }
 
     render() {
+        var props = this.props;
         return (
             <div>
                 <h1>{this.props.titleForm}</h1>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}
+                    OnChangeImageFile={props.OnChangeImageFile}
 
-                    stateValues={this.props.stateValues}
+                    stateValues={props.stateValues}
                 />
                 <div className="submit">
-                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
+                    <button className="btn btn-primary" onClick={props.handleSubmit}>Save</button>
                     <button className="btn btn-primary" onClick={this.handleCancel}>Cancel</button>
                 </div>
             </div>
@@ -88,11 +108,12 @@ class PostCreatorUpdater extends Component {
         this.SetInitState(jsonState);
         this.state = jsonState;
 
+        this.OnChangeImageFile = this.OnChangeImageFile.bind(this);
     }
 
     SetInitState(jsonState) {
         if (this.props.modeAction === "create") {
-
+            jsonState.imageUrls = [];
         }
         else if (this.props.modeAction === "edit") {
             var editContents = this.props.editContents;
@@ -100,8 +121,22 @@ class PostCreatorUpdater extends Component {
             jsonState.ma_bai_dang = editContents.ma_bai_dang;
             jsonState.tieu_de = editContents.tieu_de;
             jsonState.noi_dung = editContents.noi_dung;
-
+            jsonState.imageUrls = editContents.imageUrls;
         }
+    }
+
+    OnChangeImageFile(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        var file = event.target.files[0];
+
+        FileSaver.saveAs(file, '/images/' + file.name);
+
+        var imageUrls = this.state.imageUrls;
+        imageUrls.push('/images/' + file.name);
+        this.setState({
+            imageUrls: imageUrls
+        });
     }
 
     handleUpdateState(jsonState) {
@@ -115,7 +150,8 @@ class PostCreatorUpdater extends Component {
             ma_bai_dang: state.ma_bai_dang,
             tieu_de: state.tieu_de,
             noi_dung: state.noi_dung,
-            url: `/post/${state.ma_bai_dang}`
+            url: `/post/${state.ma_bai_dang}`,
+            imageUrls: state.imageUrls
         };
 
         return content;
@@ -123,7 +159,7 @@ class PostCreatorUpdater extends Component {
 
     CreatePost() {
         var content = this.GetModelStateJson();
-
+   
         var $this = this;
         var token = localStorage.getItem('x-auth');
 
@@ -148,7 +184,7 @@ class PostCreatorUpdater extends Component {
         var url = UrlApi.PostManagement + "/" + this.props.editContents._id;
         var $this = this;
         var token = localStorage.getItem('x-auth');
-        
+
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .set('x-auth', token)
@@ -176,6 +212,8 @@ class PostCreatorUpdater extends Component {
                     stateValues={this.state}
                     handleSubmit={this.handleSubmit.bind(this)}
                     UpdateState={this.handleUpdateState.bind(this)}
+
+                    OnChangeImageFile={this.OnChangeImageFile}
                 />
             </div>
         );
