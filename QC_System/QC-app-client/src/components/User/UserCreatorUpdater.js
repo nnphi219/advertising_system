@@ -69,7 +69,10 @@ class UserCreatorUpdaterForm extends Component {
     render() {
         return (
             <div className='popup_inner user_createform_size div_scroll_bar'>
-                <h1>{this.props.titleForm}</h1>
+                <div>
+                    <a class="close popup-button-close user_margin_button-close" onClick={this.handleClosePopup}>×</a>
+                    <h1>{this.props.titleForm}</h1>
+                </div>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}
 
@@ -161,7 +164,7 @@ class UserCreatorUpdater extends Component {
     }
 
     render() {
-        var titleForm = this.props.modeAction === "create" ? "Tạo chiến dịch tin đăng" : "Chỉnh sửa chiến dịch tin đăng";
+        var titleForm = this.props.modeAction === "create" ? "Tạo user" : "Chỉnh sửa user";
         return (
             <div className='popup'>
                 <UserCreatorUpdaterForm

@@ -17,6 +17,7 @@ import ErrorPage from './components/ErrorPage/ErrorPage';
 import PostTypeManagement from './components/PostTypes/PostTypeManagement';
 import { PostTypeCreator, PostTypeEditor } from './components/PostTypes/PostTypeCreatorUpdater';
 import PostTypeDetail from './components/PostTypes/PostTypeDetail';
+import Post_Campaign from './components/Post_Campaign/Post_Campaign';
 
 class Title extends Component {
     render() {
@@ -61,11 +62,15 @@ class App extends Component {
                         <Route exact={true} path={"/posttypes/:id"} component={PostTypeDetail} />
                         <Route exact={true} path={"/posttypes/create"} component={PostTypeCreator} />
                         <Route exact={true} path={"/posttypes/edit/:id"} component={PostTypeEditor} />
-                        
+
                         <Route exact={true} path={"/notfound"} component={ErrorPage} />
 
                         <Route path={"/title"} component={Title} />
                     </div>
+                </BrowserRouter>
+
+                <BrowserRouter>
+                    <Route exact={true} path={"/post-campaign"} component={Post_Campaign} />
                 </BrowserRouter>
             </div>
         );
