@@ -7,6 +7,7 @@ class RenderAPost extends Component {
     render() {
         var post = this.props.post;
         var imgUrl = post.imageUrls !== [] ? post.imageUrls[0] : "http://placehold.it/700x400";
+        console.log(imgUrl);
         return (
             <div className="col-lg-3 col-md-6 mb-4">
                 <div className="card h-100">
@@ -51,7 +52,6 @@ class Marketing extends Component {
 
         Request.get(UrlApi.Marketing)
             .then((res) => {
-                console.log(res.body);
                 this.setState({
                     postContents: res.body
                 });

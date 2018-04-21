@@ -28,9 +28,9 @@ chien dich tin dang
 
 
 
------------------> tao nut tat nhanh cho form
------------------> thieu kich hoat
------------------> mo ta cho cac truong cua cac bang
+-----------------> tao nut tat nhanh cho form --- done
+-----------------> thieu kich hoat --- done
+-----------------> mo ta cho cac truong cua cac bang 
 -----------------> tao work flow
 
 

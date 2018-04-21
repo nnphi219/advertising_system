@@ -58,7 +58,15 @@ class RegisterForm extends Component {
                         value={stateValues.passwordconfirm}
                         type={"password"}
                         className={"user--input"}
-                        OnChangeInput={this.props.OnChangeInput}submit
+                        OnChangeInput={this.props.OnChangeInput}
+                    />
+                    <RenderInput
+                        nameId={"UrlApi"}
+                        title={"Server Url"}
+                        value={stateValues.UrlApi}
+                        type={"text"}
+                        className={"user--input"}
+                        OnChangeInput={this.props.OnChangeInput}
                     />
                 </div>
                 <div className="register--submit">
@@ -80,7 +88,8 @@ class UserRegister extends Component {
             password: '',
             usernameError: '',
             emailError: '',
-            passwordError: ''
+            passwordError: '',
+            UrlApi: 'http://localhost:8081'
         };
 
         this.OnChangeInput = this.OnChangeInput.bind(this);

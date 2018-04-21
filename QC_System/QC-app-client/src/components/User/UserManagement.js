@@ -22,6 +22,7 @@ function RenderRow(props) {
                     nameId={props.trContent._id}
                     handleEditClick={props.handleEditClick}
                     handleDeleteClick={props.handleDeleteClick}
+                    ActiveIsNotShown={true}
                 />
             </td>
         </tr>
