@@ -1,4 +1,5 @@
 const hostNameServer = "http://localhost:8081";
+const QCSystem = "http://localhost:3000";
 
 export const UrlApi = {
     UserManagement: hostNameServer + "/users",
@@ -15,7 +16,7 @@ export const UrlApi = {
 
     PostTypes: hostNameServer + "/posttypes",
     ReadAPostType: hostNameServer + "/posttypes/check"
-}
+};
 
 export const UrlRedirect = {
     Users : '/users',
@@ -38,4 +39,8 @@ export const UrlRedirect = {
     EditPostType: '/posttypes/edit',
 
     NotFound: '/notfound'
-}
+};
+
+export const QCSytemUrl = {
+    Post_Campaign: QCSystem + "/post-campaign"
+};

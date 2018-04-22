@@ -8,6 +8,7 @@ import './price_factor.css';
 import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 import { DescriptionDetail } from '../share/CommonComponent';
+import { KHUNG_GIO } from '../share/constant';
 
 const loai_gia_tri_tang_them_theo_phan_tram = 1;
 const loai_gia_tri_tang_them_theo_gia_tri = 2;
@@ -53,6 +54,8 @@ class RenderProperties extends Component {
         var timeLog = this.TranserTimeLogToString(this.props.stateValues.khung_gio_ap_dung);
         var ServicePriceIdsKeys = this.props.stateValues.ServicePrices === undefined ? [] : this.props.stateValues.ServicePrices.list_ma_gia;
         var ServicePriceIdsValues = ServicePriceIdsKeys;
+
+        var array_khung_gio = KHUNG_GIO.slice();
 
         var arrayServiceTitles = [];
         var don_gia_co_ban = 0;
@@ -137,15 +140,15 @@ class RenderProperties extends Component {
                     (VND)
                     <input type="number" key={"don_gia_co_ban"} name={"don_gia_co_ban"} value={don_gia_co_ban} onChange={this.props.OnchangeBasicPrice} readOnly={true} className="pricefactor--input" style={{ width: "40%" }} />
                 </div>
-                <div>
-                    <label key={"khung_gio_ap_dung"} className="fullwidth">
-                        {"Khung giờ áp dụng"}
-                        <select name={"khung_gio_ap_dung"} id={"ma_gia"} key={"khung_gio_ap_dung"} value={timeLog} onChange={this.props.OnChangeSelect} className="pricefactor--select">
-                            <option value={"2h-4h"} >{"2h-4h"}</option>
-                            <option value={"4h-6h"} >{"4h-6h"}</option>
-                        </select>
-                    </label>
-                </div>
+                <RenderSelect
+                    nameId={"khung_gio_ap_dung"}
+                    title={"Khung giờ áp dụng"}
+                    keys={array_khung_gio}
+                    values={array_khung_gio}
+                    selectedValue={timeLog}
+                    OnChangeSelect={this.props.OnChangeSelect}
+                    className={"pricefactor--select"}
+                />
                 <div>
                     <div className="">
                         <label className="fullwidth">

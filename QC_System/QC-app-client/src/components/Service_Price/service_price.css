@@ -65,14 +65,14 @@
 }
 
 .serviceprice_createform_size {
-    left: 15%;
+    left: 10%;
     right: 15%;
-    top: 15%;
-    bottom: 25%;
+    top: 10%;
+    bottom: 10%;
     width: 70%;
-    height: 60%;
+    height: 80%;
 }
 
 .serviceprice_margin_button-close {
-    margin-right: 16%;
+    margin-right: 19%;
 }

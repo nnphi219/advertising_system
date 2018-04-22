@@ -28,21 +28,21 @@ class NavTopLinks extends Component {
         this.logout = this.logout.bind(this);
     }
 
-    GetCurrentUser(){
+    GetCurrentUser() {
         var $this = this;
 
         Request.get(UrlApi.UserAuthen)
-        .set('x-auth', localStorage.getItem('x-auth'))
-        .then((res) => {
-            $this.setState({
-                username: res.body.username
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .then((res) => {
+                $this.setState({
+                    username: res.body.username
+                });
             });
-        });
     }
 
     logout() {
         var token = localStorage.getItem('x-auth');
-        
+
         Request.delete(UrlApi.UserLogout)
             .set('x-auth', token)
             .end(function (err, res) {
@@ -130,6 +130,38 @@ class NavTopLinks extends Component {
 }
 
 class NavbarDefault extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isAdmin: false
+        }
+    }
+
+    componentDidMount() {
+        this.SetPermission();
+    }
+
+    SetPermission() {
+        var $this = this;
+
+        Request.get(UrlApi.UserAuthen)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .then((res) => {
+                if (res.body.user_type === "admin") {
+                    $this.setState({
+                        isAdmin: true
+                    });
+                }
+                else {
+                    $this.setState({
+                        isAdmin: false
+                    });
+                }
+
+            });
+    }
+
     render() {
         return (
             <div className="navbar-default sidebar" role="navigation">
@@ -138,9 +170,13 @@ class NavbarDefault extends Component {
                         <li>
                             <a href="/login"><i className="fa fa-dashboard fa-fw"></i>Login</a>
                         </li>
-                        <li>
-                            <a href="/users-management"><i className="fa fa-dashboard fa-fw"></i>Quản lý user</a>
-                        </li>
+                        {
+                            this.state.isAdmin ?
+                                <li>
+                                    <a href="/users-management"><i className="fa fa-dashboard fa-fw"></i>Quản lý user</a>
+                                </li>
+                                : null
+                        }
                         <li>
                             <a href="/ads-area"><i className="fa fa-dashboard fa-fw"></i>Vùng quảng cáo</a>
                         </li>

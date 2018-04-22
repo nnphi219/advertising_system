@@ -65,3 +65,7 @@
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
+
+.user_margin_button-close {
+    margin-right: 31%;
+}

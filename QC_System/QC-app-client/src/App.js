@@ -12,6 +12,7 @@ import PaymentManagement from './components/Payment_Management/PaymentManagement
 import UserManagement from './components/User/UserManagement';
 import UserLogin from './components/User/UserLogin';
 import UserRegister from './components/User/UserRegister';
+import XPostCampaign from './components/Post_Campaign_Management/XPostCampaign';
 
 class AdminTitle extends Component {
     render() {
@@ -63,6 +64,7 @@ export class AppAdmin extends Component {
                     
                     <Route exact={true} path={"/login"} component={UserLogin} />
                     <Route exact={true} path={"/register"} component={UserRegister} />
+                    <Route exact={true} path={"/post-campaign"} component={XPostCampaign} />
                     
                     <Route path={"/users-management"} component={UserManagement} />
                     <Route path={"/ads-area"} component={AdsArea} />

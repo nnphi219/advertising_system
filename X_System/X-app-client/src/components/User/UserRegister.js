@@ -58,7 +58,7 @@ class RegisterForm extends Component {
                         value={stateValues.passwordconfirm}
                         type={"password"}
                         className={"user--input"}
-                        OnChangeInput={this.props.OnChangeInput}submit
+                        OnChangeInput={this.props.OnChangeInput}
                     />
                 </div>
                 <div className="submit">

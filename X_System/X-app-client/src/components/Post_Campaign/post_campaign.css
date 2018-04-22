@@ -1,0 +1,9 @@
+.div_post_campaign {
+    min-height: 1000px;
+}
+
+.iframe_post_campaign {
+    width: 100%;
+    height: auto;
+    min-height: 1000px;
+}
