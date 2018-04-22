@@ -28,6 +28,13 @@ if (systemType === "x-system") {
 var logedIn = false;
 
 function ReactRender(haveLayout) {
+    var currentURL = window.location.href.replace('http://', '').replace('https://', '');
+    var currentPath = currentURL.split('/')[1];
+
+    if (haveLayout && currentPath === "post-campaign") {
+        haveLayout = false;
+    }
+
     haveLayout ?
         ReactDOM.render(<Layout />, window.document.getElementById('root'))
         : ReactDOM.render(<div id="body"></div>, window.document.getElementById('root'));

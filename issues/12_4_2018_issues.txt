@@ -39,3 +39,7 @@ trang ap dung quang cao va loai bai dang ap dung: lay api tu he thong x > x cung
 --- loai bai dang ap dung:(ma_loai_bai_dang_ap_dung, ten_loai_bai_dang_ap_dung)---> bat dong san, du an
 --- mở rộng: 3 cấp.
 
+------------ chien dich tin dang
+- create: he thong x goi iframe goi form tao chien dich tin dang cho user(params: x's admin's username)
+- read: call api of qc system(params: x's admin's username, accesstoken of xsystem's user)
+ 
