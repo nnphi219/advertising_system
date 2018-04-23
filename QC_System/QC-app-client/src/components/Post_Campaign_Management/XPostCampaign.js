@@ -9,18 +9,27 @@ import { TransferSelectInputKeyToValue } from '../share/Mapper';
 function RenderLeftForm(props) {
     var stateValues = props.stateValues;
 
-    var AdsAreaIdsKeys = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.keys;
-    var AdsAreaIdsValues = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.values;
-    var khung_gio_hien_thi = TransferTimeLogJsonToString(stateValues.khung_gio_hien_thi);
-    var PromotionIdsKeys = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.keys;
-    var PromotionIdsValues = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.values;
-    let PostIdKeys = stateValues.PostIds === undefined ? [] : stateValues.PostIds.keys;
-    let PostIdValues = stateValues.PostIds === undefined ? [] : stateValues.PostIds.values;
-    var trang_hien_thi = TransferSelectInputKeyToValue(
-        props.stateValues.trang_hien_thi,
-        ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
-        ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
-    );
+    // var AdsAreaIdsKeys = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.keys;
+    // var AdsAreaIdsValues = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.values;
+    var AdsAreaIdsKeys = [];
+    var AdsAreaIdsValues = [];
+    // var khung_gio_hien_thi = TransferTimeLogJsonToString(stateValues.khung_gio_hien_thi);
+    var khung_gio_hien_thi = '2h-4h';
+    // var PromotionIdsKeys = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.keys;
+    // var PromotionIdsValues = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.values;
+    var PromotionIdsKeys = [];
+    var PromotionIdsValues = [];
+    // let PostIdKeys = stateValues.PostIds === undefined ? [] : stateValues.PostIds.keys;
+    // let PostIdValues = stateValues.PostIds === undefined ? [] : stateValues.PostIds.values;
+    var PostIdKeys = [];
+    var PostIdValues = [];
+    // var trang_hien_thi = TransferSelectInputKeyToValue(
+    //     props.stateValues.trang_hien_thi,
+    //     ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
+    //     ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
+    // );
+    var stateValues = {};
+    var trang_hien_thi = "Trang chủ";
 
     return (
         <div className="post_campaign--left-form">
@@ -48,7 +57,7 @@ function RenderLeftForm(props) {
                 title={"Loại dịch vụ"}
                 keys={AdsAreaIdsKeys}
                 values={AdsAreaIdsValues}
-                selectedValue={props.stateValues.loai_dich_vu}
+                selectedValue={stateValues.loai_dich_vu}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}
             />
@@ -199,12 +208,11 @@ class RenderProperties extends Component {
         return (
             <div>
                 <div className="left_border">
-                    {/* <RenderLeftForm
+                    <RenderLeftForm
                         OnChangeInput={this.props.OnChangeInput}
                         OnchangeStartDate={this.props.OnchangeStartDate}
                         OnchangeEndDate={this.props.OnchangeEndDate}
-                    /> */}
-                    {"fef"}
+                    />
                 </div>
                 {/* <div className="vertical_line" style="height: 45px;"></div> */}
 
@@ -307,6 +315,255 @@ class PostCampaignCreatorUpdaterForm extends Component {
 }
 
 class XPostCampaign extends Component {
+    constructor(props) {
+        super(props);
+
+        var jsonState = {};
+        this.state = this.SetInitState(jsonState);
+        // this.GetAdsAreaInfos();
+        // this.GetPostId();
+        // this.GetPromotionIdInfos();
+    }
+
+    GetAdsAreaInfos() {
+        var $this = this;
+        Request.get(UrlApi.GetAdsAreaInfo)
+            .then((res) => {
+                var _ids = [];
+                var adsAreaIdkeys = [];
+                var adsAreaIdvalues = [];
+                var appliedPageTypeKeys = [];
+
+                res.body.map((adsArea) => {
+                    _ids.push(adsArea._id);
+                    adsAreaIdkeys.push(adsArea.ma_dich_vu);
+                    adsAreaIdvalues.push(adsArea.ten_hien_thi);
+                    appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
+                });
+
+                var jsonAdsAreaIds = {
+                    AdsAreaIds: {
+                        _ids: _ids,
+                        keys: adsAreaIdkeys,
+                        values: adsAreaIdvalues,
+                        appliedPageTypeKeys: appliedPageTypeKeys
+                    }
+                };
+                if (this.props.modeAction === "create") {
+                    jsonAdsAreaIds.ma_dich_vu = adsAreaIdkeys[0];
+                    jsonAdsAreaIds.trang_hien_thi = appliedPageTypeKeys[0];
+                }
+                $this.setState(jsonAdsAreaIds);
+            });
+    }
+
+    GetPromotionIdInfos() {
+        var $this = this;
+        Request.get(UrlApi.GetPromotionIdInfos)
+            .then((res) => {
+                var _ids = [];
+                var keys = [];
+                var values = [];
+
+                res.body.map((promotion) => {
+                    _ids.push(promotion._id);
+                    keys.push(promotion.ma_khuyen_mai);
+                    values.push(promotion.mo_ta);
+                });
+
+                var jsonPromotionIds = {
+                    PromotionIds: {
+                        _ids: _ids,
+                        keys: keys,
+                        values: values
+                    },
+
+                };
+                if (this.props.modeAction === "create") {
+                    jsonPromotionIds.ma_khuyen_mai = keys[0];
+                }
+
+                $this.setState(jsonPromotionIds);
+            });
+    }
+
+    GetPostId() {
+        // Hardcode here to test
+        this.setState({
+            PostIds: {
+                PostIdKeys: ["bd1", "bd2", "bd3"],
+                PostIdValues: ["Bài đăng 1", "Bài đăng 2", "Bài đăng 3"]
+            }
+        });
+    }
+
+    SetInitState(jsonState) {
+        jsonState.ma_chien_dich = "";
+        jsonState.ma_bai_dang = "bd1";
+        // jsonState.loai_dich_vu = "";
+        jsonState.co_che_hien_thi = "doc_quyen";
+        jsonState.tinh_gia_theo = "ngay";
+        jsonState.vi_tri = {
+            tinh: "",
+            quan_huyen: ""
+        }
+        jsonState.khung_gio_hien_thi = {
+            bat_dau: 2,
+            ket_thuc: 4
+        }
+        jsonState.thoi_luong_ap_dung = 1;
+        jsonState.don_gia_co_ban = 0;
+        var today = new Date();
+        let tomorrow = new Date();
+        tomorrow.setDate(today.getDate() + jsonState.thoi_luong_ap_dung);
+        jsonState.ngay_bat_dau = (today);
+        jsonState.ngay_ket_thuc = (tomorrow);
+        jsonState.thanh_tien = 0;
+        jsonState.tong_cong = 0;
+        jsonState.ma_khuyen_mai = "";
+
+        return jsonState;
+        if (this.props.modeAction === "create") {
+            jsonState.ma_chien_dich = "";
+            jsonState.ma_bai_dang = "bd1";
+            // jsonState.loai_dich_vu = "";
+            jsonState.co_che_hien_thi = "doc_quyen";
+            jsonState.tinh_gia_theo = "ngay";
+            jsonState.vi_tri = {
+                tinh: "",
+                quan_huyen: ""
+            }
+            jsonState.khung_gio_hien_thi = {
+                bat_dau: 2,
+                ket_thuc: 4
+            }
+            jsonState.thoi_luong_ap_dung = 1;
+            jsonState.don_gia_co_ban = 0;
+            var today = new Date();
+            let tomorrow = new Date();
+            tomorrow.setDate(today.getDate() + jsonState.thoi_luong_ap_dung);
+            jsonState.ngay_bat_dau = (today);
+            jsonState.ngay_ket_thuc = (tomorrow);
+            jsonState.thanh_tien = 0;
+            jsonState.tong_cong = 0;
+            jsonState.ma_khuyen_mai = "";
+        }
+        else {
+            var editContents = this.props.editContents;
+
+            jsonState.ma_chien_dich = editContents.ma_chien_dich;
+            jsonState.ma_bai_dang = editContents.ma_bai_dang;
+            jsonState.ma_khuyen_mai = editContents.ma_khuyen_mai;
+            jsonState.co_che_hien_thi = editContents.co_che_hien_thi;
+            jsonState.tinh_gia_theo = editContents.tinh_gia_theo;
+            jsonState.don_gia_co_ban = editContents.don_gia_co_ban;
+            jsonState.thanh_tien = editContents.thanh_tien;
+            jsonState.tong_cong = editContents.tong_cong;
+
+            jsonState.start_date = JsonDateToDate(editContents.start_date);
+            jsonState.end_date = JsonDateToDate(editContents.end_date);
+
+            var loai_nhan_to = editContents.loai_nhan_to;
+            if (loai_nhan_to !== undefined && loai_nhan_to !== null) {
+                if (loai_nhan_to.thoi_luong !== undefined && loai_nhan_to.thoi_luong !== null) {
+                    jsonState.lnt_thoi_luong = loai_nhan_to.thoi_luong;
+                }
+                jsonState.khung_gio_hien_thi = loai_nhan_to.khung_gio;
+                if (loai_nhan_to.vi_tri !== undefined && loai_nhan_to.vi_tri !== null) {
+                    jsonState.lnt_tinh = loai_nhan_to.vi_tri.tinh;
+                    jsonState.lnt_quan_huyen = loai_nhan_to.vi_tri.quan_huyen;
+                }
+            }
+        }
+
+        return jsonState;
+    }
+
+    handleUpdateState(jsonState) {
+        this.setState(jsonState);
+    }
+
+    GetModelStateJson() {
+        var state = this.state;
+        console.log(state);
+
+        var startDateJson = DateToJsonDate(state.ngay_bat_dau);
+        var endDateJson = DateToJsonDate(state.ngay_ket_thuc);
+
+        var loai_nhan_to = {
+            khung_gio: state.khung_gio_hien_thi
+        };
+        if (state.lnt_thoi_luong !== undefined && state.lnt_thoi_luong !== null && parseInt(state.lnt_thoi_luong) !== 0) {
+            loai_nhan_to.thoi_luong = state.lnt_thoi_luong;
+        }
+
+        var postCampaignContent = {
+            ma_chien_dich: state.ma_chien_dich,
+            ma_bai_dang: state.ma_bai_dang,
+            loai_dich_vu: state.loai_dich_vu,
+            trang_hien_thi: state.trang_hien_thi,
+            co_che_hien_thi: state.co_che_hien_thi,
+            tinh_gia_theo: state.tinh_gia_theo,
+            vi_tri: state.vi_tri,
+            khung_gio_hien_thi: state.khung_gio_hien_thi,
+            ngay_bat_dau: startDateJson,
+            ngay_ket_thuc: endDateJson,
+            don_gia_co_ban: state.don_gia_co_ban,
+            thanh_tien: state.thanh_tien,
+            ma_khuyen_mai: state.ma_khuyen_mai,
+            tong_cong: state.tong_cong,
+            dang_kich_hoat: 1
+        };
+
+        if (state.lnt_tinh !== undefined && state.lnt_tinh !== null && state.lnt_tinh !== "") {
+            var vi_tri = {};
+            vi_tri.tinh = state.lnt_tinh;
+            if (state.lnt_quan_huyen !== undefined && state.lnt_quan_huyen !== null && state.lnt_quan_huyen !== "") {
+                vi_tri.quan_huyen = state.lnt_quan_huyen;
+            }
+
+            postCampaignContent["vi_tri"] = vi_tri;
+        }
+
+        return postCampaignContent;
+    }
+
+    CreatePostCampaign() {
+        var postCampaignContent = this.GetModelStateJson();
+
+        var $this = this;
+        Request.post(UrlApi.PostCampaignManagement)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(postCampaignContent)
+            .end(function (err, res) {
+                $this.props.closeCreatorUpdaterPopup();
+                $this.props.resetContentState();
+            });
+    }
+
+    EditPostCampaign() {
+        var postCampaignContent = this.GetModelStateJson();
+
+        var url = UrlApi.PostCampaignManagement + "/" + this.props.editContents._id;
+        var $this = this;
+        Request.put(url)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(postCampaignContent)
+            .end(function (err, res) {
+                $this.props.closeCreatorUpdaterPopup();
+                $this.props.resetContentState();
+            });
+    }
+
+    handleSubmit() {
+        if (this.props.modeAction === "create") {
+            this.CreatePostCampaign();
+        }
+        else {
+            this.EditPostCampaign();
+        }
+    }
+
     render() {
         var urlParams = new URLSearchParams(window.location.search);
         var modeAction = urlParams.get('modeAction');
