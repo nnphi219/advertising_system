@@ -15,7 +15,7 @@ import './frontend/dist/css/sb-admin-2.css';
 import './frontend/vendor/morrisjs/morris.css';
 import './frontend/vendor/font-awesome/css/font-awesome.css';
 
-var AllowedUrl = ["login", "register"];
+var AllowedUrl = ["login", "register", "post-campaign"];
 var UnallowedUrlLogin = ["login", "register"];
 
 var currentUrl = window.location.href;
