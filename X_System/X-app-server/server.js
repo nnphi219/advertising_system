@@ -14,8 +14,8 @@ var cors = require('cors');
 var hostname = 'http://xsystem-server.localtest.me';
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://localhost:27017/x_system'); 
-mongoose.connect('mongodb://xsystemadmin:xsystemadmin@ds115569.mlab.com:15569/xsystem');
+mongoose.connect('mongodb://localhost:27017/x_system'); 
+// mongoose.connect('mongodb://xsystemadmin:xsystemadmin@ds115569.mlab.com:15569/xsystem');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,6 +27,7 @@ var postRoute = require('./api/routes/PostRoute');
 var pageRoute = require('./api/routes/PageRoute');
 var postTypeRoute = require('./api/routes/PostTypeRoute');
 var commonRoute = require('./api/routes/CommonRoute');
+var qcInteractionRoute = require('./api/routes/QCInteractionRoute');
 
 todoListRoute(app);
 userRoute(app);
@@ -34,6 +35,8 @@ postRoute(app);
 postTypeRoute(app);
 pageRoute(app);
 commonRoute(app);
+
+qcInteractionRoute(app);
 
 app.listen(port);
 

@@ -199,7 +199,7 @@ class ServicePrice extends Component {
         var url = UrlApi.ServicePrice + "/" + event.target.name;
         var $this = this;
         var updateServicePriceJson = {
-          trang_thai: parseInt(event.target.id) === 1 ? 0 : 1
+          trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
         };
     
         Request.put(url)

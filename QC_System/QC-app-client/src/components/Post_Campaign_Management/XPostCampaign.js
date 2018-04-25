@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import PostCampaignManagement from './PostCampaignManagement';
-import DatePicker from 'react-date-picker';
+import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 import { TransferSelectInputKeyToValue } from '../share/Mapper';
 
-function RenderLeftForm(props) {
+function RenderForm(props) {
     var stateValues = props.stateValues;
 
     // var AdsAreaIdsKeys = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.keys;
@@ -32,15 +31,15 @@ function RenderLeftForm(props) {
     var trang_hien_thi = "Trang chủ";
 
     return (
-        <div className="post_campaign--left-form">
-            <RenderInput
+        <div>
+            {/* <RenderInput
                 nameId={"ma_chien_dich"}
                 title={"Mã chiến dịch"}
                 type={"text"}
                 value={stateValues.ma_chien_dich}
-                className={"post_campaign--input"}
+                className={"x_post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
-            />
+            /> */}
 
             <RenderSelect
                 nameId={"ma_bai_dang"}
@@ -67,7 +66,7 @@ function RenderLeftForm(props) {
                 title={"Trang hiển thị"}
                 type={"text"}
                 value={trang_hien_thi}
-                className={"post--input"}
+                className={"x_post_campaign--input"}
                 isReadOnly={1}
                 OnChangeInput={props.OnChangeInput}
             />
@@ -107,7 +106,7 @@ function RenderLeftForm(props) {
                 title={"Tỉnh thành"}
                 value={stateValues.lnt_tinh}
                 type={"input"}
-                className={"post_campaign--input"}
+                className={"x_post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
             />
 
@@ -116,7 +115,7 @@ function RenderLeftForm(props) {
                 title={"Quận huyện"}
                 value={stateValues.lnt_quan_huyen}
                 type={"input"}
-                className={"post_campaign--input"}
+                className={"x_post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
             />
 
@@ -133,7 +132,7 @@ function RenderLeftForm(props) {
                 title={"Thời lượng áp dụng"}
                 value={stateValues.thoi_luong_ap_dung}
                 type={"number"}
-                className={"post_campaign--input"}
+                className={"x_post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
                 isReadOnly={1}
             />
@@ -151,7 +150,7 @@ function RenderLeftForm(props) {
                 title={"Đơn giá cơ bản"}
                 value={stateValues.don_gia_co_ban}
                 type={"number"}
-                className={"post_campaign--input"}
+                className={"x_post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
             />
 
@@ -160,7 +159,7 @@ function RenderLeftForm(props) {
                 title={"Thành tiền"}
                 value={stateValues.thanh_tien}
                 type={"number"}
-                className={"post_campaign--input"}
+                className={"x_post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
                 isReadOnly={1}
             />
@@ -180,7 +179,7 @@ function RenderLeftForm(props) {
                 title={"Tổng cộng"}
                 value={stateValues.tong_cong}
                 type={"number"}
-                className={"post_campaign--input"}
+                className={"x_post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
                 isReadOnly={1}
             />
@@ -206,20 +205,27 @@ function RenderRightForm(props) {
 class RenderProperties extends Component {
     render() {
         return (
-            <div>
-                <div className="left_border">
-                    <RenderLeftForm
+            <div className="x_post_campaign">
+                <div>
+                    <h2>{"Tạo chiến dịch tin đăng"}</h2>
+                </div>
+                <div className="x_post_campaign_body">
+                    <RenderForm
                         OnChangeInput={this.props.OnChangeInput}
                         OnchangeStartDate={this.props.OnchangeStartDate}
                         OnchangeEndDate={this.props.OnchangeEndDate}
                     />
+                    <div className="submit">
+                        <button className="btn btn-primary">Save</button>
+                        <button className="btn btn-primary">Cancel</button>
+                    </div>
                 </div>
                 {/* <div className="vertical_line" style="height: 45px;"></div> */}
 
-                <div className="right_border">
+                {/* <div className="right_border">
                     <RenderRightForm
                     />
-                </div>
+                </div> */}
             </div>
         );
     }
@@ -295,21 +301,11 @@ class PostCampaignCreatorUpdaterForm extends Component {
 
     render() {
         return (
-            <div>
-                <div>
-                    <RenderProperties
-                        OnChangeInput={this.OnChangeInput}
-                        OnchangeStartDate={this.OnchangeStartDate}
-                        OnchangeEndDate={this.OnchangeEndDate}
-                    />
-                </div>
-                <div>
-                    <div className="submit">
-                        <button className="btn btn-primary">Save</button>
-                        <button className="btn btn-primary">Cancel</button>
-                    </div>
-                </div>
-            </div>
+            <RenderProperties
+                OnChangeInput={this.OnChangeInput}
+                OnchangeStartDate={this.OnchangeStartDate}
+                OnchangeEndDate={this.OnchangeEndDate}
+            />
         );
     }
 }
@@ -318,42 +314,84 @@ class XPostCampaign extends Component {
     constructor(props) {
         super(props);
 
-        var jsonState = {};
+        var urlParams = new URLSearchParams(window.location.search);
+        var modeAction = urlParams.get('modeAction');
+        var XAdminUsername = urlParams.get('AdminUserAuthenticate');
+        var USerOfXSysyemAccessToken = urlParams.get('userAccessToken');
+
+        var jsonState = {
+            modeAction,
+            XAdminUsername,
+            USerOfXSysyemAccessToken
+        };
+
         this.state = this.SetInitState(jsonState);
-        // this.GetAdsAreaInfos();
-        // this.GetPostId();
-        // this.GetPromotionIdInfos();
     }
 
-    GetAdsAreaInfos() {
+    componentDidMount(){
+        var modeAction = this.state.modeAction;
+        var XAdminUsername = this.state.XAdminUsername;
+        var USerOfXSysyemAccessToken = this.state.USerOfXSysyemAccessToken;
+        var jsonSetInfosOfUser = {};
+
         var $this = this;
-        Request.get(UrlApi.GetAdsAreaInfo)
+        this.GetInfosByUsernameOfQCSystem(jsonSetInfosOfUser, XAdminUsername)
+            .then((jsonSetInfosOfUser) => {
+                return this.GetPostsOfXsystemByUserToken(jsonSetInfosOfUser, jsonSetInfosOfUser.XsystemUrlApi, USerOfXSysyemAccessToken);
+            }).then((jsonSetInfosOfUser) => {
+                $this.setState(jsonSetInfosOfUser);
+            });
+    }
+
+    GetAdsAreaInfos(jsonSetInfosOfUser, adsAreas) {
+        var _ids = [];
+        var keys = [];
+        var values = [];
+        var appliedPageTypeKeys = [];
+
+        adsAreas.map((adsArea) => {
+            _ids.push(adsArea._id);
+            keys.push(adsArea.ma_dich_vu);
+            values.push(adsArea.ten_hien_thi);
+            appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
+        });
+
+        jsonSetInfosOfUser.AdsAreaIds = {
+            _ids,
+            keys,
+            values,
+            appliedPageTypeKeys
+        };
+
+        if (this.props.modeAction === "create") {
+            jsonSetInfosOfUser.ma_dich_vu = keys[0];
+            jsonSetInfosOfUser.trang_hien_thi = appliedPageTypeKeys[0];
+        }
+
+        return jsonSetInfosOfUser;
+    }
+
+    GetPostsOfXsystemByUserToken(jsonSetInfosOfUser, XsystemUrlApi, USerOfXSysyemAccessToken) {
+        return Request.get(XsystemUrlApi + "/getPostByUserToken")
+            .set('xsystem-auth', USerOfXSysyemAccessToken)
             .then((res) => {
-                var _ids = [];
-                var adsAreaIdkeys = [];
-                var adsAreaIdvalues = [];
-                var appliedPageTypeKeys = [];
+                jsonSetInfosOfUser.posts = res.body;
+                return jsonSetInfosOfUser;
+            });
+    }
 
-                res.body.map((adsArea) => {
-                    _ids.push(adsArea._id);
-                    adsAreaIdkeys.push(adsArea.ma_dich_vu);
-                    adsAreaIdvalues.push(adsArea.ten_hien_thi);
-                    appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
-                });
+    GetInfosByUsernameOfQCSystem(jsonSetInfosOfUser, XAdminUsername) {
+        return Request.get(UrlApi.GetInfosByUserName)
+            .set('Username', XAdminUsername)
+            .then((res) => {
+                var infos = res.body;
+                var user = infos.user;
 
-                var jsonAdsAreaIds = {
-                    AdsAreaIds: {
-                        _ids: _ids,
-                        keys: adsAreaIdkeys,
-                        values: adsAreaIdvalues,
-                        appliedPageTypeKeys: appliedPageTypeKeys
-                    }
-                };
-                if (this.props.modeAction === "create") {
-                    jsonAdsAreaIds.ma_dich_vu = adsAreaIdkeys[0];
-                    jsonAdsAreaIds.trang_hien_thi = appliedPageTypeKeys[0];
-                }
-                $this.setState(jsonAdsAreaIds);
+                jsonSetInfosOfUser.XsystemUrlApi = user.UrlApi;
+
+                jsonSetInfosOfUser = this.GetAdsAreaInfos(jsonSetInfosOfUser, infos.adsAreaInfos);
+
+                return jsonSetInfosOfUser;
             });
     }
 
@@ -565,10 +603,7 @@ class XPostCampaign extends Component {
     }
 
     render() {
-        var urlParams = new URLSearchParams(window.location.search);
-        var modeAction = urlParams.get('modeAction');
-        var XAdminUsername = urlParams.get('AdminUserAuthenticate');
-        var USerOfXSysyemAccessToken = urlParams.get('userAccessToken');
+        console.log(this.state);
         return (
             <PostCampaignCreatorUpdaterForm
             />

@@ -1,35 +1,40 @@
+// import { hostname } from "os";
+
 const HOST = "localhost";
 const PORT = "8080";
-const hostName = "http://localhost:8080";
-const hostNameXSystem = "http://localhost:8081";
+const hostNameServer = "http://localhost:8080";
+const hostNameXSystemServer = "http://localhost:8081";
 
 export const XsystemUrlApi = {
-    GetPages: hostNameXSystem + "getPages",
-    GetPostTypes: hostNameXSystem + "getPostTypes"
+    GetPages: hostNameXSystemServer + "/getPages",
+    GetPostTypes: hostNameXSystemServer + "/getPostTypes",
+    GetPostByUserToken: hostNameXSystemServer + "/getPostByUserToken"
 }
 
 const UrlApi = {
-    AdsArea: hostName + "/adsareas",
-    ReadA_AdsArea: hostName + "/adsareas/check",
-    GetAdsAreaInfo: hostName + "/getadsAreasInfo",
+    AdsArea: hostNameServer + "/adsareas",
+    ReadA_AdsArea: hostNameServer + "/adsareas/check",
+    GetAdsAreaInfo: hostNameServer + "/getadsAreasInfo",
+    GetAdsAreaInfoByUsername: hostNameServer + "/getadsAreaInfoByUserName",
+    GetInfosByUserName: hostNameServer + "/getInfosByUserName",
 
-    PriceFactor: hostName + "/pricefactors",
-    ReadA_PriceFactor: hostName + "/pricefactors/check",
+    PriceFactor: hostNameServer + "/pricefactors",
+    ReadA_PriceFactor: hostNameServer + "/pricefactors/check",
 
-    ServicePrice: hostName + "/serviceprices",
-    ReadA_ServicePrice: hostName + "/serviceprices/check",
-    GetServicePriceIdInfo: hostName + "/getservicePricesIdInfo",
+    ServicePrice: hostNameServer + "/serviceprices",
+    ReadA_ServicePrice: hostNameServer + "/serviceprices/check",
+    GetServicePriceIdInfo: hostNameServer + "/getservicePricesIdInfo",
 
-    PromotionManagement: hostName + "/promotionmanagements",
-    GetPromotionIdInfos: hostName + "/getPromotionsIdInfo",
-    ReadA_Promotion: hostName + "/promotionmanagements/check",
+    PromotionManagement: hostNameServer + "/promotionmanagements",
+    GetPromotionIdInfos: hostNameServer + "/getPromotionsIdInfo",
+    ReadA_Promotion: hostNameServer + "/promotionmanagements/check",
 
-    PostCampaignManagement: hostName + "/postcampaignmanagements",
+    PostCampaignManagement: hostNameServer + "/postcampaignmanagements",
 
-    UserManagement: hostName + "/users",
-    UserAuthen: hostName + "/users/me",
-    UserLogin: hostName + "/users/login",
-    UserLogout: hostName + "/users/me/token",
+    UserManagement: hostNameServer + "/users",
+    UserAuthen: hostNameServer + "/users/me",
+    UserLogin: hostNameServer + "/users/login",
+    UserLogout: hostNameServer + "/users/me/token",
 
     PostManagement: `http://${HOST}:${PORT}/postmanagement`,
     Upload: `http://${HOST}:${PORT}/postmanagement/upload`

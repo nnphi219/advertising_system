@@ -33,7 +33,22 @@ var authenticateAdmin = (req, res, next) => {
   });
 };
 
+var authenticateQCSystem = (req, res, next) => {
+  var token = req.header('xsystem-auth');
+ 
+  User.findByToken(token).then((user) => {
+    if (!user) {
+      return Promise.reject();
+    }
+
+    req.user = user;
+    req.token = token;
+    next();
+  }).catch((e) => {
+    res.status(401).send();
+  });
+};
 
 
 
-module.exports = { authenticate, authenticateAdmin };
+module.exports = { authenticate, authenticateAdmin, authenticateQCSystem };

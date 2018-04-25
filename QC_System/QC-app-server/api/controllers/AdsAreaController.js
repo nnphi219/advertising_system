@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
     AdsArea = mongoose.model('AdsAreas');
 
 exports.list_all_adsAreas = function (req, res) {
-    AdsArea.find({nguoi_tao: req.user.username}, function (err, adsArea) {
+    AdsArea.find({ nguoi_tao: req.user.username }, function (err, adsArea) {
         if (err) {
             res.send(err);
         }
@@ -25,15 +25,29 @@ exports.read_a_adsArea_by_adsAreaId = function (req, res) {
 };
 
 exports.read_adsArea_Info = function (req, res) {
-    AdsArea.find({nguoi_tao: req.user.username}, function (err, adsAreas) {
+    AdsArea.find({ nguoi_tao: req.user.username }, function (err, adsAreas) {
         if (err) {
             res.send(err);
         }
         else {
             var adsareaIdInfo = adsAreas.map((adsArea) =>
-             _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung', 'loai_quang_cao'])
+                _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung', 'loai_quang_cao'])
             );
             res.json(adsareaIdInfo);
+        }
+    });
+};
+
+exports.read_adsArea_infos_by_username = function(username, next) {
+    AdsArea.find({ nguoi_tao: username }, function (err, adsAreas) {
+        if (err) {
+            next(null);
+        }
+        else {
+            var adsareaIdInfo = adsAreas.map((adsArea) =>
+                _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung', 'loai_quang_cao'])
+            );
+            next(adsareaIdInfo);
         }
     });
 };

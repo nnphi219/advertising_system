@@ -1,18 +1,12 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 import { DescriptionDetail } from '../share/CommonComponent';
 
 class RenderProperties extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-        var props = this.props;
         var stateValues = this.props.stateValues;
         var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
         var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
@@ -262,7 +256,7 @@ class PromotionCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (parseInt(state.gia_tri) <= 0) {
+        if (parseInt(state.gia_tri, 10) <= 0) {
             jsonError.error_gia_tri = "Yêu cầu lớn hơn 0";
             isValid = false;
         }

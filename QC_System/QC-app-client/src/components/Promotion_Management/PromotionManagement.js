@@ -14,7 +14,7 @@ function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
     var muc_gia_ap_dung = props.trContent.muc_gia_ap_dung;
-    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia) === 1 ? "%" : "VND");
+    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia, 10) === 1 ? "%" : "VND");
 
     var start_date = props.trContent.start_date;
     var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;
@@ -178,7 +178,7 @@ class PromotionManagement extends Component {
         var url = UrlApi.PromotionManagement + "/" + event.target.name;
         var $this = this;
         var updatePromotionJson = {
-          trang_thai: parseInt(event.target.id) === 1 ? 0 : 1
+          trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
         };
     
         Request.put(url)

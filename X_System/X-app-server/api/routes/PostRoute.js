@@ -1,5 +1,5 @@
 'use strict';
-var { authenticate } = require('../../middleware/authenticate');
+var { authenticate, authenticateQCSystem } = require('../../middleware/authenticate');
 
 module.exports = function(app) {
     var postController = require('../controllers/PostController');
@@ -18,4 +18,7 @@ module.exports = function(app) {
 
     app.route('/marketing')
         .get(postController.list_all_posts_for_marketing);
+
+    app.route('/getPostByUserToken')
+        .get(authenticateQCSystem, postController.list_all_posts);
 };

@@ -1,0 +1,8 @@
+------------ chien dich tin dang
+- create: he thong x goi iframe goi form tao chien dich tin dang cho user(params: x's admin's username)
+- read: call api of qc system(params: x's admin's username, accesstoken of xsystem's user)
+
+
+--- lay ma bai dang tu he thong xsystem
+--- loai dich vu(ma vung quang cao) -- done
+tham khao https://batdongsan.com.vn/dang-tin-rao-vat-ban-nha-dat

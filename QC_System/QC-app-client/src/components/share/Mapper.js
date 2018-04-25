@@ -9,7 +9,7 @@ export function DateToJsonDate(date) {
 }
 
 export function JsonDateToDate(jsonDate) {
-    var date = new Date(parseInt(jsonDate.year), parseInt(jsonDate.month) - 1, parseInt(jsonDate.day), null, null, null, null);
+    var date = new Date(parseInt(jsonDate.year, 10), parseInt(jsonDate.month, 10) - 1, parseInt(jsonDate.day, 10), null, null, null, null);
     return date;
 }
 
@@ -67,22 +67,22 @@ export function TransferSelectInputKeyToValue(value, keys, values) {
 // ---------------------- sort
 
 export function JsonSort(data, keys, isASC) {
-    if(keys === ''){
+    if (keys === '') {
         return data;
     }
 
     var keyArr = keys.split('.');
 
-    return data.sort(function(a, b) {
-        var x = a; 
+    return data.sort(function (a, b) {
+        var x = a;
         var y = b;
         keyArr.forEach(key => {
-            x = (x === undefined)? undefined: x[key];
-            y = (y === undefined)? undefined: y[key];
+            x = (x === undefined) ? undefined : x[key];
+            y = (y === undefined) ? undefined : y[key];
         });
 
-        if(x !== undefined && y === undefined){
-            if(isASC) {
+        if (x !== undefined && y === undefined) {
+            if (isASC) {
                 return 1;
             }
             else {
@@ -90,8 +90,8 @@ export function JsonSort(data, keys, isASC) {
             }
         }
 
-        if(x === undefined && y !== undefined){
-            if(isASC) {
+        if (x === undefined && y !== undefined) {
+            if (isASC) {
                 return -1;
             }
             else {
@@ -99,7 +99,7 @@ export function JsonSort(data, keys, isASC) {
             }
         }
 
-        if(isASC) {
+        if (isASC) {
             { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
         }
         else {
@@ -108,17 +108,17 @@ export function JsonSort(data, keys, isASC) {
     });
 };
 
-export function JsonSortDateType(data, keyDate, isASC){
-    if(keyDate === ''){
+export function JsonSortDateType(data, keyDate, isASC) {
+    if (keyDate === '') {
         return data;
     }
 
-    return data.sort(function(a, b) {
-        var x = a[keyDate]; 
+    return data.sort(function (a, b) {
+        var x = a[keyDate];
         var y = b[keyDate];
 
-        if(x !== undefined && y === undefined){
-            if(isASC) {
+        if (x !== undefined && y === undefined) {
+            if (isASC) {
                 return 1;
             }
             else {
@@ -126,8 +126,8 @@ export function JsonSortDateType(data, keyDate, isASC){
             }
         }
 
-        if(x === undefined && y !== undefined){
-            if(isASC) {
+        if (x === undefined && y !== undefined) {
+            if (isASC) {
                 return -1;
             }
             else {
@@ -138,7 +138,7 @@ export function JsonSortDateType(data, keyDate, isASC){
         x = JsonDateToDate(x);
         y = JsonDateToDate(y);
 
-        if(isASC) {
+        if (isASC) {
             { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
         }
         else {

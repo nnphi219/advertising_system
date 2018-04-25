@@ -170,7 +170,7 @@ class PriceFactor extends Component {
         var url = UrlApi.PriceFactor + "/" + event.target.name;
         var $this = this;
         var updatePriceFactorJson = {
-          trang_thai: parseInt(event.target.id) === 1 ? 0 : 1
+          trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
         };
     
         Request.put(url)

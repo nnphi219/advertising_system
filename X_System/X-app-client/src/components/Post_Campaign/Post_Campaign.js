@@ -4,19 +4,19 @@ import "./post_campaign.css";
 
 import IframeComm from "react-iframe-comm";
 
-// class Post_Campaign extends Component {
-//     render() {
-//         return (
-//             <div className="div_post_campaign">
-//                 <iframe className="iframe_post_campaign" src={QCSytemUrl.Post_Campaign}>
-//                     <p>Your browser does not support iframes.</p>
-//                 </iframe>
-//             </div>
-//         );
-//     }
-// }
+class Post_Campaign extends Component {
+    render() {
+        return (
+            <div className="div_post_campaign">
+                <iframe className="iframe_post_campaign" src={QCSytemUrl.Post_Campaign}>
+                    <p>Your browser does not support iframes.</p>
+                </iframe>
+            </div>
+        );
+    }
+}
 
-const Post_Campaign = ({}) => {
+const test = ({}) => {
  
     // the html attributes to create the iframe with 
     // make sure you use camelCase attribute names 
