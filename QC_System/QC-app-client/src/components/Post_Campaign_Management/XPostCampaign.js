@@ -8,20 +8,19 @@ import { TransferSelectInputKeyToValue } from '../share/Mapper';
 function RenderForm(props) {
     var stateValues = props.stateValues;
 
-    // var AdsAreaIdsKeys = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.keys;
-    // var AdsAreaIdsValues = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.values;
-    var AdsAreaIdsKeys = [];
-    var AdsAreaIdsValues = [];
+    var AdsAreaIdsKeys = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.keys;
+    var AdsAreaIdsValues = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.values;
+
     // var khung_gio_hien_thi = TransferTimeLogJsonToString(stateValues.khung_gio_hien_thi);
     var khung_gio_hien_thi = '2h-4h';
     // var PromotionIdsKeys = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.keys;
     // var PromotionIdsValues = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.values;
     var PromotionIdsKeys = [];
     var PromotionIdsValues = [];
-    // let PostIdKeys = stateValues.PostIds === undefined ? [] : stateValues.PostIds.keys;
-    // let PostIdValues = stateValues.PostIds === undefined ? [] : stateValues.PostIds.values;
-    var PostIdKeys = [];
-    var PostIdValues = [];
+
+    var PostIdKeys = stateValues.XSystemPosts === undefined ? [] : stateValues.XSystemPosts.keys;
+    var PostIdValues = PostIdKeys;
+
     // var trang_hien_thi = TransferSelectInputKeyToValue(
     //     props.stateValues.trang_hien_thi,
     //     ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
@@ -204,6 +203,7 @@ function RenderRightForm(props) {
 
 class RenderProperties extends Component {
     render() {
+        var props = this.props;
         return (
             <div className="x_post_campaign">
                 <div>
@@ -211,9 +211,11 @@ class RenderProperties extends Component {
                 </div>
                 <div className="x_post_campaign_body">
                     <RenderForm
-                        OnChangeInput={this.props.OnChangeInput}
-                        OnchangeStartDate={this.props.OnchangeStartDate}
-                        OnchangeEndDate={this.props.OnchangeEndDate}
+                        OnChangeInput={props.OnChangeInput}
+                        OnchangeStartDate={props.OnchangeStartDate}
+                        OnchangeEndDate={props.OnchangeEndDate}
+
+                        stateValues={props.stateValues}
                     />
                     <div className="submit">
                         <button className="btn btn-primary">Save</button>
@@ -242,7 +244,6 @@ class PostCampaignCreatorUpdaterForm extends Component {
     }
 
     OnKeyDown(event) {
-        // console.log(event);
         if (event.keyCode === 27) {
             //Do whatever when esc is pressed
             this.props.handleClosePopup();
@@ -282,7 +283,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
 
         let ngay_bat_dau = this.props.stateValues.ngay_bat_dau;
         let thoi_luong = new Date(date - ngay_bat_dau).getDate();
-        console.log(thoi_luong);
+
         if (parseInt(date.getTime() - ngay_bat_dau.getTime()) >= 0) {
             var jsonState = { "ngay_ket_thuc": date, "thoi_luong_ap_dung": thoi_luong };
             this.props.UpdateState(jsonState);
@@ -300,11 +301,13 @@ class PostCampaignCreatorUpdaterForm extends Component {
     }
 
     render() {
+        var props = this.props;
         return (
             <RenderProperties
                 OnChangeInput={this.OnChangeInput}
                 OnchangeStartDate={this.OnchangeStartDate}
                 OnchangeEndDate={this.OnchangeEndDate}
+                stateValues={props.stateValues}
             />
         );
     }
@@ -328,7 +331,7 @@ class XPostCampaign extends Component {
         this.state = this.SetInitState(jsonState);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         var modeAction = this.state.modeAction;
         var XAdminUsername = this.state.XAdminUsername;
         var USerOfXSysyemAccessToken = this.state.USerOfXSysyemAccessToken;
@@ -375,7 +378,21 @@ class XPostCampaign extends Component {
         return Request.get(XsystemUrlApi + "/getPostByUserToken")
             .set('xsystem-auth', USerOfXSysyemAccessToken)
             .then((res) => {
-                jsonSetInfosOfUser.posts = res.body;
+                var _ids = [];
+                var keys = [];
+
+                var xSystemPosts = res.body;
+
+                xSystemPosts.map((xSystemPost) => {
+                    _ids.push(xSystemPost._id);
+                    keys.push(xSystemPost.ma_bai_dang);
+                });
+
+                jsonSetInfosOfUser.XSystemPosts = {
+                    _ids,
+                    keys
+                };
+
                 return jsonSetInfosOfUser;
             });
     }
@@ -423,16 +440,6 @@ class XPostCampaign extends Component {
 
                 $this.setState(jsonPromotionIds);
             });
-    }
-
-    GetPostId() {
-        // Hardcode here to test
-        this.setState({
-            PostIds: {
-                PostIdKeys: ["bd1", "bd2", "bd3"],
-                PostIdValues: ["Bài đăng 1", "Bài đăng 2", "Bài đăng 3"]
-            }
-        });
     }
 
     SetInitState(jsonState) {
@@ -523,7 +530,6 @@ class XPostCampaign extends Component {
 
     GetModelStateJson() {
         var state = this.state;
-        console.log(state);
 
         var startDateJson = DateToJsonDate(state.ngay_bat_dau);
         var endDateJson = DateToJsonDate(state.ngay_ket_thuc);
@@ -603,9 +609,9 @@ class XPostCampaign extends Component {
     }
 
     render() {
-        console.log(this.state);
         return (
             <PostCampaignCreatorUpdaterForm
+                stateValues={this.state}
             />
         );
     }
