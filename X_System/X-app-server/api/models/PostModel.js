@@ -28,6 +28,7 @@ var PostSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    ma_loai_bai_dang: String,
     nguoi_tao: {
         type: String,
         require: true

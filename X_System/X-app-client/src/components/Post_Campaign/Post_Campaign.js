@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import {QCSytemUrl} from '../share/Url';
+import { QCSytemUrl } from '../share/Url';
 import "./post_campaign.css";
 
 import IframeComm from "react-iframe-comm";
+import { UsernameOnQcSystem } from '../share/CommonProperty';
 
 class Post_Campaign extends Component {
     render() {
+        var urlIFrame = QCSytemUrl.Post_Campaign;
+        urlIFrame += "?AdminUserAuthenticate=" + UsernameOnQcSystem;
+        urlIFrame += "&userAccessToken=" + localStorage.getItem('x-auth');
+        urlIFrame += "&modeAction=create";
+
         return (
             <div className="div_post_campaign">
-                <iframe className="iframe_post_campaign" src={QCSytemUrl.Post_Campaign}>
+                <iframe className="iframe_post_campaign" src={urlIFrame}>
                     <p>Your browser does not support iframes.</p>
                 </iframe>
             </div>
@@ -16,8 +22,8 @@ class Post_Campaign extends Component {
     }
 }
 
-const test = ({}) => {
- 
+const test = ({ }) => {
+
     // the html attributes to create the iframe with 
     // make sure you use camelCase attribute names 
     const attributes = {
@@ -26,21 +32,21 @@ const test = ({}) => {
         height: "175",
         frameBorder: 1, // show frame border just for fun... 
     };
- 
+
     // the postMessage data you want to send to your iframe 
     // it will be send after the iframe has loaded 
     const postMessageData = "hello iframe";
- 
+
     // parent received a message from iframe 
     const onReceiveMessage = () => {
         console.log("onReceiveMessage");
     };
- 
+
     // iframe has loaded 
     const onReady = () => {
         console.log("onReady");
     };
- 
+
     return (
         <IframeComm
             attributes={attributes}

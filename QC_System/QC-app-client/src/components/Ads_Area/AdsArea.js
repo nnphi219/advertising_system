@@ -30,6 +30,7 @@ function RenderRow(props) {
     <tr>
       <td>{props.trContentAdsArea.ma_dich_vu}</td>
       <td>{props.trContentAdsArea.ten_hien_thi}</td>
+      <td>{props.trContentAdsArea.loai_quang_cao.value}</td>
       <td>{props.trContentAdsArea.loai_bai_dang_ap_dung.value}</td>
       <td>{props.trContentAdsArea.loai_trang_ap_dung.value}</td>
       <td>{props.trContentAdsArea.so_luong_chia_se_vung}</td>
@@ -111,8 +112,8 @@ class AdsAreaInformation extends Component {
 class AdsAreaContents extends Component {
   render() {
     var theadAdsAreas = {
-      keys: ['ma_dich_vu', 'ten_hien_thi', 'loai_bai_dang_ap_dung', 'loai_trang_ap_dung', 'so_luong_chia_se_vung', 'so_luong_tin_toi_da', 'kich_thuoc_vung.width', 'trang_thai'],
-      values: ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"]
+      keys: ['ma_dich_vu', 'ten_hien_thi', 'loai_quang_cao.key', 'loai_bai_dang_ap_dung', 'loai_trang_ap_dung', 'so_luong_chia_se_vung', 'so_luong_tin_toi_da', 'kich_thuoc_vung.width', 'trang_thai'],
+      values: ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Loại quảng cáo", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"]
     };
 
     var props = this.props;

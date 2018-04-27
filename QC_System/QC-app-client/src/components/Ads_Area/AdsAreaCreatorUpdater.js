@@ -19,7 +19,7 @@ function AdsAreaRenderInput(props) {
             classNameInput += (props.errorTitle !== undefined && props.errorTitle !== "") ? " input--required" : "";
         }
     }
-    console.log(props.inputData.id + " " + props.isReadOnly);
+
     return (
         <div>
             <label key={props.inputData.id} className="fullwidth">
@@ -245,7 +245,7 @@ class AdsAreaCreatorForm extends Component {
             <div className='popup_inner adsarea_createform_size'>
                 <div>
                     <div>
-                        <a class="close popup-button-close adsarea_margin_button-close" onClick={this.handleClosePopup}>×</a>
+                        <a className="close popup-button-close adsarea_margin_button-close" onClick={this.handleClosePopup}>×</a>
                         <h1>{this.props.titleForm}</h1>
                     </div>
                     <div key="left" className="adsarea_information_left">
@@ -428,6 +428,11 @@ class AdsAreaCreatorUpdater extends Component {
     }
 
     SetInitState(inputs, jsonState) {
+        jsonState.AdsAreaTypes = {
+            keys: ["banner", "tin_rao"],
+            values: ["banner", "Tin rao"]
+        };
+
         if (this.props.modeAction === "create") {
             inputs.forEach(element => {
                 if (element.type === "combobox") {
@@ -455,10 +460,14 @@ class AdsAreaCreatorUpdater extends Component {
         else {
             inputs.forEach(element => {
                 if (element.type === "combobox") {
-                    if(element.id === "loai_trang_ap_dung" || element.id === "loai_bai_dang_ap_dung"){
+                    if (element.id === "loai_trang_ap_dung" || element.id === "loai_bai_dang_ap_dung") {
                         jsonState[element.id] = this.props.editContents[element.id].key;
                     }
-                    else{
+                    else if (element.id === "loai_quang_cao") {
+                        console.log(this.props.editContents[element.id].key);
+                        jsonState[element.id] = this.props.editContents[element.id].key;
+                    }
+                    else {
                         jsonState[element.id] = this.props.editContents[element.id];
                     }
                 }
@@ -555,10 +564,16 @@ class AdsAreaCreatorUpdater extends Component {
             var indexOfAppliedPage = state.AppliedPages.keys.indexOf(state.loai_trang_ap_dung);
             var indexOfAppliedPostType = state.AppliedPostTypes.keys.indexOf(state.loai_bai_dang_ap_dung);
 
+            var indexOfAdsType = state.AdsAreaTypes.keys.indexOf(state.loai_quang_cao);
+            var loai_quang_cao = {
+                key: state.loai_quang_cao,
+                value: state.AdsAreaTypes.values[indexOfAdsType]
+            };
+
             var adsAreaContent = {
                 ma_dich_vu: state.ma_dich_vu,
                 ten_hien_thi: state.ten_hien_thi,
-                loai_quang_cao: state.loai_quang_cao,
+                loai_quang_cao: loai_quang_cao,
                 loai_trang_ap_dung: {
                     key: state.loai_trang_ap_dung,
                     value: state.AppliedPages.values[indexOfAppliedPage]
@@ -714,8 +729,8 @@ var adsAreaInformationInputs = [
         "description": "Trang áp dụng quảng cáo",
         "id": "loai_trang_ap_dung",
         "type": "combobox",
-        "keys": ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
-        "values": ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
+        "keys": ["trang_chu2", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
+        "values": ["Trang chủ2", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
     },
     {
         "description": "Loại bài đăng áp dụng",

@@ -13,6 +13,7 @@ function RenderRow(props) {
     return (
         <tr>
             <td>{props.trContent.ma_bai_dang}</td>
+            <td>{props.trContent.ma_loai_bai_dang}</td>
             <td>{props.trContent.tieu_de}</td>
             <td>{props.trContent.url}</td>
             <td>{props.trContent.nguoi_tao}</td>
@@ -51,7 +52,7 @@ class PostContents extends Component {
     render() {
         var theader = {
             keys: [],
-            values: ["Mã bài đăng", "Tiêu đề", "url", "Người tạo"]
+            values: ["Mã bài đăng", "Thuộc loại bài đăng", "Tiêu đề", "url", "Người tạo"]
         };
 
         return (

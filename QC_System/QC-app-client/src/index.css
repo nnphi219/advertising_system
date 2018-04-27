@@ -139,3 +139,7 @@ body {
   color: red;
   width: auto;
 }
+
+.margin_zero {
+  margin: 0;
+}
