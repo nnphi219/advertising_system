@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import NumericInput from 'react-numeric-input';
-import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './price_factor.css';
 
 import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 import { DescriptionDetail } from '../share/CommonComponent';
 import { KHUNG_GIO } from '../share/constant';
 
@@ -16,7 +14,7 @@ const loai_gia_tri_tang_them_theo_gia_tri = 2;
 function GetRealValue(stateValues) {
     if(stateValues.ServicePrices !== undefined){
         var indexOfServicePrice = stateValues.ServicePrices.list_ma_gia.indexOf(stateValues.ma_gia);
-        var gia_co_ban = parseInt(stateValues.ServicePrices.list_gia_tri[indexOfServicePrice]);
+        var gia_co_ban = parseInt(stateValues.ServicePrices.list_gia_tri[indexOfServicePrice], 10);
        
         var loai_gia_tri_tang_them = stateValues.loai_gia_tri_tang_them;
         var phan_tram_tang_giam = parseFloat(stateValues.phan_tram_tang_giam) / 100;
@@ -34,9 +32,6 @@ function GetRealValue(stateValues) {
 }
 
 class RenderProperties extends Component {
-    constructor(props) {
-        super(props);
-    }
     TranserTimeLogToString(timeLogJson) {
         if (timeLogJson == null) {
             return "";
@@ -492,7 +487,7 @@ class PriceFactorCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (parseInt(state.phan_tram_tang_giam) <= 0) {
+        if (parseInt(state.phan_tram_tang_giam, 10) <= 0) {
             jsonError.error_phan_tram_tang_giam = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
