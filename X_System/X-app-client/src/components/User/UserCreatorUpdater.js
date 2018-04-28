@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import { UrlApi, UrlRedirect } from '../share/Url';
-import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
+import { RenderInput, RenderSelect } from '../share/InputsRender';
 
 import './user.css';
-
-var rp = require('request-promise');
 
 class RenderProperties extends Component {
     render() {
@@ -134,7 +132,6 @@ class UserCreatorUpdater extends Component {
     CreateUser() {
         var userContent = this.GetModelStateJson();
 
-        var $this = this;
         Request.post(UrlApi.UserManagement)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(userContent)
@@ -147,7 +144,6 @@ class UserCreatorUpdater extends Component {
         var userContent = this.GetModelStateJson();
 
         var url = UrlApi.UserManagement + "/" + this.props.editContents._id;
-        var $this = this;
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(userContent)

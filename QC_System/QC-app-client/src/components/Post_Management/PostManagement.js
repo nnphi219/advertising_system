@@ -6,7 +6,7 @@ import DeleteForm from '../share/DeleteForm';
 import HeaderForm from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import UrlApi from '../share/UrlApi';
-import { TransferFactorUnitKeyToText, JsonDateToDate, TransferdisplayMechanismToText, TransferSelectInputKeyToValue } from '../share/Mapper';
+import { TransferSelectInputKeyToValue } from '../share/Mapper';
 
 import './post_management.css';
 import PostCreatorUpdater from './PostCreatorUpdater';

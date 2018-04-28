@@ -4,14 +4,10 @@ import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './service_price.css';
 import { JsonDateToDate, DateToJsonDate, TransferSelectInputKeyToValue } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { RenderInput, RenderSelect, RenderRadioButon } from '../share/InputsRender';
 import { DescriptionDetail } from '../share/CommonComponent';
 
 class RenderLeftForm extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         var props = this.props;
         var stateValues = props.stateValues;
@@ -19,9 +15,6 @@ class RenderLeftForm extends Component {
         var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
         var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
 
-        var classNamePriceId = this.props.stateValues.ma_gia === "" ? "input--required" : "";
-
-        var props = this.props;
         var ma_gia_isReadOnly = this.props.modeAction === 'edit' ? 1 : 0;
 
         var arrayAdsAreaTitles = [];
@@ -269,7 +262,7 @@ class ServicePriceCreatorUpdater extends Component {
                 var list_loai_trang_ap_dung = [];
                 var list_loai_quang_cao = [];
 
-                res.body.map((adsArea) => {
+                res.body.forEach((adsArea) => {
                     _ids.push(adsArea._id);
                     keys.push(adsArea.ma_dich_vu);
                     values.push(adsArea.ten_hien_thi);
@@ -357,17 +350,17 @@ class ServicePriceCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (parseInt(state.gia_tri) <= 0) {
+        if (parseInt(state.gia_tri, 10) <= 0) {
             jsonError.error_gia_tri = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_ngay_ap_dung) <= 0) {
+        if (parseInt(state.so_ngay_ap_dung, 10) <= 0) {
             jsonError.error_so_ngay_ap_dung = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_click_tren_view) <= 0) {
+        if (parseInt(state.so_click_tren_view, 10) <= 0) {
             jsonError.error_so_click_tren_view = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
@@ -385,7 +378,7 @@ class ServicePriceCreatorUpdater extends Component {
 
         if (isValid) {
             var startDateJson = DateToJsonDate(state.start_date);
-            var endDateJson = parseInt(state.co_thoi_diem_ket_thuc) === 1 ? DateToJsonDate(state.end_date) : null;
+            var endDateJson = parseInt(state.co_thoi_diem_ket_thuc, 10) === 1 ? DateToJsonDate(state.end_date) : null;
 
             var servicePriceContent = {
                 ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
@@ -403,7 +396,7 @@ class ServicePriceCreatorUpdater extends Component {
                 value: TransferSelectInputKeyToValue(state.loai_co_che, servicePriceInputs.loai_co_che.keys, servicePriceInputs.loai_co_che.values)
             }
 
-            var so_click_tren_view = parseInt(state.so_click_tren_view);
+            var so_click_tren_view = parseInt(state.so_click_tren_view, 10);
 
             if (so_click_tren_view > 0) {
                 servicePriceContent.so_luong_don_vi_ap_dung.so_click_tren_view = so_click_tren_view

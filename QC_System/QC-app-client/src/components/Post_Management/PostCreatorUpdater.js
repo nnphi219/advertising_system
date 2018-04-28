@@ -175,7 +175,8 @@ class PostCreatorUpdater extends Component {
                 var adsAreaIdvalues = [];
                 var appliedPageTypeKeys = [];
 
-                res.body.map((adsArea) => {
+                var adsAreas = res.body;
+                adsAreas.forEach(adsArea => {
                     _ids.push(adsArea._id);
                     adsAreaIdkeys.push(adsArea.ma_dich_vu);
                     adsAreaIdvalues.push(adsArea.ten_hien_thi);

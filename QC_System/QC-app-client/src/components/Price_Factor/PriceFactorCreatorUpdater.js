@@ -333,7 +333,7 @@ class PriceFactorCreatorUpdater extends Component {
                 var list_loai_co_che = [];
                 var list_gia_tri = [];
 
-                res.body.map((servicePrice) => {
+                res.body.forEach((servicePrice) => {
                     _ids.push(servicePrice._id);
                     list_ma_gia.push(servicePrice.ma_gia);
                     list_loai_co_che.push(servicePrice.loai_co_che);

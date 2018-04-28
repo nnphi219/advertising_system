@@ -341,7 +341,7 @@ class PostCampaignCreatorUpdater extends Component {
                 var adsAreaIdvalues = [];
                 var appliedPageTypeKeys = [];
 
-                res.body.map((adsArea) => {
+                res.body.forEach((adsArea) => {
                     _ids.push(adsArea._id);
                     adsAreaIdkeys.push(adsArea.ma_dich_vu);
                     adsAreaIdvalues.push(adsArea.ten_hien_thi);
@@ -372,7 +372,7 @@ class PostCampaignCreatorUpdater extends Component {
                 var keys = [];
                 var values = [];
            
-                res.body.map((promotion) => {
+                res.body.forEach((promotion) => {
                     _ids.push(promotion._id);
                     keys.push(promotion.ma_khuyen_mai);
                     values.push(promotion.mo_ta);

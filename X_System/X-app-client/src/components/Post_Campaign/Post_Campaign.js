@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { QCSytemUrl } from '../share/Url';
 import "./post_campaign.css";
 
-import IframeComm from "react-iframe-comm";
 import { UsernameOnQcSystem } from '../share/CommonProperty';
 
 class Post_Campaign extends Component {
@@ -14,7 +13,7 @@ class Post_Campaign extends Component {
 
         return (
             <div className="div_post_campaign">
-                <iframe className="iframe_post_campaign" src={urlIFrame}>
+                <iframe className="iframe_post_campaign" src={urlIFrame} title="This is a unique title">
                     <p>Your browser does not support iframes.</p>
                 </iframe>
             </div>

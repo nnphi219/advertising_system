@@ -177,7 +177,7 @@ class PromotionCreatorUpdater extends Component {
                 var list_loai_trang_ap_dung = [];
                 var list_loai_quang_cao = [];
 
-                res.body.map((adsArea) => {
+                res.body.forEach((adsArea) => {
                     _ids.push(adsArea._id);
                     keys.push(adsArea.ma_dich_vu);
                     values.push(adsArea.ten_hien_thi);

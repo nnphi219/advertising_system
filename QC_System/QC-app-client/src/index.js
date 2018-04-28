@@ -4,8 +4,7 @@ import Request from 'superagent';
 import { AppAdmin, AppXSystem } from './App';
 import registerServiceWorker from './registerServiceWorker';
 import Layout from './components/layout/Layout';
-import UserLogin from './components/User/UserLogin';
-import UrlApi, { UrlRedirect } from './components/share/UrlApi';
+import UrlApi from './components/share/UrlApi';
 
 import './index.css';
 import './frontend/vendor/popup/popup.css';
@@ -28,7 +27,6 @@ var currentPageWithoutParameters = currentPage.split('?')[0];
 if (systemType === "x-system") {
     elementApp = <AppXSystem />;
 }
-var logedIn = false;
 
 function ReactRender(haveLayout) {
     if (haveLayout && currentPageWithoutParameters === "post-campaign") {

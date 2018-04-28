@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 import './user.css';
 import { UrlApi } from '../share/Url';
-import validator from 'validator';
 
 class UserLoginInfo extends Component {
     constructor(props) {

@@ -3,8 +3,8 @@ import DatePicker from 'react-date-picker';
 
 export class RenderInput extends Component {
     render() {
-        var isReadOnly = parseInt(this.props.isReadOnly) === 1 ? true : false;
-        var cssLabel = "fullwidth" + ` ${this.props.cssLabel}`
+        var isReadOnly = parseInt(this.props.isReadOnly, 10) === 1 ? true : false;
+        var cssLabel = `fullwidth ${this.props.cssLabel}`;
 
         return (
             <div className={this.props.divClass}>
@@ -20,8 +20,7 @@ export class RenderInput extends Component {
 
 export class RenderTextArea extends Component {
     render() {
-        var isReadOnly = parseInt(this.props.isReadOnly) === 1 ? true : false;
-        var cssLabel = "fullwidth" + ` ${this.props.cssLabel}`
+        var isReadOnly = parseInt(this.props.isReadOnly, 10) === 1 ? true : false;
 
         return (
             <div className={this.props.divClassName}>
@@ -30,8 +29,8 @@ export class RenderTextArea extends Component {
                         {this.props.title}
                         <div>
                             <textarea rows="4" cols="50" key={this.props.nameId} name={this.props.nameId} value={this.props.value} onChange={this.props.OnChangeInput} className={this.props.className} readOnly={isReadOnly}>
-                                
-                            </textarea>         
+
+                            </textarea>
                         </div>
                     </label>
                 </div>

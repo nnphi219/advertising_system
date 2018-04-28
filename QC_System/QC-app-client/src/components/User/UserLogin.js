@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { RenderInput } from '../share/InputsRender';
 import './user.css';
 
 class UserLogin extends Component {

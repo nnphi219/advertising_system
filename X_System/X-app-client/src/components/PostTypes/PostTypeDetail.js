@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import { UrlApi, UrlRedirect } from '../share/Url';
+import { UrlApi } from '../share/Url';
 
 import './post_type.css';
 
@@ -43,7 +43,7 @@ class PostTypeDetail extends Component {
                 <div>
                     <div>
                         <h1 className="PostType_detail--header">{PostTypeContent.tieu_de}</h1>
-                        <img className="PostType_detail--image" src={imageUrl} />
+                        <img className="PostType_detail--image" src={imageUrl} alt=""/>
                     </div>
                     <div>
                         <span>

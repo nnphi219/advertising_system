@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import { UrlApi, UrlRedirect } from '../share/Url';
-import { RenderInput, RenderSelect } from '../share/InputsRender';
+import { RenderInput } from '../share/InputsRender';
 
 import './post_type.css';
-
-var rp = require('request-promise');
 
 class RenderProperties extends Component {
     render() {
@@ -177,7 +175,6 @@ class PostTypeCreatorUpdater extends Component {
                 return;
             }
 
-            var $this = this;
             var token = localStorage.getItem('x-auth');
 
             Request.post(UrlApi.PostTypes)
@@ -207,7 +204,6 @@ class PostTypeCreatorUpdater extends Component {
         }
 
         var url = UrlApi.PostTypes + "/" + this.props.editContents._id;
-        var $this = this;
         var token = localStorage.getItem('x-auth');
 
         Request.put(url)

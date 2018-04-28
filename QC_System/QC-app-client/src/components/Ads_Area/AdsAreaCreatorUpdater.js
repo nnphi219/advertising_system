@@ -67,8 +67,6 @@ function RenderDoubleInputs(props) {
 }
 
 function RenderCombobox(props) {
-    var count = 0;
-
     var selectedValue = props.stateValues[props.inputData.id];
     if (AreaCombobox.includes(props.inputData.id)) {
         selectedValue = TransferSizeToString(selectedValue);
@@ -323,7 +321,7 @@ class AdsAreaCreatorUpdater extends Component {
                 var keys = [];
                 var values = [];
                 if (res.body) {
-                    res.body.map((appliedPage) => {
+                    res.body.forEach((appliedPage) => {
                         _ids.push(appliedPage._id);
                         keys.push(appliedPage.ma_trang_quang_cao);
                         values.push(appliedPage.ten_trang_quang_cao);
@@ -358,7 +356,7 @@ class AdsAreaCreatorUpdater extends Component {
                 var values = [];
 
                 if (res.body) {
-                    res.body.map((appliedPostType) => {
+                    res.body.forEach((appliedPostType) => {
                         _ids.push(appliedPostType._id);
                         keys.push(appliedPostType.ma_loai_bai_dang);
                         values.push(appliedPostType.ten_loai_bai_dang);
@@ -524,27 +522,27 @@ class AdsAreaCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (parseInt(state.so_luong_chia_se_vung) <= 0) {
+        if (parseInt(state.so_luong_chia_se_vung, 10) <= 0) {
             jsonError.error_so_luong_chia_se_vung = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_luong_tin_toi_da) <= 0) {
+        if (parseInt(state.so_luong_tin_toi_da, 10) <= 0) {
             jsonError.error_so_luong_tin_toi_da = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_luong_chu_mo_ta) <= 0) {
+        if (parseInt(state.so_luong_chu_mo_ta, 10) <= 0) {
             jsonError.error_so_luong_chu_mo_ta = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.kich_thuoc_vien) <= 0) {
+        if (parseInt(state.kich_thuoc_vien, 10) <= 0) {
             jsonError.error_kich_thuoc_vien = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_luong_chu_xem_truoc) <= 0) {
+        if (parseInt(state.so_luong_chu_xem_truoc, 10) <= 0) {
             jsonError.error_so_luong_chu_xem_truoc = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
@@ -583,8 +581,8 @@ class AdsAreaCreatorUpdater extends Component {
                     value: state.AppliedPostTypes.values[indexOfAppliedPostType]
                 },
                 kich_thuoc_vung: {
-                    width: parseInt(state.ktv_chieu_rong),
-                    height: parseInt(state.ktv_chieu_cao)
+                    width: parseInt(state.ktv_chieu_rong, 10),
+                    height: parseInt(state.ktv_chieu_cao, 10)
                 },
                 so_luong_chia_se_vung: state.so_luong_chia_se_vung,
                 so_luong_tin_toi_da: state.so_luong_tin_toi_da,

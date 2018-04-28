@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import { UrlApi, UrlRedirect } from '../share/Url';
-import { RenderInput, RenderDate, RenderTextArea, RenderSelect } from '../share/InputsRender';
+import { RenderInput, RenderTextArea, RenderSelect } from '../share/InputsRender';
 
 import './post.css';
 import Img from 'react-image';
 
-var rp = require('request-promise');
 var FileSaver = require('file-saver');
 
 class RenderProperties extends Component {
@@ -146,7 +145,7 @@ class PostCreatorUpdater extends Component {
                 var keys = [];
                 var values = [];
 
-                postTypes.map((postType) => {
+                postTypes.forEach((postType) => {
                     _ids.push(postType._id);
                     keys.push(postType.ma_loai_bai_dang);
                     values.push(postType.ten_loai_bai_dang);
@@ -217,7 +216,6 @@ class PostCreatorUpdater extends Component {
     CreatePost() {
         var content = this.GetModelStateJson();
 
-        var $this = this;
         var token = localStorage.getItem('x-auth');
 
         Request.post(UrlApi.PostManagement)
@@ -239,7 +237,6 @@ class PostCreatorUpdater extends Component {
         var content = this.GetModelStateJson();
 
         var url = UrlApi.PostManagement + "/" + this.props.editContents._id;
-        var $this = this;
         var token = localStorage.getItem('x-auth');
 
         Request.put(url)
@@ -274,12 +271,6 @@ class PostCreatorUpdater extends Component {
                 />
             </div>
         );
-    }
-}
-var userInputsData = {
-    user_type: {
-        keys: ["user", "admin"],
-        values: ["user", "admin"]
     }
 }
 

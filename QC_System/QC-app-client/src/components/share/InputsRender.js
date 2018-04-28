@@ -3,8 +3,8 @@ import DatePicker from 'react-date-picker';
 
 export class RenderInput extends Component {
     render() {
-        var isReadOnly = parseInt(this.props.isReadOnly) === 1 ? true : false;
-        var cssLabel = "fullwidth" + ` ${this.props.cssLabel}`;
+        var isReadOnly = parseInt(this.props.isReadOnly, 10) === 1 ? true : false;
+        var cssLabel = `fullwidth ${this.props.cssLabel}`;
         var props = this.props;
         var classNameInput = props.className;
         var styleCss = props.styleCss;

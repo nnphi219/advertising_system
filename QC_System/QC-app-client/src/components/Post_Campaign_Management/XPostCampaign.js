@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
-import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
-import { TransferSelectInputKeyToValue } from '../share/Mapper';
+import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson } from '../share/Mapper';
+import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 
 function RenderForm(props) {
     var stateValues = props.stateValues;
@@ -253,21 +252,6 @@ function RenderForm(props) {
     );
 }
 
-function RenderRightForm(props) {
-    return (
-        <div className="post_campaign--right-form">
-            {/* <RenderInput
-                nameId={"tong_cong"}
-                title={"Tổng cộng"}
-                type={"number"}
-                className={"post_campaign--input"}
-                OnChangeInput={props.OnChangeInput}
-                isReadOnly={1}
-            /> */}
-        </div>
-    )
-}
-
 class RenderProperties extends Component {
     render() {
         var props = this.props;
@@ -344,7 +328,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
         this.props.UpdateState(jsonState);
         let ngay_ket_thuc = new Date();
         let thoi_luong_ap_dung = this.props.stateValues.thoi_luong_ap_dung;
-        ngay_ket_thuc.setDate(this.props.stateValues.ngay_ket_thuc.getDate() + parseInt(thoi_luong_ap_dung));
+        ngay_ket_thuc.setDate(this.props.stateValues.ngay_ket_thuc.getDate() + parseInt(thoi_luong_ap_dung, 10));
         this.OnchangeEndDate(ngay_ket_thuc);
     }
 
@@ -353,7 +337,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
         let ngay_bat_dau = this.props.stateValues.ngay_bat_dau;
         let thoi_luong = new Date(date - ngay_bat_dau).getDate();
 
-        if (parseInt(date.getTime() - ngay_bat_dau.getTime()) >= 0) {
+        if (parseInt(date.getTime() - ngay_bat_dau.getTime(), 10) >= 0) {
             var jsonState = { "ngay_ket_thuc": date, "thoi_luong_ap_dung": thoi_luong };
             this.props.UpdateState(jsonState);
         }
@@ -424,7 +408,7 @@ class XPostCampaign extends Component {
         var appliedPageTypeKeys = [];
         var adsTypes = [];
 
-        adsAreas.map((adsArea) => {
+        adsAreas.forEach((adsArea) => {
             _ids.push(adsArea._id);
             keys.push(adsArea.ma_dich_vu);
             values.push(adsArea.ten_hien_thi);
@@ -458,7 +442,7 @@ class XPostCampaign extends Component {
 
                 var xSystemPosts = res.body;
 
-                xSystemPosts.map((xSystemPost) => {
+                xSystemPosts.forEach((xSystemPost) => {
                     _ids.push(xSystemPost._id);
                     keys.push(xSystemPost.ma_bai_dang);
                     titles.push(xSystemPost.tieu_de);
@@ -501,7 +485,7 @@ class XPostCampaign extends Component {
                 var keys = [];
                 var values = [];
 
-                res.body.map((promotion) => {
+                res.body.forEach((promotion) => {
                     _ids.push(promotion._id);
                     keys.push(promotion.ma_khuyen_mai);
                     values.push(promotion.mo_ta);
@@ -591,7 +575,7 @@ class XPostCampaign extends Component {
         var loai_nhan_to = {
             khung_gio: state.khung_gio_hien_thi
         };
-        if (state.lnt_thoi_luong !== undefined && state.lnt_thoi_luong !== null && parseInt(state.lnt_thoi_luong) !== 0) {
+        if (state.lnt_thoi_luong !== undefined && state.lnt_thoi_luong !== null && parseInt(state.lnt_thoi_luong, 10) !== 0) {
             loai_nhan_to.thoi_luong = state.lnt_thoi_luong;
         }
 

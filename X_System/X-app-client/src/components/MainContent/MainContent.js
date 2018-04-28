@@ -86,7 +86,7 @@ class MainContent extends Component {
                                     <h2>Put special offer in standout call to action area here</h2>
                                 </div>
                                 <div className="cta">
-                                    <a className="btn btn-large btn-rounded btn-color" href="#">
+                                    <a className="btn btn-large btn-rounded btn-color" href="#2">
                                         <i className="icon-chevron-right"></i> Call action</a>
                                 </div>
                             </div>
