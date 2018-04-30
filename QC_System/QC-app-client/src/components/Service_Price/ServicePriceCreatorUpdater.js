@@ -5,6 +5,7 @@ import UrlApi from '../share/UrlApi';
 import './service_price.css';
 import { JsonDateToDate, DateToJsonDate, TransferSelectInputKeyToValue } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon } from '../share/InputsRender';
+import { Date2BiggerDate1 } from '../share/DateFormat';
 import { DescriptionDetail } from '../share/CommonComponent';
 
 class RenderLeftForm extends Component {
@@ -23,10 +24,21 @@ class RenderLeftForm extends Component {
             arrayAdsAreaTitles.push("Loại quảng cáo: " + stateValues.AdsAreaIds.list_loai_quang_cao[indexOfAdsArea]);
             arrayAdsAreaTitles.push("Trang áp dụng: " + stateValues.AdsAreaIds.list_loai_trang_ap_dung[indexOfAdsArea]);
         }
+
         return (
             <div key="left" className="serviceprice_information_left">
                 <h2>Thông tin giá dịch vụ</h2>
                 <div>
+                    <RenderInput
+                        nameId={"ma_gia"}
+                        title={"Mã giá"}
+                        value={this.props.stateValues.ma_gia}
+                        errorTitle={props.stateValues.error_ma_gia}
+                        type={"text"}
+                        className={"serviceprice--input"}
+                        isReadOnly={ma_gia_isReadOnly}
+                        OnChangeInput={this.props.OnChangeInput}
+                    />
                     <RenderSelect
                         nameId={"ma_dich_vu_ap_dung"}
                         title={"Dịch vụ quảng cáo"}
@@ -39,16 +51,7 @@ class RenderLeftForm extends Component {
                     <DescriptionDetail
                         arrayTitles={arrayAdsAreaTitles}
                     />
-                    <RenderInput
-                        nameId={"ma_gia"}
-                        title={"Mã giá"}
-                        value={this.props.stateValues.ma_gia}
-                        errorTitle={props.stateValues.error_ma_gia}
-                        type={"text"}
-                        className={"serviceprice--input"}
-                        isReadOnly={ma_gia_isReadOnly}
-                        OnChangeInput={this.props.OnChangeInput}
-                    />
+
                     <div>
                         <div className="">
                             <label className="fullwidth">
@@ -56,6 +59,7 @@ class RenderLeftForm extends Component {
                                 <div>
                                     <DatePicker name="start_date" value={this.props.stateValues.start_date} onChange={this.props.OnchangeStartDate} className="input-date" />
                                 </div>
+                                <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_start_date}</p>
                             </label>
                         </div>
                     </div>
@@ -75,6 +79,7 @@ class RenderLeftForm extends Component {
                                 <div>
                                     <DatePicker name="end_date" value={this.props.stateValues.end_date} onChange={this.props.OnchangeEndDate} className="input-date" />
                                 </div>
+                                <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_end_date}</p>
                             </label>
                         </div>
                     </div>
@@ -168,6 +173,7 @@ class RenderProperties extends Component {
                     OnChangeInput={this.props.OnChangeInput}
                     OnChangeSelect={this.props.OnChangeSelect}
                     OnChangeRadioButton={this.props.OnChangeRadioButton}
+
                     stateValues={this.props.stateValues}
                 />
             </div>
@@ -187,13 +193,37 @@ class ServicePriceCreatorUpdaterForm extends Component {
         this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
     }
 
-    OnchangeStartDate(date) {
-        var jsonState = { "start_date": date }
+    OnchangeStartDate(start_date) {
+        let end_date = this.props.stateValues.end_date;
+        var jsonState = {
+            error_start_date: "",
+            error_end_date: ""
+        };
+
+        if (Date2BiggerDate1(start_date, end_date)) {
+            jsonState.start_date = start_date;
+        }
+        else {
+            jsonState.error_start_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+
         this.props.UpdateState(jsonState);
     }
 
-    OnchangeEndDate(date) {
-        var jsonState = { "end_date": date }
+    OnchangeEndDate(end_date) {
+        let start_date = this.props.stateValues.start_date;
+        var jsonState = {
+            error_start_date: "",
+            error_end_date: ""
+        };
+
+        if (Date2BiggerDate1(start_date, end_date)) {
+            jsonState.end_date = end_date;
+        }
+        else {
+            jsonState.error_end_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+    
         this.props.UpdateState(jsonState);
     }
 
@@ -219,7 +249,7 @@ class ServicePriceCreatorUpdaterForm extends Component {
         return (
             <div className='popup_inner serviceprice_createform_size div_scroll_bar'>
                 <div>
-                    <a class="close popup-button-close serviceprice_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
+                    <a className="close popup-button-close serviceprice_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
                     <h1>{this.props.titleForm}</h1>
                 </div>
                 <RenderProperties
@@ -245,7 +275,10 @@ class ServicePriceCreatorUpdater extends Component {
     constructor(props) {
         super(props);
 
-        var jsonState = {};
+        var jsonState = {
+            error_start_date: "",
+            error_end_date: ""
+        };
         jsonState = this.SetInitState(jsonState);
         this.state = this.SetInitError(jsonState);
         this.GetAdsAreasByUser();
@@ -267,7 +300,7 @@ class ServicePriceCreatorUpdater extends Component {
                     keys.push(adsArea.ma_dich_vu);
                     values.push(adsArea.ten_hien_thi);
                     list_loai_trang_ap_dung.push(adsArea.loai_trang_ap_dung.value);
-                    list_loai_quang_cao.push(adsArea.loai_quang_cao);
+                    list_loai_quang_cao.push(adsArea.loai_quang_cao.value);
                 });
 
                 var jsonAdsAreaIds = {

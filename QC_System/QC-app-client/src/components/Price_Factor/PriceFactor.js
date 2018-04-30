@@ -11,10 +11,18 @@ import './price_factor.css';
 import '../Ads_Area/ads_area.css';
 
 import UrlApi from "../share/UrlApi";
+import { TransferTimeLogJsonToString } from '../share/Mapper';
 
 function RenderRow(props) {
     var factorType = props.trContentPriceFactor.loai_nhan_to;
-    var timeLot = `${factorType.khung_gio.bat_dau.toString()}h-${factorType.khung_gio.ket_thuc.toString()}h`;
+    var timeSlots = factorType.khung_gio;
+
+    var timeSlotStrings = "";
+    timeSlots.forEach(timeSlot => {
+        timeSlotStrings += (timeSlotStrings !== "" ? ", " : "");
+        timeSlotStrings += TransferTimeLogJsonToString(timeSlot);
+    });
+
     var location = (factorType.vi_tri !== undefined && factorType.vi_tri !== null) ? factorType.vi_tri.quan_huyen + "," + factorType.vi_tri.tinh : "";
 
     var rateCalculationJson = props.trContentPriceFactor.ti_le_tinh_gia;
@@ -26,7 +34,7 @@ function RenderRow(props) {
             <td>{props.trContentPriceFactor.ma_chi_so}</td>
             <td>{props.trContentPriceFactor.ten_chi_so}</td>
             <td>{props.trContentPriceFactor.ma_gia}</td>
-            <td>{timeLot}</td>
+            <td>{timeSlotStrings}</td>
             <td>{location}</td>
             <td>{rateCalculationString}</td>
             <td>{status}</td>
@@ -170,16 +178,16 @@ class PriceFactor extends Component {
         var url = UrlApi.PriceFactor + "/" + event.target.name;
         var $this = this;
         var updatePriceFactorJson = {
-          trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
+            trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
         };
-    
+
         Request.put(url)
-          .set('Content-Type', 'application/x-www-form-urlencoded')
-          .set('x-auth', localStorage.getItem('x-auth'))
-          .send(updatePriceFactorJson)
-          .end(function (err, res) {
-            $this.getPriceFactors();
-          });
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .send(updatePriceFactorJson)
+            .end(function (err, res) {
+                $this.getPriceFactors();
+            });
     }
 
     handleDeleteClick(event) {

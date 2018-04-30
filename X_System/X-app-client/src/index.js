@@ -11,6 +11,7 @@ import './index.css';
 import './frontend/vendor/popup.css';
 import './frontend/assets/css/bootstrap.css';
 import './frontend/assets/css/bootstrap-responsive.css';
+import './frontend/assets/css/bootstrap-tokenfield.css';
 import './frontend/assets/css/docs.css';
 import './frontend/assets/css/prettyPhoto.css';
 import './frontend/assets/js/google-code-prettify/prettify.css';

@@ -6,7 +6,7 @@ import { RenderInput, RenderTextArea, RenderSelect } from '../share/InputsRender
 import './post.css';
 import Img from 'react-image';
 
-var FileSaver = require('file-saver');
+const uuidv4 = require('uuid/v4');
 
 class RenderProperties extends Component {
     render() {
@@ -17,13 +17,13 @@ class RenderProperties extends Component {
         imageUrls.forEach(imageUrl => {
             renderImages.push(<Img key={imageUrl} src={imageUrl} style={{ marginRight: "5px" }} />);
         });
-        
+
         var postTypesKeys = [];
         var postTypesValues = [];
-        if(stateValues.PostTypes !== undefined) {
-            postTypesKeys =  stateValues.PostTypes.keys;
-            postTypesValues =  stateValues.PostTypes.values;
-        }   
+        if (stateValues.PostTypes !== undefined) {
+            postTypesKeys = stateValues.PostTypes.keys;
+            postTypesValues = stateValues.PostTypes.values;
+        }
 
         return (
             <div style={{ paddingLeft: "30px" }}>
@@ -131,9 +131,9 @@ class PostCreatorUpdater extends Component {
     componentDidMount() {
         var $this = this;
         this.GetPostTypes()
-        .then((jsonSetForeignedInfos) => {
-            $this.setState(jsonSetForeignedInfos);
-        });
+            .then((jsonSetForeignedInfos) => {
+                $this.setState(jsonSetForeignedInfos);
+            });
     }
 
     GetPostTypes() {
@@ -153,7 +153,7 @@ class PostCreatorUpdater extends Component {
 
                 var jsonSetForeignedInfos = {
                     PostTypes: {
-                        _ids, keys, values 
+                        _ids, keys, values
                     }
                 }
 
@@ -185,13 +185,49 @@ class PostCreatorUpdater extends Component {
         event.preventDefault();
         var file = event.target.files[0];
 
-        FileSaver.saveAs(file, '/images/' + file.name);
+        // FileSaver.saveAs(file, '/images/' + file.name);
 
         var imageUrls = this.state.imageUrls;
         imageUrls.push('/images/' + file.name);
         this.setState({
             imageUrls: imageUrls
         });
+
+        const data = new FormData();
+        data.append('file', file);
+        data.append('filename', file.file_name || uuidv4());
+        
+        fetch(UrlApi.UploadFile, {
+            method: 'POST',
+            body: data,
+        }).then((response) => {
+            response.json().then((body) => {
+                console.log(body);
+            });
+        }).catch((e) => {
+           
+            this.props.Onchange({UploadImageDescription: "fail"});
+        });
+
+        // Request.post(UrlApi.UploadFile)
+        //     .set('Content-Type', 'application/x-www-form-urlencoded')
+        //     .send(file)
+        //     .end(function (err, res) {
+        //         console.log(res);
+        //     });
+
+        // var data = new FormData();
+        // data.append('file', file);
+        // data.append('filename', file.name);
+
+        // fetch(UrlApi.UploadFile, {
+        //     method: 'POST',
+        //     body: data,
+        // }).then((response) => response.json())
+        //     .then(response => console.log(response))
+        //     .catch((e) => {
+        //         console.log(2);
+        //     });
     }
 
     handleUpdateState(jsonState) {

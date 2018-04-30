@@ -170,7 +170,7 @@ function RenderProperties(props) {
             inputs.push(<RenderRadioButton key={element.id} inputData={element} keySelectedItem={keySelectedItem} handleOnchangeRadioButton={props.handleOnchangeRadioButton} />);
         }
         else if (element.type === "double_inputs") {
-            inputs.push(<RenderDoubleInputs inputData={element} stateValues={props.stateValues} OnChangeInput={props.handleOnchangeInput} />);
+            inputs.push(<RenderDoubleInputs key={element.id} inputData={element} stateValues={props.stateValues} OnChangeInput={props.handleOnchangeInput} />);
         }
         else {
             var valueInput = props.stateValues[element.id];

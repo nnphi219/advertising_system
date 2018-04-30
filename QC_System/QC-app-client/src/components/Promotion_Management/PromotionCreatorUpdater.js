@@ -133,7 +133,7 @@ class PromotionCreatorUpdaterForm extends Component {
         return (
             <div className='popup_inner promotion_createform_size div_scroll_bar'>
                 <div>
-                    <a class="close popup-button-close promotion_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
+                    <a className="close popup-button-close promotion_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
                     <h1>{this.props.titleForm}</h1>
                 </div>
                 <RenderProperties

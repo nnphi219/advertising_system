@@ -5,8 +5,8 @@ export class DescriptionDetail extends Component {
         var elements = [];
         var props = this.props;
         var arrayTitles = props.arrayTitles;
-        arrayTitles.forEach(element => {
-            elements.push(<p>{element}</p>);
+        arrayTitles.forEach((element, index) => {
+            elements.push(<p key={index}>{element}</p>);
         });
         return (
             <div className="div__description">

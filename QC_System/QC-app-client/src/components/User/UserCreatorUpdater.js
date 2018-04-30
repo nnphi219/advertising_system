@@ -68,7 +68,7 @@ class UserCreatorUpdaterForm extends Component {
         return (
             <div className='popup_inner user_createform_size div_scroll_bar'>
                 <div>
-                    <a class="close popup-button-close user_margin_button-close" onClick={this.handleClosePopup}>×</a>
+                    <a className="close popup-button-close user_margin_button-close" onClick={this.handleClosePopup}>×</a>
                     <h1>{this.props.titleForm}</h1>
                 </div>
                 <RenderProperties

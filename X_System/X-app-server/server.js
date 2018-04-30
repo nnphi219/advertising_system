@@ -12,6 +12,9 @@ var express = require('express'),
     bodyParser = require('body-parser');
 var cors = require('cors');
 var hostname = 'http://xsystem-server.localtest.me';
+
+const fileUpload = require('express-fileupload');
+
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/x_system'); 
@@ -20,6 +23,9 @@ mongoose.connect('mongodb://localhost:27017/x_system');
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Use for upload file
+app.use(fileUpload());
 
 var todoListRoute = require('./api/routes/todoListRoute'); //importing route
 var userRoute = require('./api/routes/UserRoute');

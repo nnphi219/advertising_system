@@ -9,6 +9,7 @@ import UrlApi from './components/share/UrlApi';
 import './index.css';
 import './frontend/vendor/popup/popup.css';
 import './frontend/vendor/bootstrap/css/bootstrap.css';
+import './frontend/vendor/bootstrap/css/bootstrap-tokenfield.css';
 import './frontend/vendor/metisMenu/metisMenu.css';
 import './frontend/dist/css/sb-admin-2.css';
 import './frontend/vendor/morrisjs/morris.css';

@@ -24,8 +24,14 @@ export function TransferTimeLogJsonToString(valueJson) {
 
 export function TransferTimeLogStringToJson(value) {
     var timeLogArr = value.split("h").join("").split('-');
-    var valueJson = { "bat_dau": timeLogArr[0], "ket_thuc": timeLogArr[1] };
+    var valueJson = { "bat_dau": parseInt(timeLogArr[0], 10) , "ket_thuc": parseInt(timeLogArr[1], 10) };
     return valueJson;
+}
+
+export function TransferTimeLogStringToArrayElement(value, array_bat_dau, array_ket_thuc) {
+    var timeLogArr = value.split("h").join("").split('-');
+    array_bat_dau.push(parseInt(timeLogArr[0], 10));
+    array_ket_thuc.push(parseInt(timeLogArr[1], 10));
 }
 
 export function TransferdisplayMechanismToText(value) {
