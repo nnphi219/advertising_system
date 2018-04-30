@@ -2,18 +2,24 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+const khung_gio_schema = new Schema({
+    bat_dau: Number,
+    ket_thuc: Number
+});
+
+const khung_gio = mongoose.model("khung_gio", khung_gio_schema);
 
 var PriceFactorSchema = new Schema({
     ma_chi_so: String,
     ten_chi_so: String,
     ma_gia: String, //get from ServicePrice
     don_vi_nhan_to: String, // table Factor's Unit
-    loai_nhan_to:  {// (thời lượng, khung giờ, vị trí)
+    loai_nhan_to: {// (thời lượng, khung giờ, vị trí)
         thoi_luong: Number,
-        khung_gio: {
+        khung_gio: [{
             bat_dau: Number,
             ket_thuc: Number
-        },
+        }],
         vi_tri: {
             tinh: String,
             quan_huyen: String

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import './layout.css';
 import { NavigationAdmin } from './NavigationAdmin';
 import { NavigationXSystem } from './NavigationXSystem';

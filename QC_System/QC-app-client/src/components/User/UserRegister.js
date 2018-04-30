@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { RenderInput, RenderSelect } from '../share/InputsRender';
+import { RenderInput } from '../share/InputsRender';
 import validator from 'validator';
 import Request from 'superagent';
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
@@ -137,7 +137,6 @@ class UserRegister extends Component {
     submit() {
         var content = this.GetStateModel();
       
-        var $this = this;
         Request.post(UrlApi.UserManagement)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(content)

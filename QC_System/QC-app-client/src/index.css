@@ -139,3 +139,19 @@ body {
   color: red;
   width: auto;
 }
+
+.margin_zero {
+  margin: 0;
+}
+
+.div_property_margin_bottom {
+  margin-bottom: 20px;
+}
+
+.timeslot_margin_right {
+  margin-right: 10px;
+}
+
+.timeslot_button {
+  background: #d9dadb;
+}

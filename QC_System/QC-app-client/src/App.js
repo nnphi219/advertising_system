@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { BrowserRouter, Route, Redirect } from "react-router-dom";
-import { IndexRoute } from 'react-router';
+import { BrowserRouter, Route } from "react-router-dom";
 import AdsArea from './components/Ads_Area/AdsArea';
 import PriceFactor from './components/Price_Factor/PriceFactor';
 import ServicePrice from './components/Service_Price/ServicePrice';
@@ -21,7 +20,6 @@ class AdminTitle extends Component {
                 <div className="row">
                     <div className="col-lg-12">
                         <h1 className="page-header">This is Admin System Page</h1>
-                        <h1></h1>
                     </div>
                     <button
                         type='button'
@@ -48,11 +46,6 @@ class XSystemTitle extends Component {
             </div>
         );
     }
-}
-
-function requireAuth() {
-    console.log("a");
-    window.location.href = '/login';
 }
 
 export class AppAdmin extends Component {

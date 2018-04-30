@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 import { TransferSelectInputKeyToValue } from '../share/Mapper';
 
 function RenderLeftForm(props) {
@@ -272,7 +271,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
         this.props.UpdateState(jsonState);
         let ngay_ket_thuc = new Date();
         let thoi_luong_ap_dung = this.props.stateValues.thoi_luong_ap_dung;
-        ngay_ket_thuc.setDate(this.props.stateValues.ngay_ket_thuc.getDate() + parseInt(thoi_luong_ap_dung));
+        ngay_ket_thuc.setDate(this.props.stateValues.ngay_ket_thuc.getDate() + parseInt(thoi_luong_ap_dung, 10), 10);
         this.OnchangeEndDate(ngay_ket_thuc);
     }
 
@@ -281,7 +280,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
         let ngay_bat_dau = this.props.stateValues.ngay_bat_dau;
         let thoi_luong = new Date(date - ngay_bat_dau).getDate();
         console.log(thoi_luong);
-        if (parseInt(date.getTime() - ngay_bat_dau.getTime()) >= 0) {
+        if (parseInt(date.getTime() - ngay_bat_dau.getTime(), 10) >= 0) {
             var jsonState = { "ngay_ket_thuc": date, "thoi_luong_ap_dung": thoi_luong };
             this.props.UpdateState(jsonState);
         }
@@ -342,7 +341,7 @@ class PostCampaignCreatorUpdater extends Component {
                 var adsAreaIdvalues = [];
                 var appliedPageTypeKeys = [];
 
-                res.body.map((adsArea) => {
+                res.body.forEach((adsArea) => {
                     _ids.push(adsArea._id);
                     adsAreaIdkeys.push(adsArea.ma_dich_vu);
                     adsAreaIdvalues.push(adsArea.ten_hien_thi);
@@ -373,7 +372,7 @@ class PostCampaignCreatorUpdater extends Component {
                 var keys = [];
                 var values = [];
            
-                res.body.map((promotion) => {
+                res.body.forEach((promotion) => {
                     _ids.push(promotion._id);
                     keys.push(promotion.ma_khuyen_mai);
                     values.push(promotion.mo_ta);
@@ -476,7 +475,7 @@ class PostCampaignCreatorUpdater extends Component {
         var loai_nhan_to = {
             khung_gio: state.khung_gio_hien_thi
         };
-        if (state.lnt_thoi_luong !== undefined && state.lnt_thoi_luong !== null && parseInt(state.lnt_thoi_luong) !== 0) {
+        if (state.lnt_thoi_luong !== undefined && state.lnt_thoi_luong !== null && parseInt(state.lnt_thoi_luong, 10) !== 0) {
             loai_nhan_to.thoi_luong = state.lnt_thoi_luong;
         }
        

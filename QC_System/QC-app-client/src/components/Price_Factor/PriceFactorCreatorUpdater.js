@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import NumericInput from 'react-numeric-input';
-import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './price_factor.css';
 
-import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, TransferTimeLogStringToArrayElement, TransferTimeLogJsonToString } from '../share/Mapper';
+import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 import { DescriptionDetail } from '../share/CommonComponent';
 import { KHUNG_GIO } from '../share/constant';
+import { Date2BiggerDate1 } from '../share/DateFormat';
+import { ArrayRemoveItem } from '../share/CommonFunction';
 
 const loai_gia_tri_tang_them_theo_phan_tram = 1;
 const loai_gia_tri_tang_them_theo_gia_tri = 2;
 
 function GetRealValue(stateValues) {
-    if(stateValues.ServicePrices !== undefined){
+    if (stateValues.ServicePrices !== undefined) {
         var indexOfServicePrice = stateValues.ServicePrices.list_ma_gia.indexOf(stateValues.ma_gia);
-        var gia_co_ban = parseInt(stateValues.ServicePrices.list_gia_tri[indexOfServicePrice]);
-       
+        var gia_co_ban = parseInt(stateValues.ServicePrices.list_gia_tri[indexOfServicePrice], 10);
+
         var loai_gia_tri_tang_them = stateValues.loai_gia_tri_tang_them;
         var phan_tram_tang_giam = parseFloat(stateValues.phan_tram_tang_giam) / 100;
-    
+
         if (Math.abs(loai_gia_tri_tang_them) === 1) {
             return gia_co_ban + gia_co_ban * phan_tram_tang_giam;
         }
@@ -28,20 +28,51 @@ function GetRealValue(stateValues) {
             return gia_co_ban + gia_co_ban * phan_tram_tang_giam;
         }
     }
-    else{
+    else {
         return 0;
     }
 }
 
-class RenderProperties extends Component {
-    constructor(props) {
-        super(props);
+function GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots) {
+    return array_khung_gio.filter((timeSlot) =>
+        selectedTimeSlots.indexOf(timeSlot) > -1 ? false : true
+    );
+}
+
+function TransferArrayTimeSlotJsonToArrayString(jsonArrayTimeSlots) {
+    var arrayTimeSlotStrings = [];
+    jsonArrayTimeSlots.forEach(jsonTimeSlot => {
+        
+        arrayTimeSlotStrings.push(TransferTimeLogJsonToString(jsonTimeSlot));
+    });
+
+    return arrayTimeSlotStrings;
+}
+
+function CheckSimilarArray(array1, array2) {
+    console.log(array1);
+    console.log(array2);
+    var a = array1.slice().sort();
+    var b = array2.slice().sort();
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length != b.length) return false;
+
+    // If you don't care about the order of the elements inside
+    // the array, you should sort both arrays here.
+
+    for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
     }
-    TranserTimeLogToString(timeLogJson) {
-        if (timeLogJson == null) {
+    return true;
+}
+
+class RenderProperties extends Component {
+    TranserTimeSlotToString(timeSlotJson) {
+        if (timeSlotJson == null) {
             return "";
         }
-        return `${timeLogJson.bat_dau.toString()}h-${timeLogJson.ket_thuc.toString()}h`;
+        return `${timeSlotJson.bat_dau.toString()}h-${timeSlotJson.ket_thuc.toString()}h`;
     }
 
     render() {
@@ -51,11 +82,21 @@ class RenderProperties extends Component {
 
         var realValue = GetRealValue(stateValues);
 
-        var timeLog = this.TranserTimeLogToString(this.props.stateValues.khung_gio_ap_dung);
+        var selectedTimeSlots = stateValues.selectedTimeSlots;
+
+        var timeSlotTokenFields = selectedTimeSlots.map((timeSlot) => {
+            return (
+                <div key={timeSlot} className="token">
+                    <span className="token-label" style={{ maxWidth: "769px" }}>{timeSlot}</span>
+                    <a name={timeSlot} className="close" tabIndex="-1" onClick={props.OnRemoveTokenField}>×</a>
+                </div>
+            );
+        });
+
+        var remainingTimeSlots = stateValues.remainingTimeSlots.slice();
+
         var ServicePriceIdsKeys = this.props.stateValues.ServicePrices === undefined ? [] : this.props.stateValues.ServicePrices.list_ma_gia;
         var ServicePriceIdsValues = ServicePriceIdsKeys;
-
-        var array_khung_gio = KHUNG_GIO.slice();
 
         var arrayServiceTitles = [];
         var don_gia_co_ban = 0;
@@ -68,7 +109,7 @@ class RenderProperties extends Component {
         var loai_gia_tri_tang_them_element = [];
         var loai_gia_tri_tang_them = stateValues.loai_gia_tri_tang_them;
         loai_gia_tri_tang_them_element.push(
-            <div>
+            <div key={1}>
                 <div className="pricefactor-radio">
                     <input type="radio" value={loai_gia_tri_tang_them_theo_phan_tram} name={"loai_gia_tri_tang_them"}
                         defaultChecked={loai_gia_tri_tang_them === 1 ? true : false}
@@ -84,7 +125,7 @@ class RenderProperties extends Component {
             </div>
         );
         loai_gia_tri_tang_them_element.push(
-            <div>
+            <div key={2}>
                 <div className="pricefactor-radio">
                     <input type="radio" value={-1 * loai_gia_tri_tang_them_theo_phan_tram} name={"loai_gia_tri_tang_them"}
                         defaultChecked={loai_gia_tri_tang_them === -1 ? true : false}
@@ -121,39 +162,67 @@ class RenderProperties extends Component {
                     className={"pricefactor--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
-                <RenderSelect
-                    nameId={"ma_gia"}
-                    title={"Mã giá áp dụng"}
-                    keys={ServicePriceIdsKeys}
-                    values={ServicePriceIdsValues}
-                    selectedValue={this.props.stateValues.ma_gia}
-                    OnChangeSelect={this.props.OnChangeSelect}
-                    className={"pricefactor--select"}
-                />
-                <DescriptionDetail
-                    arrayTitles={arrayServiceTitles}
-                />
-                <div>
+                <div className="div_property_margin_bottom">
+                    <RenderSelect
+                        nameId={"ma_gia"}
+                        title={"Mã giá áp dụng"}
+                        keys={ServicePriceIdsKeys}
+                        values={ServicePriceIdsValues}
+                        selectedValue={this.props.stateValues.ma_gia}
+                        OnChangeSelect={this.props.OnChangeSelect}
+                        className={"pricefactor--select"}
+                    />
+                    <DescriptionDetail
+                        arrayTitles={arrayServiceTitles}
+                    />
+                </div>
+                <div className="div_property_margin_bottom">
                     <label className="fullwidth">
                         {"Đơn giá cơ bản"}
                     </label>
                     (VND)
                     <input type="number" key={"don_gia_co_ban"} name={"don_gia_co_ban"} value={don_gia_co_ban} onChange={this.props.OnchangeBasicPrice} readOnly={true} className="pricefactor--input" style={{ width: "40%" }} />
                 </div>
-                <RenderSelect
-                    nameId={"khung_gio_ap_dung"}
-                    title={"Khung giờ áp dụng"}
-                    keys={array_khung_gio}
-                    values={array_khung_gio}
-                    selectedValue={timeLog}
-                    OnChangeSelect={this.props.OnChangeSelect}
-                    className={"pricefactor--select"}
-                />
-                <div>
+                <div key="khung_gio_ap_dung" className="div_property_margin_bottom">
+                    <div>
+                        <label className="fullwidth">
+                            {"Khung giờ áp dụng"}
+                        </label>
+                    </div>
+                    <div>
+                        <div className="float-left timeslot_margin_right">
+                            <RenderSelect
+                                nameId={"time_slot"}
+                                keys={remainingTimeSlots}
+                                values={remainingTimeSlots}
+                                selectedValue={stateValues.time_slot}
+                                OnChangeSelect={this.props.OnChangeSelect}
+                                className={"pricefactor--select"}
+                            />
+                        </div>
+                        {
+                            stateValues.allowAddTimeSlot ?
+                                <div className="float-left timeslot_margin_right">
+                                    <button type="button" className="btn timeslot_button" onClick={props.OnAddTokenField}>Thêm</button>
+                                </div>
+                                : null
+                        }
+                        <div className="float-left pricefactor_tokenfield tokenfield div_property_margin_bottom">
+                            {timeSlotTokenFields}
+                        </div>
+                    </div>
+                </div>
+                <div key="thoi_gian_ap_dung" className="div_property_margin_bottom">
+                    <div>
+                        <label className="fullwidth">
+                            {"Thời gian áp dụng"}
+                            <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_date}</p>
+                        </label>
+                    </div>
                     <div className="">
                         <label className="fullwidth">
                             <div>
-                                <div className={"float-left"} style={{ paddingTop: "5px" }}>
+                                <div className={"float-left"} style={{ paddingTop: "5px", marginRight: "5px" }}>
                                     {"Từ ngày"}
                                 </div>
                                 <RenderDate
@@ -163,7 +232,7 @@ class RenderProperties extends Component {
                                     value={this.props.stateValues.start_date}
                                     OnchangeDate={this.props.OnchangeStartDate}
                                 />
-                                <div className={"float-left"} style={{ paddingTop: "5px" }}>
+                                <div className={"float-left"} style={{ paddingTop: "5px", marginLeft: "5px", marginRight: "5px" }}>
                                     {" đến "}
                                 </div>
                                 <RenderDate
@@ -184,7 +253,7 @@ class RenderProperties extends Component {
                             <input type="text" id={"tinh"} key={"tinh"} name={"tinh"} value={this.props.stateValues.tinh} onChange={this.props.OnChangeInput} className="pricefactor--input inline" />
                         </label>
                     </div>
-                    <div className="float-left">
+                    <div className="float-left div_property_margin_bottom">
                         <label key={"quan_huyen"} className="fullwidth">
                             {"Áp dụng cho quận huyện"}
                             <input type="text" id={"quan_huyen"} key={"quan_huyen"} name={"quan_huyen"} value={this.props.stateValues.quan_huyen} onChange={this.props.OnChangeInput} className="pricefactor--input inline" />
@@ -231,6 +300,8 @@ class PriceFactorCreatorUpdaterForm extends Component {
 
         this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
         this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
+        this.OnAddTokenField = this.OnAddTokenField.bind(this);
+        this.OnRemoveTokenField = this.OnRemoveTokenField.bind(this);
     }
 
     OnchangeBasicPrice(number) {
@@ -242,13 +313,31 @@ class PriceFactorCreatorUpdaterForm extends Component {
         this.props.UpdateState(jsonState);
     }
 
-    OnchangeStartDate(date) {
-        var jsonState = { "start_date": date }
+    OnchangeStartDate(start_date) {
+        let end_date = this.props.stateValues.end_date;
+        var jsonState = { error_date: "" };
+
+        if (Date2BiggerDate1(start_date, end_date)) {
+            jsonState.start_date = start_date;
+        }
+        else {
+            jsonState.error_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+
         this.props.UpdateState(jsonState);
     }
 
-    OnchangeEndDate(date) {
-        var jsonState = { "end_date": date }
+    OnchangeEndDate(end_date) {
+        let start_date = this.props.stateValues.start_date;
+        var jsonState = { error_date: "" };
+
+        if (Date2BiggerDate1(start_date, end_date)) {
+            jsonState.end_date = end_date;
+        }
+        else {
+            jsonState.error_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+
         this.props.UpdateState(jsonState);
     }
 
@@ -259,11 +348,6 @@ class PriceFactorCreatorUpdaterForm extends Component {
     OnChangeSelect(e) {
         var name = e.target.name;
         var value = e.target.value;
-
-        if (name === "khung_gio_ap_dung") {
-            var timeLogArr = value.split("h").join("").split('-');
-            value = { "bat_dau": timeLogArr[0], "ket_thuc": timeLogArr[1] };
-        }
 
         var jsonState = {
             [name]: value
@@ -280,6 +364,57 @@ class PriceFactorCreatorUpdaterForm extends Component {
         this.props.UpdateState(jsonState);
     }
 
+    OnAddTokenField(e) {
+        var stateValues = this.props.stateValues;
+        var selectedCurrentTimeSlot = stateValues.time_slot;
+
+        if (selectedCurrentTimeSlot === null) {
+            e.preventDefault();
+            return;
+        }
+
+        var selectedTimeSlots = stateValues.selectedTimeSlots.slice();
+        var array_khung_gio = stateValues.array_khung_gio.slice();
+
+        var jsonState = {};
+        if (selectedCurrentTimeSlot === "all") {
+            selectedTimeSlots = ["all"];
+            jsonState.allowAddTimeSlot = false;
+        }
+        else {
+            selectedTimeSlots.push(selectedCurrentTimeSlot);
+        }
+
+        var remainingTimeSlots = GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots);
+
+        jsonState.selectedTimeSlots = selectedTimeSlots;
+        jsonState.remainingTimeSlots = remainingTimeSlots;
+        jsonState.time_slot = remainingTimeSlots.length > 0 ? remainingTimeSlots[0] : null;
+
+        this.props.UpdateState(jsonState);
+    }
+
+    OnRemoveTokenField(e) {
+        var stateValues = this.props.stateValues;
+        var removedTimeSlot = e.target.name;
+        var selectedTimeSlots = stateValues.selectedTimeSlots.slice();
+        var array_khung_gio = stateValues.array_khung_gio.slice();
+        var jsonState = {};
+
+        if (removedTimeSlot === "all") {
+            jsonState.allowAddTimeSlot = true;
+        }
+
+        ArrayRemoveItem(selectedTimeSlots, removedTimeSlot);
+        var remainingTimeSlots = GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots);
+
+        jsonState.selectedTimeSlots = selectedTimeSlots;
+        jsonState.remainingTimeSlots = remainingTimeSlots;
+        jsonState.time_slot = remainingTimeSlots.length > 0 ? remainingTimeSlots[0] : null;
+
+        this.props.UpdateState(jsonState);
+    }
+
     OnChangeRadioButton(e) {
         this.props.UpdateState({
             [e.target.name]: e.target.value
@@ -290,7 +425,7 @@ class PriceFactorCreatorUpdaterForm extends Component {
         return (
             <div className='popup_inner pricefactor_createform_size div_scroll_bar'>
                 <div>
-                    <a class="close popup-button-close pricefactor_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
+                    <a className="close popup-button-close pricefactor_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
                     <h1>{this.props.titleForm}</h1>
                 </div>
                 <div className="pricefactor_information">
@@ -309,6 +444,8 @@ class PriceFactorCreatorUpdaterForm extends Component {
 
                         OnchangeStartDate={this.OnchangeStartDate}
                         OnchangeEndDate={this.OnchangeEndDate}
+                        OnAddTokenField={this.OnAddTokenField}
+                        OnRemoveTokenField={this.OnRemoveTokenField}
                     />
                 </div>
 
@@ -321,7 +458,11 @@ class PriceFactorCreatorUpdater extends Component {
     constructor(props) {
         super(props);
 
-        var jsonState = {};
+        var jsonState = {
+            selectedTimeSlots: [],
+            allowAddTimeSlot: true,
+            error_date: ""
+        };
         jsonState = this.SetInitState(jsonState);
         this.state = this.SetInitError(jsonState);
 
@@ -338,7 +479,7 @@ class PriceFactorCreatorUpdater extends Component {
                 var list_loai_co_che = [];
                 var list_gia_tri = [];
 
-                res.body.map((servicePrice) => {
+                res.body.forEach((servicePrice) => {
                     _ids.push(servicePrice._id);
                     list_ma_gia.push(servicePrice.ma_gia);
                     list_loai_co_che.push(servicePrice.loai_co_che);
@@ -364,15 +505,17 @@ class PriceFactorCreatorUpdater extends Component {
 
     SetInitState(jsonState) {
         var today = new Date();
+        var array_khung_gio = KHUNG_GIO.slice();
 
+        jsonState.array_khung_gio = array_khung_gio;
         if (this.props.modeAction === "create") {
             jsonState.ma_chi_so = '';
             jsonState.ten_chi_so = '';
             jsonState.don_gia_co_ban = 0;
-            jsonState.khung_gio_ap_dung = {
-                bat_dau: 2,
-                ket_thuc: 4
-            };
+
+            jsonState.remainingTimeSlots = array_khung_gio;
+            jsonState.time_slot = array_khung_gio[0];
+
             jsonState.loai_gia_tri_tang_them = 1;
             jsonState.phan_tram_tang_giam = 0;
             jsonState.start_date = today;
@@ -389,7 +532,23 @@ class PriceFactorCreatorUpdater extends Component {
             jsonState.ma_chi_so = editContents.ma_chi_so;
             jsonState.ma_gia = editContents.ma_gia;
             jsonState.don_gia_co_ban = editContents.gia_tri_ap_dung;
-            jsonState.khung_gio_ap_dung = editContents.loai_nhan_to.khung_gio;
+
+            jsonState.remainingTimeSlots = array_khung_gio;
+
+            var currentSelectedTimeSlots = TransferArrayTimeSlotJsonToArrayString(editContents.loai_nhan_to.khung_gio);
+            var currentSelectedTimeSlotsWithAll = currentSelectedTimeSlots.slice();
+            currentSelectedTimeSlotsWithAll.push("all");
+         
+            if (CheckSimilarArray(currentSelectedTimeSlotsWithAll, jsonState.remainingTimeSlots)) {
+                jsonState.selectedTimeSlots = ["all"];
+                jsonState.allowAddTimeSlot = false;
+            }
+            else {
+                jsonState.selectedTimeSlots = currentSelectedTimeSlots;
+            }
+
+            jsonState.remainingTimeSlots = GetRemainingTimeSlots(array_khung_gio, jsonState.selectedTimeSlots);
+            jsonState.time_slot = jsonState.remainingTimeSlots[0];
 
             var ti_le_tang = (editContents.ti_le_tinh_gia.tang === 1) ? 1 : -1;
             jsonState.loai_gia_tri_tang_them = editContents.ti_le_tinh_gia.loai_ti_le * ti_le_tang;
@@ -422,12 +581,27 @@ class PriceFactorCreatorUpdater extends Component {
             var startDateJson = DateToJsonDate(state.start_date);
             var endDateJson = DateToJsonDate(state.end_date);
 
+            var khung_gio = {};
+            var remainingTimeSlots = state.remainingTimeSlots;
+            var selectedTimeSlots = state.selectedTimeSlots;
+
+            if (selectedTimeSlots.length === 1 && selectedTimeSlots[0] === "all") {
+                selectedTimeSlots = remainingTimeSlots;
+            }
+            var array_bat_dau = [];
+            var array_ket_thuc = [];
+            selectedTimeSlots.forEach(timeSlot => {
+                TransferTimeLogStringToArrayElement(timeSlot, array_bat_dau, array_ket_thuc)
+            });
+            khung_gio.bat_dau = array_bat_dau;
+            khung_gio.ket_thuc = array_ket_thuc;
+
             var priceFactorContent = {
                 ma_chi_so: state.ma_chi_so,
                 ten_chi_so: state.ten_chi_so,
                 ma_gia: state.ma_gia,
                 loai_nhan_to: {
-                    khung_gio: state.khung_gio_ap_dung,
+                    khung_gio: khung_gio,
                     vi_tri: {
                         tinh: state.tinh,
                         quan_huyen: state.quan_huyen
@@ -492,7 +666,7 @@ class PriceFactorCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (parseInt(state.phan_tram_tang_giam) <= 0) {
+        if (parseInt(state.phan_tram_tang_giam, 10) <= 0) {
             jsonError.error_phan_tram_tang_giam = "Yêu cầu lớn hơn 0";
             isValid = false;
         }

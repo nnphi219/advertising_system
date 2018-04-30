@@ -34,7 +34,7 @@ exports.create_a_user = function (req, res) {
         accessToken: token
       };
 
-      if(new_user.UrlApi !== undefined && new_user.UrlApi !== null) {
+      if (new_user.UrlApi !== undefined && new_user.UrlApi !== null) {
         userRes.UrlApi = new_user.UrlApi;
       }
 
@@ -56,6 +56,14 @@ exports.read_a_user = function (req, res) {
   // authenticate(req, res, function(req, res) {
   //   res.send(req.user);
   // });
+};
+
+exports.read_a_user_by_username = function (username, next) {
+  User.findOne({username: username}, function (err, user) {
+    if (err)
+      next(null);
+    next(user);
+  });
 };
 
 
@@ -92,7 +100,7 @@ exports.delete_a_user = function (req, res) {
 
 exports.UserLogin = function (req, res) {
   var body = _.pick(req.body, ['username', 'password']);
-  
+
   User.findByCredentials(body.username, body.password)
     .then((user) => {
       user.generateAuthToken().then((token) => {
@@ -103,7 +111,7 @@ exports.UserLogin = function (req, res) {
           accessToken: token
         };
 
-        if(user.UrlApi !== undefined && user.UrlApi !== null) {
+        if (user.UrlApi !== undefined && user.UrlApi !== null) {
           userRes.UrlApi = user.UrlApi;
         }
 

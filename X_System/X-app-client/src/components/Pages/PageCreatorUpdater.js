@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import { UrlApi, UrlRedirect } from '../share/Url';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate, RenderTextArea } from '../share/InputsRender';
+import { RenderInput } from '../share/InputsRender';
 
 import './page.css';
-
-var rp = require('request-promise');
 
 class RenderProperties extends Component {
     render() {
@@ -177,7 +175,6 @@ class PageCreatorUpdater extends Component {
                 return;
             }
 
-            var $this = this;
             var token = localStorage.getItem('x-auth');
 
             Request.post(UrlApi.Pages)
@@ -207,7 +204,6 @@ class PageCreatorUpdater extends Component {
         }
 
         var url = UrlApi.Pages + "/" + this.props.editContents._id;
-        var $this = this;
         var token = localStorage.getItem('x-auth');
 
         Request.put(url)
@@ -241,12 +237,6 @@ class PageCreatorUpdater extends Component {
                 />
             </div>
         );
-    }
-}
-var userInputsData = {
-    user_type: {
-        keys: ["user", "admin"],
-        values: ["user", "admin"]
     }
 }
 

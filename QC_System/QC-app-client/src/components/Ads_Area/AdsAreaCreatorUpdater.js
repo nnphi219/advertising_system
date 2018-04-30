@@ -19,7 +19,7 @@ function AdsAreaRenderInput(props) {
             classNameInput += (props.errorTitle !== undefined && props.errorTitle !== "") ? " input--required" : "";
         }
     }
-    console.log(props.inputData.id + " " + props.isReadOnly);
+
     return (
         <div>
             <label key={props.inputData.id} className="fullwidth">
@@ -67,8 +67,6 @@ function RenderDoubleInputs(props) {
 }
 
 function RenderCombobox(props) {
-    var count = 0;
-
     var selectedValue = props.stateValues[props.inputData.id];
     if (AreaCombobox.includes(props.inputData.id)) {
         selectedValue = TransferSizeToString(selectedValue);
@@ -172,7 +170,7 @@ function RenderProperties(props) {
             inputs.push(<RenderRadioButton key={element.id} inputData={element} keySelectedItem={keySelectedItem} handleOnchangeRadioButton={props.handleOnchangeRadioButton} />);
         }
         else if (element.type === "double_inputs") {
-            inputs.push(<RenderDoubleInputs inputData={element} stateValues={props.stateValues} OnChangeInput={props.handleOnchangeInput} />);
+            inputs.push(<RenderDoubleInputs key={element.id} inputData={element} stateValues={props.stateValues} OnChangeInput={props.handleOnchangeInput} />);
         }
         else {
             var valueInput = props.stateValues[element.id];
@@ -245,7 +243,7 @@ class AdsAreaCreatorForm extends Component {
             <div className='popup_inner adsarea_createform_size'>
                 <div>
                     <div>
-                        <a class="close popup-button-close adsarea_margin_button-close" onClick={this.handleClosePopup}>×</a>
+                        <a className="close popup-button-close adsarea_margin_button-close" onClick={this.handleClosePopup}>×</a>
                         <h1>{this.props.titleForm}</h1>
                     </div>
                     <div key="left" className="adsarea_information_left">
@@ -323,7 +321,7 @@ class AdsAreaCreatorUpdater extends Component {
                 var keys = [];
                 var values = [];
                 if (res.body) {
-                    res.body.map((appliedPage) => {
+                    res.body.forEach((appliedPage) => {
                         _ids.push(appliedPage._id);
                         keys.push(appliedPage.ma_trang_quang_cao);
                         values.push(appliedPage.ten_trang_quang_cao);
@@ -358,7 +356,7 @@ class AdsAreaCreatorUpdater extends Component {
                 var values = [];
 
                 if (res.body) {
-                    res.body.map((appliedPostType) => {
+                    res.body.forEach((appliedPostType) => {
                         _ids.push(appliedPostType._id);
                         keys.push(appliedPostType.ma_loai_bai_dang);
                         values.push(appliedPostType.ten_loai_bai_dang);
@@ -428,6 +426,11 @@ class AdsAreaCreatorUpdater extends Component {
     }
 
     SetInitState(inputs, jsonState) {
+        jsonState.AdsAreaTypes = {
+            keys: ["banner", "tin_rao"],
+            values: ["banner", "Tin rao"]
+        };
+
         if (this.props.modeAction === "create") {
             inputs.forEach(element => {
                 if (element.type === "combobox") {
@@ -455,10 +458,14 @@ class AdsAreaCreatorUpdater extends Component {
         else {
             inputs.forEach(element => {
                 if (element.type === "combobox") {
-                    if(element.id === "loai_trang_ap_dung" || element.id === "loai_bai_dang_ap_dung"){
+                    if (element.id === "loai_trang_ap_dung" || element.id === "loai_bai_dang_ap_dung") {
                         jsonState[element.id] = this.props.editContents[element.id].key;
                     }
-                    else{
+                    else if (element.id === "loai_quang_cao") {
+                        console.log(this.props.editContents[element.id].key);
+                        jsonState[element.id] = this.props.editContents[element.id].key;
+                    }
+                    else {
                         jsonState[element.id] = this.props.editContents[element.id];
                     }
                 }
@@ -515,27 +522,27 @@ class AdsAreaCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (parseInt(state.so_luong_chia_se_vung) <= 0) {
+        if (parseInt(state.so_luong_chia_se_vung, 10) <= 0) {
             jsonError.error_so_luong_chia_se_vung = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_luong_tin_toi_da) <= 0) {
+        if (parseInt(state.so_luong_tin_toi_da, 10) <= 0) {
             jsonError.error_so_luong_tin_toi_da = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_luong_chu_mo_ta) <= 0) {
+        if (parseInt(state.so_luong_chu_mo_ta, 10) <= 0) {
             jsonError.error_so_luong_chu_mo_ta = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.kich_thuoc_vien) <= 0) {
+        if (parseInt(state.kich_thuoc_vien, 10) <= 0) {
             jsonError.error_kich_thuoc_vien = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_luong_chu_xem_truoc) <= 0) {
+        if (parseInt(state.so_luong_chu_xem_truoc, 10) <= 0) {
             jsonError.error_so_luong_chu_xem_truoc = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
@@ -555,10 +562,16 @@ class AdsAreaCreatorUpdater extends Component {
             var indexOfAppliedPage = state.AppliedPages.keys.indexOf(state.loai_trang_ap_dung);
             var indexOfAppliedPostType = state.AppliedPostTypes.keys.indexOf(state.loai_bai_dang_ap_dung);
 
+            var indexOfAdsType = state.AdsAreaTypes.keys.indexOf(state.loai_quang_cao);
+            var loai_quang_cao = {
+                key: state.loai_quang_cao,
+                value: state.AdsAreaTypes.values[indexOfAdsType]
+            };
+
             var adsAreaContent = {
                 ma_dich_vu: state.ma_dich_vu,
                 ten_hien_thi: state.ten_hien_thi,
-                loai_quang_cao: state.loai_quang_cao,
+                loai_quang_cao: loai_quang_cao,
                 loai_trang_ap_dung: {
                     key: state.loai_trang_ap_dung,
                     value: state.AppliedPages.values[indexOfAppliedPage]
@@ -568,8 +581,8 @@ class AdsAreaCreatorUpdater extends Component {
                     value: state.AppliedPostTypes.values[indexOfAppliedPostType]
                 },
                 kich_thuoc_vung: {
-                    width: parseInt(state.ktv_chieu_rong),
-                    height: parseInt(state.ktv_chieu_cao)
+                    width: parseInt(state.ktv_chieu_rong, 10),
+                    height: parseInt(state.ktv_chieu_cao, 10)
                 },
                 so_luong_chia_se_vung: state.so_luong_chia_se_vung,
                 so_luong_tin_toi_da: state.so_luong_tin_toi_da,
@@ -714,8 +727,8 @@ var adsAreaInformationInputs = [
         "description": "Trang áp dụng quảng cáo",
         "id": "loai_trang_ap_dung",
         "type": "combobox",
-        "keys": ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
-        "values": ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
+        "keys": ["trang_chu2", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
+        "values": ["Trang chủ2", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
     },
     {
         "description": "Loại bài đăng áp dụng",

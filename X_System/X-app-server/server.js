@@ -12,14 +12,20 @@ var express = require('express'),
     bodyParser = require('body-parser');
 var cors = require('cors');
 var hostname = 'http://xsystem-server.localtest.me';
+
+const fileUpload = require('express-fileupload');
+
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://localhost:27017/x_system'); 
-mongoose.connect('mongodb://xsystemadmin:xsystemadmin@ds115569.mlab.com:15569/xsystem');
+mongoose.connect('mongodb://localhost:27017/x_system'); 
+// mongoose.connect('mongodb://xsystemadmin:xsystemadmin@ds115569.mlab.com:15569/xsystem');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Use for upload file
+app.use(fileUpload());
 
 var todoListRoute = require('./api/routes/todoListRoute'); //importing route
 var userRoute = require('./api/routes/UserRoute');
@@ -27,6 +33,7 @@ var postRoute = require('./api/routes/PostRoute');
 var pageRoute = require('./api/routes/PageRoute');
 var postTypeRoute = require('./api/routes/PostTypeRoute');
 var commonRoute = require('./api/routes/CommonRoute');
+var qcInteractionRoute = require('./api/routes/QCInteractionRoute');
 
 todoListRoute(app);
 userRoute(app);
@@ -34,6 +41,8 @@ postRoute(app);
 postTypeRoute(app);
 pageRoute(app);
 commonRoute(app);
+
+qcInteractionRoute(app);
 
 app.listen(port);
 

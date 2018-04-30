@@ -4,14 +4,11 @@ import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './service_price.css';
 import { JsonDateToDate, DateToJsonDate, TransferSelectInputKeyToValue } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { RenderInput, RenderSelect, RenderRadioButon } from '../share/InputsRender';
+import { Date2BiggerDate1 } from '../share/DateFormat';
 import { DescriptionDetail } from '../share/CommonComponent';
 
 class RenderLeftForm extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         var props = this.props;
         var stateValues = props.stateValues;
@@ -19,9 +16,6 @@ class RenderLeftForm extends Component {
         var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
         var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
 
-        var classNamePriceId = this.props.stateValues.ma_gia === "" ? "input--required" : "";
-
-        var props = this.props;
         var ma_gia_isReadOnly = this.props.modeAction === 'edit' ? 1 : 0;
 
         var arrayAdsAreaTitles = [];
@@ -30,10 +24,21 @@ class RenderLeftForm extends Component {
             arrayAdsAreaTitles.push("Loại quảng cáo: " + stateValues.AdsAreaIds.list_loai_quang_cao[indexOfAdsArea]);
             arrayAdsAreaTitles.push("Trang áp dụng: " + stateValues.AdsAreaIds.list_loai_trang_ap_dung[indexOfAdsArea]);
         }
+
         return (
             <div key="left" className="serviceprice_information_left">
                 <h2>Thông tin giá dịch vụ</h2>
                 <div>
+                    <RenderInput
+                        nameId={"ma_gia"}
+                        title={"Mã giá"}
+                        value={this.props.stateValues.ma_gia}
+                        errorTitle={props.stateValues.error_ma_gia}
+                        type={"text"}
+                        className={"serviceprice--input"}
+                        isReadOnly={ma_gia_isReadOnly}
+                        OnChangeInput={this.props.OnChangeInput}
+                    />
                     <RenderSelect
                         nameId={"ma_dich_vu_ap_dung"}
                         title={"Dịch vụ quảng cáo"}
@@ -46,16 +51,7 @@ class RenderLeftForm extends Component {
                     <DescriptionDetail
                         arrayTitles={arrayAdsAreaTitles}
                     />
-                    <RenderInput
-                        nameId={"ma_gia"}
-                        title={"Mã giá"}
-                        value={this.props.stateValues.ma_gia}
-                        errorTitle={props.stateValues.error_ma_gia}
-                        type={"text"}
-                        className={"serviceprice--input"}
-                        isReadOnly={ma_gia_isReadOnly}
-                        OnChangeInput={this.props.OnChangeInput}
-                    />
+
                     <div>
                         <div className="">
                             <label className="fullwidth">
@@ -63,6 +59,7 @@ class RenderLeftForm extends Component {
                                 <div>
                                     <DatePicker name="start_date" value={this.props.stateValues.start_date} onChange={this.props.OnchangeStartDate} className="input-date" />
                                 </div>
+                                <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_start_date}</p>
                             </label>
                         </div>
                     </div>
@@ -82,6 +79,7 @@ class RenderLeftForm extends Component {
                                 <div>
                                     <DatePicker name="end_date" value={this.props.stateValues.end_date} onChange={this.props.OnchangeEndDate} className="input-date" />
                                 </div>
+                                <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_end_date}</p>
                             </label>
                         </div>
                     </div>
@@ -175,6 +173,7 @@ class RenderProperties extends Component {
                     OnChangeInput={this.props.OnChangeInput}
                     OnChangeSelect={this.props.OnChangeSelect}
                     OnChangeRadioButton={this.props.OnChangeRadioButton}
+
                     stateValues={this.props.stateValues}
                 />
             </div>
@@ -194,13 +193,37 @@ class ServicePriceCreatorUpdaterForm extends Component {
         this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
     }
 
-    OnchangeStartDate(date) {
-        var jsonState = { "start_date": date }
+    OnchangeStartDate(start_date) {
+        let end_date = this.props.stateValues.end_date;
+        var jsonState = {
+            error_start_date: "",
+            error_end_date: ""
+        };
+
+        if (Date2BiggerDate1(start_date, end_date)) {
+            jsonState.start_date = start_date;
+        }
+        else {
+            jsonState.error_start_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+
         this.props.UpdateState(jsonState);
     }
 
-    OnchangeEndDate(date) {
-        var jsonState = { "end_date": date }
+    OnchangeEndDate(end_date) {
+        let start_date = this.props.stateValues.start_date;
+        var jsonState = {
+            error_start_date: "",
+            error_end_date: ""
+        };
+
+        if (Date2BiggerDate1(start_date, end_date)) {
+            jsonState.end_date = end_date;
+        }
+        else {
+            jsonState.error_end_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+    
         this.props.UpdateState(jsonState);
     }
 
@@ -226,7 +249,7 @@ class ServicePriceCreatorUpdaterForm extends Component {
         return (
             <div className='popup_inner serviceprice_createform_size div_scroll_bar'>
                 <div>
-                    <a class="close popup-button-close serviceprice_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
+                    <a className="close popup-button-close serviceprice_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
                     <h1>{this.props.titleForm}</h1>
                 </div>
                 <RenderProperties
@@ -252,7 +275,10 @@ class ServicePriceCreatorUpdater extends Component {
     constructor(props) {
         super(props);
 
-        var jsonState = {};
+        var jsonState = {
+            error_start_date: "",
+            error_end_date: ""
+        };
         jsonState = this.SetInitState(jsonState);
         this.state = this.SetInitError(jsonState);
         this.GetAdsAreasByUser();
@@ -269,12 +295,12 @@ class ServicePriceCreatorUpdater extends Component {
                 var list_loai_trang_ap_dung = [];
                 var list_loai_quang_cao = [];
 
-                res.body.map((adsArea) => {
+                res.body.forEach((adsArea) => {
                     _ids.push(adsArea._id);
                     keys.push(adsArea.ma_dich_vu);
                     values.push(adsArea.ten_hien_thi);
                     list_loai_trang_ap_dung.push(adsArea.loai_trang_ap_dung.value);
-                    list_loai_quang_cao.push(adsArea.loai_quang_cao);
+                    list_loai_quang_cao.push(adsArea.loai_quang_cao.value);
                 });
 
                 var jsonAdsAreaIds = {
@@ -357,17 +383,17 @@ class ServicePriceCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (parseInt(state.gia_tri) <= 0) {
+        if (parseInt(state.gia_tri, 10) <= 0) {
             jsonError.error_gia_tri = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_ngay_ap_dung) <= 0) {
+        if (parseInt(state.so_ngay_ap_dung, 10) <= 0) {
             jsonError.error_so_ngay_ap_dung = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
 
-        if (parseInt(state.so_click_tren_view) <= 0) {
+        if (parseInt(state.so_click_tren_view, 10) <= 0) {
             jsonError.error_so_click_tren_view = "Yêu cầu lớn hơn 0";
             isValid = false;
         }
@@ -385,7 +411,7 @@ class ServicePriceCreatorUpdater extends Component {
 
         if (isValid) {
             var startDateJson = DateToJsonDate(state.start_date);
-            var endDateJson = parseInt(state.co_thoi_diem_ket_thuc) === 1 ? DateToJsonDate(state.end_date) : null;
+            var endDateJson = parseInt(state.co_thoi_diem_ket_thuc, 10) === 1 ? DateToJsonDate(state.end_date) : null;
 
             var servicePriceContent = {
                 ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
@@ -403,7 +429,7 @@ class ServicePriceCreatorUpdater extends Component {
                 value: TransferSelectInputKeyToValue(state.loai_co_che, servicePriceInputs.loai_co_che.keys, servicePriceInputs.loai_co_che.values)
             }
 
-            var so_click_tren_view = parseInt(state.so_click_tren_view);
+            var so_click_tren_view = parseInt(state.so_click_tren_view, 10);
 
             if (so_click_tren_view > 0) {
                 servicePriceContent.so_luong_don_vi_ap_dung.so_click_tren_view = so_click_tren_view

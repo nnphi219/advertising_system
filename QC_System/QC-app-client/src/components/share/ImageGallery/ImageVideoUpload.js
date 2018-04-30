@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import './style.css';
-import FileUploadProgress  from 'react-fileupload-progress';
-import axios from 'axios';
 const uuidv4 = require('uuid/v4');
 
 

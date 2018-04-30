@@ -4,34 +4,33 @@ import Request from 'superagent';
 import { AppAdmin, AppXSystem } from './App';
 import registerServiceWorker from './registerServiceWorker';
 import Layout from './components/layout/Layout';
-import UserLogin from './components/User/UserLogin';
-import UrlApi, { UrlRedirect } from './components/share/UrlApi';
+import UrlApi from './components/share/UrlApi';
 
 import './index.css';
 import './frontend/vendor/popup/popup.css';
 import './frontend/vendor/bootstrap/css/bootstrap.css';
+import './frontend/vendor/bootstrap/css/bootstrap-tokenfield.css';
 import './frontend/vendor/metisMenu/metisMenu.css';
 import './frontend/dist/css/sb-admin-2.css';
 import './frontend/vendor/morrisjs/morris.css';
 import './frontend/vendor/font-awesome/css/font-awesome.css';
 
-var AllowedUrl = ["login", "register"];
+var AllowedUrl = ["login", "register", "post-campaign"];
 var UnallowedUrlLogin = ["login", "register"];
 
 var currentUrl = window.location.href;
 var systemType = currentUrl.replace('http://', "").replace("https://", "").split('/')[1];
 var elementApp = <AppAdmin />;
 
+var currentPage = currentUrl.replace('http://', '').replace('https://', '').split('/')[1];
+var currentPageWithoutParameters = currentPage.split('?')[0];
+
 if (systemType === "x-system") {
     elementApp = <AppXSystem />;
 }
-var logedIn = false;
 
 function ReactRender(haveLayout) {
-    var currentURL = window.location.href.replace('http://', '').replace('https://', '');
-    var currentPath = currentURL.split('/')[1];
-
-    if (haveLayout && currentPath === "post-campaign") {
+    if (haveLayout && currentPageWithoutParameters === "post-campaign") {
         haveLayout = false;
     }
 
@@ -43,10 +42,7 @@ function ReactRender(haveLayout) {
 }
 
 function RedirectUrl() {
-    var currentURL = window.location.href.replace('http://', '').replace('https://', '');
-    var currentPath = currentURL.split('/')[1];
-
-    if (AllowedUrl.indexOf(currentPath) === -1) {
+    if (AllowedUrl.indexOf(currentPageWithoutParameters) === -1) {
         window.location.href = '/login';
     }
     else {
@@ -60,10 +56,7 @@ Request.get(UrlApi.UserAuthen)
     .then((res) => {
         var user = res.body;
         if (user) {
-            var currentURL = window.location.href.replace('http://', '').replace('https://', '');
-            var currentPath = currentURL.split('/')[1];
-
-            if (UnallowedUrlLogin.indexOf(currentPath) === -1) {
+            if (UnallowedUrlLogin.indexOf(currentPage) === -1) {
                 ReactRender(true);
             }
             else {

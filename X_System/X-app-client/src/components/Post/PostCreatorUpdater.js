@@ -1,41 +1,58 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import { UrlApi, UrlRedirect } from '../share/Url';
-import { RenderInput, RenderDate, RenderTextArea } from '../share/InputsRender';
+import { RenderInput, RenderTextArea, RenderSelect } from '../share/InputsRender';
 
 import './post.css';
 import Img from 'react-image';
 
-var rp = require('request-promise');
-var FileSaver = require('file-saver');
+const uuidv4 = require('uuid/v4');
 
 class RenderProperties extends Component {
     render() {
         var props = this.props;
-        var imageUrls = props.stateValues.imageUrls;
+        var stateValues = props.stateValues;
+        var imageUrls = stateValues.imageUrls;
         var renderImages = [];
         imageUrls.forEach(imageUrl => {
             renderImages.push(<Img key={imageUrl} src={imageUrl} style={{ marginRight: "5px" }} />);
         });
+
+        var postTypesKeys = [];
+        var postTypesValues = [];
+        if (stateValues.PostTypes !== undefined) {
+            postTypesKeys = stateValues.PostTypes.keys;
+            postTypesValues = stateValues.PostTypes.values;
+        }
 
         return (
             <div style={{ paddingLeft: "30px" }}>
                 <RenderInput
                     nameId={"ma_bai_dang"}
                     title={"Mã bài đăng"}
-                    value={this.props.stateValues.ma_bai_dang}
+                    value={stateValues.ma_bai_dang}
                     type={"text"}
                     className={"user--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
 
+                <RenderSelect
+                    nameId={"ma_loai_bai_dang"}
+                    title={"Mã loại bài đăng"}
+                    keys={postTypesKeys}
+                    values={postTypesValues}
+                    selectedValue={stateValues.ma_loai_bai_dang}
+                    OnChangeSelect={props.OnChangeInput}
+                    className={"input--select"}
+                />
+
                 <RenderInput
                     nameId={"tieu_de"}
                     title={"Tiêu đề"}
-                    value={this.props.stateValues.tieu_de}
+                    value={stateValues.tieu_de}
                     type={"text"}
                     className={"user--input"}
-                    OnChangeInput={this.props.OnChangeInput}
+                    OnChangeInput={props.OnChangeInput}
                 />
                 <div>
                     <div>
@@ -50,10 +67,10 @@ class RenderProperties extends Component {
                 <RenderTextArea
                     nameId={"noi_dung"}
                     title={"Nội dung"}
-                    value={this.props.stateValues.noi_dung}
+                    value={stateValues.noi_dung}
                     type={"text"}
                     className={"textarea--input"}
-                    OnChangeInput={this.props.OnChangeInput}
+                    OnChangeInput={props.OnChangeInput}
                 />
             </div>
         );
@@ -111,6 +128,43 @@ class PostCreatorUpdater extends Component {
         this.OnChangeImageFile = this.OnChangeImageFile.bind(this);
     }
 
+    componentDidMount() {
+        var $this = this;
+        this.GetPostTypes()
+            .then((jsonSetForeignedInfos) => {
+                $this.setState(jsonSetForeignedInfos);
+            });
+    }
+
+    GetPostTypes() {
+        return Request.get(UrlApi.PostTypes)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .then((res) => {
+                var postTypes = res.body;
+                var _ids = [];
+                var keys = [];
+                var values = [];
+
+                postTypes.forEach((postType) => {
+                    _ids.push(postType._id);
+                    keys.push(postType.ma_loai_bai_dang);
+                    values.push(postType.ten_loai_bai_dang);
+                });
+
+                var jsonSetForeignedInfos = {
+                    PostTypes: {
+                        _ids, keys, values
+                    }
+                }
+
+                if (this.props.modeAction === "create") {
+                    jsonSetForeignedInfos.ma_loai_bai_dang = keys[0];
+                }
+
+                return jsonSetForeignedInfos;
+            });
+    }
+
     SetInitState(jsonState) {
         if (this.props.modeAction === "create") {
             jsonState.imageUrls = [];
@@ -122,6 +176,7 @@ class PostCreatorUpdater extends Component {
             jsonState.tieu_de = editContents.tieu_de;
             jsonState.noi_dung = editContents.noi_dung;
             jsonState.imageUrls = editContents.imageUrls;
+            jsonState.ma_loai_bai_dang = editContents.ma_loai_bai_dang;
         }
     }
 
@@ -130,13 +185,49 @@ class PostCreatorUpdater extends Component {
         event.preventDefault();
         var file = event.target.files[0];
 
-        FileSaver.saveAs(file, '/images/' + file.name);
+        // FileSaver.saveAs(file, '/images/' + file.name);
 
         var imageUrls = this.state.imageUrls;
         imageUrls.push('/images/' + file.name);
         this.setState({
             imageUrls: imageUrls
         });
+
+        const data = new FormData();
+        data.append('file', file);
+        data.append('filename', file.file_name || uuidv4());
+        
+        fetch(UrlApi.UploadFile, {
+            method: 'POST',
+            body: data,
+        }).then((response) => {
+            response.json().then((body) => {
+                console.log(body);
+            });
+        }).catch((e) => {
+           
+            this.props.Onchange({UploadImageDescription: "fail"});
+        });
+
+        // Request.post(UrlApi.UploadFile)
+        //     .set('Content-Type', 'application/x-www-form-urlencoded')
+        //     .send(file)
+        //     .end(function (err, res) {
+        //         console.log(res);
+        //     });
+
+        // var data = new FormData();
+        // data.append('file', file);
+        // data.append('filename', file.name);
+
+        // fetch(UrlApi.UploadFile, {
+        //     method: 'POST',
+        //     body: data,
+        // }).then((response) => response.json())
+        //     .then(response => console.log(response))
+        //     .catch((e) => {
+        //         console.log(2);
+        //     });
     }
 
     handleUpdateState(jsonState) {
@@ -151,7 +242,8 @@ class PostCreatorUpdater extends Component {
             tieu_de: state.tieu_de,
             noi_dung: state.noi_dung,
             url: `/post/${state.ma_bai_dang}`,
-            imageUrls: state.imageUrls
+            imageUrls: state.imageUrls,
+            ma_loai_bai_dang: state.ma_loai_bai_dang
         };
 
         return content;
@@ -159,8 +251,7 @@ class PostCreatorUpdater extends Component {
 
     CreatePost() {
         var content = this.GetModelStateJson();
-   
-        var $this = this;
+
         var token = localStorage.getItem('x-auth');
 
         Request.post(UrlApi.PostManagement)
@@ -182,7 +273,6 @@ class PostCreatorUpdater extends Component {
         var content = this.GetModelStateJson();
 
         var url = UrlApi.PostManagement + "/" + this.props.editContents._id;
-        var $this = this;
         var token = localStorage.getItem('x-auth');
 
         Request.put(url)
@@ -217,12 +307,6 @@ class PostCreatorUpdater extends Component {
                 />
             </div>
         );
-    }
-}
-var userInputsData = {
-    user_type: {
-        keys: ["user", "admin"],
-        values: ["user", "admin"]
     }
 }
 

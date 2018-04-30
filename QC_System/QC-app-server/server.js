@@ -37,6 +37,8 @@ var promotionManagement = require('./api/routes/PromotionManagementRoute');
 var postCampaignManagement = require('./api/routes/PostCampaignManagementRoute');
 let postManagement = require('./api/routes/PostManagementRoute');
 
+var xSystemInteractionRoute = require('./api/routes/XSystemInteractionRoute');
+
 todoListRoute(app); //register the route
 userRoute(app);
 adsAreaRoute(app);
@@ -45,6 +47,7 @@ servicePriceRoute(app);
 promotionManagement(app);
 postCampaignManagement(app);
 postManagement(app);
+xSystemInteractionRoute(app);
 
 app.listen(port);
 

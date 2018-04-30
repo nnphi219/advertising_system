@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
-import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { JsonDateToDate } from '../share/Mapper';
+import { RenderInput, RenderSelect } from '../share/InputsRender';
 import { ImageVideoUpload } from '../share/ImageGallery/ImageVideoUpload';
 import { TransferSelectInputKeyToValue } from '../share/Mapper';
 import './post_management.css';
@@ -13,9 +12,9 @@ function RenderLeftForm(props) {
     var AdsAreaIdsKeys = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.keys;
     var AdsAreaIdsValues = stateValues.AdsAreaIds === undefined ? [] : stateValues.AdsAreaIds.values;
 
-    var AppliedPageTypeKeys = stateValues.AppliedPageTypes === undefined ? [] : stateValues.AppliedPageTypes.keys;
-    var AppliedPageTypesValues = stateValues.AppliedPageTypes === undefined ? [] : stateValues.AppliedPageTypes.values;
-    console.log(stateValues);
+    // var AppliedPageTypeKeys = stateValues.AppliedPageTypes === undefined ? [] : stateValues.AppliedPageTypes.keys;
+    // var AppliedPageTypesValues = stateValues.AppliedPageTypes === undefined ? [] : stateValues.AppliedPageTypes.values;
+
     var trang_hien_thi = TransferSelectInputKeyToValue(
         props.stateValues.trang_hien_thi,
         ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
@@ -176,7 +175,8 @@ class PostCreatorUpdater extends Component {
                 var adsAreaIdvalues = [];
                 var appliedPageTypeKeys = [];
 
-                res.body.map((adsArea) => {
+                var adsAreas = res.body;
+                adsAreas.forEach(adsArea => {
                     _ids.push(adsArea._id);
                     adsAreaIdkeys.push(adsArea.ma_dich_vu);
                     adsAreaIdvalues.push(adsArea.ten_hien_thi);

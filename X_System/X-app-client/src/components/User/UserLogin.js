@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 import { UrlApi, UrlRedirect } from '../share/Url';
 import validator from 'validator';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { RenderInput } from '../share/InputsRender';
 
 import './user.css';
 

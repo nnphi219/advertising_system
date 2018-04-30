@@ -72,3 +72,85 @@
     float: left; 
     border: 1px inset; /* This is default border style for <hr> tag */
   }
+
+.x_post_campaign {
+    width: 1100px;
+    margin: 30px;
+}
+
+.x_post_campaign_body {
+    margin: 0 20px;
+}
+
+.x_post_campaign--input {
+    display: block;
+    width: 40%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.post_campaign__info--header {
+    background-color: #9badf2;
+    font-size: 30px;
+    padding-left: 10px;
+}
+
+.post_campaign__info--content {
+    padding: 0 30px 20px 30px;
+    border: 3px solid #9badf2;
+    margin-bottom: 20px;
+    padding-top: 10px;
+}
+
+.post_campaign__info--content--postid {
+    height: 72px;
+}
+
+.post_campaign__info--content--adsarea {
+    height: 155px;
+}
+
+.post_campaign__info--content--displaymode {
+    height: 70px;
+}
+
+.post_campaign__info--content-title {
+    font-size: 20px;
+    margin-bottom: 0;
+    margin-top: 5px;
+}
+
+.post_campaign__info--content-title p {
+    margin-bottom: 0;
+}
+
+.post_campaign__info--content-description {
+    font-size: 17px;
+    color: #9b2335;
+    margin-top: 6px;
+    margin-left: 20px;
+    max-width: 600px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.post_campaign__info--content--serviceprice {
+    width: 22%;
+}
+
+.post_campaign__info--displayedpast {
+    width: 210px;
+}

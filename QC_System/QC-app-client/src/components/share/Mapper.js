@@ -9,7 +9,7 @@ export function DateToJsonDate(date) {
 }
 
 export function JsonDateToDate(jsonDate) {
-    var date = new Date(parseInt(jsonDate.year), parseInt(jsonDate.month) - 1, parseInt(jsonDate.day), null, null, null, null);
+    var date = new Date(parseInt(jsonDate.year, 10), parseInt(jsonDate.month, 10) - 1, parseInt(jsonDate.day, 10), null, null, null, null);
     return date;
 }
 
@@ -24,8 +24,14 @@ export function TransferTimeLogJsonToString(valueJson) {
 
 export function TransferTimeLogStringToJson(value) {
     var timeLogArr = value.split("h").join("").split('-');
-    var valueJson = { "bat_dau": timeLogArr[0], "ket_thuc": timeLogArr[1] };
+    var valueJson = { "bat_dau": parseInt(timeLogArr[0], 10) , "ket_thuc": parseInt(timeLogArr[1], 10) };
     return valueJson;
+}
+
+export function TransferTimeLogStringToArrayElement(value, array_bat_dau, array_ket_thuc) {
+    var timeLogArr = value.split("h").join("").split('-');
+    array_bat_dau.push(parseInt(timeLogArr[0], 10));
+    array_ket_thuc.push(parseInt(timeLogArr[1], 10));
 }
 
 export function TransferdisplayMechanismToText(value) {
@@ -67,22 +73,22 @@ export function TransferSelectInputKeyToValue(value, keys, values) {
 // ---------------------- sort
 
 export function JsonSort(data, keys, isASC) {
-    if(keys === ''){
+    if (keys === '') {
         return data;
     }
 
     var keyArr = keys.split('.');
 
-    return data.sort(function(a, b) {
-        var x = a; 
+    return data.sort(function (a, b) {
+        var x = a;
         var y = b;
         keyArr.forEach(key => {
-            x = (x === undefined)? undefined: x[key];
-            y = (y === undefined)? undefined: y[key];
+            x = (x === undefined) ? undefined : x[key];
+            y = (y === undefined) ? undefined : y[key];
         });
 
-        if(x !== undefined && y === undefined){
-            if(isASC) {
+        if (x !== undefined && y === undefined) {
+            if (isASC) {
                 return 1;
             }
             else {
@@ -90,8 +96,8 @@ export function JsonSort(data, keys, isASC) {
             }
         }
 
-        if(x === undefined && y !== undefined){
-            if(isASC) {
+        if (x === undefined && y !== undefined) {
+            if (isASC) {
                 return -1;
             }
             else {
@@ -99,26 +105,26 @@ export function JsonSort(data, keys, isASC) {
             }
         }
 
-        if(isASC) {
-            { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
+        if (isASC) {
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
         }
         else {
-            { return ((x > y) ? -1 : ((x < y) ? 1 : 0)); }
+            return ((x > y) ? -1 : ((x < y) ? 1 : 0));
         }
     });
 };
 
-export function JsonSortDateType(data, keyDate, isASC){
-    if(keyDate === ''){
+export function JsonSortDateType(data, keyDate, isASC) {
+    if (keyDate === '') {
         return data;
     }
 
-    return data.sort(function(a, b) {
-        var x = a[keyDate]; 
+    return data.sort(function (a, b) {
+        var x = a[keyDate];
         var y = b[keyDate];
 
-        if(x !== undefined && y === undefined){
-            if(isASC) {
+        if (x !== undefined && y === undefined) {
+            if (isASC) {
                 return 1;
             }
             else {
@@ -126,8 +132,8 @@ export function JsonSortDateType(data, keyDate, isASC){
             }
         }
 
-        if(x === undefined && y !== undefined){
-            if(isASC) {
+        if (x === undefined && y !== undefined) {
+            if (isASC) {
                 return -1;
             }
             else {
@@ -138,11 +144,11 @@ export function JsonSortDateType(data, keyDate, isASC){
         x = JsonDateToDate(x);
         y = JsonDateToDate(y);
 
-        if(isASC) {
-            { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
+        if (isASC) {
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
         }
         else {
-            { return ((x > y) ? -1 : ((x < y) ? 1 : 0)); }
+            return ((x > y) ? -1 : ((x < y) ? 1 : 0));
         }
     });
 };

@@ -1,18 +1,12 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
 import { DescriptionDetail } from '../share/CommonComponent';
 
 class RenderProperties extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-        var props = this.props;
         var stateValues = this.props.stateValues;
         var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
         var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
@@ -139,7 +133,7 @@ class PromotionCreatorUpdaterForm extends Component {
         return (
             <div className='popup_inner promotion_createform_size div_scroll_bar'>
                 <div>
-                    <a class="close popup-button-close promotion_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
+                    <a className="close popup-button-close promotion_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
                     <h1>{this.props.titleForm}</h1>
                 </div>
                 <RenderProperties
@@ -183,7 +177,7 @@ class PromotionCreatorUpdater extends Component {
                 var list_loai_trang_ap_dung = [];
                 var list_loai_quang_cao = [];
 
-                res.body.map((adsArea) => {
+                res.body.forEach((adsArea) => {
                     _ids.push(adsArea._id);
                     keys.push(adsArea.ma_dich_vu);
                     values.push(adsArea.ten_hien_thi);
@@ -262,7 +256,7 @@ class PromotionCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (parseInt(state.gia_tri) <= 0) {
+        if (parseInt(state.gia_tri, 10) <= 0) {
             jsonError.error_gia_tri = "Yêu cầu lớn hơn 0";
             isValid = false;
         }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import { UrlApi, UrlRedirect } from '../share/Url';
+import { UrlApi } from '../share/Url';
 
 import './page.css';
 
@@ -43,7 +43,7 @@ class PageDetail extends Component {
                 <div>
                     <div>
                         <h1 className="page_detail--header">{pageContent.tieu_de}</h1>
-                        <img className="page_detail--image" src={imageUrl} />
+                        <img className="page_detail--image" src={imageUrl} alt=""/>
                     </div>
                     <div>
                         <span>

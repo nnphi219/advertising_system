@@ -15,7 +15,9 @@ export const UrlApi = {
     ReadAPage: hostNameServer + '/pages/check',
 
     PostTypes: hostNameServer + "/posttypes",
-    ReadAPostType: hostNameServer + "/posttypes/check"
+    ReadAPostType: hostNameServer + "/posttypes/check",
+
+    UploadFile: hostNameServer + "/uploads"
 };
 
 export const UrlRedirect = {

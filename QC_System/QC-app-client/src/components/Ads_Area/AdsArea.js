@@ -4,7 +4,7 @@ import AdsAreaCreatorUpdater from './AdsAreaCreatorUpdater';
 import AdsAreaDeleteForm from './AdsAreaDelete';
 import './ads_area.css';
 import UrlApi from '../share/UrlApi';
-import { TransferSelectInputKeyToValue, JsonSortDateType, JsonSort } from '../share/Mapper';
+import { JsonSortDateType, JsonSort } from '../share/Mapper';
 import RenderHeader from '../share/RenderHeader';
 
 function RenderEditDeleteButton(props) {
@@ -30,6 +30,7 @@ function RenderRow(props) {
     <tr>
       <td>{props.trContentAdsArea.ma_dich_vu}</td>
       <td>{props.trContentAdsArea.ten_hien_thi}</td>
+      <td>{props.trContentAdsArea.loai_quang_cao.value}</td>
       <td>{props.trContentAdsArea.loai_bai_dang_ap_dung.value}</td>
       <td>{props.trContentAdsArea.loai_trang_ap_dung.value}</td>
       <td>{props.trContentAdsArea.so_luong_chia_se_vung}</td>
@@ -46,20 +47,6 @@ function RenderRow(props) {
         />
       </td>
     </tr>
-  );
-}
-
-function RenderHead(props) {
-  var row = [];
-  props.theadAdsAreas.forEach(element => {
-    row.push(<th key={element}>{element}</th>);
-  });
-  return (
-    <thead>
-      <tr>
-        {row}
-      </tr>
-    </thead>
   );
 }
 
@@ -84,35 +71,35 @@ function RenderBody(props) {
   );
 }
 
-class AdsAreaInformation extends Component {
-  render() {
-    var informationLeft = [];
-    informationLeft.push(<p key="title">Đang áp dụng(10) Ngừng kích hoạt(3) Đã xóa(3)</p>);
-    informationLeft.push(<button key="Action" id="Action" type="button" className="btn btn-primary">Chọn hành động</button>);
-    informationLeft.push(<button key="Apply" id="Apply" type="button" className="btn btn-primary">Áp dụng</button>);
-    informationLeft.push(<button key="CreatedDate" id="CreatedDate" type="button" className="btn btn-primary">Chọn ngày tạo</button>);
-    informationLeft.push(<button key="Filter" id="Filter" type="button" className="btn btn-primary">Lọc</button>);
+// class AdsAreaInformation extends Component {
+//   render() {
+//     var informationLeft = [];
+//     informationLeft.push(<p key="title">Đang áp dụng(10) Ngừng kích hoạt(3) Đã xóa(3)</p>);
+//     informationLeft.push(<button key="Action" id="Action" type="button" className="btn btn-primary">Chọn hành động</button>);
+//     informationLeft.push(<button key="Apply" id="Apply" type="button" className="btn btn-primary">Áp dụng</button>);
+//     informationLeft.push(<button key="CreatedDate" id="CreatedDate" type="button" className="btn btn-primary">Chọn ngày tạo</button>);
+//     informationLeft.push(<button key="Filter" id="Filter" type="button" className="btn btn-primary">Lọc</button>);
 
-    var informationRight = [];
+//     var informationRight = [];
 
-    return (
-      <div className="adsarea--information">
-        <div className="adsarea--information-left">
-          {informationLeft}
-        </div>
-        <div className="adsarea--information-right">
-          {informationRight}
-        </div>
-      </div>
-    );
-  }
-}
+//     return (
+//       <div className="adsarea--information">
+//         <div className="adsarea--information-left">
+//           {informationLeft}
+//         </div>
+//         <div className="adsarea--information-right">
+//           {informationRight}
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 class AdsAreaContents extends Component {
   render() {
     var theadAdsAreas = {
-      keys: ['ma_dich_vu', 'ten_hien_thi', 'loai_bai_dang_ap_dung', 'loai_trang_ap_dung', 'so_luong_chia_se_vung', 'so_luong_tin_toi_da', 'kich_thuoc_vung.width', 'trang_thai'],
-      values: ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"]
+      keys: ['ma_dich_vu', 'ten_hien_thi', 'loai_quang_cao.key', 'loai_bai_dang_ap_dung', 'loai_trang_ap_dung', 'so_luong_chia_se_vung', 'so_luong_tin_toi_da', 'kich_thuoc_vung.width', 'trang_thai'],
+      values: ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Loại quảng cáo", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"]
     };
 
     var props = this.props;
@@ -255,7 +242,7 @@ class AdsArea extends Component {
     var url = UrlApi.AdsArea + "/" + event.target.name;
     var $this = this;
     var updateAdsAreaJson = {
-      trang_thai: parseInt(event.target.id) === 1 ? 0 : 1
+      trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
     };
 
     Request.put(url)
