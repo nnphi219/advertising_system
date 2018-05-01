@@ -1,4 +1,9 @@
 'use strict';
+
+var mapper = require('../../share/Mapper');
+var dateFormat = require('../../share/DateFormat');
+var commonFunction = require('../../share/CommonFunction');
+
 const _ = require('lodash');
 
 var mongoose = require('mongoose'),
@@ -7,18 +12,36 @@ var mongoose = require('mongoose'),
 
 var userController = require('./UserController');
 var adsAreaController = require('./AdsAreaController');
+var servicePriceController = require('./ServicePriceController');
+var priceFactorController = require('./PriceFactorController');
+
+function GetSelectedTimeSlotsArrayJson(selectedTimeSlots, next) {
+    let array_khung_gio_bat_dau = selectedTimeSlots.bat_dau.slice();
+    let array_khung_gio_ket_thuc = selectedTimeSlots.ket_thuc.slice();
+    let array_khung_gio = [];
+
+    array_khung_gio_bat_dau.forEach((bat_dau, index) => {
+        let timeSlot = {
+            bat_dau: bat_dau,
+            ket_thuc: array_khung_gio_ket_thuc[index]
+        };
+        array_khung_gio.push(timeSlot);
+    });
+    
+    next(array_khung_gio);
+};
 
 exports.read_Infos_ByUsername = (req, res) => {
     var username = req.header('Username');
 
-    var user = userController.read_a_user_by_username(username, function(user){
+    var user = userController.read_a_user_by_username(username, function (user) {
         if (user) {
             var jsonInfosByUsername = {
                 user: user
             };
-            
-            adsAreaController.read_adsArea_infos_by_username(user.username, function(adsAreaInfos){
-                if(adsAreaInfos !== null) {
+
+            adsAreaController.read_adsArea_infos_by_username(user.username, function (adsAreaInfos) {
+                if (adsAreaInfos !== null) {
                     jsonInfosByUsername.adsAreaInfos = adsAreaInfos;
                 }
                 res.json(jsonInfosByUsername);
@@ -27,5 +50,83 @@ exports.read_Infos_ByUsername = (req, res) => {
         else {
             res.status(404).send();
         }
+    });
+};
+
+exports.get_serviceprice_ByAreaIdAndDisplayMode = (req, res) => {
+    var adsareaId = req.header('adsareaId');
+    var displayModeKey = req.header('displayMode');
+    var nguoitao = req.header('Username');
+    var XSystemToken = req.header('xsystem-auth');
+
+    servicePriceController.get_a_serviceprice_by_adsAreaIdAndCreator(adsareaId, displayModeKey, nguoitao, function (servicePrice) {
+        res.json(servicePrice);
+    });
+}
+
+exports.calculate_total_affect_value = (req, res) => {
+    var content = req.body;
+
+    var appliedServicePriceId = content.appliedServicePriceId;
+
+    var location = content.vi_tri;
+    var jsonStartDate = content.start_date;
+    var jsonEndDate = content.end_date;
+
+
+    var nguoitao = content.Username;
+    var XSystemToken = content['xsystem-auth'];
+
+    var total_affect_value = 0;
+
+    var selectedTimeSlots = {
+        bat_dau: [],
+        ket_thuc: []
+    };  
+    if (content.selectedTimeSlots !== undefined) {
+        selectedTimeSlots = content.selectedTimeSlots;
+        if(typeof(selectedTimeSlots.bat_dau) === "string"){
+            var refactorSelectedTimeSlots = {
+                bat_dau: [selectedTimeSlots.bat_dau],
+                ket_thuc: [selectedTimeSlots.ket_thuc]
+            }
+
+            selectedTimeSlots = refactorSelectedTimeSlots;
+        }
+    }
+
+    GetSelectedTimeSlotsArrayJson(selectedTimeSlots, function (khung_gio) {
+        priceFactorController.read_all_priceFactor_by_servicePriceIdAndDate(appliedServicePriceId, nguoitao, function (priceFactors) {
+            priceFactors.forEach(priceFactor => {
+                let finishLoop = false;
+                let jsonDateInLoop = jsonStartDate;
+                while (!finishLoop) {
+
+                    if (dateFormat.JsonDateIsInTheMiddleOfTime(jsonDateInLoop, priceFactor.start_date, priceFactor_end_date)) {
+                        var priceFactor_timeSlots = priceFactor.loai_nhan_to.khung_gio;
+                        khung_gio.forEach((timeSlot) => {
+                            if (commonFunction.CheckArrayTimeSlotsContainsElement(priceFactor_timeSlots, timeSlot)) {
+                                total_affect_value += priceFactor.gia_tri_tang_them;
+                            }
+                        });
+                    }
+                    console.log("inloop");
+                    var dateInLoop = mapper.JsonDateToDate(jsonDateInLoop);
+                    dateInLoop.setDate(dateInLoop.getDate() + 1);
+                    jsonDateInLoop = mapper.DateToJsonDate(dateInLoop);
+
+                    if (!dateFormat.Date2GreaterThanOrEqualDate1(jsonDateInLoop, jsonEndDate)) {
+                        console.log("condition");
+                        finishLoop = true;
+                    }
+                }
+            });
+            console.log(total_affect_value);
+            var jsonRes = {
+                total_affect_value
+            };
+
+            res.json(jsonRes);
+        });
     });
 };

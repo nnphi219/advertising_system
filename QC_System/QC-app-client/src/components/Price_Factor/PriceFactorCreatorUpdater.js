@@ -3,15 +3,17 @@ import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
 import './price_factor.css';
 
-import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, TransferTimeLogStringToArrayElement, TransferTimeLogJsonToString } from '../share/Mapper';
+import { Transfer_Provice_District_JsonToArray, JsonDateToDate, DateToJsonDate, TransferTimeLogStringToArrayElement, TransferTimeLogJsonToString, GetProvinces, GetDistrictsBasicOnProvince } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 import { DescriptionDetail } from '../share/CommonComponent';
 import { KHUNG_GIO } from '../share/constant';
-import { Date2BiggerDate1 } from '../share/DateFormat';
+import { Date2GreaterThanOrEqualDate1 } from '../share/DateFormat';
 import { ArrayRemoveItem } from '../share/CommonFunction';
 
 const loai_gia_tri_tang_them_theo_phan_tram = 1;
 const loai_gia_tri_tang_them_theo_gia_tri = 2;
+
+const data_tinh_thanh_quan_huyen = require("../../data_sheet/tinh_thanh_quan_huyen.json");
 
 function GetRealValue(stateValues) {
     if (stateValues.ServicePrices !== undefined) {
@@ -42,7 +44,7 @@ function GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots) {
 function TransferArrayTimeSlotJsonToArrayString(jsonArrayTimeSlots) {
     var arrayTimeSlotStrings = [];
     jsonArrayTimeSlots.forEach(jsonTimeSlot => {
-        
+
         arrayTimeSlotStrings.push(TransferTimeLogJsonToString(jsonTimeSlot));
     });
 
@@ -50,13 +52,11 @@ function TransferArrayTimeSlotJsonToArrayString(jsonArrayTimeSlots) {
 }
 
 function CheckSimilarArray(array1, array2) {
-    console.log(array1);
-    console.log(array2);
     var a = array1.slice().sort();
     var b = array2.slice().sort();
     if (a === b) return true;
     if (a == null || b == null) return false;
-    if (a.length != b.length) return false;
+    if (a.length !== b.length) return false;
 
     // If you don't care about the order of the elements inside
     // the array, you should sort both arrays here.
@@ -140,6 +140,13 @@ class RenderProperties extends Component {
                 </div>
             </div>
         );
+
+        var originProvinceCodes = stateValues.originProvinces.codes;
+        var originProvinceNames = stateValues.originProvinces.names;
+
+        var districtsOfSelectedProvince = GetDistrictsBasicOnProvince(stateValues.tinh, stateValues.list_province_district);
+        var districtCodes = districtsOfSelectedProvince.codes;
+        var districtNames = districtsOfSelectedProvince.names;
 
         return (
             <div>
@@ -250,15 +257,33 @@ class RenderProperties extends Component {
                     <div className="float-left">
                         <label key={"tinh"} className="fullwidth">
                             {"Áp dụng cho tỉnh thành"}
-                            <input type="text" id={"tinh"} key={"tinh"} name={"tinh"} value={this.props.stateValues.tinh} onChange={this.props.OnChangeInput} className="pricefactor--input inline" />
+                            <RenderSelect
+                                nameId={"tinh"}
+                                keys={originProvinceCodes}
+                                values={originProvinceNames}
+                                selectedValue={stateValues.tinh}
+                                OnChangeSelect={this.props.OnChangeSelect}
+                                className={"pricefactor--select timeslot_margin_right"}
+                            />
                         </label>
                     </div>
-                    <div className="float-left div_property_margin_bottom">
-                        <label key={"quan_huyen"} className="fullwidth">
-                            {"Áp dụng cho quận huyện"}
-                            <input type="text" id={"quan_huyen"} key={"quan_huyen"} name={"quan_huyen"} value={this.props.stateValues.quan_huyen} onChange={this.props.OnChangeInput} className="pricefactor--input inline" />
-                        </label>
-                    </div>
+                    {
+                        districtCodes.length === 0 ? null
+                            :
+                            <div className="float-left div_property_margin_bottom">
+                                <label key={"quan_huyen"} className="fullwidth">
+                                    {"Áp dụng cho quận huyện"}
+                                    <RenderSelect
+                                        nameId={"quan_huyen"}
+                                        keys={districtCodes}
+                                        values={districtNames}
+                                        selectedValue={stateValues.quan_huyen}
+                                        OnChangeSelect={this.props.OnChangeSelect}
+                                        className={"pricefactor--select"}
+                                    />
+                                </label>
+                            </div>
+                    }
                 </div>
                 <div key={"loai_gia_tri_tang_them"} name={"loai_gia_tri_tang_them"} onChange={this.props.OnChangeRadioButton}>
                     <label className="fullwidth">{"Loại giá trị tăng thêm"}</label>
@@ -275,9 +300,9 @@ class RenderProperties extends Component {
                     OnChangeInput={this.props.OnChangeInput}
                 />
                 <div>
-                    <label key={"gia_tri_thuc"} className="fullwidth">
+                    <label key={"gia_tri_tang_them"} className="fullwidth">
                         {"Giá trị thực"}
-                        <input type="text" id={"gia_tri_thuc"} value={realValue} key={"gia_tri_thuc"} name={"gia_tri_thuc"} onChange={this.props.OnChangeInput} readOnly className="pricefactor--input" />
+                        <input type="text" id={"gia_tri_tang_them"} value={realValue} key={"gia_tri_tang_them"} name={"gia_tri_tang_them"} onChange={this.props.OnChangeInput} readOnly className="pricefactor--input" />
                     </label>
                 </div>
                 <div className="submit">
@@ -317,7 +342,7 @@ class PriceFactorCreatorUpdaterForm extends Component {
         let end_date = this.props.stateValues.end_date;
         var jsonState = { error_date: "" };
 
-        if (Date2BiggerDate1(start_date, end_date)) {
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
             jsonState.start_date = start_date;
         }
         else {
@@ -331,7 +356,7 @@ class PriceFactorCreatorUpdaterForm extends Component {
         let start_date = this.props.stateValues.start_date;
         var jsonState = { error_date: "" };
 
-        if (Date2BiggerDate1(start_date, end_date)) {
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
             jsonState.end_date = end_date;
         }
         else {
@@ -507,6 +532,9 @@ class PriceFactorCreatorUpdater extends Component {
         var today = new Date();
         var array_khung_gio = KHUNG_GIO.slice();
 
+        jsonState.list_province_district = Transfer_Provice_District_JsonToArray(data_tinh_thanh_quan_huyen);
+        jsonState.originProvinces = GetProvinces(jsonState.list_province_district);
+
         jsonState.array_khung_gio = array_khung_gio;
         if (this.props.modeAction === "create") {
             jsonState.ma_chi_so = '';
@@ -515,6 +543,9 @@ class PriceFactorCreatorUpdater extends Component {
 
             jsonState.remainingTimeSlots = array_khung_gio;
             jsonState.time_slot = array_khung_gio[0];
+
+            jsonState.tinh = "";
+            jsonState.quan_huyen = "";
 
             jsonState.loai_gia_tri_tang_them = 1;
             jsonState.phan_tram_tang_giam = 0;
@@ -538,7 +569,7 @@ class PriceFactorCreatorUpdater extends Component {
             var currentSelectedTimeSlots = TransferArrayTimeSlotJsonToArrayString(editContents.loai_nhan_to.khung_gio);
             var currentSelectedTimeSlotsWithAll = currentSelectedTimeSlots.slice();
             currentSelectedTimeSlotsWithAll.push("all");
-         
+
             if (CheckSimilarArray(currentSelectedTimeSlotsWithAll, jsonState.remainingTimeSlots)) {
                 jsonState.selectedTimeSlots = ["all"];
                 jsonState.allowAddTimeSlot = false;
@@ -558,7 +589,7 @@ class PriceFactorCreatorUpdater extends Component {
             jsonState.start_date = JsonDateToDate(editContents.start_date);
             jsonState.end_date = JsonDateToDate(editContents.end_date);
         }
-        jsonState.gia_tri_thuc = 0;
+        jsonState.gia_tri_tang_them = 0;
 
         return jsonState;
     }
@@ -614,7 +645,7 @@ class PriceFactorCreatorUpdater extends Component {
                     gia_tri: state.phan_tram_tang_giam
                 },
 
-                gia_tri_thuc: GetRealValue(state),
+                gia_tri_tang_them: GetRealValue(state),
                 start_date: startDateJson,
                 end_date: endDateJson
             };
@@ -796,7 +827,7 @@ class PriceFactorCreatorUpdater extends Component {
 //     },
 //     {
 //         "description": "Tổng tiền",
-//         "id": "gia_tri_thuc",
+//         "id": "gia_tri_tang_them",
 //         "type": "textbox"
 //     }
 // ];

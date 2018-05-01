@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
-import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson } from '../share/Mapper';
+import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, GetDistrictsBasicOnProvince, Transfer_Provice_District_JsonToArray, GetProvinces, TransferTimeLogStringToArrayElement } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
+import { KHUNG_GIO } from '../share/constant';
+import { ArrayRemoveItem } from '../share/CommonFunction';
+
+const data_tinh_thanh_quan_huyen = require("../../data_sheet/tinh_thanh_quan_huyen.json");
+
+function GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots) {
+    return array_khung_gio.filter((timeSlot) =>
+        selectedTimeSlots.indexOf(timeSlot) > -1 ? false : true
+    );
+}
 
 function RenderForm(props) {
     var stateValues = props.stateValues;
@@ -43,6 +53,24 @@ function RenderForm(props) {
     var postIdValues = postIdKeys;
 
     var displayModeDetailDescription = "";
+
+    var selectedTimeSlots = stateValues.selectedTimeSlots;
+    var timeSlotTokenFields = selectedTimeSlots.map((timeSlot) => {
+        return (
+            <div key={timeSlot} className="token">
+                <span className="token-label" style={{ maxWidth: "769px" }}>{timeSlot}</span>
+                <a name={timeSlot} className="close" tabIndex="-1" onClick={props.OnRemoveTokenField}>×</a>
+            </div>
+        );
+    });
+    var remainingTimeSlots = stateValues.remainingTimeSlots.slice();
+
+    var originProvinceCodes = stateValues.originProvinces.codes;
+    var originProvinceNames = stateValues.originProvinces.names;
+
+    var districtsOfSelectedProvince = GetDistrictsBasicOnProvince(stateValues.lnt_tinh, stateValues.list_province_district);
+    var districtCodes = districtsOfSelectedProvince.codes;
+    var districtNames = districtsOfSelectedProvince.names;
 
     return (
         <div>
@@ -149,33 +177,59 @@ function RenderForm(props) {
                     className={"input--select"}
                 />
 
+                <div key="khung_gio_hien_thi" className="div_property_margin_bottom">
+                    <div>
+                        <label className="fullwidth">
+                            {"Khung giờ hiển thị"}
+                        </label>
+                    </div>
+                    <div>
+                        <div className="float-left timeslot_margin_right">
+                            <RenderSelect
+                                nameId={"time_slot"}
+                                keys={remainingTimeSlots}
+                                values={remainingTimeSlots}
+                                selectedValue={stateValues.time_slot}
+                                OnChangeSelect={props.OnChangeInput}
+                                className={"pricefactor--select"}
+                            />
+                        </div>
+                        {
+                            stateValues.allowAddTimeSlot ?
+                                <div className="float-left timeslot_margin_right">
+                                    <button type="button" className="btn timeslot_button" onClick={props.OnAddTokenField}>Thêm</button>
+                                </div>
+                                : null
+                        }
+                        <div className="float-left pricefactor_tokenfield tokenfield div_property_margin_bottom">
+                            {timeSlotTokenFields}
+                        </div>
+                    </div>
+                </div>
+
                 <RenderSelect
-                    nameId={"khung_gio_hien_thi"}
-                    title={"Khung giờ hiển thị"}
-                    keys={["2h-4h", "4h-6h", "6h-8h"]}
-                    values={["2h-4h", "4h-6h", "6h-8h"]}
-                    selectedValue={khung_gio_hien_thi}
+                    nameId={"lnt_tinh"}
+                    title={"Tỉnh thành"}
+                    keys={originProvinceCodes}
+                    values={originProvinceNames}
+                    selectedValue={stateValues.lnt_tinh}
                     OnChangeSelect={props.OnChangeInput}
                     className={"input--select"}
                 />
 
-                <RenderInput
-                    nameId={"lnt_tinh"}
-                    title={"Tỉnh thành"}
-                    value={stateValues.lnt_tinh}
-                    type={"input"}
-                    className={"x_post_campaign--input"}
-                    OnChangeInput={props.OnChangeInput}
-                />
-
-                <RenderInput
-                    nameId={"lnt_quan_huyen"}
-                    title={"Quận huyện"}
-                    value={stateValues.lnt_quan_huyen}
-                    type={"input"}
-                    className={"x_post_campaign--input"}
-                    OnChangeInput={props.OnChangeInput}
-                />
+                {
+                    districtCodes.length === 0 ? null
+                        :
+                        <RenderSelect
+                            nameId={"lnt_quan_huyen"}
+                            title={"Quận huyện"}
+                            keys={districtCodes}
+                            values={districtNames}
+                            selectedValue={stateValues.lnt_quan_huyen}
+                            OnChangeSelect={props.OnChangeInput}
+                            className={"input--select"}
+                        />
+                }
 
                 <RenderDate
                     nameId={"ngay_bat_dau"}
@@ -210,11 +264,12 @@ function RenderForm(props) {
             <div className="post_campaign__info--content">
                 <RenderInput
                     nameId={"don_gia_co_ban"}
-                    title={"Đơn giá cơ bản"}
+                    title={"Đơn giá cơ bản trên mỗi khung giờ"}
                     value={stateValues.don_gia_co_ban}
-                    type={"number"}
+                    type={"text"}
                     className={"x_post_campaign--input"}
                     OnChangeInput={props.OnChangeInput}
+                    isReadOnly={1}
                 />
 
                 <RenderInput
@@ -255,6 +310,8 @@ function RenderForm(props) {
 class RenderProperties extends Component {
     render() {
         var props = this.props;
+        var stateValues = props.stateValues;
+
         return (
             <div className="x_post_campaign">
                 <div>
@@ -265,6 +322,8 @@ class RenderProperties extends Component {
                         OnChangeInput={props.OnChangeInput}
                         OnchangeStartDate={props.OnchangeStartDate}
                         OnchangeEndDate={props.OnchangeEndDate}
+                        OnAddTokenField={props.OnAddTokenField}
+                        OnRemoveTokenField={props.OnRemoveTokenField}
 
                         stateValues={props.stateValues}
                     />
@@ -292,6 +351,9 @@ class PostCampaignCreatorUpdaterForm extends Component {
         this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
         this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
         this.OnKeyDown = this.OnKeyDown.bind(this);
+
+        this.OnAddTokenField = this.OnAddTokenField.bind(this);
+        this.OnRemoveTokenField = this.OnRemoveTokenField.bind(this);
     }
 
     OnKeyDown(event) {
@@ -311,13 +373,23 @@ class PostCampaignCreatorUpdaterForm extends Component {
         }
 
         if (name === "loai_dich_vu") {
-            var stateValues = this.props.stateValues;
+            let stateValues = this.props.stateValues;
             var adsAreaKeys = stateValues.AdsAreaIds.keys;
             var appliedPageTypeKeys = stateValues.AdsAreaIds.appliedPageTypeKeys;
             var indexOfValueInKeys = adsAreaKeys.indexOf(value);
 
             var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
             jsonState.trang_hien_thi = appliedPageType;
+
+            jsonState.co_che_hien_thi = stateValues.co_che_hien_thi;
+            jsonState.updateBasicUnitPrice = true;
+        }
+
+        if (name === "co_che_hien_thi") {
+            let stateValues = this.props.stateValues;
+
+            jsonState.loai_dich_vu = stateValues.loai_dich_vu;
+            jsonState.updateBasicUnitPrice = true;
         }
 
         this.props.UpdateState(jsonState);
@@ -345,6 +417,57 @@ class PostCampaignCreatorUpdaterForm extends Component {
         // this.props.UpdateState({"thoi_luong_ap_dung": new Date(date - ngay_bat_dau).getDate()});
     }
 
+    OnAddTokenField(e) {
+        var stateValues = this.props.stateValues;
+        var selectedCurrentTimeSlot = stateValues.time_slot;
+
+        if (selectedCurrentTimeSlot === null) {
+            e.preventDefault();
+            return;
+        }
+
+        var selectedTimeSlots = stateValues.selectedTimeSlots.slice();
+        var array_khung_gio = stateValues.array_khung_gio.slice();
+
+        var jsonState = {};
+        if (selectedCurrentTimeSlot === "all") {
+            selectedTimeSlots = ["all"];
+            jsonState.allowAddTimeSlot = false;
+        }
+        else {
+            selectedTimeSlots.push(selectedCurrentTimeSlot);
+        }
+
+        var remainingTimeSlots = GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots);
+
+        jsonState.selectedTimeSlots = selectedTimeSlots;
+        jsonState.remainingTimeSlots = remainingTimeSlots;
+        jsonState.time_slot = remainingTimeSlots.length > 0 ? remainingTimeSlots[0] : null;
+
+        this.props.UpdateState(jsonState);
+    }
+
+    OnRemoveTokenField(e) {
+        var stateValues = this.props.stateValues;
+        var removedTimeSlot = e.target.name;
+        var selectedTimeSlots = stateValues.selectedTimeSlots.slice();
+        var array_khung_gio = stateValues.array_khung_gio.slice();
+        var jsonState = {};
+
+        if (removedTimeSlot === "all") {
+            jsonState.allowAddTimeSlot = true;
+        }
+
+        ArrayRemoveItem(selectedTimeSlots, removedTimeSlot);
+        var remainingTimeSlots = GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots);
+
+        jsonState.selectedTimeSlots = selectedTimeSlots;
+        jsonState.remainingTimeSlots = remainingTimeSlots;
+        jsonState.time_slot = remainingTimeSlots.length > 0 ? remainingTimeSlots[0] : null;
+
+        this.props.UpdateState(jsonState);
+    }
+
     componentDidMount() {
         document.addEventListener("keydown", this.OnKeyDown, false);
     }
@@ -360,6 +483,9 @@ class PostCampaignCreatorUpdaterForm extends Component {
                 OnChangeInput={this.OnChangeInput}
                 OnchangeStartDate={this.OnchangeStartDate}
                 OnchangeEndDate={this.OnchangeEndDate}
+                OnAddTokenField={this.OnAddTokenField}
+                OnRemoveTokenField={this.OnRemoveTokenField}
+
                 stateValues={props.stateValues}
             />
         );
@@ -378,7 +504,9 @@ class XPostCampaign extends Component {
         var jsonState = {
             modeAction,
             XAdminUsername,
-            USerOfXSysyemAccessToken
+            USerOfXSysyemAccessToken,
+            selectedTimeSlots: [],
+            allowAddTimeSlot: true
         };
 
         this.state = this.SetInitState(jsonState, modeAction);
@@ -397,7 +525,77 @@ class XPostCampaign extends Component {
             .then((jsonSetInfosOfUser) => {
                 return this.GetPostsOfXsystemByUserToken(jsonSetInfosOfUser, jsonSetInfosOfUser.XsystemUrlApi, USerOfXSysyemAccessToken, modeAction);
             }).then((jsonSetInfosOfUser) => {
+                return $this.GetBasicPriceByAreaAndDisplayedMode(jsonSetInfosOfUser, $this.state.co_che_hien_thi, XAdminUsername, USerOfXSysyemAccessToken);
+            }).then((jsonSetInfosOfUser) => {
                 $this.setState(jsonSetInfosOfUser);
+            });
+    }
+
+    GetBasicPriceByAreaAndDisplayedMode(jsonState, displayedMode, XAdminUsername, USerOfXSysyemAccessToken) {
+        return Request.get(UrlApi.GetServicePriceByAreaIdAndDisplayMode)
+            .set('Username', XAdminUsername)
+            .set('adsareaId', jsonState.loai_dich_vu)
+            .set('displayMode', displayedMode)
+            .set('xsystem-auth', USerOfXSysyemAccessToken)
+            .then((res) => {
+                var servicePrice = res.body;
+                if (servicePrice !== undefined && servicePrice !== null) {
+                    jsonState.don_gia_co_ban = servicePrice.gia_tri;
+                    jsonState.appliedServicePriceId = servicePrice.ma_gia;
+                }
+                else {
+                    jsonState.don_gia_co_ban = 0;
+                    jsonState.appliedServicePriceId = null;
+                }
+
+                return jsonState;
+            });
+    }
+
+    CalculatedIntoMoney(jsonState) {
+        var stateValues = this.state;
+
+        var appliedServicePriceId = stateValues.appliedServicePriceId;
+        var lnt_tinh = stateValues.lnt_tinh;
+        var lnt_quan_huyen = stateValues.lnt_quan_huyen;
+        var vi_tri = {
+            tinh: lnt_tinh,
+            quan_huyen: lnt_quan_huyen
+        }
+
+        var start_date = DateToJsonDate(stateValues.ngay_bat_dau);
+        var end_date = DateToJsonDate(stateValues.ngay_ket_thuc);
+
+        var totalAffectValue = 0;
+
+        var selectedTimeSlots = stateValues.selectedTimeSlots.slice();
+
+        var array_bat_dau = [];
+        var array_ket_thuc = [];
+        selectedTimeSlots.forEach(timeSlot => {
+            TransferTimeLogStringToArrayElement(timeSlot, array_bat_dau, array_ket_thuc)
+        });
+        var khung_gio = {
+            bat_dau: array_bat_dau,
+            ket_thuc: array_ket_thuc
+        };
+    
+        var content = {
+            selectedTimeSlots: khung_gio,
+            vi_tri: vi_tri,
+            appliedServicePriceId: appliedServicePriceId,
+            start_date: start_date,
+            end_date: end_date,
+            Username: stateValues.XAdminUsername,
+            'xsystem-auth': stateValues.USerOfXSysyemAccessToken
+        };
+
+        var $this = this;
+        Request.post(UrlApi.PriceFactorCalculateTotalAffectValue)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(content)
+            .end((err, res) => {
+                console.log(res);
             });
     }
 
@@ -508,21 +706,29 @@ class XPostCampaign extends Component {
     }
 
     SetInitState(jsonState, modeAction) {
+        var array_khung_gio = KHUNG_GIO.slice();
+
+        jsonState.list_province_district = Transfer_Provice_District_JsonToArray(data_tinh_thanh_quan_huyen);
+        jsonState.originProvinces = GetProvinces(jsonState.list_province_district);
+
+        jsonState.array_khung_gio = array_khung_gio
         if (modeAction === "create") {
             jsonState.ma_bai_dang = "";
             // jsonState.loai_dich_vu = "";
             jsonState.co_che_hien_thi = "doc_quyen";
+
             jsonState.tinh_gia_theo = "ngay";
-            jsonState.vi_tri = {
-                tinh: "",
-                quan_huyen: ""
-            }
-            jsonState.khung_gio_hien_thi = {
-                bat_dau: 2,
-                ket_thuc: 4
-            }
+
+            jsonState.lnt_tinh = "";
+            jsonState.lnt_quan_huyen = "";
+            jsonState.time_slot = array_khung_gio[0];
+
+            // jsonState.khung_gio_hien_thi = {
+            //     bat_dau: 2,
+            //     ket_thuc: 4
+            // }
             jsonState.thoi_luong_ap_dung = 1;
-            jsonState.don_gia_co_ban = 0;
+
             var today = new Date();
             let tomorrow = new Date();
             tomorrow.setDate(today.getDate() + jsonState.thoi_luong_ap_dung);
@@ -531,6 +737,9 @@ class XPostCampaign extends Component {
             jsonState.thanh_tien = 0;
             jsonState.tong_cong = 0;
             jsonState.ma_khuyen_mai = "";
+
+            jsonState.remainingTimeSlots = array_khung_gio;
+            jsonState.time_slot = array_khung_gio[0];
         }
         else {
             var editContents = this.props.editContents;
@@ -563,7 +772,18 @@ class XPostCampaign extends Component {
     }
 
     handleUpdateState(jsonState) {
-        this.setState(jsonState);
+        if (jsonState.updateBasicUnitPrice) {
+            jsonState.updateBasicUnitPrice = false;
+            var $this = this;
+            this.GetBasicPriceByAreaAndDisplayedMode(jsonState, jsonState.co_che_hien_thi, this.state.XAdminUsername)
+                .then((jsonState) => {
+                    $this.setState(jsonState);
+                });
+        }
+        else {
+            this.CalculatedIntoMoney(jsonState);
+            this.setState(jsonState);
+        }
     }
 
     GetModelStateJson() {

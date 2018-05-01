@@ -1,4 +1,4 @@
-export function Date2BiggerDate1(date1, date2) {
+export function Date2GreaterThanOrEqualDate1(date1, date2) {
     let date1_year = parseInt(date1.getFullYear(), 10),
         date1_month = parseInt(date1.getMonth() + 1, 10),
         date1_day = parseInt(date1.getDate(), 10),

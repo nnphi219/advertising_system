@@ -24,6 +24,14 @@ exports.read_a_adsArea_by_adsAreaId = function (req, res) {
     });
 };
 
+exports.get_a_adsArea_by_adsAreaIdAndCreator = function (adsareaId, creator, next) {
+    AdsArea.findOne({ ma_dich_vu: adsareaId, nguoi_tao: creator }, function (err, adsArea) {
+        if (err)
+            next(null);
+        next(adsArea);
+    });
+};
+
 exports.read_adsArea_Info = function (req, res) {
     AdsArea.find({ nguoi_tao: req.user.username }, function (err, adsAreas) {
         if (err) {
@@ -38,7 +46,7 @@ exports.read_adsArea_Info = function (req, res) {
     });
 };
 
-exports.read_adsArea_infos_by_username = function(username, next) {
+exports.read_adsArea_infos_by_username = function (username, next) {
     AdsArea.find({ nguoi_tao: username }, function (err, adsAreas) {
         if (err) {
             next(null);

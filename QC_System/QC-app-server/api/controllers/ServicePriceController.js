@@ -24,6 +24,14 @@ exports.read_a_servicePrice_by_servicePriceId = (req, res) => {
     });
 };
 
+exports.get_a_serviceprice_by_adsAreaIdAndCreator = function (adsareaId, displayModeKey, creator, next) {
+    ServicePrice.findOne({ ma_dich_vu_ap_dung: adsareaId, 'loai_co_che.key': displayModeKey, nguoi_tao: creator }, function (err, servicePrice) {
+        if (err)
+            next(null);
+        next(servicePrice);
+    });
+};
+
 exports.read_servicePriceId_Info = function (req, res) {
     ServicePrice.find({nguoi_tao: req.user.username}, function (err, servicePrices) {
         if (err) {

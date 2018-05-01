@@ -31,7 +31,7 @@ var PriceFactorSchema = new Schema({
         tang: Number, // 1 - tang, 0 - giam
         gia_tri: Number
     },
-    gia_tri_thuc: Number,
+    gia_tri_tang_them: Number,
     start_date: {
         day: Number,
         month: Number,

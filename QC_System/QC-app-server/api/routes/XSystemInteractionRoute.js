@@ -6,4 +6,10 @@ module.exports = function (app) {
 
     app.route('/getInfosByUserName')
         .get(xsystemController.read_Infos_ByUsername);
+
+    app.route('/getServicePriceByAreaIdAndDisplayMode')
+        .get(xsystemController.get_serviceprice_ByAreaIdAndDisplayMode);
+
+    app.route('/priceFactorCalculateTotalAffectValue')
+        .post(xsystemController.calculate_total_affect_value)
 };

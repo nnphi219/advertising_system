@@ -7,7 +7,7 @@ class RenderEditDeleteButton extends Component {
         var activeTitle = (props.trang_thai === 1) ? "Hủy" : "Kích hoạt";
 
         return (
-            <div>
+            <div style={{width: '200px'}}>
                 <button key="Edit" id="Edit" name={props.nameId} type="button" className="btn btn-warning adsarea--button-edit" onClick={props.handleEditClick}>Edit</button>
                 <button key="Delete" id="Delete" name={props.nameId} type="button" className="btn btn-danger adsarea--button-delete" onClick={props.handleDeleteClick}>Delete</button>
                 {

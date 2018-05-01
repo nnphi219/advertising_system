@@ -24,7 +24,7 @@ export function TransferTimeLogJsonToString(valueJson) {
 
 export function TransferTimeLogStringToJson(value) {
     var timeLogArr = value.split("h").join("").split('-');
-    var valueJson = { "bat_dau": parseInt(timeLogArr[0], 10) , "ket_thuc": parseInt(timeLogArr[1], 10) };
+    var valueJson = { "bat_dau": parseInt(timeLogArr[0], 10), "ket_thuc": parseInt(timeLogArr[1], 10) };
     return valueJson;
 }
 
@@ -152,3 +152,81 @@ export function JsonSortDateType(data, keyDate, isASC) {
         }
     });
 };
+
+export function Transfer_Provice_District_JsonToArray(data_province_district) {
+    var list_province_district = [];
+
+    Object.keys(data_province_district).forEach(province_district_key => {
+        var province_district_mapper = {};
+        var province = data_province_district[province_district_key];
+
+        province_district_mapper.code = province.code;
+        province_district_mapper.slug = province.slug;
+        province_district_mapper.type = province.type;
+        province_district_mapper.name = province.name;
+        province_district_mapper.name_with_type = province.name_with_type;
+        province_district_mapper.quan_huyen = [];
+
+        var districts = province["quan-huyen"];
+        Object.keys(districts).forEach(district_key => {
+            var district_mapper = {};
+            var district = districts[district_key];
+
+            district_mapper.code = district.code;
+            district_mapper.slug = district.slug;
+            district_mapper.type = district.type;
+            district_mapper.name = district.name;
+            district_mapper.name_with_type = district.name_with_type;
+            district_mapper.parent_code = district.parent_code;
+
+            province_district_mapper.quan_huyen.push(district_mapper);
+        });
+
+        list_province_district.push(province_district_mapper);
+    });
+
+    return list_province_district;
+}
+
+export function GetProvinces(list_province_district) {
+    var provinceCodes = [""];
+    var provinceNames = ["Lựa chọn"];
+
+    list_province_district.forEach(province => {
+        provinceCodes.push(province.code);
+        provinceNames.push(province.name_with_type);
+    });
+
+    return {
+        codes: provinceCodes,
+        names: provinceNames
+    };
+}
+
+export function GetDistrictsBasicOnProvince(provinceCode, list_province_district) {
+    var districtCodes = [""];
+    var districtNames = ["Lựa chọn"];
+    
+    if (provinceCode === undefined || provinceCode === null || provinceCode === "") {
+        return {
+            codes: [],
+            names: []
+        }
+    }
+
+    var selectedProvince = list_province_district.find(function (province) {
+        return province.code === provinceCode;
+    });
+
+    var districtsInProvince = selectedProvince.quan_huyen.slice();
+
+    districtsInProvince.forEach(district => {
+        districtCodes.push(district.code);
+        districtNames.push(district.name_with_type);
+    });
+
+    return {
+        codes: districtCodes,
+        names: districtNames
+    }
+}

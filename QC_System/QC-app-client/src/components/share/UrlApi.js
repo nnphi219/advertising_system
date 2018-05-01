@@ -21,9 +21,12 @@ const UrlApi = {
     PriceFactor: hostNameServer + "/pricefactors",
     ReadA_PriceFactor: hostNameServer + "/pricefactors/check",
 
+    PriceFactorCalculateTotalAffectValue: hostNameServer + "/priceFactorCalculateTotalAffectValue",
+
     ServicePrice: hostNameServer + "/serviceprices",
     ReadA_ServicePrice: hostNameServer + "/serviceprices/check",
     GetServicePriceIdInfo: hostNameServer + "/getservicePricesIdInfo",
+    GetServicePriceByAreaIdAndDisplayMode: hostNameServer + "/getServicePriceByAreaIdAndDisplayMode",
 
     PromotionManagement: hostNameServer + "/promotionmanagements",
     GetPromotionIdInfos: hostNameServer + "/getPromotionsIdInfo",

@@ -30,7 +30,9 @@
       return elem.classList.contains(c);
     };
     addClass = function (elem, c) {
-      elem.classList.add(c);
+      if (elem !== null) {
+        elem.classList.add(c);
+      }
     };
     removeClass = function (elem, c) {
       if (elem != null) {
