@@ -27,7 +27,7 @@ function GetSelectedTimeSlotsArrayJson(selectedTimeSlots, next) {
         };
         array_khung_gio.push(timeSlot);
     });
-    
+
     next(array_khung_gio);
 };
 
@@ -82,10 +82,10 @@ exports.calculate_total_affect_value = (req, res) => {
     var selectedTimeSlots = {
         bat_dau: [],
         ket_thuc: []
-    };  
+    };
     if (content.selectedTimeSlots !== undefined) {
         selectedTimeSlots = content.selectedTimeSlots;
-        if(typeof(selectedTimeSlots.bat_dau) === "string"){
+        if (typeof (selectedTimeSlots.bat_dau) === "string") {
             var refactorSelectedTimeSlots = {
                 bat_dau: [selectedTimeSlots.bat_dau],
                 ket_thuc: [selectedTimeSlots.ket_thuc]
@@ -95,33 +95,35 @@ exports.calculate_total_affect_value = (req, res) => {
         }
     }
 
-    GetSelectedTimeSlotsArrayJson(selectedTimeSlots, function (khung_gio) {
+    GetSelectedTimeSlotsArrayJson(selectedTimeSlots, function (selectedTimeSlotJsons) {
+
         priceFactorController.read_all_priceFactor_by_servicePriceIdAndDate(appliedServicePriceId, nguoitao, function (priceFactors) {
             priceFactors.forEach(priceFactor => {
                 let finishLoop = false;
                 let jsonDateInLoop = jsonStartDate;
-                while (!finishLoop) {
 
-                    if (dateFormat.JsonDateIsInTheMiddleOfTime(jsonDateInLoop, priceFactor.start_date, priceFactor_end_date)) {
+                while (!finishLoop) {
+                    if (dateFormat.JsonDateIsInTheMiddleOfTime(jsonDateInLoop, priceFactor.start_date, priceFactor.end_date)) {
                         var priceFactor_timeSlots = priceFactor.loai_nhan_to.khung_gio;
-                        khung_gio.forEach((timeSlot) => {
+                        selectedTimeSlotJsons.forEach((timeSlot) => {
+
                             if (commonFunction.CheckArrayTimeSlotsContainsElement(priceFactor_timeSlots, timeSlot)) {
-                                total_affect_value += priceFactor.gia_tri_tang_them;
+                                total_affect_value += priceFactor.gia_tri_thuc_tang_them;
+                                console.log(priceFactor.gia_tri_thuc_tang_them);
                             }
                         });
                     }
-                    console.log("inloop");
+
                     var dateInLoop = mapper.JsonDateToDate(jsonDateInLoop);
                     dateInLoop.setDate(dateInLoop.getDate() + 1);
                     jsonDateInLoop = mapper.DateToJsonDate(dateInLoop);
 
-                    if (!dateFormat.Date2GreaterThanOrEqualDate1(jsonDateInLoop, jsonEndDate)) {
-                        console.log("condition");
+                    if (!dateFormat.JsonDate2GreaterThanOrEqualJsonDate1(jsonDateInLoop, jsonEndDate)) {
                         finishLoop = true;
                     }
                 }
             });
-            console.log(total_affect_value);
+
             var jsonRes = {
                 total_affect_value
             };

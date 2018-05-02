@@ -5,21 +5,9 @@ export function ArrayRemoveItem(array, item) {
     }
 }
 
-export function CheckArrayTimeSlotsContainsElement(timeSlots, element) {
-    var isFinished = false;
-    var index = 0;
-    var result = false;
-
-    while (!isFinished && index < timeSlots.length) {
-        let timeSlot = timeSlots[index];
-
-        if (timeSlot.bat_dau === element.bat_dau && timeSlot.ket_thuc === element.ket_thuc) {
-            result = true;
-            isFinished = true;
-        }
-
-        index++;
-    }
-
-    return result;
+export function NumberFormat(num){
+    var n = num.toString(), p = n.indexOf('.');
+    return n.replace(/\d(?=(?:\d{3})+(?:\.|$))/g, function($0, i){
+        return p<0 || i<p ? ($0+',') : $0;
+    });
 }

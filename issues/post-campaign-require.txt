@@ -18,8 +18,9 @@ tham khao https://batdongsan.com.vn/dang-tin-rao-vat-ban-nha-dat
 afternoon
 post campaign:
 --- tinh thanh quan huyen doi lai lay json -- done
---- lay gia tri tang them --- working
---- khi nguoi dung chon dich vu quang cao ---> se lay ra nhung gia dich vu cho quang cao nay
---- dua vao co che hien thi ng dung chon(tren gia dich vu) ---> nhung khung gio hien thi phu hop(lay tu chi so anh huong gia). ----> gia co ban duoc ap dung.
+--- lay gia tri tang them --- done
+--- khi nguoi dung chon dich vu quang cao ---> se lay ra nhung gia dich vu cho quang cao nay ---done
+--- dua vao co che hien thi ng dung chon(tren gia dich vu) ---> nhung khung gio hien thi phu hop(lay tu chi so anh huong gia). ----> gia co ban duoc ap dung. --done
 --- chon ma khuyen mai de ap dung giam gia.
+--- tinh thanh 
 --------------------------------------------------------------

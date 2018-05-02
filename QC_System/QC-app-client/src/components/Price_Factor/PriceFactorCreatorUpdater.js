@@ -10,6 +10,11 @@ import { KHUNG_GIO } from '../share/constant';
 import { Date2GreaterThanOrEqualDate1 } from '../share/DateFormat';
 import { ArrayRemoveItem } from '../share/CommonFunction';
 
+const TANG_THEO_PHAN_TRAM = 1;
+const GIAM_THEO_PHAN_TRAM = -1;
+const TANG_THEO_GIA_TRI = 2;
+const GIAM_THEO_GIA_TRI = -2;
+
 const loai_gia_tri_tang_them_theo_phan_tram = 1;
 const loai_gia_tri_tang_them_theo_gia_tri = 2;
 
@@ -20,14 +25,23 @@ function GetRealValue(stateValues) {
         var indexOfServicePrice = stateValues.ServicePrices.list_ma_gia.indexOf(stateValues.ma_gia);
         var gia_co_ban = parseInt(stateValues.ServicePrices.list_gia_tri[indexOfServicePrice], 10);
 
-        var loai_gia_tri_tang_them = stateValues.loai_gia_tri_tang_them;
-        var phan_tram_tang_giam = parseFloat(stateValues.phan_tram_tang_giam) / 100;
+        var loai_gia_tri_tang_them = parseInt(stateValues.loai_gia_tri_tang_them);
+        var gia_tri_tang_giam = parseFloat(stateValues.gia_tri_tang_giam);
 
-        if (Math.abs(loai_gia_tri_tang_them) === 1) {
-            return gia_co_ban + gia_co_ban * phan_tram_tang_giam;
+        if (loai_gia_tri_tang_them === TANG_THEO_PHAN_TRAM) {
+            return gia_co_ban * gia_tri_tang_giam / 100;
+        }
+        else if (loai_gia_tri_tang_them === GIAM_THEO_PHAN_TRAM) {
+            return (-1) * gia_co_ban * gia_tri_tang_giam / 100;
+        }
+        else if (loai_gia_tri_tang_them === TANG_THEO_GIA_TRI) {
+            return gia_tri_tang_giam;
+        }
+        else if (loai_gia_tri_tang_them === GIAM_THEO_GIA_TRI) {
+            return (-1) * gia_tri_tang_giam;
         }
         else {
-            return gia_co_ban + gia_co_ban * phan_tram_tang_giam;
+            return 0;
         }
     }
     else {
@@ -111,14 +125,14 @@ class RenderProperties extends Component {
         loai_gia_tri_tang_them_element.push(
             <div key={1}>
                 <div className="pricefactor-radio">
-                    <input type="radio" value={loai_gia_tri_tang_them_theo_phan_tram} name={"loai_gia_tri_tang_them"}
-                        defaultChecked={loai_gia_tri_tang_them === 1 ? true : false}
+                    <input type="radio" value={TANG_THEO_PHAN_TRAM} name={"loai_gia_tri_tang_them"}
+                        defaultChecked={loai_gia_tri_tang_them === TANG_THEO_PHAN_TRAM ? true : false}
                     />
                     {"Tăng theo %"}
                 </div>
                 <div className="pricefactor-radio">
-                    <input type="radio" value={loai_gia_tri_tang_them_theo_gia_tri} name={"loai_gia_tri_tang_them"}
-                        defaultChecked={loai_gia_tri_tang_them === 2 ? true : false}
+                    <input type="radio" value={TANG_THEO_GIA_TRI} name={"loai_gia_tri_tang_them"}
+                        defaultChecked={loai_gia_tri_tang_them === TANG_THEO_GIA_TRI ? true : false}
                     />
                     {"Tăng theo giá trị"}
                 </div>
@@ -127,14 +141,14 @@ class RenderProperties extends Component {
         loai_gia_tri_tang_them_element.push(
             <div key={2}>
                 <div className="pricefactor-radio">
-                    <input type="radio" value={-1 * loai_gia_tri_tang_them_theo_phan_tram} name={"loai_gia_tri_tang_them"}
-                        defaultChecked={loai_gia_tri_tang_them === -1 ? true : false}
+                    <input type="radio" value={GIAM_THEO_PHAN_TRAM} name={"loai_gia_tri_tang_them"}
+                        defaultChecked={loai_gia_tri_tang_them === GIAM_THEO_PHAN_TRAM ? true : false}
                     />
                     {"Giảm theo %"}
                 </div>
                 <div className="pricefactor-radio">
-                    <input type="radio" value={-1 * loai_gia_tri_tang_them_theo_gia_tri} name={"loai_gia_tri_tang_them"}
-                        defaultChecked={loai_gia_tri_tang_them === -2 ? true : false}
+                    <input type="radio" value={GIAM_THEO_GIA_TRI} name={"loai_gia_tri_tang_them"}
+                        defaultChecked={loai_gia_tri_tang_them === GIAM_THEO_GIA_TRI ? true : false}
                     />
                     {"Giảm theo giá trị"}
                 </div>
@@ -290,19 +304,19 @@ class RenderProperties extends Component {
                     {loai_gia_tri_tang_them_element}
                 </div>
                 <RenderInput
-                    nameId={"phan_tram_tang_giam"}
-                    title={"Phần trăm tăng/giảm (%)"}
-                    errorTitle={stateValues.error_phan_tram_tang_giam}
+                    nameId={"gia_tri_tang_giam"}
+                    title={`Giá trị tăng/giảm (${Math.abs(stateValues.loai_gia_tri_tang_them) === TANG_THEO_PHAN_TRAM ? '%' : 'VND'})`}
+                    errorTitle={stateValues.error_gia_tri_tang_giam}
                     type={"number"}
-                    value={this.props.stateValues.phan_tram_tang_giam}
+                    value={this.props.stateValues.gia_tri_tang_giam}
                     styleCss={{ width: "30%" }}
                     className={"pricefactor--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
                 <div>
-                    <label key={"gia_tri_tang_them"} className="fullwidth">
-                        {"Giá trị thực"}
-                        <input type="text" id={"gia_tri_tang_them"} value={realValue} key={"gia_tri_tang_them"} name={"gia_tri_tang_them"} onChange={this.props.OnChangeInput} readOnly className="pricefactor--input" />
+                    <label key={"gia_tri_thuc_tang_them"} className="fullwidth">
+                        {stateValues.loai_gia_tri_tang_them > 0 ? "Giá trị tăng" : "Giá trị giảm"}
+                        <input type="text" id={"gia_tri_thuc_tang_them"} value={Math.abs(realValue)} key={"gia_tri_thuc_tang_them"} name={"gia_tri_thuc_tang_them"} onChange={this.props.OnChangeInput} readOnly className="pricefactor--input" />
                     </label>
                 </div>
                 <div className="submit">
@@ -547,8 +561,8 @@ class PriceFactorCreatorUpdater extends Component {
             jsonState.tinh = "";
             jsonState.quan_huyen = "";
 
-            jsonState.loai_gia_tri_tang_them = 1;
-            jsonState.phan_tram_tang_giam = 0;
+            jsonState.loai_gia_tri_tang_them = TANG_THEO_PHAN_TRAM;
+            jsonState.gia_tri_tang_giam = 0;
             jsonState.start_date = today;
             jsonState.end_date = today;
             jsonState.a = today;
@@ -581,15 +595,13 @@ class PriceFactorCreatorUpdater extends Component {
             jsonState.remainingTimeSlots = GetRemainingTimeSlots(array_khung_gio, jsonState.selectedTimeSlots);
             jsonState.time_slot = jsonState.remainingTimeSlots[0];
 
-            var ti_le_tang = (editContents.ti_le_tinh_gia.tang === 1) ? 1 : -1;
-            jsonState.loai_gia_tri_tang_them = editContents.ti_le_tinh_gia.loai_ti_le * ti_le_tang;
-
-            jsonState.phan_tram_tang_giam = editContents.ti_le_tinh_gia.gia_tri;
+            jsonState.loai_gia_tri_tang_them = editContents.ti_le_tinh_gia.loai_ti_le;
+            jsonState.gia_tri_tang_giam = editContents.ti_le_tinh_gia.gia_tri;
 
             jsonState.start_date = JsonDateToDate(editContents.start_date);
             jsonState.end_date = JsonDateToDate(editContents.end_date);
         }
-        jsonState.gia_tri_tang_them = 0;
+        jsonState.gia_tri_thuc_tang_them = 0;
 
         return jsonState;
     }
@@ -597,7 +609,7 @@ class PriceFactorCreatorUpdater extends Component {
     SetInitError(jsonState) {
         jsonState.error_ma_chi_so = '';
         jsonState.error_ten_chi_so = '';
-        jsonState.error_phan_tram_tang_giam = '';
+        jsonState.error_gia_tri_tang_giam = '';
 
         return jsonState;
     }
@@ -607,8 +619,8 @@ class PriceFactorCreatorUpdater extends Component {
         var isValid = this.CheckValid(state);
 
         if (isValid) {
-            var ti_le_tinh_gia__loai_ti_le = (Math.abs(state.loai_gia_tri_tang_them) === 1) ? 1 : 2;
-            var phan_tram_tang_giam_iscreased = state.loai_gia_tri_tang_them >= 0 ? 1 : 0;
+            var ti_le_tinh_gia__loai_ti_le = state.loai_gia_tri_tang_them;
+            var gia_tri_tang_giam_iscreased = state.loai_gia_tri_tang_them >= 0 ? 1 : 0;
             var startDateJson = DateToJsonDate(state.start_date);
             var endDateJson = DateToJsonDate(state.end_date);
 
@@ -641,11 +653,10 @@ class PriceFactorCreatorUpdater extends Component {
                 gia_tri_ap_dung: state.don_gia_co_ban,
                 ti_le_tinh_gia: {
                     loai_ti_le: ti_le_tinh_gia__loai_ti_le,
-                    tang: phan_tram_tang_giam_iscreased,
-                    gia_tri: state.phan_tram_tang_giam
+                    gia_tri: state.gia_tri_tang_giam
                 },
 
-                gia_tri_tang_them: GetRealValue(state),
+                gia_tri_thuc_tang_them: GetRealValue(state),
                 start_date: startDateJson,
                 end_date: endDateJson
             };
@@ -697,8 +708,8 @@ class PriceFactorCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (parseInt(state.phan_tram_tang_giam, 10) <= 0) {
-            jsonError.error_phan_tram_tang_giam = "Yêu cầu lớn hơn 0";
+        if (parseInt(state.gia_tri_tang_giam, 10) < 0) {
+            jsonError.error_gia_tri_tang_giam = "Yêu cầu lớn hơn hoặc bằng 0";
             isValid = false;
         }
 
@@ -822,12 +833,12 @@ class PriceFactorCreatorUpdater extends Component {
 //     },
 //     {
 //         "description": "Phần trăm tăng/giảm (%)",
-//         "id": "phan_tram_tang_giam",
+//         "id": "gia_tri_tang_giam",
 //         "type": "textbox"
 //     },
 //     {
 //         "description": "Tổng tiền",
-//         "id": "gia_tri_tang_them",
+//         "id": "gia_tri_thuc_tang_them",
 //         "type": "textbox"
 //     }
 // ];

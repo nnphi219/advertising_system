@@ -4,7 +4,7 @@ import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, GetDistrictsBasicOnProvince, Transfer_Provice_District_JsonToArray, GetProvinces, TransferTimeLogStringToArrayElement } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 import { KHUNG_GIO } from '../share/constant';
-import { ArrayRemoveItem } from '../share/CommonFunction';
+import { ArrayRemoveItem, NumberFormat } from '../share/CommonFunction';
 
 const data_tinh_thanh_quan_huyen = require("../../data_sheet/tinh_thanh_quan_huyen.json");
 
@@ -12,6 +12,10 @@ function GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots) {
     return array_khung_gio.filter((timeSlot) =>
         selectedTimeSlots.indexOf(timeSlot) > -1 ? false : true
     );
+}
+
+function GetBasicPrice(basicPriceOnTimeSlot, selectedTimeSlots) {
+    return parseFloat(basicPriceOnTimeSlot) * selectedTimeSlots.length;
 }
 
 function RenderForm(props) {
@@ -35,7 +39,6 @@ function RenderForm(props) {
         }
     }
 
-    var khung_gio_hien_thi = '2h-4h';
     // var PromotionIdsKeys = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.keys;
     // var PromotionIdsValues = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.values;
     var promotionIdsKeys = [];
@@ -71,6 +74,9 @@ function RenderForm(props) {
     var districtsOfSelectedProvince = GetDistrictsBasicOnProvince(stateValues.lnt_tinh, stateValues.list_province_district);
     var districtCodes = districtsOfSelectedProvince.codes;
     var districtNames = districtsOfSelectedProvince.names;
+
+    var don_gia_co_ban = GetBasicPrice(stateValues.don_gia_dich_vu, stateValues.selectedTimeSlots);
+    var thanh_tien = parseInt(don_gia_co_ban, 10) + parseInt(stateValues.tong_gia_tri_anh_huong, 10);
 
     return (
         <div>
@@ -262,10 +268,34 @@ function RenderForm(props) {
                 Thành tiền
             </div>
             <div className="post_campaign__info--content">
+                <div>
+                    <div className="float-left">
+                        <RenderInput
+                            nameId={"don_gia_co_ban"}
+                            title={"Đơn giá cơ bản"}
+                            value={NumberFormat(parseInt(don_gia_co_ban, 10))}
+                            type={"text"}
+                            className={"x_post_campaign--input"}
+                            OnChangeInput={props.OnChangeInput}
+                            isReadOnly={1}
+                        />
+                    </div>
+                    <div className="float-left">
+                        <RenderInput
+                            nameId={"don_gia_dich_vu"}
+                            title={"Đơn giá cơ bản trên mỗi khung giờ"}
+                            value={NumberFormat(parseInt(stateValues.don_gia_dich_vu, 10))}
+                            type={"text"}
+                            className={"x_post_campaign--input"}
+                            OnChangeInput={props.OnChangeInput}
+                            isReadOnly={1}
+                        />
+                    </div>
+                </div>
                 <RenderInput
-                    nameId={"don_gia_co_ban"}
-                    title={"Đơn giá cơ bản trên mỗi khung giờ"}
-                    value={stateValues.don_gia_co_ban}
+                    nameId={"tong_gia_tri_anh_huong"}
+                    title={"Tổng giá trị tăng thêm"}
+                    value={NumberFormat(parseInt(stateValues.tong_gia_tri_anh_huong, 10))}
                     type={"text"}
                     className={"x_post_campaign--input"}
                     OnChangeInput={props.OnChangeInput}
@@ -275,8 +305,8 @@ function RenderForm(props) {
                 <RenderInput
                     nameId={"thanh_tien"}
                     title={"Thành tiền"}
-                    value={stateValues.thanh_tien}
-                    type={"number"}
+                    value={NumberFormat(thanh_tien)}
+                    type={"text"}
                     className={"x_post_campaign--input"}
                     OnChangeInput={props.OnChangeInput}
                     isReadOnly={1}
@@ -296,7 +326,7 @@ function RenderForm(props) {
                     nameId={"tong_cong"}
                     title={"Tổng cộng"}
                     value={stateValues.tong_cong}
-                    type={"number"}
+                    type={"text"}
                     className={"x_post_campaign--input"}
                     OnChangeInput={props.OnChangeInput}
                     isReadOnly={1}
@@ -364,35 +394,46 @@ class PostCampaignCreatorUpdaterForm extends Component {
     }
 
     OnChangeInput(e) {
+        var stateValues = this.props.stateValues;
         var name = e.target.name;
         var value = e.target.value;
-        var jsonState = { [name]: value };
+        stateValues[name] = value;
 
         if (name === "khung_gio_hien_thi") {
             value = TransferTimeLogStringToJson(value);
-        }
 
-        if (name === "loai_dich_vu") {
-            let stateValues = this.props.stateValues;
+            this.props.UpdateState(stateValues);
+        }
+        else if (name === "loai_dich_vu") {
             var adsAreaKeys = stateValues.AdsAreaIds.keys;
             var appliedPageTypeKeys = stateValues.AdsAreaIds.appliedPageTypeKeys;
             var indexOfValueInKeys = adsAreaKeys.indexOf(value);
 
             var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
-            jsonState.trang_hien_thi = appliedPageType;
+            stateValues.trang_hien_thi = appliedPageType;
 
-            jsonState.co_che_hien_thi = stateValues.co_che_hien_thi;
-            jsonState.updateBasicUnitPrice = true;
+            stateValues.co_che_hien_thi = stateValues.co_che_hien_thi;
+
+            let $this = this;
+            this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
+                .then((stateValues) => {
+                    $this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
+                        $this.props.UpdateState(stateValues);
+                    });
+                });
         }
-
-        if (name === "co_che_hien_thi") {
-            let stateValues = this.props.stateValues;
-
-            jsonState.loai_dich_vu = stateValues.loai_dich_vu;
-            jsonState.updateBasicUnitPrice = true;
+        else if (name === "co_che_hien_thi") {
+            let $this = this;
+            this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
+                .then((stateValues) => {
+                    $this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
+                        $this.props.UpdateState(stateValues);
+                    });
+                });
         }
-
-        this.props.UpdateState(jsonState);
+        else {
+            this.props.UpdateState(stateValues);
+        }
     }
 
     OnchangeStartDate(date) {
@@ -429,10 +470,9 @@ class PostCampaignCreatorUpdaterForm extends Component {
         var selectedTimeSlots = stateValues.selectedTimeSlots.slice();
         var array_khung_gio = stateValues.array_khung_gio.slice();
 
-        var jsonState = {};
         if (selectedCurrentTimeSlot === "all") {
             selectedTimeSlots = ["all"];
-            jsonState.allowAddTimeSlot = false;
+            stateValues.allowAddTimeSlot = false;
         }
         else {
             selectedTimeSlots.push(selectedCurrentTimeSlot);
@@ -440,32 +480,38 @@ class PostCampaignCreatorUpdaterForm extends Component {
 
         var remainingTimeSlots = GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots);
 
-        jsonState.selectedTimeSlots = selectedTimeSlots;
-        jsonState.remainingTimeSlots = remainingTimeSlots;
-        jsonState.time_slot = remainingTimeSlots.length > 0 ? remainingTimeSlots[0] : null;
+        stateValues.selectedTimeSlots = selectedTimeSlots;
+        stateValues.remainingTimeSlots = remainingTimeSlots;
+        stateValues.time_slot = remainingTimeSlots.length > 0 ? remainingTimeSlots[0] : null;
 
-        this.props.UpdateState(jsonState);
+        let $this = this;
+        this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
+            $this.props.UpdateState(stateValues);
+        });
     }
 
     OnRemoveTokenField(e) {
         var stateValues = this.props.stateValues;
+
         var removedTimeSlot = e.target.name;
         var selectedTimeSlots = stateValues.selectedTimeSlots.slice();
         var array_khung_gio = stateValues.array_khung_gio.slice();
-        var jsonState = {};
 
         if (removedTimeSlot === "all") {
-            jsonState.allowAddTimeSlot = true;
+            stateValues.allowAddTimeSlot = true;
         }
 
         ArrayRemoveItem(selectedTimeSlots, removedTimeSlot);
         var remainingTimeSlots = GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots);
 
-        jsonState.selectedTimeSlots = selectedTimeSlots;
-        jsonState.remainingTimeSlots = remainingTimeSlots;
-        jsonState.time_slot = remainingTimeSlots.length > 0 ? remainingTimeSlots[0] : null;
+        stateValues.selectedTimeSlots = selectedTimeSlots;
+        stateValues.remainingTimeSlots = remainingTimeSlots;
+        stateValues.time_slot = remainingTimeSlots.length > 0 ? remainingTimeSlots[0] : null;
 
-        this.props.UpdateState(jsonState);
+        let $this = this;
+        this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
+            $this.props.UpdateState(stateValues);
+        });
     }
 
     componentDidMount() {
@@ -512,6 +558,8 @@ class XPostCampaign extends Component {
         this.state = this.SetInitState(jsonState, modeAction);
 
         this.handleUpdateState = this.handleUpdateState.bind(this);
+        this.CalculatedIntoMoney = this.CalculatedIntoMoney.bind(this);
+        this.GetBasicPriceByAreaAndDisplayedMode = this.GetBasicPriceByAreaAndDisplayedMode.bind(this);
     }
 
     componentDidMount() {
@@ -540,11 +588,11 @@ class XPostCampaign extends Component {
             .then((res) => {
                 var servicePrice = res.body;
                 if (servicePrice !== undefined && servicePrice !== null) {
-                    jsonState.don_gia_co_ban = servicePrice.gia_tri;
+                    jsonState.don_gia_dich_vu = servicePrice.gia_tri;
                     jsonState.appliedServicePriceId = servicePrice.ma_gia;
                 }
                 else {
-                    jsonState.don_gia_co_ban = 0;
+                    jsonState.don_gia_dich_vu = 0;
                     jsonState.appliedServicePriceId = null;
                 }
 
@@ -552,7 +600,7 @@ class XPostCampaign extends Component {
             });
     }
 
-    CalculatedIntoMoney(jsonState) {
+    CalculatedIntoMoney(jsonState, next) {
         var stateValues = this.state;
 
         var appliedServicePriceId = stateValues.appliedServicePriceId;
@@ -579,7 +627,7 @@ class XPostCampaign extends Component {
             bat_dau: array_bat_dau,
             ket_thuc: array_ket_thuc
         };
-    
+
         var content = {
             selectedTimeSlots: khung_gio,
             vi_tri: vi_tri,
@@ -595,7 +643,8 @@ class XPostCampaign extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(content)
             .end((err, res) => {
-                console.log(res);
+                jsonState.tong_gia_tri_anh_huong = res.body.total_affect_value;
+                next(jsonState);
             });
     }
 
@@ -714,8 +763,9 @@ class XPostCampaign extends Component {
         jsonState.array_khung_gio = array_khung_gio
         if (modeAction === "create") {
             jsonState.ma_bai_dang = "";
-            // jsonState.loai_dich_vu = "";
             jsonState.co_che_hien_thi = "doc_quyen";
+
+            jsonState.tong_gia_tri_anh_huong = 0;
 
             jsonState.tinh_gia_theo = "ngay";
 
@@ -723,10 +773,6 @@ class XPostCampaign extends Component {
             jsonState.lnt_quan_huyen = "";
             jsonState.time_slot = array_khung_gio[0];
 
-            // jsonState.khung_gio_hien_thi = {
-            //     bat_dau: 2,
-            //     ket_thuc: 4
-            // }
             jsonState.thoi_luong_ap_dung = 1;
 
             var today = new Date();
@@ -734,7 +780,6 @@ class XPostCampaign extends Component {
             tomorrow.setDate(today.getDate() + jsonState.thoi_luong_ap_dung);
             jsonState.ngay_bat_dau = (today);
             jsonState.ngay_ket_thuc = (tomorrow);
-            jsonState.thanh_tien = 0;
             jsonState.tong_cong = 0;
             jsonState.ma_khuyen_mai = "";
 
@@ -749,7 +794,6 @@ class XPostCampaign extends Component {
             jsonState.co_che_hien_thi = editContents.co_che_hien_thi;
             jsonState.tinh_gia_theo = editContents.tinh_gia_theo;
             jsonState.don_gia_co_ban = editContents.don_gia_co_ban;
-            jsonState.thanh_tien = editContents.thanh_tien;
             jsonState.tong_cong = editContents.tong_cong;
 
             jsonState.start_date = JsonDateToDate(editContents.start_date);
@@ -772,18 +816,7 @@ class XPostCampaign extends Component {
     }
 
     handleUpdateState(jsonState) {
-        if (jsonState.updateBasicUnitPrice) {
-            jsonState.updateBasicUnitPrice = false;
-            var $this = this;
-            this.GetBasicPriceByAreaAndDisplayedMode(jsonState, jsonState.co_che_hien_thi, this.state.XAdminUsername)
-                .then((jsonState) => {
-                    $this.setState(jsonState);
-                });
-        }
-        else {
-            this.CalculatedIntoMoney(jsonState);
-            this.setState(jsonState);
-        }
+        this.setState(jsonState);
     }
 
     GetModelStateJson() {
@@ -811,7 +844,6 @@ class XPostCampaign extends Component {
             ngay_bat_dau: startDateJson,
             ngay_ket_thuc: endDateJson,
             don_gia_co_ban: state.don_gia_co_ban,
-            thanh_tien: state.thanh_tien,
             ma_khuyen_mai: state.ma_khuyen_mai,
             tong_cong: state.tong_cong,
             dang_kich_hoat: 1
@@ -872,6 +904,8 @@ class XPostCampaign extends Component {
                 stateValues={this.state}
 
                 UpdateState={this.handleUpdateState}
+                CalculatedIntoMoney={this.CalculatedIntoMoney}
+                GetBasicPriceByAreaAndDisplayedMode={this.GetBasicPriceByAreaAndDisplayedMode}
             />
         );
     }

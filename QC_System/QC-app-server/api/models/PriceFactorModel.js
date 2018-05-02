@@ -27,11 +27,10 @@ var PriceFactorSchema = new Schema({
     },
     gia_tri_ap_dung: String, //
     ti_le_tinh_gia: {
-        loai_ti_le: Number, //1 - phan tram, 2 - theo gia tri
-        tang: Number, // 1 - tang, 0 - giam
+        loai_ti_le: Number, //1 - tang theo phan tram, 2 - tang theo gia tri, (-1) - giam theo phan tram, (-2) - giam theo gia tri
         gia_tri: Number
     },
-    gia_tri_tang_them: Number,
+    gia_tri_thuc_tang_them: Number,
     start_date: {
         day: Number,
         month: Number,
