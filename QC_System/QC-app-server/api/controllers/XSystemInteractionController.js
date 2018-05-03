@@ -14,6 +14,7 @@ var userController = require('./UserController');
 var adsAreaController = require('./AdsAreaController');
 var servicePriceController = require('./ServicePriceController');
 var priceFactorController = require('./PriceFactorController');
+var promotionController = require('./PromotionManagementController');
 
 function GetSelectedTimeSlotsArrayJson(selectedTimeSlots, next) {
     let array_khung_gio_bat_dau = selectedTimeSlots.bat_dau.slice();
@@ -62,7 +63,16 @@ exports.get_serviceprice_ByAreaIdAndDisplayMode = (req, res) => {
     servicePriceController.get_a_serviceprice_by_adsAreaIdAndCreator(adsareaId, displayModeKey, nguoitao, function (servicePrice) {
         res.json(servicePrice);
     });
-}
+};
+
+exports.get_promotion_by_promotionCodeAndUsername = (req, res) => {
+    var promotionCode = req.header('promotioncode');
+    var creator = req.header('username');
+
+    promotionController.get_a_promotion_by_CodeAndUsername(promotionCode, creator, function (promotion) {
+        res.json(promotion);
+    });
+};
 
 exports.calculate_total_affect_value = (req, res) => {
     var content = req.body;
@@ -109,7 +119,6 @@ exports.calculate_total_affect_value = (req, res) => {
 
                             if (commonFunction.CheckArrayTimeSlotsContainsElement(priceFactor_timeSlots, timeSlot)) {
                                 total_affect_value += priceFactor.gia_tri_thuc_tang_them;
-                                console.log(priceFactor.gia_tri_thuc_tang_them);
                             }
                         });
                     }
@@ -131,4 +140,11 @@ exports.calculate_total_affect_value = (req, res) => {
             res.json(jsonRes);
         });
     });
+};
+
+exports.create_a_postCampaign_from_xsystemUser = function(req, res) {
+    var content = req.body;
+    console.log(content);
+
+    res.json({});
 };

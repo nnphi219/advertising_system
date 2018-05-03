@@ -20,6 +20,7 @@
     "react-string-replace": "^0.4.1",
     "superagent": "^3.8.2",
     "sweetalert": "^2.1.0",
+    "uuid": "^3.2.1",
     "validator": "^9.4.1"
   },
   "scripts": {

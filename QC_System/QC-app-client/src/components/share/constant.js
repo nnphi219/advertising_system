@@ -6,3 +6,6 @@ export const KHUNG_GIO = [
     '16h-17h', '17h-18h', '18h-19h', '19h-20h',
     '21h-22h', '22h-23h', '23h-24h', 'all'
 ];
+
+export const PROMOTION_PHAN_TRAM = 1;
+export const PROMOTION_GIA_TRI = 2;

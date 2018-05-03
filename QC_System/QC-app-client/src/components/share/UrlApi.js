@@ -31,8 +31,10 @@ const UrlApi = {
     PromotionManagement: hostNameServer + "/promotionmanagements",
     GetPromotionIdInfos: hostNameServer + "/getPromotionsIdInfo",
     ReadA_Promotion: hostNameServer + "/promotionmanagements/check",
+    GetPromotionByPromotionCodeAndUsername: hostNameServer + "/GetPromotionByPromotionCodeAndUsername",
 
     PostCampaignManagement: hostNameServer + "/postcampaignmanagements",
+    PostCampaignforXsystem: hostNameServer + "/PostCampaignforXsystem",
 
     UserManagement: hostNameServer + "/users",
     UserAuthen: hostNameServer + "/users/me",
