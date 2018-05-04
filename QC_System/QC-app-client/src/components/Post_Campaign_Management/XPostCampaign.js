@@ -952,6 +952,8 @@ class XPostCampaign extends Component {
                 ma_khuyen_mai: state.ma_khuyen_mai,
                 gia_tri_tang_them: state.tong_gia_tri_anh_huong,
                 tong_cong: state.tong_cong,
+                x_admin_username: state.XAdminUsername,
+                x_user_accessToken: state.USerOfXSysyemAccessToken,
                 trang_thai: 1
             };
 

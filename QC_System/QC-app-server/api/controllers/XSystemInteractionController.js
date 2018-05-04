@@ -1,5 +1,7 @@
 'use strict';
 
+const https = require('https');
+
 var mapper = require('../../share/Mapper');
 var dateFormat = require('../../share/DateFormat');
 var commonFunction = require('../../share/CommonFunction');
@@ -142,9 +144,34 @@ exports.calculate_total_affect_value = (req, res) => {
     });
 };
 
-exports.create_a_postCampaign_from_xsystemUser = function(req, res) {
+exports.create_a_postCampaign_from_xsystemUser = function (req, res) {
     var content = req.body;
-    console.log(content);
+    var x_user_accessToken = content.x_user_accessToken;
 
-    res.json({});
+    const options = {
+        hostname: 'http://localhost:8081',
+        path: '/checkXUserauthenticate',
+        method: 'POST',
+    };
+
+    // https.request(options, (res)=>{
+    //     var x_user_specific_info = res.body.x_user_specific_info;
+    //     console.log(x_user_specific_info);
+    //     res.json({});
+    // });
+res.json({});
+    // confirm user of x system basic on x_user_accessToken
+    // GetSelectedTimeSlots(content.khung_gio_hien_thi, function (arrayJsonTimeSlots) {
+    //     var newPostCampaign = new PostCampaignManagement(req.body);
+    //     newPostCampaign.khung_gio_hien_thi = arrayJsonTimeSlots;
+
+    //     newPostCampaign.save(function (err, resPostCampaign) {
+    //         if(err){
+    //             res.send(err);
+    //         }
+    //         else{
+    //             res.json(resPostCampaign);
+    //         }
+    //     });
+    // });
 };

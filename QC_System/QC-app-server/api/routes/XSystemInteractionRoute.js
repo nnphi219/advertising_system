@@ -16,6 +16,6 @@ module.exports = function (app) {
     app.route('/priceFactorCalculateTotalAffectValue')
         .post(xsystemController.calculate_total_affect_value)
 
-    app.route('./postCampaignforXsystem')
+    app.route('/postCampaignforXsystem')
         .post(xsystemController.create_a_postCampaign_from_xsystemUser)
 };

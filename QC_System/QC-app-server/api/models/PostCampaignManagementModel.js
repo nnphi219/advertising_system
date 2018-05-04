@@ -32,6 +32,8 @@ var PostCampaignManagementSchema = new Schema({
     gia_tri_tang_them: Number,
     tong_cong: Number,
     trang_thai: Number,
+    x_admin_username: String,
+    x_user_specific_info: String,
     created_date: {
         type: Date,
         default: Date.now
