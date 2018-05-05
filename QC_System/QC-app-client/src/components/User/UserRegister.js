@@ -128,6 +128,7 @@ class UserRegister extends Component {
         var jsonState = {
             username: state.username,
             password: state.password,
+            UrlApi: state.UrlApi,
             email: state.email
         };
 

@@ -16,7 +16,7 @@ exports.list_all_users = function (req, res) {
 };
 
 exports.create_a_user = function (req, res) {
-  var body = _.pick(req.body, ['email', 'username', 'password', 'user_type']);
+  var body = _.pick(req.body, ['email', 'username', 'password', 'UrlApi', 'user_type']);
   var new_user = new User(body);
   if (new_user.user_type === undefined) {
     new_user.user_type = "user";
