@@ -547,8 +547,8 @@ var servicePriceInputs = {
         keys: [1, 0]
     },
     loai_co_che: {
-        keys: ["doc_quyen", "co_dinh_vi_tri", "chia_se_co_dinh", "ngau_nhien"],
-        values: ["Độc quyền", "Cố định vị trí", "Chia sẻ cố định", "Ngẫu nhiên"]
+        keys: ["doc_quyen", "co_dinh_vi_tri", "chia_se_vi_tri_co_dinh", "ngau_nhien"],
+        values: ["Độc quyền", "Cố định vị trí", "Chia sẻ vị trí cố định", "Ngẫu nhiên"]
     }
 };
 

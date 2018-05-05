@@ -65,8 +65,8 @@ function RenderLeftForm(props) {
             <RenderSelect
                 nameId={"co_che_hien_thi"}
                 title={"Cơ chế hiển thị"}
-                keys={["doc_quyen", "co_dinh_vi_tri", "chia_se_co_dinh", "ngau_nhien"]}
-                values={["Độc quyền", "Cố định vị trí", "Chia sẻ cố định", "Ngẫu nhiên"]}
+                keys={["doc_quyen", "co_dinh_vi_tri", "chia_se_vi_tri_co_dinh", "ngau_nhien"]}
+                values={["Độc quyền", "Cố định vị trí", "Chia sẻ vị trí cố định", "Ngẫu nhiên"]}
                 selectedValue={stateValues.co_che_hien_thi}
                 OnChangeSelect={props.OnChangeInput}
                 className={"input--select"}

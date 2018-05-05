@@ -79,7 +79,7 @@
 		"price_description": String,
 		"price_type": Number, //1.CPD, 2.....
 		"applied_unit_number": Number, //day, view, ...,
-		"mechanism_type": String //(độc quyền, cố định vị trí, chia sẻ cố định, ngẫu nhiên)
+		"mechanism_type": String //(độc quyền, cố định vị trí, Chia sẻ vị trí cố định, ngẫu nhiên)
 		"start_date": Date,
 		"end_date": Date,
 		"create_date": {

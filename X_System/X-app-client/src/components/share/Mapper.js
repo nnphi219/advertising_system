@@ -36,8 +36,8 @@ export function TransferdisplayMechanismToText(value) {
     else if (value === "co_dinh_vi_tri") {
         result = "Cố định vị trí";
     }
-    else if (value === "chia_se_co_dinh") {
-        result = "Chia sẻ cố định";
+    else if (value === "chia_se_vi_tri_co_dinh") {
+        result = "Chia sẻ vị trí cố định";
     } else if (value === "ngau_nhien") {
         result = "Ngẫu nhiên";
     }

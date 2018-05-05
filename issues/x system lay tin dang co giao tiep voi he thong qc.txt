@@ -17,13 +17,25 @@ trang_ap_dung_id: req.params.trang_ap_dung_id
 
 
 ----> tra ve cho frontend cua x: 
+================================================================== quan trong ========================
 res {
-	vung1:{
-		posts: []
-	}
-	vung2:
+	type: 'banner', 'tin_rao'
+	
+	neu la banner: 
+		content: {
+			banner_type: ('image', 'video'),
+			resource_url: -> duong dan anh,
+			link_page_url -> redirect to trang muon quang cao
+		}
+	
+	neu la tin_rao:
+		contents: {
+			posts:[
+				{}
+			]
+		}
 }
-
+=========================================================================================================
  
 backend cua qc:
 - dinh nghia: get http://localhost:8080/GetPostsBasicOnAppliedPageAndXAdminUsername

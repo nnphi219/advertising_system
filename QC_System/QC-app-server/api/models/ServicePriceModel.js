@@ -13,7 +13,7 @@ var ServicePriceSchema = new Schema({
         so_ngay_ap_dung: Number,
         so_click_tren_view: Number
     },
-    loai_co_che:{ //(độc quyền, cố định vị trí, chia sẻ cố định, ngẫu nhiên)
+    loai_co_che:{ //(độc quyền, cố định vị trí, Chia sẻ vị trí cố định, ngẫu nhiên)
         key: String,
         value: String
     },
