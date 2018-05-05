@@ -8,8 +8,10 @@ class Home extends Component {
         return (
             <div>
                 <Banner />
-                <Intro />
-                <MainContent />
+                <div className="content">
+                    <Intro />
+                    <MainContent />
+                </div>
             </div>
         );
     }

@@ -5,7 +5,7 @@ import UrlApi from '../share/UrlApi';
 import './service_price.css';
 import { JsonDateToDate, DateToJsonDate, TransferSelectInputKeyToValue } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderRadioButon } from '../share/InputsRender';
-import { Date2BiggerDate1 } from '../share/DateFormat';
+import { Date2GreaterThanOrEqualDate1 } from '../share/DateFormat';
 import { DescriptionDetail } from '../share/CommonComponent';
 
 class RenderLeftForm extends Component {
@@ -200,7 +200,7 @@ class ServicePriceCreatorUpdaterForm extends Component {
             error_end_date: ""
         };
 
-        if (Date2BiggerDate1(start_date, end_date)) {
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
             jsonState.start_date = start_date;
         }
         else {
@@ -217,7 +217,7 @@ class ServicePriceCreatorUpdaterForm extends Component {
             error_end_date: ""
         };
 
-        if (Date2BiggerDate1(start_date, end_date)) {
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
             jsonState.end_date = end_date;
         }
         else {

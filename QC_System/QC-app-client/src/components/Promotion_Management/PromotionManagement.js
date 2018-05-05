@@ -14,22 +14,13 @@ function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
     var muc_gia_ap_dung = props.trContent.muc_gia_ap_dung;
-    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia, 10) === 1 ? "%" : "VND");
-
-    var start_date = props.trContent.start_date;
-    var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;
-
-    var end_date = props.trContent.end_date;
-    var endDate = `${end_date.day}/${end_date.month}/${end_date.year}`;
+    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia, 10) === 1 ? " %" : " VND");
 
     return (
         <tr>
             <td>{props.trContent.ma_khuyen_mai}</td>
-            <td>{props.trContent.mo_ta}</td>
-            <td>{props.trContent.ma_dich_vu_ap_dung}</td>
+            <td>{props.trContent.mo_ta_khuyen_mai}</td>
             <td>{ratesApply}</td>
-            <td>{startDate}</td>
-            <td>{endDate}</td>
             <td>{status}</td>
             <td>
                 <RenderEditDeleteButton
@@ -71,7 +62,7 @@ class PromotionManagementContents extends Component {
     render() {
         var theaderPromotion = {
             keys: [],
-            values: ["Mã khuyến mãi", "Mô tả khuyến mãi", "Mã dịch vụ áp dụng", "Mực giá áp dụng", "Bắt đầu", "Kết thúc", "Trạng thái"]
+            values: ["Mã khuyến mãi", "Mô tả khuyến mãi", "Mức giá áp dụng", "Trạng thái"]
         };
 
         return (

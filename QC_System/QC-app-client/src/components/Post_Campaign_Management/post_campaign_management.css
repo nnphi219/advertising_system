@@ -154,3 +154,36 @@
 .post_campaign__info--displayedpast {
     width: 210px;
 }
+
+.x_post_campaign--title{
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 50px;
+}
+
+.x_post_campaign__promotion--input {
+    width: 100%;
+}
+
+.xpostcampaign__successform {
+    font-size: 60px;
+    text-align: center;
+    margin-top: 55px;
+}
+
+.xpostcampaign__successform--button {
+    text-align: center;
+}
+
+.xpostcampaign__successform--button button {
+    font-size: 25px;
+}
+
+.promotion__divleft {
+    width: 400px;
+}
+
+.promotion__divright {
+    width: 550px;
+    margin-top: 15px;
+}

@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
-import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
-import { DescriptionDetail } from '../share/CommonComponent';
+import { RenderInput, RenderRadioButon } from '../share/InputsRender';
+
+import { PROMOTION_PHAN_TRAM, PROMOTION_GIA_TRI } from '../share/constant';
+
+const uuidV1 = require('uuid/v1');
 
 class RenderProperties extends Component {
+
     render() {
         var stateValues = this.props.stateValues;
-        var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
-        var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
 
         var arrayAdsAreaTitles = [];
         if (stateValues.AdsAreaIds !== undefined) {
@@ -33,60 +34,49 @@ class RenderProperties extends Component {
                 />
 
                 <RenderInput
-                    nameId={"mo_ta"}
+                    nameId={"mo_ta_khuyen_mai"}
                     title={"Mô tả khuyến mãi"}
                     type={"text"}
-                    value={stateValues.mo_ta}
-                    errorTitle={stateValues.error_mo_ta}
+                    value={stateValues.mo_ta_khuyen_mai}
+                    errorTitle={stateValues.error_mo_ta_khuyen_mai}
                     className={"promotion--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
 
-                <RenderSelect
-                    nameId={"ma_dich_vu_ap_dung"}
-                    title={"Mã dịch vụ quảng cáo"}
-                    keys={AdsAreaIdsKeys}
-                    values={AdsAreaIdsValues}
-                    selectedValue={this.props.stateValues.ma_dich_vu_ap_dung}
-                    OnChangeSelect={this.props.OnChangeSelect}
-                    className={"input--select"}
-                />
-                <DescriptionDetail
-                    arrayTitles={arrayAdsAreaTitles}
-                />
                 <RenderRadioButon
                     nameId={"loai_gia"}
                     title={"Mức giá áp dụng"}
-                    keys={[1, 0]}
+                    keys={[PROMOTION_PHAN_TRAM, PROMOTION_GIA_TRI]}
                     values={["Phần trăm", "Giá trị"]}
-                    selectedValue={this.props.stateValues.loai_gia}
+                    selectedValue={stateValues.loai_gia}
                     OnChangeRadioButton={this.props.OnChangeRadioButton}
                     className={"input-radio"}
                 />
                 <RenderInput
                     nameId={"gia_tri"}
+                    title={parseInt(stateValues.loai_gia, 10) === PROMOTION_PHAN_TRAM ? "Đơn vị (%)" : "Đơn vị (VND)"}
                     value={stateValues.gia_tri}
                     errorTitle={stateValues.error_gia_tri}
                     type={"number"}
                     className={"promotion--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
+                <div>
+                    <div>
+                        <RenderInput
+                            nameId={"code"}
+                            title={"Code"}
+                            value={stateValues.code}
+                            type={"text"}
+                            className={"promotion--input"}
+                            OnChangeInput={this.props.OnChangeInput}
+                            isReadOnly={1}
+                        />
+                    </div>
 
-                <RenderDate
-                    nameId={"start_date"}
-                    title={"Ngày bắt đầu"}
-                    className={"input--date"}
-                    value={this.props.stateValues.start_date}
-                    OnchangeDate={this.props.OnchangeStartDate}
-                />
+                    <button onClick={this.props.OnGenerateCode}>Tạo mới code</button>
+                </div>
 
-                <RenderDate
-                    nameId={"end_date"}
-                    title={"Ngày kết thúc"}
-                    className={"input--date"}
-                    value={this.props.stateValues.end_date}
-                    OnchangeDate={this.props.OnchangeEndDate}
-                />
             </div>
         );
     }
@@ -99,18 +89,15 @@ class PromotionCreatorUpdaterForm extends Component {
         this.OnChangeInput = this.OnChangeInput.bind(this);
         this.OnChangeSelect = this.OnChangeSelect.bind(this);
         this.OnChangeRadioButton = this.OnChangeRadioButton.bind(this);
-
-        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
-        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
+        this.OnGenerateCode = this.OnGenerateCode.bind(this);
+        
     }
 
-    OnchangeStartDate(date) {
-        var jsonState = { "start_date": date }
-        this.props.UpdateState(jsonState);
-    }
+    OnGenerateCode(){
+        var jsonState = {
+            code: uuidV1()
+        };
 
-    OnchangeEndDate(date) {
-        var jsonState = { "end_date": date }
         this.props.UpdateState(jsonState);
     }
 
@@ -142,6 +129,7 @@ class PromotionCreatorUpdaterForm extends Component {
                     OnChangeRadioButton={this.OnChangeRadioButton}
                     OnchangeStartDate={this.OnchangeStartDate}
                     OnchangeEndDate={this.OnchangeEndDate}
+                    OnGenerateCode={this.OnGenerateCode}
 
                     stateValues={this.props.stateValues}
                     modeAction={this.props.modeAction}
@@ -206,24 +194,19 @@ class PromotionCreatorUpdater extends Component {
     SetInitState(jsonState) {
         if (this.props.modeAction === "create") {
             jsonState.ma_khuyen_mai = '';
-            jsonState.mo_ta = '';
-            jsonState.loai_gia = 1;
+            jsonState.mo_ta_khuyen_mai = '';
+            jsonState.loai_gia = PROMOTION_PHAN_TRAM;
+            jsonState.code = uuidV1();
             jsonState.gia_tri = 0;
-
-            var today = new Date();
-            jsonState.start_date = today;
-            jsonState.end_date = today;
         }
         else {
             var editContents = this.props.editContents;
 
             jsonState.ma_khuyen_mai = editContents.ma_khuyen_mai;
-            jsonState.mo_ta = editContents.mo_ta;
-            jsonState.ma_dich_vu_ap_dung = editContents.ma_dich_vu_ap_dung;
+            jsonState.mo_ta_khuyen_mai = editContents.mo_ta_khuyen_mai;
             jsonState.loai_gia = editContents.muc_gia_ap_dung.loai_gia;
             jsonState.gia_tri = editContents.muc_gia_ap_dung.gia_tri;
-            jsonState.start_date = JsonDateToDate(editContents.start_date);
-            jsonState.end_date = JsonDateToDate(editContents.end_date);
+            jsonState.code = editContents.code;
         }
 
         return jsonState;
@@ -237,7 +220,7 @@ class PromotionCreatorUpdater extends Component {
     SetInitError(jsonState) {
         jsonState.error_ma_khuyen_mai = '';
         jsonState.error_gia_tri = '';
-        jsonState.error_mo_ta = '';
+        jsonState.error_mo_ta_khuyen_mai = '';
 
         return jsonState;
     }
@@ -251,8 +234,8 @@ class PromotionCreatorUpdater extends Component {
             isValid = false;
         }
 
-        if (state.mo_ta === "") {
-            jsonError.error_mo_ta = "Mô tả không thể rỗng";
+        if (state.mo_ta_khuyen_mai === "") {
+            jsonError.error_mo_ta_khuyen_mai = "Mô tả không thể rỗng";
             isValid = false;
         }
 
@@ -273,19 +256,15 @@ class PromotionCreatorUpdater extends Component {
         var isValid = this.CheckValid(state);
 
         if (isValid) {
-            var startDateJson = DateToJsonDate(state.start_date);
-            var endDateJson = DateToJsonDate(state.end_date);
 
             var promotionContent = {
                 ma_khuyen_mai: state.ma_khuyen_mai,
-                mo_ta: state.mo_ta,
-                ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
+                mo_ta_khuyen_mai: state.mo_ta_khuyen_mai,
+                code: state.code,
                 muc_gia_ap_dung: {
                     loai_gia: state.loai_gia,
                     gia_tri: state.gia_tri
                 },
-                start_date: startDateJson,
-                end_date: endDateJson
             };
 
             if (this.props.modeAction === 'edit') {

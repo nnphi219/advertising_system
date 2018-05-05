@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    PostCampaignManagement = mongoose.model('PostCampaignManagements');
+    PostCampaignManagement = mongoose.model('PostCampaigns');
 
 exports.list_all_postCampaignManagement = function (req, res) {
     PostCampaignManagement.find({}, function (err, postCampaignManagement) {

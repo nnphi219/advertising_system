@@ -21,15 +21,20 @@ const UrlApi = {
     PriceFactor: hostNameServer + "/pricefactors",
     ReadA_PriceFactor: hostNameServer + "/pricefactors/check",
 
+    PriceFactorCalculateTotalAffectValue: hostNameServer + "/priceFactorCalculateTotalAffectValue",
+
     ServicePrice: hostNameServer + "/serviceprices",
     ReadA_ServicePrice: hostNameServer + "/serviceprices/check",
     GetServicePriceIdInfo: hostNameServer + "/getservicePricesIdInfo",
+    GetServicePriceByAreaIdAndDisplayMode: hostNameServer + "/getServicePriceByAreaIdAndDisplayMode",
 
     PromotionManagement: hostNameServer + "/promotionmanagements",
     GetPromotionIdInfos: hostNameServer + "/getPromotionsIdInfo",
     ReadA_Promotion: hostNameServer + "/promotionmanagements/check",
+    GetPromotionByPromotionCodeAndUsername: hostNameServer + "/GetPromotionByPromotionCodeAndUsername",
 
     PostCampaignManagement: hostNameServer + "/postcampaignmanagements",
+    PostCampaignforXsystem: hostNameServer + "/PostCampaignforXsystem",
 
     UserManagement: hostNameServer + "/users",
     UserAuthen: hostNameServer + "/users/me",

@@ -4,7 +4,6 @@ var Schema = mongoose.Schema;
 
 
 var PostCampaignManagementSchema = new Schema({
-    ma_chien_dich: String,
     ma_bai_dang: String,
     loai_dich_vu: String, //Lay tu vung quang cao
     trang_hien_thi: String,
@@ -14,10 +13,10 @@ var PostCampaignManagementSchema = new Schema({
         tinh: String,
         quan_huyen: String
     },
-    khung_gio_hien_thi: {
+    khung_gio_hien_thi: [{
         bat_dau: Number,
         ket_thuc: Number
-    },
+    }],
     ngay_bat_dau: {
         day: Number,
         month: Number,
@@ -28,11 +27,13 @@ var PostCampaignManagementSchema = new Schema({
         month: Number,
         year: Number
     },
-    don_gia_co_ban: Number,
-    thanh_tien: Number,
+    don_gia_dich_vu: Number,
     ma_khuyen_mai: String,
+    gia_tri_tang_them: Number,
     tong_cong: Number,
-    dang_kich_hoat: Number,
+    trang_thai: Number,
+    x_admin_username: String,
+    x_user_specific_info: String,
     created_date: {
         type: Date,
         default: Date.now
@@ -43,4 +44,4 @@ var PostCampaignManagementSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('PostCampaignManagements', PostCampaignManagementSchema);
+module.exports = mongoose.model('PostCampaigns', PostCampaignManagementSchema);

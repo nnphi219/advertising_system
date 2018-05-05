@@ -36,7 +36,15 @@ exports.read_a_priceFactor_by_priceFactorId = (req, res) => {
             res.send(err);
         res.json(priceFactor);
     });
-}
+};
+
+exports.read_all_priceFactor_by_servicePriceIdAndDate = (servicePriceId, creator, next) => {
+    PriceFactor.find({ nguoi_tao: creator, ma_gia: servicePriceId }, function (err, priceFactors) {
+        if (err)
+            next([]);
+        next(priceFactors);
+    });
+};
 
 exports.create_a_priceFactor = function (req, res) {
     GetSelectedTimeSlots(req.body, function (khung_gio) {
@@ -56,7 +64,6 @@ exports.create_a_priceFactor = function (req, res) {
     });
 };
 
-
 exports.read_a_priceFactor = function (req, res) {
     PriceFactor.findById(req.params.priceFactorId, function (err, priceFactor) {
         if (err) {
@@ -67,7 +74,6 @@ exports.read_a_priceFactor = function (req, res) {
         }
     });
 };
-
 
 exports.update_a_priceFactor = function (req, res) {
     GetSelectedTimeSlots(req.body, function (khung_gio) {
@@ -82,7 +88,6 @@ exports.update_a_priceFactor = function (req, res) {
         });
     });
 };
-
 
 exports.delete_a_priceFactor = function (req, res) {
     PriceFactor.remove({
