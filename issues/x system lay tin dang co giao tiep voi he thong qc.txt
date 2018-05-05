@@ -1,0 +1,47 @@
+
+frontend cua x: goi http://localtest:8081/GetPostsBasicOnAppliedPage?trang_ap_dung_id=""
+
+backend cua x: 
+- dinh nghia: get: http://localtest:8081/GetPostsBasicOnAppliedPage/:trang_ap_dung_id
+trang_ap_dung_id: req.params.trang_ap_dung_id
+
+---- goi post http://localhost:8080/GetPostsBasicOnAppliedPageAndXAdminUsername
+ ({ trang_ap_dung_id, x_admin_username, password })
+---------> backend cua qc se tra ve
+ req: {
+	vung1:{
+		postcampaignsid:[]
+	}
+	vung2:
+}
+
+
+----> tra ve cho frontend cua x: 
+res {
+	vung1:{
+		posts: []
+	}
+	vung2:
+}
+
+ 
+backend cua qc:
+- dinh nghia: get http://localhost:8080/GetPostsBasicOnAppliedPageAndXAdminUsername
+res: {
+	vung1:{
+		postcampaignsid: []
+	}
+	vung2:
+}
+
+
+
+
+
+
+--- chien dich tin dang
+- thieu banner
+
+
+--- xsystem
+- luu array vung quang cao trong trang quang cao
