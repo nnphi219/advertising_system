@@ -9,9 +9,12 @@ class Layout extends Component {
     render() {
         return (
             <div>
-                <Header
-                    isAdmin={this.props.isAdmin}
-                />
+                <div>
+
+                    <Header
+                        isAdmin={this.props.isAdmin}
+                    />
+                </div>
                 <div id="body" />
                 <Footer />
             </div>

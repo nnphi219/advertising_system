@@ -22,7 +22,7 @@ class Header extends Component {
                                             <nav>
                                                 <ul className="nav topnav">
                                                     <li className="dropdown active">
-                                                        <a href="index.html">Home</a>
+                                                        <a href="/">Trang chủ</a>
                                                     </li>
                                                     {/* <li className="dropdown">
                                                         <a href="#1">Features</a>
@@ -56,7 +56,7 @@ class Header extends Component {
                                                             : null
                                                     }
                                                     <li>
-                                                        <a href="/marketing">marketing</a>
+                                                        <a href="/tin-rao-vat">Trang rao vặt</a>
                                                     </li>
                                                     <li className="dropdown" id="UserLoginInfo">
 

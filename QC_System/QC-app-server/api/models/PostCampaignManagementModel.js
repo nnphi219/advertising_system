@@ -44,4 +44,4 @@ var PostCampaignManagementSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('PostCampaignManagements', PostCampaignManagementSchema);
+module.exports = mongoose.model('PostCampaigns', PostCampaignManagementSchema);

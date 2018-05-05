@@ -218,7 +218,7 @@ function RenderForm(props) {
                         <div className="float-left pricefactor_tokenfield tokenfield div_property_margin_bottom">
                             {timeSlotTokenFields}
                         </div>
-                        <div className="float-left" style={{paddingTop: "5px", marginLeft: "5px"}}>
+                        <div className="float-left" style={{ paddingTop: "5px", marginLeft: "5px" }}>
                             <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_time_slots}</p>
                         </div>
                     </div>
@@ -366,9 +366,6 @@ class RenderProperties extends Component {
 
         return (
             <div className="x_post_campaign">
-                <div>
-                    <h2>{"Tạo chiến dịch tin đăng"}</h2>
-                </div>
                 <div className="x_post_campaign_body">
                     <RenderForm
                         OnChangeInput={props.OnChangeInput}
@@ -569,16 +566,38 @@ class PostCampaignCreatorUpdaterForm extends Component {
     render() {
         var props = this.props;
         return (
-            <RenderProperties
-                OnChangeInput={this.OnChangeInput}
-                OnchangeStartDate={this.OnchangeStartDate}
-                OnchangeEndDate={this.OnchangeEndDate}
-                OnAddTokenField={this.OnAddTokenField}
-                OnRemoveTokenField={this.OnRemoveTokenField}
-                handleSubmit={this.props.handleSubmit}
+            <div>
+                <div className="x_post_campaign--title">
+                    {"Tạo chiến dịch tin đăng"}
+                </div>
+                <div>
+                    <RenderProperties
+                        OnChangeInput={this.OnChangeInput}
+                        OnchangeStartDate={this.OnchangeStartDate}
+                        OnchangeEndDate={this.OnchangeEndDate}
+                        OnAddTokenField={this.OnAddTokenField}
+                        OnRemoveTokenField={this.OnRemoveTokenField}
+                        handleSubmit={this.props.handleSubmit}
 
-                stateValues={props.stateValues}
-            />
+                        stateValues={props.stateValues}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+class SuccessForm extends Component {
+    render() {
+        return (
+            <div>
+                <div>
+                    <p className="xpostcampaign__successform">Bài đăng tạo thành công!</p>
+                </div>
+                <div className="xpostcampaign__successform--button">
+                    <button className="btn btn-primary" onClick={this.props.OnCreateNew}>Tạo mới</button>
+                </div>
+            </div>
         );
     }
 }
@@ -594,6 +613,7 @@ class XPostCampaign extends Component {
 
         var jsonState = {
             modeAction,
+            register_successfully: false,
             XAdminUsername,
             USerOfXSysyemAccessToken,
             selectedTimeSlots: [],
@@ -733,6 +753,7 @@ class XPostCampaign extends Component {
     }
 
     GetPostsOfXsystemByUserToken(jsonSetInfosOfUser, XsystemUrlApi, USerOfXSysyemAccessToken, modeAction) {
+        console.log(USerOfXSysyemAccessToken);
         return Request.get(XsystemUrlApi + "/getPostByUserToken")
             .set('xsystem-auth', USerOfXSysyemAccessToken)
             .then((res) => {
@@ -938,10 +959,21 @@ class XPostCampaign extends Component {
             khung_gio.bat_dau = array_bat_dau;
             khung_gio.ket_thuc = array_ket_thuc;
 
+            var trang_hien_thi = '';
+            if (state.AdsAreaIds !== undefined) {
+                let AdsAreaIdsKeys = state.AdsAreaIds.keys;
+
+                var indexOfAdsAreas = AdsAreaIdsKeys.indexOf(state.loai_dich_vu);
+
+                if (indexOfAdsAreas !== -1) {
+                    trang_hien_thi = state.AdsAreaIds.appliedPageTypeKeys[indexOfAdsAreas].key;
+                }
+            }
+
             var postCampaignContent = {
                 ma_bai_dang: state.ma_bai_dang,
                 loai_dich_vu: state.loai_dich_vu,
-                trang_hien_thi: state.trang_hien_thi,
+                trang_hien_thi: trang_hien_thi,
                 co_che_hien_thi: state.co_che_hien_thi,
                 tinh_gia_theo: state.tinh_gia_theo,
                 vi_tri: vi_tri,
@@ -969,13 +1001,20 @@ class XPostCampaign extends Component {
         if (postCampaignContent === null) {
             return;
         }
-
+        console.log(postCampaignContent);
         var $this = this;
         Request.post(UrlApi.PostCampaignforXsystem)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postCampaignContent)
             .end(function (err, res) {
-                console.log(res);
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    this.setState({
+                        register_successfully: true
+                    });
+                }
             });
     }
 
@@ -997,17 +1036,29 @@ class XPostCampaign extends Component {
         this.CreatePostCampaign();
     }
 
+    OnCreateNew() {
+        this.setState({
+            register_successfully: false
+        });
+    }
+
     render() {
         return (
-            <PostCampaignCreatorUpdaterForm
-                stateValues={this.state}
+            this.state.register_successfully ?
+                <SuccessForm
+                    OnCreateNew={this.OnCreateNew.bind(this)}
+                />
+                :
+                <PostCampaignCreatorUpdaterForm
+                    stateValues={this.state}
 
-                UpdateState={this.handleUpdateState}
-                CalculatedIntoMoney={this.CalculatedIntoMoney}
-                GetBasicPriceByAreaAndDisplayedMode={this.GetBasicPriceByAreaAndDisplayedMode}
+                    UpdateState={this.handleUpdateState}
+                    CalculatedIntoMoney={this.CalculatedIntoMoney}
+                    GetBasicPriceByAreaAndDisplayedMode={this.GetBasicPriceByAreaAndDisplayedMode}
 
-                handleSubmit={this.handleSubmit}
-            />
+                    handleSubmit={this.handleSubmit}
+                />
+
         );
     }
 }

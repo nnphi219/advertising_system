@@ -8,9 +8,10 @@ var express = require('express'),
     PriceFactor = require('./api/models/PriceFactorModel'),
     ServicePrice = require('./api/models/ServicePriceModel'),
     PromotionManagement = require('./api/models/PromotionManagementModel'),
-    PostCampaignManagement = require('./api/models/PostCampaignManagementModel'),
+    PostCampaign = require('./api/models/PostCampaignManagementModel'),
     PostManagement = require('./api/models/PostManagementModel'),
     bodyParser = require('body-parser');
+    
 var cors = require('cors');
 const {users, populateUsers} = require('./seed/seed');
 const fileUpload = require('express-fileupload');

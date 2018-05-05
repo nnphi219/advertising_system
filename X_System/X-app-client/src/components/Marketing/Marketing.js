@@ -11,7 +11,8 @@ class RenderAPost extends Component {
         return (
             <div className="col-lg-3 col-md-6 mb-4">
                 <div className="card h-100">
-                    <a href={`/post/${post._id}`}><img className="card-img-top" src={imgUrl} alt="" /></a>
+                    {/* <a href={`/post/${post._id}`}><img className="card-img-top" src={imgUrl} alt="" /></a> */}
+                    <a href={`/post/${post._id}`}><img className="card-img-top" src={"/images/images2.jpg"} alt="" /></a>
                     <div className="card-body">
                         <h4 className="card-title">
                             <a href={`/post/${post._id}`}>{post.tieu_de}</a>

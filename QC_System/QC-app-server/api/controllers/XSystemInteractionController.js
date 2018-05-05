@@ -1,6 +1,6 @@
 'use strict';
 
-const https = require('https');
+const request = require('superagent');
 
 var mapper = require('../../share/Mapper');
 var dateFormat = require('../../share/DateFormat');
@@ -10,7 +10,9 @@ const _ = require('lodash');
 
 var mongoose = require('mongoose'),
     AdsArea = mongoose.model('AdsAreas'),
-    User = mongoose.model('Users');
+    User = mongoose.model('Users'),
+    PostCampaign = mongoose.model('PostCampaigns');
+
 
 var userController = require('./UserController');
 var adsAreaController = require('./AdsAreaController');
@@ -148,30 +150,28 @@ exports.create_a_postCampaign_from_xsystemUser = function (req, res) {
     var content = req.body;
     var x_user_accessToken = content.x_user_accessToken;
 
-    const options = {
-        hostname: 'http://localhost:8081',
-        path: '/checkXUserauthenticate',
-        method: 'POST',
-    };
+    request.get('http://localhost:8081/checkXUserauthenticate')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('xsystem-auth', x_user_accessToken)
+        .then((responseXAuth) => {
+            var jsonResult = null;
+            if (responseXAuth.body) {
+                var x_user_specific_info = responseXAuth.body.x_user_specific_info;
 
-    // https.request(options, (res)=>{
-    //     var x_user_specific_info = res.body.x_user_specific_info;
-    //     console.log(x_user_specific_info);
-    //     res.json({});
-    // });
-res.json({});
-    // confirm user of x system basic on x_user_accessToken
-    // GetSelectedTimeSlots(content.khung_gio_hien_thi, function (arrayJsonTimeSlots) {
-    //     var newPostCampaign = new PostCampaignManagement(req.body);
-    //     newPostCampaign.khung_gio_hien_thi = arrayJsonTimeSlots;
+                GetSelectedTimeSlotsArrayJson(content.khung_gio_hien_thi, function (arrayJsonTimeSlots) {
+                    var newPostCampaign = new PostCampaign(content);
+                    newPostCampaign.khung_gio_hien_thi = arrayJsonTimeSlots;
+                    newPostCampaign.x_user_specific_info = x_user_specific_info;
 
-    //     newPostCampaign.save(function (err, resPostCampaign) {
-    //         if(err){
-    //             res.send(err);
-    //         }
-    //         else{
-    //             res.json(resPostCampaign);
-    //         }
-    //     });
-    // });
+                    newPostCampaign.save(function (err, resPostCampaign) {
+                        if (err) {
+                            res.send(err);
+                        }
+                        else {
+                            res.json(resPostCampaign);
+                        }
+                    });
+                });
+            }
+        });
 };

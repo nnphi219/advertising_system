@@ -51,7 +51,7 @@ class App extends Component {
                         <Route exact={true} path={"/post/:id"} component={PostDetail} />
                         <Route exact={true} path={"/posts/create"} component={PostCreator} />
                         <Route exact={true} path={"/posts/edit/:id"} component={PostEditor} />
-                        <Route exact={true} path={"/marketing"} component={Marketing} />
+                        <Route exact={true} path={"/tin-rao-vat"} component={Marketing} />
 
                         <Route exact={true} path={"/pages"} component={PageManagement} />
                         <Route exact={true} path={"/page/:id"} component={PageDetail} />
