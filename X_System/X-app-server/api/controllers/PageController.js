@@ -46,7 +46,8 @@ exports.list_all_pages_for_qc = function (req, res) {
         var pages_for_qc = pages.map((page) => {
             return {
                 ma_trang_quang_cao: page.ma_trang_quang_cao,
-                ten_trang_quang_cao: page.ten_trang_quang_cao
+                ten_trang_quang_cao: page.ten_trang_quang_cao,
+                vung_quang_cao: page.vung_quang_cao
             }
         });
 

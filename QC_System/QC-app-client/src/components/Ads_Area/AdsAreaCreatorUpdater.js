@@ -5,6 +5,27 @@ import UrlApi from '../share/UrlApi';
 import { RenderSelect, RenderInput } from '../share/InputsRender';
 import './ads_area.css';
 
+function GetSelectedXAdsArea(arrayAppliedPages, selectedAppliedPage) {
+    let keys = [];
+    let values = [];
+    let arrayXAdsAreas = arrayAppliedPages.adsAreas;
+
+    let indexOfSelectedAppliedPage = arrayAppliedPages.keys.indexOf(selectedAppliedPage);
+    let selectedXAdsAreas = [];
+    if (indexOfSelectedAppliedPage > -1) {
+        selectedXAdsAreas = arrayXAdsAreas[indexOfSelectedAppliedPage];
+    }
+
+    selectedXAdsAreas.forEach(XadsArea => {
+        keys.push(XadsArea.ma_vung);
+        values.push(XadsArea.ten_vung);
+    });
+
+    return {
+        keys, values
+    }
+}
+
 function TransferSizeToString(size) {
     return size.width + "x" + size.height;
 }
@@ -68,6 +89,8 @@ function RenderDoubleInputs(props) {
 
 function RenderCombobox(props) {
     var selectedValue = props.stateValues[props.inputData.id];
+    var stateValues = props.stateValues;
+
     if (AreaCombobox.includes(props.inputData.id)) {
         selectedValue = TransferSizeToString(selectedValue);
     }
@@ -77,7 +100,13 @@ function RenderCombobox(props) {
     if (props.inputData.id === "loai_trang_ap_dung") {
         keys = props.stateValues.AppliedPages.keys;
         values = props.stateValues.AppliedPages.values;
-    } else if (props.inputData.id === "loai_bai_dang_ap_dung") {
+    }
+    else if (props.inputData.id === "vung_ap_dung_quang_cao") {
+        let selectedXAdsAreas = stateValues.selectedXAdsAreas;
+        keys = selectedXAdsAreas.keys;
+        values = selectedXAdsAreas.values;
+    }
+    else if (props.inputData.id === "loai_bai_dang_ap_dung") {
         keys = props.stateValues.AppliedPostTypes.keys;
         values = props.stateValues.AppliedPostTypes.values;
     }
@@ -220,10 +249,18 @@ class AdsAreaCreatorForm extends Component {
     }
 
     handleOnchangeSelect(e) {
+        var stateValues = this.props.stateValues;
         var name = e.target.name;
         var value = e.target.value;
 
-        this.props.handleUpdateState({ [name]: value });
+        stateValues[name] = value;
+
+        if (name === "loai_trang_ap_dung") {
+            stateValues.selectedXAdsAreas = GetSelectedXAdsArea(stateValues.AppliedPages, value);
+            stateValues.vung_ap_dung_quang_cao = stateValues.selectedXAdsAreas.keys[0];
+        }
+
+        this.props.handleUpdateState(stateValues);
     }
 
     handleOnchangeRadioButton(e) {
@@ -283,9 +320,14 @@ class AdsAreaCreatorUpdater extends Component {
     constructor(props) {
         super(props);
         var jsonState = {
-            AppliedPages: {
+            selectedXAdsAreas: {
                 keys: [],
                 values: []
+            },
+            AppliedPages: {
+                keys: [],
+                values: [],
+                adsAreas: []
             },
             AppliedPostTypes: {
                 keys: [],
@@ -320,25 +362,37 @@ class AdsAreaCreatorUpdater extends Component {
                 var _ids = [];
                 var keys = [];
                 var values = [];
+                var adsAreas = [];
+
                 if (res.body) {
                     res.body.forEach((appliedPage) => {
-                        _ids.push(appliedPage._id);
-                        keys.push(appliedPage.ma_trang_quang_cao);
-                        values.push(appliedPage.ten_trang_quang_cao);
+                        if (appliedPage.vung_quang_cao.length > 0) {
+                            _ids.push(appliedPage._id);
+                            keys.push(appliedPage.ma_trang_quang_cao);
+                            values.push(appliedPage.ten_trang_quang_cao);
+                            adsAreas.push(appliedPage.vung_quang_cao);
+                        }
                     });
                 }
 
 
                 var jsonAppliedPages = {
                     AppliedPages: {
-                        _ids: _ids,
-                        keys: keys,
-                        values: values
+                        _ids,
+                        keys,
+                        values,
+                        adsAreas
                     },
 
                 };
-                if (this.props.modeAction === "create") {
+
+                if (this.props.modeAction === "create" && keys.length > 0) {
+                    jsonAppliedPages.selectedXAdsAreas = GetSelectedXAdsArea(jsonAppliedPages.AppliedPages, keys[0]);
+                    jsonAppliedPages.vung_ap_dung_quang_cao = jsonAppliedPages.selectedXAdsAreas.keys[0];
                     jsonAppliedPages.loai_trang_ap_dung = keys[0];
+                }
+                else {
+                    jsonAppliedPages.selectedXAdsAreas = GetSelectedXAdsArea(jsonAppliedPages.AppliedPages, this.state.loai_trang_ap_dung);
                 }
 
                 $this.setState(jsonAppliedPages);
@@ -458,13 +512,15 @@ class AdsAreaCreatorUpdater extends Component {
         else {
             inputs.forEach(element => {
                 if (element.type === "combobox") {
-                    if (element.id === "loai_trang_ap_dung" || element.id === "loai_bai_dang_ap_dung") {
+                    if (element.id === "loai_trang_ap_dung"
+                        || element.id === "loai_bai_dang_ap_dung"
+                        || element.id === "vung_ap_dung_quang_cao"
+                    ) {
                         jsonState[element.id] = this.props.editContents[element.id].key;
                     }
                     else if (element.id === "loai_quang_cao") {
-                        console.log(this.props.editContents[element.id].key);
                         jsonState[element.id] = this.props.editContents[element.id].key;
-                    }
+                    }   
                     else {
                         jsonState[element.id] = this.props.editContents[element.id];
                     }
@@ -561,6 +617,7 @@ class AdsAreaCreatorUpdater extends Component {
         if (isValid) {
             var indexOfAppliedPage = state.AppliedPages.keys.indexOf(state.loai_trang_ap_dung);
             var indexOfAppliedPostType = state.AppliedPostTypes.keys.indexOf(state.loai_bai_dang_ap_dung);
+            var indexOfAppliedAdsArea = state.selectedXAdsAreas.keys.indexOf(state.vung_ap_dung_quang_cao);
 
             var indexOfAdsType = state.AdsAreaTypes.keys.indexOf(state.loai_quang_cao);
             var loai_quang_cao = {
@@ -575,6 +632,10 @@ class AdsAreaCreatorUpdater extends Component {
                 loai_trang_ap_dung: {
                     key: state.loai_trang_ap_dung,
                     value: state.AppliedPages.values[indexOfAppliedPage]
+                },
+                vung_ap_dung_quang_cao: {
+                    key: state.vung_ap_dung_quang_cao,
+                    value: state.selectedXAdsAreas.values[indexOfAppliedAdsArea]
                 },
                 loai_bai_dang_ap_dung: {
                     key: state.loai_bai_dang_ap_dung,
@@ -636,7 +697,7 @@ class AdsAreaCreatorUpdater extends Component {
             if (adsAreaContent === 'error') {
                 return;
             }
-
+            console.log(adsAreaContent);
             var $this = this;
             Request.post(UrlApi.AdsArea)
                 .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -729,6 +790,13 @@ var adsAreaInformationInputs = [
         "type": "combobox",
         "keys": ["trang_chu2", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
         "values": ["Trang chủ2", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
+    },
+    {
+        "description": "Vùng áp dụng quảng cáo",
+        "id": "vung_ap_dung_quang_cao",
+        "type": "combobox",
+        "keys": [],
+        "values": []
     },
     {
         "description": "Loại bài đăng áp dụng",

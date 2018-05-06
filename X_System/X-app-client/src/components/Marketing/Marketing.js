@@ -6,8 +6,6 @@ import './marketing_boostrap.css';
 class RenderAPost extends Component {
     render() {
         var post = this.props.post;
-        var imgUrl = post.imageUrls !== [] ? post.imageUrls[0] : "http://placehold.it/700x400";
-        console.log(imgUrl);
         return (
             <div className="col-lg-3 col-md-6 mb-4">
                 <div className="card h-100">
@@ -31,8 +29,9 @@ class RenderPosts extends Component {
     render() {
         var posts = this.props.posts !== null ? this.props.posts: [];
         var elements = [];
+        
         posts.forEach(post => {
-            elements.push(<RenderAPost post={post} />);
+            elements.push(<RenderAPost key={post.ma_bai_dang} post={post} />);
         });
 
         return (
