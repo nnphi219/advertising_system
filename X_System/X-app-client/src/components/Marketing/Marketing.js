@@ -61,6 +61,11 @@ class Marketing extends Component {
             });
     }
 
+    componentDidMount(){
+        // Request.get
+        //truyen trang_rao_vat
+    }
+
     render() {
         return (
             <div>

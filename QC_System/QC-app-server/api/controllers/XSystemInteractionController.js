@@ -23,6 +23,12 @@ var promotionController = require('./PromotionManagementController');
 function GetSelectedTimeSlotsArrayJson(selectedTimeSlots, next) {
     let array_khung_gio_bat_dau = selectedTimeSlots.bat_dau.slice();
     let array_khung_gio_ket_thuc = selectedTimeSlots.ket_thuc.slice();
+
+    if(typeof(array_khung_gio_bat_dau) == 'string'){
+        array_khung_gio_bat_dau = [array_khung_gio_bat_dau];
+        array_khung_gio_ket_thuc = [array_khung_gio_ket_thuc];
+    }
+
     let array_khung_gio = [];
 
     array_khung_gio_bat_dau.forEach((bat_dau, index) => {

@@ -231,6 +231,9 @@ class RenderProperties extends Component {
                         <div className="float-left pricefactor_tokenfield tokenfield div_property_margin_bottom">
                             {timeSlotTokenFields}
                         </div>
+                        <div className="float-left" style={{ paddingTop: "5px", marginLeft: "5px" }}>
+                            <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_time_slots}</p>
+                        </div>
                     </div>
                 </div>
                 <div key="thoi_gian_ap_dung" className="div_property_margin_bottom">
@@ -610,6 +613,7 @@ class PriceFactorCreatorUpdater extends Component {
         jsonState.error_ma_chi_so = '';
         jsonState.error_ten_chi_so = '';
         jsonState.error_gia_tri_tang_giam = '';
+        jsonState.error_time_slots = '';
 
         return jsonState;
     }
@@ -710,6 +714,11 @@ class PriceFactorCreatorUpdater extends Component {
 
         if (parseInt(state.gia_tri_tang_giam, 10) < 0) {
             jsonError.error_gia_tri_tang_giam = "Yêu cầu lớn hơn hoặc bằng 0";
+            isValid = false;
+        }
+
+        if (state.selectedTimeSlots.length === 0) {
+            jsonError.error_time_slots = "Chưa chọn khung giờ hiện thị";
             isValid = false;
         }
 

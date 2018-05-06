@@ -1,5 +1,6 @@
 const hostNameServer = "http://localhost:8081";
 const QCSystem = "http://localhost:3000";
+const QcSystemServer = "http://localhost:8080";
 
 export const UrlApi = {
     UserManagement: hostNameServer + "/users",
@@ -44,5 +45,7 @@ export const UrlRedirect = {
 };
 
 export const QCSytemUrl = {
-    Post_Campaign: QCSystem + "/post-campaign"
+    Post_Campaign: QCSystem + "/post-campaign",
+
+    get_posts_basicOn_DisplayPage: QcSystemServer + "/getPostsBasicOnServiceTypeAndXAdminUsername"
 };

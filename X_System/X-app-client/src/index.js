@@ -9,6 +9,7 @@ import { UrlApi, UrlRedirect } from './components/share/Url';
 
 import './index.css';
 import './frontend/vendor/popup.css';
+import './frontend/vendor/bootstrap-tokenfield.css';
 import './frontend/assets/css/bootstrap.css';
 import './frontend/assets/css/bootstrap-responsive.css';
 import './frontend/assets/css/bootstrap-tokenfield.css';
