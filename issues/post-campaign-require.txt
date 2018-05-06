@@ -7,20 +7,4 @@
 --- loai dich vu(ma vung quang cao) -- done
 tham khao https://batdongsan.com.vn/dang-tin-rao-vat-ban-nha-dat
 
---- 29/4/2018
---------------------- xong trong buoi sang
------- tao tat ca gia dich vu voi tat ca loai co che hien thi --done
---- chi so anh huong gia
- - edit khung gio ap dung -- done
- - tu ngay den ngay -- done
- - tinh thanh quan huyen doi lai lay json -- done
---------------------------------------------------------------
-afternoon
-post campaign:
---- tinh thanh quan huyen doi lai lay json -- done
---- lay gia tri tang them --- done
---- khi nguoi dung chon dich vu quang cao ---> se lay ra nhung gia dich vu cho quang cao nay ---done
---- dua vao co che hien thi ng dung chon(tren gia dich vu) ---> nhung khung gio hien thi phu hop(lay tu chi so anh huong gia). ----> gia co ban duoc ap dung. --done
---- chon ma khuyen mai de ap dung giam gia.
---- tinh thanh 
---------------------------------------------------------------
+
