@@ -6,6 +6,12 @@ var mongoose = require('mongoose'),
 function GetSelectedTimeSlots(body, next) {
     var array_khung_gio_bat_dau = body.loai_nhan_to.khung_gio.bat_dau;
     var array_khung_gio_ket_thuc = body.loai_nhan_to.khung_gio.ket_thuc;
+
+    if(typeof(array_khung_gio_bat_dau) == 'string'){
+        array_khung_gio_bat_dau = [array_khung_gio_bat_dau];
+        array_khung_gio_ket_thuc = [array_khung_gio_ket_thuc];
+    }
+
     var khung_gio = [];
 
     array_khung_gio_bat_dau.forEach((bat_dau, index) => {

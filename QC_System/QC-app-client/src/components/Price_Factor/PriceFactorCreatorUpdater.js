@@ -15,9 +15,6 @@ const GIAM_THEO_PHAN_TRAM = -1;
 const TANG_THEO_GIA_TRI = 2;
 const GIAM_THEO_GIA_TRI = -2;
 
-const loai_gia_tri_tang_them_theo_phan_tram = 1;
-const loai_gia_tri_tang_them_theo_gia_tri = 2;
-
 const data_tinh_thanh_quan_huyen = require("../../data_sheet/tinh_thanh_quan_huyen.json");
 
 function GetRealValue(stateValues) {
@@ -25,7 +22,7 @@ function GetRealValue(stateValues) {
         var indexOfServicePrice = stateValues.ServicePrices.list_ma_gia.indexOf(stateValues.ma_gia);
         var gia_co_ban = parseInt(stateValues.ServicePrices.list_gia_tri[indexOfServicePrice], 10);
 
-        var loai_gia_tri_tang_them = parseInt(stateValues.loai_gia_tri_tang_them);
+        var loai_gia_tri_tang_them = parseInt(stateValues.loai_gia_tri_tang_them, 10);
         var gia_tri_tang_giam = parseFloat(stateValues.gia_tri_tang_giam);
 
         if (loai_gia_tri_tang_them === TANG_THEO_PHAN_TRAM) {
@@ -230,6 +227,9 @@ class RenderProperties extends Component {
                         }
                         <div className="float-left pricefactor_tokenfield tokenfield div_property_margin_bottom">
                             {timeSlotTokenFields}
+                        </div>
+                        <div className="float-left" style={{ paddingTop: "5px", marginLeft: "5px" }}>
+                            <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_time_slots}</p>
                         </div>
                     </div>
                 </div>
@@ -610,6 +610,7 @@ class PriceFactorCreatorUpdater extends Component {
         jsonState.error_ma_chi_so = '';
         jsonState.error_ten_chi_so = '';
         jsonState.error_gia_tri_tang_giam = '';
+        jsonState.error_time_slots = '';
 
         return jsonState;
     }
@@ -620,7 +621,6 @@ class PriceFactorCreatorUpdater extends Component {
 
         if (isValid) {
             var ti_le_tinh_gia__loai_ti_le = state.loai_gia_tri_tang_them;
-            var gia_tri_tang_giam_iscreased = state.loai_gia_tri_tang_them >= 0 ? 1 : 0;
             var startDateJson = DateToJsonDate(state.start_date);
             var endDateJson = DateToJsonDate(state.end_date);
 
@@ -710,6 +710,11 @@ class PriceFactorCreatorUpdater extends Component {
 
         if (parseInt(state.gia_tri_tang_giam, 10) < 0) {
             jsonError.error_gia_tri_tang_giam = "Yêu cầu lớn hơn hoặc bằng 0";
+            isValid = false;
+        }
+
+        if (state.selectedTimeSlots.length === 0) {
+            jsonError.error_time_slots = "Chưa chọn khung giờ hiện thị";
             isValid = false;
         }
 

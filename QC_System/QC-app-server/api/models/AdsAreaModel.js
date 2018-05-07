@@ -29,6 +29,10 @@ var AdsAreaSchema = new Schema({
         key: String,
         value: String
     }, //
+    vung_ap_dung_quang_cao: {
+        key: String,
+        value: String
+    }, //
     so_luong_tin_toi_da: Number,
     so_luong_chia_se_vung: Number,
     hieu_ung_tieu_de: String, // hiệu ứng tiêu đề.

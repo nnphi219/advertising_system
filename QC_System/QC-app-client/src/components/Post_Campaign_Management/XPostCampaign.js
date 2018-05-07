@@ -39,11 +39,6 @@ function RenderForm(props) {
         }
     }
 
-    // var PromotionIdsKeys = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.keys;
-    // var PromotionIdsValues = stateValues.PromotionIds === undefined ? [] : stateValues.PromotionIds.values;
-    var promotionIdsKeys = [];
-    var promotionIdsValues = [];
-
     var postIdKeys = [];
     var postDetailDescription = "";
 
@@ -81,21 +76,13 @@ function RenderForm(props) {
     var promotionDetailDescription = [];
     if (stateValues.promotionInfo) {
         let promotionDetail = stateValues.promotionInfo;
-        let appliedValue = promotionDetail.muc_gia_ap_dung.gia_tri + " " + (parseInt(promotionDetail.muc_gia_ap_dung.loai_gia) === PROMOTION_PHAN_TRAM ? "%" : "VND");
+        let appliedValue = promotionDetail.muc_gia_ap_dung.gia_tri + " " + (parseInt(promotionDetail.muc_gia_ap_dung.loai_gia, 10) === PROMOTION_PHAN_TRAM ? "%" : "VND");
         promotionDetailDescription.push(<p key="1" className="margin_zero"> {"Tên khuyến mãi: " + promotionDetail.mo_ta_khuyen_mai + "."}</p>)
         promotionDetailDescription.push(<p key="2" className="margin_zero"> {"Giá trị áp dụng: " + appliedValue + "."}</p>)
     }
 
     return (
         <div>
-            {/* <RenderInput
-                nameId={"ma_chien_dich"}
-                title={"Mã chiến dịch"}
-                type={"text"}
-                value={stateValues.ma_chien_dich}
-                className={"x_post_campaign--input"}
-                OnChangeInput={props.OnChangeInput}
-            /> */}
             <div className="post_campaign__info--header">
                 Thông tin cơ bản
             </div>
@@ -362,7 +349,6 @@ function RenderForm(props) {
 class RenderProperties extends Component {
     render() {
         var props = this.props;
-        var stateValues = props.stateValues;
 
         return (
             <div className="x_post_campaign">
@@ -687,8 +673,6 @@ class XPostCampaign extends Component {
         var start_date = DateToJsonDate(stateValues.ngay_bat_dau);
         var end_date = DateToJsonDate(stateValues.ngay_ket_thuc);
 
-        var totalAffectValue = 0;
-
         var selectedTimeSlots = stateValues.selectedTimeSlots.slice();
 
         var array_bat_dau = [];
@@ -711,7 +695,6 @@ class XPostCampaign extends Component {
             'xsystem-auth': stateValues.USerOfXSysyemAccessToken
         };
 
-        var $this = this;
         Request.post(UrlApi.PriceFactorCalculateTotalAffectValue)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(content)
@@ -753,7 +736,6 @@ class XPostCampaign extends Component {
     }
 
     GetPostsOfXsystemByUserToken(jsonSetInfosOfUser, XsystemUrlApi, USerOfXSysyemAccessToken, modeAction) {
-        console.log(USerOfXSysyemAccessToken);
         return Request.get(XsystemUrlApi + "/getPostByUserToken")
             .set('xsystem-auth', USerOfXSysyemAccessToken)
             .then((res) => {
@@ -896,7 +878,7 @@ class XPostCampaign extends Component {
         if (stateValues.promotionInfo) {
             let muc_gia_ap_dung = stateValues.promotionInfo.muc_gia_ap_dung;
 
-            if (parseInt(muc_gia_ap_dung.loai_gia) === PROMOTION_PHAN_TRAM) {
+            if (parseInt(muc_gia_ap_dung.loai_gia, 10) === PROMOTION_PHAN_TRAM) {
                 return thanh_tien - thanh_tien * muc_gia_ap_dung.gia_tri;
             }
             else {
@@ -1001,8 +983,7 @@ class XPostCampaign extends Component {
         if (postCampaignContent === null) {
             return;
         }
-        console.log(postCampaignContent);
-        var $this = this;
+        
         Request.post(UrlApi.PostCampaignforXsystem)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postCampaignContent)
