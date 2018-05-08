@@ -12,6 +12,22 @@ const uuidv4 = require('uuid/v4');
 
 const data_tinh_thanh_quan_huyen = require("../../data_sheet/tinh_thanh_quan_huyen.json");
 
+function IsBannerAds(stateValues) {
+    let isBannerAds = false;
+    if (stateValues.AdsAreaIds !== undefined) {
+        var AdsAreaIdsKeys = stateValues.AdsAreaIds.keys;
+        var indexOfAdsAreas = AdsAreaIdsKeys.indexOf(stateValues.loai_dich_vu);
+
+        if (indexOfAdsAreas !== -1) {
+            if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === "banner") {
+                isBannerAds = true;
+            }
+        }
+    }
+
+    return isBannerAds;
+}
+
 function GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots) {
     return array_khung_gio.filter((timeSlot) =>
         selectedTimeSlots.indexOf(timeSlot) > -1 ? false : true
@@ -23,7 +39,8 @@ function GetBasicPrice(basicPriceOnTimeSlot, selectedTimeSlots) {
 }
 
 function RenderBannerOption(props) {
-    var url_image = props.stateValues.url_image;
+    let url_image = props.stateValues.url_image;
+    let error_url_image = props.stateValues.error_url_image;
 
     return (
         <div className="post_campaign__info--content--banner">
@@ -44,6 +61,7 @@ function RenderBannerOption(props) {
             </div>
             <div className="post_campaign__info--content--banner--file">
                 <input type="file" id="file" onChange={props.OnChangeImageFile} />
+                <p style={{ color: "red", marginTop: "3px" }}>{error_url_image}</p>
             </div>
             <div>
                 <Img className="post_campaign__info--content--banner--image" src={url_image} style={{ marginRight: "5px" }} />
@@ -198,9 +216,6 @@ function RenderForm(props) {
                         {adsAreaDetailDescription}
                     </div>
                 </div>
-                {
-                    isBannerAds
-                }
                 {renderAdsType}
                 <div className="post_campaign__info--content--displaymode">
                     <div>
@@ -480,25 +495,28 @@ class PostCampaignCreatorUpdaterForm extends Component {
         event.preventDefault();
 
         var file = event.target.files[0];
+        if (file) {
+            const data = new FormData();
+            data.append('file', file);
+            data.append('filename', file.file_name || uuidv4());
 
-        const data = new FormData();
-        data.append('file', file);
-        data.append('filename', file.file_name || uuidv4());
-
-        var $this = this;
-        fetch(UrlApi.UploadFile, {
-            method: 'POST',
-            body: data,
-        }).then((response) => {
-            response.json().then((body) => {
-                stateValues.url_image = body.file;
-                $this.props.UpdateState(stateValues);
+            var $this = this;
+            fetch(UrlApi.UploadFile, {
+                method: 'POST',
+                body: data,
+            }).then((response) => {
+                response.json().then((body) => {
+                    stateValues.url_image = body.file;
+                    $this.props.UpdateState(stateValues);
+                });
+            }).catch((e) => {
+                $this.props.Onchange({ UploadImageDescription: "fail" });
             });
-        }).catch((e) => {
-            $this.props.Onchange({ UploadImageDescription: "fail" });
-        });
-
-
+        }
+        else {
+            stateValues.url_image = '';
+            this.props.UpdateState(stateValues);
+        }
     }
 
     OnChangeInput(e) {
@@ -521,6 +539,8 @@ class PostCampaignCreatorUpdaterForm extends Component {
             stateValues.trang_hien_thi = appliedPageType;
 
             stateValues.co_che_hien_thi = stateValues.co_che_hien_thi;
+            stateValues.url_image = '';
+            stateValues.url_redirect = '';
 
             let $this = this;
             this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
@@ -668,7 +688,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
 class SuccessForm extends Component {
     render() {
         return (
-            <div>
+            <div style={{ height: "200px" }}>
                 <div>
                     <p className="xpostcampaign__successform">Bài đăng tạo thành công!</p>
                 </div>
@@ -695,7 +715,8 @@ class XPostCampaign extends Component {
             XAdminUsername,
             USerOfXSysyemAccessToken,
             selectedTimeSlots: [],
-            allowAddTimeSlot: true
+            allowAddTimeSlot: true,
+            url_image: ''
         };
 
         jsonState = this.SetInitState(jsonState, modeAction);
@@ -709,6 +730,7 @@ class XPostCampaign extends Component {
 
     SetInitError(jsonState) {
         jsonState.error_time_slots = '';
+        jsonState.error_url_image = '';
 
         return jsonState;
     }
@@ -998,6 +1020,13 @@ class XPostCampaign extends Component {
             isValid = false;
         }
 
+        if (IsBannerAds(state)) {
+            if (state.url_image === "") {
+                jsonError.error_url_image = "Hình ảnh được yêu cầu";
+                isValid = false;
+            }
+        }
+
         if (!isValid) {
             this.setState(jsonError);
         }
@@ -1045,7 +1074,6 @@ class XPostCampaign extends Component {
             }
 
             var postCampaignContent = {
-                ma_bai_dang: state.ma_bai_dang,
                 loai_dich_vu: state.loai_dich_vu,
                 trang_hien_thi: trang_hien_thi,
                 co_che_hien_thi: state.co_che_hien_thi,
@@ -1063,6 +1091,14 @@ class XPostCampaign extends Component {
                 trang_thai: 1
             };
 
+            if (IsBannerAds(state)) {
+                postCampaignContent.url_image = state.url_image;
+                postCampaignContent.url_redirect = state.url_redirect;
+            }
+            else {
+                postCampaignContent.ma_bai_dang = state.ma_bai_dang;
+            }
+
             return postCampaignContent;
         }
         else {
@@ -1076,6 +1112,7 @@ class XPostCampaign extends Component {
             return;
         }
 
+        var $this = this;
         Request.post(UrlApi.PostCampaignforXsystem)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postCampaignContent)
@@ -1084,7 +1121,7 @@ class XPostCampaign extends Component {
                     console.log(err);
                 }
                 else {
-                    this.setState({
+                    $this.setState({
                         register_successfully: true
                     });
                 }
