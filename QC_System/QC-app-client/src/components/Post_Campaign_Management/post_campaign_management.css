@@ -114,6 +114,19 @@
     padding-top: 10px;
 }
 
+.post_campaign__info--content--banner {
+    margin-bottom: 10px;
+}
+
+.post_campaign__info--content--banner--file {
+    margin-bottom: 10px;
+}
+
+.post_campaign__info--content--banner--image {
+    margin-bottom: 5px;
+    max-height: 200px;
+}
+
 .post_campaign__info--content--postid {
     height: 72px;
 }

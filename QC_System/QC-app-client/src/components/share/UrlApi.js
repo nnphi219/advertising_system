@@ -41,8 +41,10 @@ const UrlApi = {
     UserLogin: hostNameServer + "/users/login",
     UserLogout: hostNameServer + "/users/me/token",
 
+    UploadFile: hostNameServer + "/uploads",
+
     PostManagement: `http://${HOST}:${PORT}/postmanagement`,
-    Upload: `http://${HOST}:${PORT}/postmanagement/upload`
+    Upload: `http://${HOST}:${PORT}/uploads`
 }
 
 export const UrlRedirect = {

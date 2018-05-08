@@ -6,6 +6,10 @@ import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 import { KHUNG_GIO, PROMOTION_PHAN_TRAM } from '../share/constant';
 import { ArrayRemoveItem, NumberFormat } from '../share/CommonFunction';
 
+import Img from 'react-image';
+
+const uuidv4 = require('uuid/v4');
+
 const data_tinh_thanh_quan_huyen = require("../../data_sheet/tinh_thanh_quan_huyen.json");
 
 function GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots) {
@@ -18,12 +22,72 @@ function GetBasicPrice(basicPriceOnTimeSlot, selectedTimeSlots) {
     return parseFloat(basicPriceOnTimeSlot) * selectedTimeSlots.length;
 }
 
+function RenderBannerOption(props) {
+    var url_image = props.stateValues.url_image;
+
+    return (
+        <div className="post_campaign__info--content--banner">
+            <label className="fullwidth post_campaign__info--content-title">
+                <p>{"Url trang quảng cáo"}</p>
+            </label>
+            <RenderInput
+                nameId={"url_redirect"}
+                type={"text"}
+                value={props.stateValues.url_redirect}
+                className={"post--input"}
+                OnChangeInput={props.OnChangeInput}
+            />
+            <div>
+                <label className="fullwidth post_campaign__info--content-title">
+                    <p>{"Hình ảnh"}</p>
+                </label>
+            </div>
+            <div className="post_campaign__info--content--banner--file">
+                <input type="file" id="file" onChange={props.OnChangeImageFile} />
+            </div>
+            <div>
+                <Img className="post_campaign__info--content--banner--image" src={url_image} style={{ marginRight: "5px" }} />
+            </div>
+        </div>
+    );
+}
+
+function RenderPostOption(props) {
+    return (
+        <div className="post_campaign__info--content--postid">
+            <div>
+                <label className="fullwidth post_campaign__info--content-title">
+                    <p>{"Mã bài đăng"}</p>
+                </label>
+            </div>
+            <div>
+                <div className="float-left">
+                    <RenderSelect
+                        nameId={"ma_bai_dang"}
+                        keys={props.postIdKeys}
+                        values={props.postIdValues}
+                        selectedValue={props.stateValues.ma_bai_dang}
+                        OnChangeSelect={props.OnChangeInput}
+                        className={"input--select"}
+                    />
+                </div>
+                <div className="float-left post_campaign__info--content-description">
+                    {props.postDetailDescription}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function RenderForm(props) {
     var stateValues = props.stateValues;
 
     var AdsAreaIdsKeys = [];
     var AdsAreaIdsValues = [];
     var trang_hien_thi = "";
+
+    let isBannerAds = false;
+
     if (stateValues.AdsAreaIds !== undefined) {
         AdsAreaIdsKeys = stateValues.AdsAreaIds.keys;
         AdsAreaIdsValues = stateValues.AdsAreaIds.values;
@@ -33,9 +97,11 @@ function RenderForm(props) {
         var adsAreaDetailDescription = [];
         if (indexOfAdsAreas !== -1) {
             trang_hien_thi = stateValues.AdsAreaIds.appliedPageTypeKeys[indexOfAdsAreas].value;
-
+            if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === "banner") {
+                isBannerAds = true;
+            }
             adsAreaDetailDescription.push(<p key="1" className="margin_zero"> {"Tên dịch vụ: " + stateValues.AdsAreaIds.values[indexOfAdsAreas] + "."}</p>)
-            adsAreaDetailDescription.push(<p key="2" className="margin_zero"> {"Loại quảng cáo: " + stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas] + "."}</p>)
+            adsAreaDetailDescription.push(<p key="2" className="margin_zero"> {"Loại quảng cáo: " + stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].value + "."}</p>)
         }
     }
 
@@ -81,34 +147,26 @@ function RenderForm(props) {
         promotionDetailDescription.push(<p key="2" className="margin_zero"> {"Giá trị áp dụng: " + appliedValue + "."}</p>)
     }
 
+    var renderAdsType = isBannerAds ?
+        <RenderBannerOption
+            stateValues={stateValues}
+            OnChangeInput={props.OnChangeInput}
+            OnChangeImageFile={props.OnChangeImageFile}
+        /> :
+        <RenderPostOption
+            postIdKeys={postIdKeys}
+            postIdValues={postIdValues}
+            stateValues={stateValues}
+            OnChangeInput={props.OnChangeInput}
+            postDetailDescription={postDetailDescription}
+        />
+
     return (
         <div>
             <div className="post_campaign__info--header">
                 Thông tin cơ bản
             </div>
             <div className="post_campaign__info--content">
-                <div className="post_campaign__info--content--postid">
-                    <div>
-                        <label className="fullwidth post_campaign__info--content-title">
-                            <p>{"Mã bài đăng"}</p>
-                        </label>
-                    </div>
-                    <div>
-                        <div className="float-left">
-                            <RenderSelect
-                                nameId={"ma_bai_dang"}
-                                keys={postIdKeys}
-                                values={postIdValues}
-                                selectedValue={stateValues.ma_bai_dang}
-                                OnChangeSelect={props.OnChangeInput}
-                                className={"input--select"}
-                            />
-                        </div>
-                        <div className="float-left post_campaign__info--content-description">
-                            {postDetailDescription}
-                        </div>
-                    </div>
-                </div>
                 <div className="post_campaign__info--content--adsarea">
                     <label className="fullwidth post_campaign__info--content-title">
                         <p>{"Loại dịch vụ"}</p>
@@ -140,6 +198,10 @@ function RenderForm(props) {
                         {adsAreaDetailDescription}
                     </div>
                 </div>
+                {
+                    isBannerAds
+                }
+                {renderAdsType}
                 <div className="post_campaign__info--content--displaymode">
                     <div>
                         <label className="fullwidth post_campaign__info--content-title">
@@ -355,6 +417,7 @@ class RenderProperties extends Component {
                 <div className="x_post_campaign_body">
                     <RenderForm
                         OnChangeInput={props.OnChangeInput}
+                        OnChangeImageFile={props.OnChangeImageFile}
                         OnchangeStartDate={props.OnchangeStartDate}
                         OnchangeEndDate={props.OnchangeEndDate}
                         OnAddTokenField={props.OnAddTokenField}
@@ -383,6 +446,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
         super(props);
 
         this.OnChangeInput = this.OnChangeInput.bind(this);
+        this.OnChangeImageFile = this.OnChangeImageFile.bind(this);
         this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
         this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
         this.OnKeyDown = this.OnKeyDown.bind(this);
@@ -408,6 +472,33 @@ class PostCampaignCreatorUpdaterForm extends Component {
                 stateValues.promotionInfo = promotion;
                 next(stateValues);
             });
+    }
+
+    OnChangeImageFile(event) {
+        var stateValues = this.props.stateValues;
+        event.stopPropagation();
+        event.preventDefault();
+
+        var file = event.target.files[0];
+
+        const data = new FormData();
+        data.append('file', file);
+        data.append('filename', file.file_name || uuidv4());
+
+        var $this = this;
+        fetch(UrlApi.UploadFile, {
+            method: 'POST',
+            body: data,
+        }).then((response) => {
+            response.json().then((body) => {
+                stateValues.url_image = body.file;
+                $this.props.UpdateState(stateValues);
+            });
+        }).catch((e) => {
+            $this.props.Onchange({ UploadImageDescription: "fail" });
+        });
+
+
     }
 
     OnChangeInput(e) {
@@ -559,6 +650,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
                 <div>
                     <RenderProperties
                         OnChangeInput={this.OnChangeInput}
+                        OnChangeImageFile={this.OnChangeImageFile}
                         OnchangeStartDate={this.OnchangeStartDate}
                         OnchangeEndDate={this.OnchangeEndDate}
                         OnAddTokenField={this.OnAddTokenField}
@@ -716,7 +808,7 @@ class XPostCampaign extends Component {
             keys.push(adsArea.ma_dich_vu);
             values.push(adsArea.ten_hien_thi);
             appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
-            adsTypes.push(adsArea.loai_quang_cao.value);
+            adsTypes.push(adsArea.loai_quang_cao);
         });
 
         jsonSetInfosOfUser.AdsAreaIds = {
@@ -983,7 +1075,7 @@ class XPostCampaign extends Component {
         if (postCampaignContent === null) {
             return;
         }
-        
+
         Request.post(UrlApi.PostCampaignforXsystem)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postCampaignContent)
