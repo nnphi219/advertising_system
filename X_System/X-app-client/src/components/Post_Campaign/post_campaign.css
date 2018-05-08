@@ -3,7 +3,8 @@
 }
 
 .iframe_post_campaign {
-    width: 100%;
-    height: auto;
-    min-height: 1600px;
+    overflow: hidden;
+    height: 100%;
+    width: 70%;
+    position: absolute;
 }

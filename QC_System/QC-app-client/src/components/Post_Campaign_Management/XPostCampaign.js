@@ -6,7 +6,27 @@ import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 import { KHUNG_GIO, PROMOTION_PHAN_TRAM } from '../share/constant';
 import { ArrayRemoveItem, NumberFormat } from '../share/CommonFunction';
 
+import Img from 'react-image';
+
+const uuidv4 = require('uuid/v4');
+
 const data_tinh_thanh_quan_huyen = require("../../data_sheet/tinh_thanh_quan_huyen.json");
+
+function IsBannerAds(stateValues) {
+    let isBannerAds = false;
+    if (stateValues.AdsAreaIds !== undefined) {
+        var AdsAreaIdsKeys = stateValues.AdsAreaIds.keys;
+        var indexOfAdsAreas = AdsAreaIdsKeys.indexOf(stateValues.loai_dich_vu);
+
+        if (indexOfAdsAreas !== -1) {
+            if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === "banner") {
+                isBannerAds = true;
+            }
+        }
+    }
+
+    return isBannerAds;
+}
 
 function GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots) {
     return array_khung_gio.filter((timeSlot) =>
@@ -18,12 +38,74 @@ function GetBasicPrice(basicPriceOnTimeSlot, selectedTimeSlots) {
     return parseFloat(basicPriceOnTimeSlot) * selectedTimeSlots.length;
 }
 
+function RenderBannerOption(props) {
+    let url_image = props.stateValues.url_image;
+    let error_url_image = props.stateValues.error_url_image;
+
+    return (
+        <div className="post_campaign__info--content--banner">
+            <label className="fullwidth post_campaign__info--content-title">
+                <p>{"Url trang quảng cáo"}</p>
+            </label>
+            <RenderInput
+                nameId={"url_redirect"}
+                type={"text"}
+                value={props.stateValues.url_redirect}
+                className={"post--input"}
+                OnChangeInput={props.OnChangeInput}
+            />
+            <div>
+                <label className="fullwidth post_campaign__info--content-title">
+                    <p>{"Hình ảnh"}</p>
+                </label>
+            </div>
+            <div className="post_campaign__info--content--banner--file">
+                <input type="file" id="file" onChange={props.OnChangeImageFile} />
+                <p style={{ color: "red", marginTop: "3px" }}>{error_url_image}</p>
+            </div>
+            <div>
+                <Img className="post_campaign__info--content--banner--image" src={url_image} style={{ marginRight: "5px" }} />
+            </div>
+        </div>
+    );
+}
+
+function RenderPostOption(props) {
+    return (
+        <div className="post_campaign__info--content--postid">
+            <div>
+                <label className="fullwidth post_campaign__info--content-title">
+                    <p>{"Mã bài đăng"}</p>
+                </label>
+            </div>
+            <div>
+                <div className="float-left">
+                    <RenderSelect
+                        nameId={"ma_bai_dang"}
+                        keys={props.postIdKeys}
+                        values={props.postIdValues}
+                        selectedValue={props.stateValues.ma_bai_dang}
+                        OnChangeSelect={props.OnChangeInput}
+                        className={"input--select"}
+                    />
+                </div>
+                <div className="float-left post_campaign__info--content-description">
+                    {props.postDetailDescription}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function RenderForm(props) {
     var stateValues = props.stateValues;
 
     var AdsAreaIdsKeys = [];
     var AdsAreaIdsValues = [];
     var trang_hien_thi = "";
+
+    let isBannerAds = false;
+
     if (stateValues.AdsAreaIds !== undefined) {
         AdsAreaIdsKeys = stateValues.AdsAreaIds.keys;
         AdsAreaIdsValues = stateValues.AdsAreaIds.values;
@@ -33,9 +115,11 @@ function RenderForm(props) {
         var adsAreaDetailDescription = [];
         if (indexOfAdsAreas !== -1) {
             trang_hien_thi = stateValues.AdsAreaIds.appliedPageTypeKeys[indexOfAdsAreas].value;
-
+            if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === "banner") {
+                isBannerAds = true;
+            }
             adsAreaDetailDescription.push(<p key="1" className="margin_zero"> {"Tên dịch vụ: " + stateValues.AdsAreaIds.values[indexOfAdsAreas] + "."}</p>)
-            adsAreaDetailDescription.push(<p key="2" className="margin_zero"> {"Loại quảng cáo: " + stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas] + "."}</p>)
+            adsAreaDetailDescription.push(<p key="2" className="margin_zero"> {"Loại quảng cáo: " + stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].value + "."}</p>)
         }
     }
 
@@ -81,34 +165,26 @@ function RenderForm(props) {
         promotionDetailDescription.push(<p key="2" className="margin_zero"> {"Giá trị áp dụng: " + appliedValue + "."}</p>)
     }
 
+    var renderAdsType = isBannerAds ?
+        <RenderBannerOption
+            stateValues={stateValues}
+            OnChangeInput={props.OnChangeInput}
+            OnChangeImageFile={props.OnChangeImageFile}
+        /> :
+        <RenderPostOption
+            postIdKeys={postIdKeys}
+            postIdValues={postIdValues}
+            stateValues={stateValues}
+            OnChangeInput={props.OnChangeInput}
+            postDetailDescription={postDetailDescription}
+        />
+
     return (
         <div>
             <div className="post_campaign__info--header">
                 Thông tin cơ bản
             </div>
             <div className="post_campaign__info--content">
-                <div className="post_campaign__info--content--postid">
-                    <div>
-                        <label className="fullwidth post_campaign__info--content-title">
-                            <p>{"Mã bài đăng"}</p>
-                        </label>
-                    </div>
-                    <div>
-                        <div className="float-left">
-                            <RenderSelect
-                                nameId={"ma_bai_dang"}
-                                keys={postIdKeys}
-                                values={postIdValues}
-                                selectedValue={stateValues.ma_bai_dang}
-                                OnChangeSelect={props.OnChangeInput}
-                                className={"input--select"}
-                            />
-                        </div>
-                        <div className="float-left post_campaign__info--content-description">
-                            {postDetailDescription}
-                        </div>
-                    </div>
-                </div>
                 <div className="post_campaign__info--content--adsarea">
                     <label className="fullwidth post_campaign__info--content-title">
                         <p>{"Loại dịch vụ"}</p>
@@ -140,6 +216,7 @@ function RenderForm(props) {
                         {adsAreaDetailDescription}
                     </div>
                 </div>
+                {renderAdsType}
                 <div className="post_campaign__info--content--displaymode">
                     <div>
                         <label className="fullwidth post_campaign__info--content-title">
@@ -355,6 +432,7 @@ class RenderProperties extends Component {
                 <div className="x_post_campaign_body">
                     <RenderForm
                         OnChangeInput={props.OnChangeInput}
+                        OnChangeImageFile={props.OnChangeImageFile}
                         OnchangeStartDate={props.OnchangeStartDate}
                         OnchangeEndDate={props.OnchangeEndDate}
                         OnAddTokenField={props.OnAddTokenField}
@@ -383,6 +461,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
         super(props);
 
         this.OnChangeInput = this.OnChangeInput.bind(this);
+        this.OnChangeImageFile = this.OnChangeImageFile.bind(this);
         this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
         this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
         this.OnKeyDown = this.OnKeyDown.bind(this);
@@ -410,6 +489,36 @@ class PostCampaignCreatorUpdaterForm extends Component {
             });
     }
 
+    OnChangeImageFile(event) {
+        var stateValues = this.props.stateValues;
+        event.stopPropagation();
+        event.preventDefault();
+
+        var file = event.target.files[0];
+        if (file) {
+            const data = new FormData();
+            data.append('file', file);
+            data.append('filename', file.file_name || uuidv4());
+
+            var $this = this;
+            fetch(UrlApi.UploadFile, {
+                method: 'POST',
+                body: data,
+            }).then((response) => {
+                response.json().then((body) => {
+                    stateValues.url_image = body.file;
+                    $this.props.UpdateState(stateValues);
+                });
+            }).catch((e) => {
+                $this.props.Onchange({ UploadImageDescription: "fail" });
+            });
+        }
+        else {
+            stateValues.url_image = '';
+            this.props.UpdateState(stateValues);
+        }
+    }
+
     OnChangeInput(e) {
         var stateValues = this.props.stateValues;
         var name = e.target.name;
@@ -430,6 +539,8 @@ class PostCampaignCreatorUpdaterForm extends Component {
             stateValues.trang_hien_thi = appliedPageType;
 
             stateValues.co_che_hien_thi = stateValues.co_che_hien_thi;
+            stateValues.url_image = '';
+            stateValues.url_redirect = '';
 
             let $this = this;
             this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
@@ -559,6 +670,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
                 <div>
                     <RenderProperties
                         OnChangeInput={this.OnChangeInput}
+                        OnChangeImageFile={this.OnChangeImageFile}
                         OnchangeStartDate={this.OnchangeStartDate}
                         OnchangeEndDate={this.OnchangeEndDate}
                         OnAddTokenField={this.OnAddTokenField}
@@ -576,7 +688,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
 class SuccessForm extends Component {
     render() {
         return (
-            <div>
+            <div style={{ height: "200px" }}>
                 <div>
                     <p className="xpostcampaign__successform">Bài đăng tạo thành công!</p>
                 </div>
@@ -603,7 +715,8 @@ class XPostCampaign extends Component {
             XAdminUsername,
             USerOfXSysyemAccessToken,
             selectedTimeSlots: [],
-            allowAddTimeSlot: true
+            allowAddTimeSlot: true,
+            url_image: ''
         };
 
         jsonState = this.SetInitState(jsonState, modeAction);
@@ -617,6 +730,7 @@ class XPostCampaign extends Component {
 
     SetInitError(jsonState) {
         jsonState.error_time_slots = '';
+        jsonState.error_url_image = '';
 
         return jsonState;
     }
@@ -716,7 +830,7 @@ class XPostCampaign extends Component {
             keys.push(adsArea.ma_dich_vu);
             values.push(adsArea.ten_hien_thi);
             appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
-            adsTypes.push(adsArea.loai_quang_cao.value);
+            adsTypes.push(adsArea.loai_quang_cao);
         });
 
         jsonSetInfosOfUser.AdsAreaIds = {
@@ -906,6 +1020,13 @@ class XPostCampaign extends Component {
             isValid = false;
         }
 
+        if (IsBannerAds(state)) {
+            if (state.url_image === "") {
+                jsonError.error_url_image = "Hình ảnh được yêu cầu";
+                isValid = false;
+            }
+        }
+
         if (!isValid) {
             this.setState(jsonError);
         }
@@ -953,7 +1074,6 @@ class XPostCampaign extends Component {
             }
 
             var postCampaignContent = {
-                ma_bai_dang: state.ma_bai_dang,
                 loai_dich_vu: state.loai_dich_vu,
                 trang_hien_thi: trang_hien_thi,
                 co_che_hien_thi: state.co_che_hien_thi,
@@ -971,6 +1091,14 @@ class XPostCampaign extends Component {
                 trang_thai: 1
             };
 
+            if (IsBannerAds(state)) {
+                postCampaignContent.url_image = state.url_image;
+                postCampaignContent.url_redirect = state.url_redirect;
+            }
+            else {
+                postCampaignContent.ma_bai_dang = state.ma_bai_dang;
+            }
+
             return postCampaignContent;
         }
         else {
@@ -983,7 +1111,8 @@ class XPostCampaign extends Component {
         if (postCampaignContent === null) {
             return;
         }
-        
+
+        var $this = this;
         Request.post(UrlApi.PostCampaignforXsystem)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(postCampaignContent)
@@ -992,7 +1121,7 @@ class XPostCampaign extends Component {
                     console.log(err);
                 }
                 else {
-                    this.setState({
+                    $this.setState({
                         register_successfully: true
                     });
                 }

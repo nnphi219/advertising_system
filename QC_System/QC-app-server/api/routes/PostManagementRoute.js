@@ -11,6 +11,6 @@ module.exports = function(app) {
         .put(postManagementController.update_a_postManagement)
         .delete(postManagementController.delete_a_postManagement);
 
-    app.route('/postManagement/upload')
+    app.route('/uploads')
         .post(postManagementController.persist_a_file);
 };

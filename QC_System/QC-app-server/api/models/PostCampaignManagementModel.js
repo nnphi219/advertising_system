@@ -6,9 +6,12 @@ var Schema = mongoose.Schema;
 var PostCampaignManagementSchema = new Schema({
     ma_bai_dang: String,
     loai_dich_vu: String, //Lay tu vung quang cao
+    loai_quang_cao: String,
     trang_hien_thi: String,
     co_che_hien_thi: String,
     tinh_gia_theo: String,
+    url_redirect: String,
+    url_image: String,
     vi_tri: {
         tinh: String,
         quan_huyen: String
