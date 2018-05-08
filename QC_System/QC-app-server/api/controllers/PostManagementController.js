@@ -4,6 +4,8 @@ var fs = require('fs');
 var mongoose = require('mongoose'),
     PostManagement = mongoose.model('PostManagement');
 
+var url = require('../../share/Url');
+
 exports.list_all_postManagement = function (req, res) {
     PostManagement.find({}, function (err, postManagement) {
         if (err) {
@@ -78,6 +80,6 @@ exports.persist_a_file = (req, res) => {
             console.log(err);
             return res.status(500).send(err);
         }
-      res.json({file: `uploads/${req.body.filename}.jpg`});
+      res.json({file: `${url.hostname}/uploads/${req.body.filename}.jpg`});
     });
 }
