@@ -3,6 +3,9 @@ import Request from 'superagent';
 import { UrlApi } from '../share/Url';
 import './marketing_boostrap.css';
 
+const PAGE_NAME = 'trang_rao_vat';
+const MARKETING_AREA = 'tin_rao_vat';
+
 class RenderAPost extends Component {
     render() {
         var post = this.props.post;
@@ -27,9 +30,9 @@ class RenderAPost extends Component {
 
 class RenderPosts extends Component {
     render() {
-        var posts = this.props.posts !== null ? this.props.posts: [];
+        var posts = this.props.posts !== null ? this.props.posts : [];
         var elements = [];
-        
+
         posts.forEach(post => {
             elements.push(<RenderAPost key={post.ma_bai_dang} post={post} />);
         });
@@ -50,22 +53,50 @@ class Marketing extends Component {
             postContents: null
         });
 
-        Request.get(UrlApi.Marketing)
-            .then((res) => {
-                this.setState({
-                    postContents: res.body
-                });
-            }).catch((e) => {
+    }
 
+    GetPosts(jsonAdsAreaInfo) {
+        let jsonReq = {
+            postIds: jsonAdsAreaInfo.contents.posts
+        };
+
+        var $this = this;
+        Request.post(UrlApi.GetPostsByPostIds)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(jsonReq)
+            .end(function (err, res) {
+                console.log(1);
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log(res.body);
+                    $this.setState({
+                        postContents: res.body
+                    });
+                }
             });
     }
 
-    componentDidMount(){
-        // Request.get
-        //truyen trang_rao_vat
+    GetAdvertisement() {
+        let url = UrlApi.GetAdvertisement + "/" + PAGE_NAME;
+
+        let $this = this;
+        Request.get(url)
+            .then((res) => {
+                let jsonAdsArea = res.body;
+                $this.GetPosts(jsonAdsArea[MARKETING_AREA]);
+            }).catch((e) => {
+                console.log('err');
+            });
+    }
+
+    componentDidMount() {
+        this.GetAdvertisement();
     }
 
     render() {
+        console.log(this.state.postContents);
         return (
             <div>
                 <h1>Tin rao vặt</h1>

@@ -23,7 +23,7 @@ import './frontend/assets/css/animate.css';
 import './frontend/assets/css/style.css';
 import './frontend/assets/color/default.css';
 
-var AllowedUrl = ["login", "register", "post", "marketing"];
+var AllowedUrl = ["login", "register", "post", "tin-rao-vat", ''];
 var AllowedUrlAdmin = ['pages', 'posttypes'];
 
 function RedirectUrl() {
