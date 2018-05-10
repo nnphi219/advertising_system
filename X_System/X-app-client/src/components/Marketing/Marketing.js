@@ -86,6 +86,10 @@ class Marketing extends Component {
             .then((res) => {
                 let jsonAdsArea = res.body;
                 $this.GetPosts(jsonAdsArea[MARKETING_AREA]);
+                console.log(res);
+                this.setState({
+                    postContents: res.body
+                });
             }).catch((e) => {
                 console.log('err');
             });

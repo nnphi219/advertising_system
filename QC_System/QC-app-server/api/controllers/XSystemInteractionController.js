@@ -181,3 +181,48 @@ exports.create_a_postCampaign_from_xsystemUser = function (req, res) {
             }
         });
 };
+
+exports.get_posts_basic_on_applied_page = (req, res) => {
+    let content = (req.body)
+    let trang_ap_dung_id = content.trang_ap_dung_id
+    let x_admin_username = content.x_admin_username
+    let password = content.password
+    let resExample = {
+        danh_sach_vung: [
+            "vung_trai_1",
+            "vung_trai_2",
+            "vung_phai_1",
+            "vung_tren_cung"
+        ],
+        vung_trai_1: {
+            type: 'banner',
+            content: {
+                banner_type: "image",
+                resource_url:"http://localhost:8080/uploads/20180307092548-7fa8.jpg",
+                link_page_url: "http://localhost:8080/uploads/20180307092548-7fa8.jpg"
+            }
+        },
+        vung_trai_2: {
+            type: 'banner',
+            content: {
+                banner_type: "image",
+                resource_url:"http://localhost:8080/uploads/20180424160229-6f91.jpg",
+                link_page_url: "http://localhost:8080/uploads/20180424160229-6f91.jpg"
+            }
+        },
+        vung_phai_1: {
+            type: 'banner',
+            content: {
+                banner_type: "image",
+                resource_url:"http://localhost:8080/uploads/20180426115906-0b71.jpg",
+                link_page_url: "http://localhost:8080/uploads/20180426115906-0b71.jpg"
+            }
+        },
+        vung_tren_cung: {
+            type: 'tin_rao',
+            postcampaignsid: ["5adac6b03d05d218e49eea4b", "5ae2ed5b1ba58647816046f1", "5ae354ff7c74b466c1fc034b"]
+        }
+    }
+    // xu ly o day de lay cac postcampaignsid cua vung
+    res.json(resExample)
+}
