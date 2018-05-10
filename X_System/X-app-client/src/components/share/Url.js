@@ -19,7 +19,7 @@ export const UrlApi = {
     PostTypes: hostNameServer + "/posttypes",
     ReadAPostType: hostNameServer + "/posttypes/check",
 
-    GetAdvertisement: hostNameServer + "/getPostsBasicOnAppliedPage_seeddata",
+    GetAdvertisement: hostNameServer + "/getPostsBasicOnAppliedPage",
 
     UploadFile: hostNameServer + "/uploads"
 };

@@ -65,12 +65,10 @@ class Marketing extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(jsonReq)
             .end(function (err, res) {
-                console.log(1);
                 if (err) {
                     console.log(err);
                 }
                 else {
-                    console.log(res.body);
                     $this.setState({
                         postContents: res.body
                     });
@@ -84,12 +82,8 @@ class Marketing extends Component {
         let $this = this;
         Request.get(url)
             .then((res) => {
-                let jsonAdsArea = res.body;
+                let jsonAdsArea = res.body;                
                 $this.GetPosts(jsonAdsArea[MARKETING_AREA]);
-                console.log(res);
-                this.setState({
-                    postContents: res.body
-                });
             }).catch((e) => {
                 console.log('err');
             });
@@ -100,7 +94,6 @@ class Marketing extends Component {
     }
 
     render() {
-        console.log(this.state.postContents);
         return (
             <div>
                 <h1>Tin rao vặt</h1>

@@ -6,6 +6,8 @@ var mapper = require('../../share/Mapper');
 var dateFormat = require('../../share/DateFormat');
 var commonFunction = require('../../share/CommonFunction');
 
+var { authenticate } = require('../../middleware/authenticate');
+
 const _ = require('lodash');
 
 var mongoose = require('mongoose'),
@@ -19,12 +21,13 @@ var adsAreaController = require('./AdsAreaController');
 var servicePriceController = require('./ServicePriceController');
 var priceFactorController = require('./PriceFactorController');
 var promotionController = require('./PromotionManagementController');
+var postCampaignController = require('./PostCampaignManagementController');
 
 function GetSelectedTimeSlotsArrayJson(selectedTimeSlots, next) {
     let array_khung_gio_bat_dau = selectedTimeSlots.bat_dau.slice();
     let array_khung_gio_ket_thuc = selectedTimeSlots.ket_thuc.slice();
 
-    if(typeof(array_khung_gio_bat_dau) == 'string'){
+    if (typeof (array_khung_gio_bat_dau) == 'string') {
         array_khung_gio_bat_dau = [array_khung_gio_bat_dau];
         array_khung_gio_ket_thuc = [array_khung_gio_ket_thuc];
     }
@@ -183,46 +186,57 @@ exports.create_a_postCampaign_from_xsystemUser = function (req, res) {
 };
 
 exports.get_posts_basic_on_applied_page = (req, res) => {
-    let content = (req.body)
-    let trang_ap_dung_id = content.trang_ap_dung_id
-    let x_admin_username = content.x_admin_username
-    let password = content.password
-    let resExample = {
-        danh_sach_vung: [
-            "vung_trai_1",
-            "vung_trai_2",
-            "vung_phai_1",
-            "vung_tren_cung"
-        ],
-        vung_trai_1: {
-            type: 'banner',
-            content: {
-                banner_type: "image",
-                resource_url:"http://localhost:8080/uploads/20180307092548-7fa8.jpg",
-                link_page_url: "http://localhost:8080/uploads/20180307092548-7fa8.jpg"
-            }
-        },
-        vung_trai_2: {
-            type: 'banner',
-            content: {
-                banner_type: "image",
-                resource_url:"http://localhost:8080/uploads/20180424160229-6f91.jpg",
-                link_page_url: "http://localhost:8080/uploads/20180424160229-6f91.jpg"
-            }
-        },
-        vung_phai_1: {
-            type: 'banner',
-            content: {
-                banner_type: "image",
-                resource_url:"http://localhost:8080/uploads/20180426115906-0b71.jpg",
-                link_page_url: "http://localhost:8080/uploads/20180426115906-0b71.jpg"
-            }
-        },
-        vung_tren_cung: {
-            type: 'tin_rao',
-            postcampaignsid: ["5adac6b03d05d218e49eea4b", "5ae2ed5b1ba58647816046f1", "5ae354ff7c74b466c1fc034b"]
+    let content = (req.body);
+    let trang_ap_dung_id = content.trang_ap_dung_id;
+    let x_admin_username = content.x_admin_username;
+    let password = content.password;
+
+    // check user
+    userController.read_a_user_by_credential(x_admin_username, password, (user) => {
+        if (user) {
+            //check adsarea by applied page
+            adsAreaController.read_list_adsArea_by_appliedPageAndUsername(trang_ap_dung_id, user.username, function (adsAreas) {
+                if (adsAreas) {
+                    // read all postCampaigns by ads area id, (have no check time slot yet)
+                    var resResult = {};
+                    adsAreas.forEach((adsArea) => {
+                        postCampaignController.read_list_postCampaign_by_adsAreaIdAndXAdminUsername(adsArea.ma_dich_vu, user.username, function (postCampaigns) {
+                            if (postCampaigns && postCampaigns.length > 0) {
+                                if (adsArea.loai_quang_cao.key === 'banner') {
+                                    resResult[adsArea.vung_ap_dung_quang_cao.key] = {
+                                        type: adsArea.loai_quang_cao.key,
+                                        content: {
+                                            banner_type: 'image',
+                                            resource_url: postCampaigns[0].url_image,
+                                            link_page_url: postCampaigns[0].url_redirect
+                                        }
+                                    };
+                                }
+                                else {
+                                    let postCampaignIds = postCampaigns.map((postCampaign) => {
+                                        return postCampaign.ma_bai_dang;
+                                    });
+
+                                    resResult[adsArea.vung_ap_dung_quang_cao.key] = {
+                                        type: adsArea.loai_quang_cao.key,
+                                        postCampaignIds: postCampaignIds
+                                    };
+                                }
+                            }
+                        });
+                    });
+                    setTimeout(function () {
+                        res.json(resResult);
+                    }, 3000);
+                }
+                else {
+                    res.json(null);
+                }
+            });
         }
-    }
-    // xu ly o day de lay cac postcampaignsid cua vung
-    res.json(resExample)
-}
+        else {
+            res.json(null);
+        }
+    });
+};
+

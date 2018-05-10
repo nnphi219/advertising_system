@@ -111,3 +111,14 @@ exports.delete_a_adsArea = function (req, res) {
         }
     });
 };
+
+exports.read_list_adsArea_by_appliedPageAndUsername = function(appliedPage, username, next) {
+    AdsArea.find({"loai_trang_ap_dung.key": appliedPage, nguoi_tao: username}, function(err, adsAreas){
+        if(err){
+            next(null);
+        }
+        else{
+            next(adsAreas);
+        }
+    });
+};

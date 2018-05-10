@@ -59,7 +59,7 @@ exports.read_a_user = function (req, res) {
 };
 
 exports.read_a_user_by_username = function (username, next) {
-  User.findOne({username: username}, function (err, user) {
+  User.findOne({ username: username }, function (err, user) {
     if (err)
       next(null);
     next(user);
@@ -98,7 +98,17 @@ exports.delete_a_user = function (req, res) {
   });
 };
 
+exports.read_a_user_by_credential = function(username, password, next){
+  User.findByCredentials(username, password)
+    .then((user) => {
+      next(user);
+    }).catch((e) => {
+      next(null);
+    });
+};
+
 exports.UserLogin = function (req, res) {
+  console.log('userlogin');
   var body = _.pick(req.body, ['username', 'password']);
 
   User.findByCredentials(body.username, body.password)
