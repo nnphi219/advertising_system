@@ -188,6 +188,12 @@ exports.get_posts_basic_on_applied_page = (req, res) => {
     let x_admin_username = content.x_admin_username
     let password = content.password
     let resExample = {
+        danh_sach_vung: [
+            "vung_trai_1",
+            "vung_trai_2",
+            "vung_phai_1",
+            "vung_tren_cung"
+        ],
         vung_trai_1: {
             type: 'banner',
             content: {

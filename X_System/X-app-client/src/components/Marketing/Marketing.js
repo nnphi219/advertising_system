@@ -52,6 +52,7 @@ class Marketing extends Component {
 
         Request.get(UrlApi.Marketing)
             .then((res) => {
+                console.log(res)
                 this.setState({
                     postContents: res.body
                 });

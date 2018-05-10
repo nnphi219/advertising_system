@@ -21,4 +21,8 @@ module.exports = function(app) {
 
     app.route('/getPostByUserToken')
         .get(authenticateQCSystem, postController.list_all_posts);
+
+    app.route('/postsWithoutAuthen')
+    .get(postController.list_all_posts)
+
 };
