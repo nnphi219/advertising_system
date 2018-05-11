@@ -5,6 +5,7 @@ const request = require('superagent');
 var mapper = require('../../share/Mapper');
 var dateFormat = require('../../share/DateFormat');
 var commonFunction = require('../../share/CommonFunction');
+var Promise = require('promise');
 
 var { authenticate } = require('../../middleware/authenticate');
 
@@ -198,36 +199,49 @@ exports.get_posts_basic_on_applied_page = (req, res) => {
             adsAreaController.read_list_adsArea_by_appliedPageAndUsername(trang_ap_dung_id, user.username, function (adsAreas) {
                 if (adsAreas) {
                     // read all postCampaigns by ads area id, (have no check time slot yet)
-                    var resResult = {};
+                    let adsAreaIds = [];
+                    let adsArea_adsTypeKeys = [];
+                    let adsArea_appliedAdsAreaKeys = [];
+
                     adsAreas.forEach((adsArea) => {
-                        postCampaignController.read_list_postCampaign_by_adsAreaIdAndXAdminUsername(adsArea.ma_dich_vu, user.username, function (postCampaigns) {
-                            if (postCampaigns && postCampaigns.length > 0) {
-                                if (adsArea.loai_quang_cao.key === 'banner') {
-                                    resResult[adsArea.vung_ap_dung_quang_cao.key] = {
-                                        type: adsArea.loai_quang_cao.key,
-                                        content: {
-                                            banner_type: 'image',
-                                            resource_url: postCampaigns[0].url_image,
-                                            link_page_url: postCampaigns[0].url_redirect
-                                        }
+                        adsAreaIds.push(adsArea.ma_dich_vu);
+                        adsArea_adsTypeKeys.push(adsArea.loai_quang_cao.key);
+                        adsArea_appliedAdsAreaKeys.push(adsArea.vung_ap_dung_quang_cao.key);
+                    });
+
+                    let resResult = {};
+                    postCampaignController.read_list_postCampaign_by_listadsAreaIdsAndXAdminUsername(adsAreaIds, user.username, function (postCampaigns) {
+                        postCampaigns.forEach((postCampaign) => {
+                            let indexOfAdsArea = adsAreaIds.indexOf(postCampaign.loai_dich_vu);
+                            if (indexOfAdsArea > -1) {
+                                let adsArea_appliedAdsAreaKey = adsArea_appliedAdsAreaKeys[indexOfAdsArea];
+                                let adsArea_adsTypeKey = adsArea_adsTypeKeys[indexOfAdsArea];
+
+                                // create key of json if not exists
+                                if (!resResult[adsArea_appliedAdsAreaKey]) {
+                                    resResult[adsArea_appliedAdsAreaKey] = {
+                                        type: adsArea_adsTypeKey,
+                                        contents: []
+                                    };
+                                }
+
+                                let contentPostCampaign = null;
+                                if (adsArea_adsTypeKey === 'banner') {
+                                    contentPostCampaign = {
+                                        banner_type: 'image',
+                                        resource_url: postCampaign.url_image,
+                                        link_page_url: postCampaign.url_redirect
                                     };
                                 }
                                 else {
-                                    let postCampaignIds = postCampaigns.map((postCampaign) => {
-                                        return postCampaign.ma_bai_dang;
-                                    });
-
-                                    resResult[adsArea.vung_ap_dung_quang_cao.key] = {
-                                        type: adsArea.loai_quang_cao.key,
-                                        postCampaignIds: postCampaignIds
-                                    };
+                                    contentPostCampaign = postCampaign.ma_bai_dang;
                                 }
+                                resResult[adsArea_appliedAdsAreaKey].contents.push(contentPostCampaign);
                             }
                         });
-                    });
-                    setTimeout(function () {
+
                         res.json(resResult);
-                    }, 3000);
+                    });
                 }
                 else {
                     res.json(null);
@@ -239,4 +253,3 @@ exports.get_posts_basic_on_applied_page = (req, res) => {
         }
     });
 };
-

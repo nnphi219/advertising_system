@@ -66,8 +66,8 @@ exports.delete_a_postCampaignManagement = function (req, res) {
     });
 };
 
-exports.read_list_postCampaign_by_adsAreaIdAndXAdminUsername = function (adsAreaId, x_admin_username, next) {
-    PostCampaignManagement.find({ loai_dich_vu: adsAreaId, x_admin_username: x_admin_username }, function (err, postCampaigns) {
+exports.read_list_postCampaign_by_listadsAreaIdsAndXAdminUsername = function (adsAreaIds, x_admin_username, next) {
+    PostCampaignManagement.find({ loai_dich_vu: { $in: adsAreaIds }, x_admin_username: x_admin_username }, function (err, postCampaigns) {
         if (err) {
             next(null);
         }

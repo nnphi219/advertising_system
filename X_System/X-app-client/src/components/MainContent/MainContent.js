@@ -14,7 +14,6 @@ class MainContent extends Component {
     GetFontFamilies() {
         Request.get("http://localhost:8081/getfontfamilies")
             .then((res) => {
-                console.log(res.body.FontFamilies[0]);
                 this.setState({
                     fontFamily: res.body.FontFamilies[0]
                 });

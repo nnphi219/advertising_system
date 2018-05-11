@@ -1,0 +1,23 @@
+.home_banner_left {
+    display: block; 
+    top: 150px; 
+    position: fixed; 
+    left: 85px;
+}
+
+.home_banner_left--image {
+    width: 200px;
+    height: 650px;
+}
+
+.home_banner_right {
+    display: block; 
+    top: 150px; 
+    position: fixed ;
+    right: 15px; 
+}
+
+.home_banner_right--image {
+    width: 200px;
+    height: 650px;
+}

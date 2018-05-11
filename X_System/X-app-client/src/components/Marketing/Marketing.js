@@ -56,14 +56,14 @@ class Marketing extends Component {
     }
 
     GetPosts(jsonAdsAreaInfo) {
-        let jsonReq = {
-            postIds: jsonAdsAreaInfo.contents.posts
+        let jsonPostIds = {
+            postIds: jsonAdsAreaInfo.contents
         };
 
         var $this = this;
         Request.post(UrlApi.GetPostsByPostIds)
             .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send(jsonReq)
+            .send(jsonPostIds)
             .end(function (err, res) {
                 if (err) {
                     console.log(err);
@@ -77,12 +77,11 @@ class Marketing extends Component {
     }
 
     GetAdvertisement() {
-        let url = UrlApi.GetAdvertisement + "/" + PAGE_NAME;
-
         let $this = this;
+        let url = UrlApi.GetAdvertisement + "/" + PAGE_NAME;
         Request.get(url)
             .then((res) => {
-                let jsonAdsArea = res.body;                
+                let jsonAdsArea = res.body;
                 $this.GetPosts(jsonAdsArea[MARKETING_AREA]);
             }).catch((e) => {
                 console.log('err');
