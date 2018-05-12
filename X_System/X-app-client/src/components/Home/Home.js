@@ -27,27 +27,33 @@ class Home extends Component {
 
     GetBannerContents(banner_top_contents, banner_left_contents, banner_right_contents) {
         let jsonState = {};
-        let thefirstBannerTopContent = banner_top_contents.contents[0];
-        jsonState.banner_top_content = {
-            banner_type: thefirstBannerTopContent.banner_type,
-            link_page_url: thefirstBannerTopContent.link_page_url,
-            resource_url: thefirstBannerTopContent.resource_url
-        };
+        if (banner_top_contents) {
+            let thefirstBannerTopContent = banner_top_contents.contents[0];
+            jsonState.banner_top_content = {
+                banner_type: thefirstBannerTopContent.banner_type,
+                link_page_url: thefirstBannerTopContent.link_page_url,
+                resource_url: thefirstBannerTopContent.resource_url
+            };
+        }
 
-        let thefirstBannerLeftContent = banner_left_contents.contents[0];
-        jsonState.banner_left_content = {
-            banner_type: thefirstBannerLeftContent.banner_type,
-            link_page_url: thefirstBannerLeftContent.link_page_url,
-            resource_url: thefirstBannerLeftContent.resource_url
-        };
+        if (banner_left_contents) {
+            let thefirstBannerLeftContent = banner_left_contents.contents[0];
+            jsonState.banner_left_content = {
+                banner_type: thefirstBannerLeftContent.banner_type,
+                link_page_url: thefirstBannerLeftContent.link_page_url,
+                resource_url: thefirstBannerLeftContent.resource_url
+            };
+        }
 
-        let thefirstBannerRightContent = banner_right_contents.contents[0];
-        jsonState.banner_right_content = {
-            banner_type: thefirstBannerRightContent.banner_type,
-            link_page_url: thefirstBannerRightContent.link_page_url,
-            resource_url: thefirstBannerRightContent.resource_url
-        };
-
+        if (banner_right_contents) {
+            let thefirstBannerRightContent = banner_right_contents.contents[0];
+            jsonState.banner_right_content = {
+                banner_type: thefirstBannerRightContent.banner_type,
+                link_page_url: thefirstBannerRightContent.link_page_url,
+                resource_url: thefirstBannerRightContent.resource_url
+            };
+        }
+        
         this.setState(jsonState);
     }
 
@@ -69,17 +75,23 @@ class Home extends Component {
 
     render() {
         let banner_left_content = this.state.banner_left_content;
+        let banner_top_content = this.state.banner_top_content;
+        let banner_right_content = this.state.banner_right_content;
         return (
             <div>
                 <BannerLeft
-                    banner_left_content={banner_left_content}
+                    banner_content={banner_left_content}
                 />
-                <Banner />
+                <Banner
+                    banner_content={banner_top_content}
+                />
                 <div className="content">
                     <Intro />
                     <MainContent />
                 </div>
-                <BannerRight />
+                <BannerRight
+                    banner_content={banner_right_content}
+                />
             </div>
         );
     }

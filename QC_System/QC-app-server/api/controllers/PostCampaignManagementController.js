@@ -1,5 +1,7 @@
 'use strict';
 
+var DateFormat = require('../../share/DateFormat');
+
 var mongoose = require('mongoose'),
     PostCampaignManagement = mongoose.model('PostCampaigns');
 
@@ -67,12 +69,35 @@ exports.delete_a_postCampaignManagement = function (req, res) {
 };
 
 exports.read_list_postCampaign_by_listadsAreaIdsAndXAdminUsername = function (adsAreaIds, x_admin_username, next) {
-    PostCampaignManagement.find({ loai_dich_vu: { $in: adsAreaIds }, x_admin_username: x_admin_username }, function (err, postCampaigns) {
+    let dateNow = new Date();
+    let day = dateNow.getDate();
+    let month = dateNow.getMonth() + 1;
+    let year = dateNow.getFullYear();
+
+    let jsonDateNow = {
+        day, month, year
+    };
+
+    let hours = dateNow.getHours();
+    let minutes = dateNow.getMinutes();
+
+    let conditionFilter = {
+        loai_dich_vu: { $in: adsAreaIds }, 
+        x_admin_username: x_admin_username,
+        'khung_gio_hien_thi.bat_dau': 0
+    };
+
+    PostCampaignManagement.find(conditionFilter, function (err, postCampaigns) {
         if (err) {
             next(null);
         }
         else {
-            next(postCampaigns);
+            var filteredTimePostCampaigns = postCampaigns.filter((postCampaign) => {
+                return DateFormat.JsonDate2GreaterThanOrEqualJsonDate1(postCampaign.ngay_bat_dau, jsonDateNow) 
+                        && DateFormat.JsonDate2GreaterThanOrEqualJsonDate1(jsonDateNow, postCampaign.ngay_ket_thuc);
+            });
+
+            next(filteredTimePostCampaigns);
         }
     });
 };
