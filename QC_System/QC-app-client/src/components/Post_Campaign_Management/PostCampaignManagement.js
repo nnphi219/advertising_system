@@ -6,25 +6,47 @@ import DeleteForm from '../share/DeleteForm';
 import HeaderForm from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import UrlApi from '../share/UrlApi';
-import { TransferFactorUnitKeyToText, JsonDateToDate, TransferdisplayMechanismToText } from '../share/Mapper';
+import { TransferFactorUnitKeyToText, TransferdisplayMechanismToText } from '../share/Mapper';
 
 import './post_campaign_management.css';
 import PostCampaignCreatorUpdater from './PostCampaignCreatorUpdater';
 
-function RenderRow(props) {
-    var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
+class PostCampaignContents extends Component {
+    render() {
+        var theaderPostCampaign = {
+            keys: [],
+            values: ["Mã chiến dịch", "Mã bài đăng", "Loại dịch vụ", "Trang hiển thị", "Cơ chế hiển thị", "Tính giá theo", "Vị trí", "Khung giờ hiển thị", "Ngày bắt đầu", "Ngày kết thúc", "Tổng cộng", "Trạng thái"]
+        };
+        
+        return (
+            <div className="table-content">
+                <table className="table table-striped">
+                    <RenderHeader theader={theaderPostCampaign} />
+                    <RenderBody
+                        tbody={this.props.tbodyContents}
+                        handleEditClick={this.props.handleEditClick}
+                        handleDeleteClick={this.props.handleDeleteClick}
+                    />
+                </table>
+            </div>
+        );
+    }
+}
 
-    var tinh_theo_gia = TransferFactorUnitKeyToText(props.trContent.tinh_gia_theo);
+function RenderRow(props) {
+    var status = (props.trContent.dang_kich_hoat === 1) ? "Kích hoạt" : "Đã hủy";
+
+    var tinh_gia_theo = TransferFactorUnitKeyToText(props.trContent.tinh_gia_theo);
     var co_che_hien_thi = TransferdisplayMechanismToText(props.trContent.co_che_hien_thi);
 
-    var loai_nhan_to = props.trContent.loai_nhan_to;
-    var khung_gio = (loai_nhan_to.khung_gio !== undefined && loai_nhan_to.khung_gio !== null) ? `${loai_nhan_to.khung_gio.bat_dau}h-${loai_nhan_to.khung_gio.ket_thuc}h` : "";
-    var vi_tri = (loai_nhan_to.vi_tri !== undefined && loai_nhan_to.vi_tri !== null) ? `${loai_nhan_to.vi_tri.quan_huyen}, ${loai_nhan_to.vi_tri.tinh}` : "";
+    var khung_gio = props.trContent.khung_gio_hien_thi;
+    var khung_gio_hien_thi = (khung_gio !== undefined && khung_gio !== null) ? `${khung_gio.bat_dau}h-${khung_gio.ket_thuc}h` : "";
+    var vi_tri = (props.trContent.vi_tri !== undefined && props.trContent.vi_tri !== null) ? `${props.trContent.vi_tri.quan_huyen}, ${props.trContent.vi_tri.tinh}` : "";
 
-    var start_date = props.trContent.start_date;
-    var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;
-    var end_date = props.trContent.end_date;
-    var endDate = `${end_date.day}/${end_date.month}/${end_date.year}`;
+    var start_date = props.trContent.ngay_bat_dau;
+    var startDate = (start_date !== undefined) ? `${start_date.day}/${start_date.month}/${start_date.year}`: "";
+    var end_date = props.trContent.ngay_ket_thuc;
+    var endDate = (end_date !== undefined) ? `${end_date.day}/${end_date.month}/${end_date.year}` : "";
 
     var tong_cong = `${props.trContent.tong_cong} VND`;
 
@@ -32,12 +54,12 @@ function RenderRow(props) {
         <tr>
             <td>{props.trContent.ma_chien_dich}</td>
             <td>{props.trContent.ma_bai_dang}</td>
-            <td>{props.trContent.ma_khuyen_mai}</td>
+            <td>{props.trContent.loai_dich_vu}</td>
+            <td>{props.trContent.trang_hien_thi}</td>
             <td>{co_che_hien_thi}</td>
-            <td>{tinh_theo_gia}</td>
-            <td>{loai_nhan_to.thoi_luong}</td>
-            <td>{khung_gio}</td>
+            <td>{tinh_gia_theo}</td>
             <td>{vi_tri}</td>
+            <td>{khung_gio_hien_thi}</td>
             <td>{startDate}</td>
             <td>{endDate}</td>
             <td>{tong_cong}</td>
@@ -71,24 +93,6 @@ function RenderBody(props) {
             {rows}
         </tbody>
     );
-}
-
-class PostCampaignContents extends Component {
-    render() {
-        var theaderPostCampaign = ["Mã chiến dịch", "Mã bài đăng", "Mã khuyến mãi", "Cơ chế hiện thị", "Tính theo giá", "Thời lượng", "Khung giờ", "Vị trí", "Bắt đầu", "Kết thúc", "Tổng tiền", "Trạng thái"];
-        return (
-            <div className="table-content">
-                <table className="table table-striped">
-                    <RenderHeader theader={theaderPostCampaign} />
-                    <RenderBody
-                        tbody={this.props.tbodyContents}
-                        handleEditClick={this.props.handleEditClick}
-                        handleDeleteClick={this.props.handleDeleteClick}
-                    />
-                </table>
-            </div>
-        );
-    }
 }
 
 class PostCampaignManagement extends Component {
@@ -181,7 +185,7 @@ class PostCampaignManagement extends Component {
             < div id="page-wrapper" >
                 <div className="row">
                     <div>
-                        <HeaderForm title={"chiến dịch tin đăng"} showCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup} />
+                        <HeaderForm title={"Chiến dịch tin đăng"} showCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup} />
                         <PostCampaignContents
                             tbodyContents={this.state.tbodyContents}
                             handleEditClick={this.handleEditClick}

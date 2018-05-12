@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import Request from 'superagent';
 import './NavigationAdmin.css';
+import UrlApi from '../share/UrlApi';
 
 class NavbarHeader extends Component {
     render() {
@@ -14,6 +16,42 @@ class NavbarHeader extends Component {
 }
 
 class NavTopLinks extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            username: ""
+        }
+
+        this.GetCurrentUser();
+
+        this.logout = this.logout.bind(this);
+    }
+
+    GetCurrentUser() {
+        var $this = this;
+
+        Request.get(UrlApi.UserAuthen)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .then((res) => {
+                $this.setState({
+                    username: res.body.username
+                });
+            });
+    }
+
+    logout() {
+        var token = localStorage.getItem('x-auth');
+
+        Request.delete(UrlApi.UserLogout)
+            .set('x-auth', token)
+            .end(function (err, res) {
+                localStorage.setItem('x-auth', '');
+                localStorage.setItem('x-urlapi', '');
+                window.location.href = '/login';
+            });
+    }
+
     render() {
         return (
             <ul className="nav navbar-top-links navbar-right">
@@ -76,12 +114,13 @@ class NavTopLinks extends Component {
                         <i className="fa fa-user fa-fw"></i> <i className="fa fa-caret-down"></i>
                     </a>
                     <ul className="dropdown-menu dropdown-user">
-                        <li><a href="#8"><i className="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a href="#8"><i className="fa fa-user fa-fw"></i> {this.state.username}</a>
                         </li>
                         <li><a href="#9"><i className="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li className="divider"></li>
-                        <li><a href="login.html"><i className="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li>
+                            <button onClick={this.logout}><i className="fa fa-sign-out fa-fw"></i>Logout</button>
                         </li>
                     </ul>
                 </li>
@@ -91,17 +130,53 @@ class NavTopLinks extends Component {
 }
 
 class NavbarDefault extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isAdmin: false
+        }
+    }
+
+    componentDidMount() {
+        this.SetPermission();
+    }
+
+    SetPermission() {
+        var $this = this;
+
+        Request.get(UrlApi.UserAuthen)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .then((res) => {
+                if (res.body.user_type === "admin") {
+                    $this.setState({
+                        isAdmin: true
+                    });
+                }
+                else {
+                    $this.setState({
+                        isAdmin: false
+                    });
+                }
+
+            });
+    }
+
     render() {
         return (
             <div className="navbar-default sidebar" role="navigation">
                 <div className="sidebar-nav navbar-collapse">
                     <ul className="nav" id="side-menu">
                         <li>
-                            <a href="/user-login"><i className="fa fa-dashboard fa-fw"></i>Login</a>
+                            <a href="/login"><i className="fa fa-dashboard fa-fw"></i>Login</a>
                         </li>
-                        <li>
-                            <a href="/users-management"><i className="fa fa-dashboard fa-fw"></i>Quản lý user</a>
-                        </li>
+                        {
+                            this.state.isAdmin ?
+                                <li>
+                                    <a href="/users-management"><i className="fa fa-dashboard fa-fw"></i>Quản lý user</a>
+                                </li>
+                                : null
+                        }
                         <li>
                             <a href="/ads-area"><i className="fa fa-dashboard fa-fw"></i>Vùng quảng cáo</a>
                         </li>
@@ -110,9 +185,6 @@ class NavbarDefault extends Component {
                         </li>
                         <li>
                             <a href="/price-factor"><i className="fa fa-dashboard fa-fw"></i>Chỉ số ảnh hưởng giá</a>
-                        </li>
-                        <li>
-                            <a href="/post-management"><i className="fa fa-dashboard fa-fw"></i>Bảng tin đăng</a>
                         </li>
                         <li>
                             <a href="/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>

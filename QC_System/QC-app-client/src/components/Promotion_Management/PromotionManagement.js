@@ -14,28 +14,22 @@ function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
     var muc_gia_ap_dung = props.trContent.muc_gia_ap_dung;
-    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia)  === 1 ? "%" : "VND");
-
-    var start_date = props.trContent.start_date;
-    var startDate = `${start_date.day}/${start_date.month}/${start_date.year}`;
-
-    var end_date = props.trContent.end_date;
-    var endDate = `${end_date.day}/${end_date.month}/${end_date.year}`;
+    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia, 10) === 1 ? " %" : " VND");
 
     return (
         <tr>
             <td>{props.trContent.ma_khuyen_mai}</td>
-            <td>{props.trContent.mo_ta}</td>
-            <td>{props.trContent.ma_dich_vu_ap_dung}</td>
+            <td>{props.trContent.mo_ta_khuyen_mai}</td>
             <td>{ratesApply}</td>
-            <td>{startDate}</td>
-            <td>{endDate}</td>
             <td>{status}</td>
             <td>
                 <RenderEditDeleteButton
                     nameId={props.trContent._id}
                     handleEditClick={props.handleEditClick}
                     handleDeleteClick={props.handleDeleteClick}
+                    handleActiveClick={props.handleActiveClick}
+
+                    trang_thai={props.trContent.trang_thai}
                 />
             </td>
         </tr>
@@ -51,6 +45,7 @@ function RenderBody(props) {
                 key={id}
                 handleEditClick={props.handleEditClick}
                 handleDeleteClick={props.handleDeleteClick}
+                handleActiveClick={props.handleActiveClick}
             />
         );
     });
@@ -65,7 +60,11 @@ function RenderBody(props) {
 class PromotionManagementContents extends Component {
 
     render() {
-        var theaderPromotion = ["Mã khuyến mãi", "Mô tả khuyến mãi", "Mã dịch vụ áp dụng", "Mực giá áp dụng", "Bắt đầu", "Kết thúc", "Trạng thái"];
+        var theaderPromotion = {
+            keys: [],
+            values: ["Mã khuyến mãi", "Mô tả khuyến mãi", "Mức giá áp dụng", "Trạng thái"]
+        };
+
         return (
             <div className="table-content">
                 <table className="table table-striped">
@@ -74,6 +73,7 @@ class PromotionManagementContents extends Component {
                         tbody={this.props.tbodyContents}
                         handleEditClick={this.props.handleEditClick}
                         handleDeleteClick={this.props.handleDeleteClick}
+                        handleActiveClick={this.props.handleActiveClick}
                     />
                 </table>
             </div>
@@ -99,14 +99,35 @@ class PromotionManagement extends Component {
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
         this.handleClosePopup = this.handleClosePopup.bind(this);
+        this.handleActiveClick = this.handleActiveClick.bind(this);
+    
+        this._onKeyDown = this._onKeyDown.bind(this);
     }
 
     componentDidMount() {
         this.getPromotions();
     }
 
+    _onKeyDown(e) {
+        if (e.key === "Escape") {
+            this.setState({
+                ShowCreatorUpdaterPopup: false,
+                ShowDeletePopup: false
+            });
+        }
+    }
+
+    componentWillMount() {
+        document.addEventListener("keydown", this._onKeyDown);
+    }
+
+    componentWillUnmount() {
+        document.addEventListener("keydown", this._onKeyDown);
+    }
+
     getPromotions() {
         Request.get(UrlApi.PromotionManagement)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({
                     tbodyContents: res.body
@@ -143,6 +164,23 @@ class PromotionManagement extends Component {
         });
     }
 
+    handleActiveClick(event) {
+        console.log("dwadawdw");
+        var url = UrlApi.PromotionManagement + "/" + event.target.name;
+        var $this = this;
+        var updatePromotionJson = {
+          trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
+        };
+    
+        Request.put(url)
+          .set('Content-Type', 'application/x-www-form-urlencoded')
+          .set('x-auth', localStorage.getItem('x-auth'))
+          .send(updatePromotionJson)
+          .end(function (err, res) {
+            $this.getPromotions();
+          });
+    }
+
     handleDeleteClick(event) {
         this.setState({
             ShowDeletePopup: !this.state.ShowDeletePopup,
@@ -176,6 +214,7 @@ class PromotionManagement extends Component {
                             tbodyContents={this.state.tbodyContents}
                             handleEditClick={this.handleEditClick}
                             handleDeleteClick={this.handleDeleteClick}
+                            handleActiveClick={this.handleActiveClick}
                         />
 
                         {

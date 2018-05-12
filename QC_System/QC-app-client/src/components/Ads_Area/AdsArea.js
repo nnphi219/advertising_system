@@ -3,37 +3,36 @@ import Request from 'superagent';
 import AdsAreaCreatorUpdater from './AdsAreaCreatorUpdater';
 import AdsAreaDeleteForm from './AdsAreaDelete';
 import './ads_area.css';
-import { TransferSelectInputKeyToValue } from '../share/Mapper';
+import UrlApi from '../share/UrlApi';
+import { JsonSortDateType, JsonSort } from '../share/Mapper';
+import RenderHeader from '../share/RenderHeader';
 
 function RenderEditDeleteButton(props) {
+  var activeTitle = (props.trang_thai === 1) ? "Hủy" : "Kích hoạt";
+
   return (
     <div>
       <button key="Edit" id="Edit" name={props.nameId} type="button" className="btn btn-warning adsarea--button-edit" onClick={props.handleEditClick}>Edit</button>
       <button key="Delete" id="Delete" name={props.nameId} type="button" className="btn btn-danger adsarea--button-delete" onClick={props.handleDeleteClick}>Delete</button>
+      <button key="Active" id={props.trang_thai} name={props.nameId} type="button" className="btn btn-primary adsarea--button-active" onClick={props.handleActiveClick}>{activeTitle}</button>
     </div>
   );
 }
 
 function RenderRow(props) {
-  var areaSize = props.trContentAdsArea.kich_thuoc_vung.width.toString() + "x" + props.trContentAdsArea.kich_thuoc_vung.height.toString();
-  var status = (props.trContentAdsArea.status === 1) ? "Kích hoạt" : "Đã hủy";
-  var loai_trang_ap_dung = TransferSelectInputKeyToValue(
-    props.trContentAdsArea.loai_trang_ap_dung,
-    ["trang_chu", "trang_tim_kiem", "trang_chi_tiet", "danh_sach_du_an"],
-    ["Trang chủ", "Trang tìm kiếm", "Trang chi tiết", "Danh sách dự án"]
-  );
-  var loai_bai_dang_ap_dung = TransferSelectInputKeyToValue(
-    props.trContentAdsArea.loai_bai_dang_ap_dung,
-    ["tin_bds", "du_an"],
-    ["Tin bds", "Dự án"]
-  );
+  var areaSize = "";
+  if (props.trContentAdsArea.kich_thuoc_vung) {
+    areaSize = props.trContentAdsArea.kich_thuoc_vung.width.toString() + "x" + props.trContentAdsArea.kich_thuoc_vung.height.toString();
+  }
+  var status = (props.trContentAdsArea.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
   return (
     <tr>
       <td>{props.trContentAdsArea.ma_dich_vu}</td>
       <td>{props.trContentAdsArea.ten_hien_thi}</td>
-      <td>{loai_bai_dang_ap_dung}</td>
-      <td>{loai_trang_ap_dung}</td>
+      <td>{props.trContentAdsArea.loai_quang_cao.value}</td>
+      <td>{props.trContentAdsArea.loai_bai_dang_ap_dung.value}</td>
+      <td>{props.trContentAdsArea.loai_trang_ap_dung.value}</td>
       <td>{props.trContentAdsArea.so_luong_chia_se_vung}</td>
       <td>{props.trContentAdsArea.so_luong_tin_toi_da}</td>
       <td>{areaSize}</td>
@@ -43,23 +42,11 @@ function RenderRow(props) {
           nameId={props.trContentAdsArea._id}
           handleEditClick={props.handleEditClick}
           handleDeleteClick={props.handleDeleteClick}
+          handleActiveClick={props.handleActiveClick}
+          trang_thai={props.trContentAdsArea.trang_thai}
         />
       </td>
     </tr>
-  );
-}
-
-function RenderHead(props) {
-  var row = [];
-  props.theadAdsAreas.forEach(element => {
-    row.push(<th key={element}>{element}</th>);
-  });
-  return (
-    <thead>
-      <tr>
-        {row}
-      </tr>
-    </thead>
   );
 }
 
@@ -72,6 +59,7 @@ function RenderBody(props) {
         key={id}
         handleEditClick={props.handleEditClick}
         handleDeleteClick={props.handleDeleteClick}
+        handleActiveClick={props.handleActiveClick}
       />
     );
   });
@@ -83,42 +71,52 @@ function RenderBody(props) {
   );
 }
 
-class AdsAreaInformation extends Component {
-  render() {
-    var informationLeft = [];
-    informationLeft.push(<p key="title">Đang áp dụng(10) Ngừng kích hoạt(3) Đã xóa(3)</p>);
-    informationLeft.push(<button key="Action" id="Action" type="button" className="btn btn-primary">Chọn hành động</button>);
-    informationLeft.push(<button key="Apply" id="Apply" type="button" className="btn btn-primary">Áp dụng</button>);
-    informationLeft.push(<button key="CreatedDate" id="CreatedDate" type="button" className="btn btn-primary">Chọn ngày tạo</button>);
-    informationLeft.push(<button key="Filter" id="Filter" type="button" className="btn btn-primary">Lọc</button>);
+// class AdsAreaInformation extends Component {
+//   render() {
+//     var informationLeft = [];
+//     informationLeft.push(<p key="title">Đang áp dụng(10) Ngừng kích hoạt(3) Đã xóa(3)</p>);
+//     informationLeft.push(<button key="Action" id="Action" type="button" className="btn btn-primary">Chọn hành động</button>);
+//     informationLeft.push(<button key="Apply" id="Apply" type="button" className="btn btn-primary">Áp dụng</button>);
+//     informationLeft.push(<button key="CreatedDate" id="CreatedDate" type="button" className="btn btn-primary">Chọn ngày tạo</button>);
+//     informationLeft.push(<button key="Filter" id="Filter" type="button" className="btn btn-primary">Lọc</button>);
 
-    var informationRight = [];
+//     var informationRight = [];
 
-    return (
-      <div className="adsarea--information">
-        <div className="adsarea--information-left">
-          {informationLeft}
-        </div>
-        <div className="adsarea--information-right">
-          {informationRight}
-        </div>
-      </div>
-    );
-  }
-}
+//     return (
+//       <div className="adsarea--information">
+//         <div className="adsarea--information-left">
+//           {informationLeft}
+//         </div>
+//         <div className="adsarea--information-right">
+//           {informationRight}
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 class AdsAreaContents extends Component {
   render() {
-    var theadAdsAreas = ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"];
+    var theadAdsAreas = {
+      keys: ['ma_dich_vu', 'ten_hien_thi', 'loai_quang_cao.key', 'loai_bai_dang_ap_dung', 'loai_trang_ap_dung', 'so_luong_chia_se_vung', 'so_luong_tin_toi_da', 'kich_thuoc_vung.width', 'trang_thai'],
+      values: ["Mã dịch vụ quảng cáo", "Tên dịch vụ", "Loại quảng cáo", "Áp dụng", "Loại trang áp dụng", "Số lượng chia sẻ vùng", "Số lượng tin tối đa", "Kích thước vùng", "Trạng thái"]
+    };
+
+    var props = this.props;
+
     return (
       <div className="adsarea-content">
-        
+
         <table className="table table-striped">
-          <RenderHead theadAdsAreas={theadAdsAreas} />
+          <RenderHeader
+            theader={theadAdsAreas}
+            OnchangeSort={props.OnchangeSort}
+          />
           <RenderBody
             tbodyAdsAreas={this.props.tbodyAdsAreas}
             handleEditClick={this.props.handleEditClick}
             handleDeleteClick={this.props.handleDeleteClick}
+            handleActiveClick={this.props.handleActiveClick}
           />
         </table>
       </div>
@@ -157,22 +155,46 @@ class AdsArea extends Component {
       ShowCreatorPopup: false,
       ShowDeletePopup: false,
       SelectedItemId: null,
-      tbodyAdsAreas: []
+      tbodyAdsAreas: [],
+      IsASC: false,
+      KeySort: ''
     };
     this.handleShowCreatorPopup = this.handleShowCreatorPopup.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleActiveClick = this.handleActiveClick.bind(this);
     this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
     this.handleResetContentsState = this.handleResetContentsState.bind(this);
+
+    this.OnchangeSort = this.OnchangeSort.bind(this);
+    this._onKeyDown = this._onKeyDown.bind(this);
   }
 
   componentDidMount() {
     this.getAdsAreas();
   }
 
+  _onKeyDown(e) {
+    if (e.key === "Escape") {
+      this.setState({
+        ShowCreatorPopup: false,
+        ShowDeletePopup: false
+      });
+    }
+  }
+
+  componentWillMount(){
+    document.addEventListener("keydown", this._onKeyDown);
+  }
+
+  componentWillUnmount(){
+    document.addEventListener("keydown", this._onKeyDown);
+  }
+
   getAdsAreas() {
     var url = "http://localhost:8080/adsareas";
     Request.get(url)
+      .set('x-auth', localStorage.getItem('x-auth'))
       .then((res) => {
         this.setState({
           tbodyAdsAreas: res.body
@@ -216,6 +238,22 @@ class AdsArea extends Component {
     });
   }
 
+  handleActiveClick(event) {
+    var url = UrlApi.AdsArea + "/" + event.target.name;
+    var $this = this;
+    var updateAdsAreaJson = {
+      trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
+    };
+
+    Request.put(url)
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('x-auth', localStorage.getItem('x-auth'))
+      .send(updateAdsAreaJson)
+      .end(function (err, res) {
+        $this.getAdsAreas();
+      });
+  }
+
   handleCloseDeletePop() {
     this.setState({
       ShowDeletePopup: !this.state.ShowDeletePopup
@@ -226,16 +264,49 @@ class AdsArea extends Component {
     this.getAdsAreas();
   }
 
+  OnchangeSort(e) {
+    var newKeySort = e.target.name;
+    var KeySort = this.state.KeySort;
+    var jsonStateSort = {
+      KeySort: newKeySort
+    };
+
+    if (newKeySort === KeySort) {
+      jsonStateSort.IsASC = !this.state.IsASC;
+    }
+    else {
+      jsonStateSort.IsASC = true;
+    }
+
+    this.setState(jsonStateSort);
+    e.preventDefault();
+  }
+
   render() {
+    var currentState = this.state;
+    var KeySort = currentState.KeySort;
+    var tbody = null;
+    if (KeySort === '') {
+      tbody = currentState.tbodyAdsAreas;
+    }
+    else if (KeySort === 'start_date' || KeySort === 'end_date') {
+      tbody = JsonSortDateType(currentState.tbodyAdsAreas, KeySort, currentState.IsASC);
+    }
+    else {
+      tbody = JsonSort(currentState.tbodyAdsAreas, KeySort, currentState.IsASC);
+    }
+
     return (
-      <div id="page-wrapper">
+      <div id="page-wrapper" onKeyDown={this.onKeyDown}>
         <div className="row">
           <div>
             <AdsAreaHeader showCreatorPopup={this.handleShowCreatorPopup} />
             <AdsAreaContents
-              tbodyAdsAreas={this.state.tbodyAdsAreas}
+              tbodyAdsAreas={tbody}
               handleEditClick={this.handleEditClick}
               handleDeleteClick={this.handleDeleteClick}
+              handleActiveClick={this.handleActiveClick}
+              OnchangeSort={this.OnchangeSort}
             />
 
             {

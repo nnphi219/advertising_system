@@ -1,0 +1,6 @@
+export
+mongodump --host localhost --port 27017 --db thesis --out ./thesis
+mongodump --host localhost --port 27017 --db x_system --out ./x_system
+
+import
+mongorestore -h localhost:27017 -d thesis2 ./thesis

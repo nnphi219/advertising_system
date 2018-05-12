@@ -1,0 +1,40 @@
+vung quang cao:
+-- thieu chon loai vung quang cao: banner, tin rao							--- done
+-- trang ap dung quang cao va loai bai dang ap dung: lay api tu he thong x 	--- done
+-- font chu tieu de: lay tu he thong x										--- done	
+-- kich thuoc vung quang cao: admin he thong x dinh nghia					--- done
+-- field required.															--- done
+-- Creator.																	--- done
+-- kich hoat --- huy														--- done
+--- chỉnh sửa nút tắt.														--- done
+
+gia dich vu:
+--- thoi diem dau gia(sai ten) --- done
+--- mô tả cho dịch vụ quảng cáo. --- done
+-- field required. --- done															
+-- Creator.	--- done	 															
+-- kich hoat --- huy --- done
+--- tạo nút tắt.	--- done
+
+chi so anh huong gia:
+--- ca ngay(sai ten) --- done
+--- khung gio ap dung: cho nhap tat ca
+--- tinh tong tien --- done
+--- tạo nút tắt.	--- done
+
+chien dich tin dang
+--- lay trang ap dung quang cao va loai bai dang ap dung: lay api tu he thong x
+----> cac bai dang ton tai.
+
+
+
+-----------------> tao nut tat nhanh cho form --- done
+-----------------> thieu kich hoat --- done
+-----------------> mo ta cho cac truong cua cac bang 
+-----------------> tao work flow
+
+
+trang ap dung quang cao va loai bai dang ap dung: lay api tu he thong x > x cung cap api()
+--- trang ap dung quang cao:(ma_trang_ap_dung_quang_cao, ten_ap_dung_quang_cao)---> trang home, trang buon ban nha dat...
+--- loai bai dang ap dung:(ma_loai_bai_dang_ap_dung, ten_loai_bai_dang_ap_dung)---> bat dong san, du an
+--- mở rộng: 3 cấp.

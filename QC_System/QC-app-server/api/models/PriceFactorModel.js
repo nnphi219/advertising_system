@@ -2,17 +2,24 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+const khung_gio_schema = new Schema({
+    bat_dau: Number,
+    ket_thuc: Number
+});
+
+const khung_gio = mongoose.model("khung_gio", khung_gio_schema);
 
 var PriceFactorSchema = new Schema({
+    ma_chi_so: String,
     ten_chi_so: String,
     ma_gia: String, //get from ServicePrice
     don_vi_nhan_to: String, // table Factor's Unit
-    loai_nhan_to:  {// (thời lượng, khung giờ, vị trí)
+    loai_nhan_to: {// (thời lượng, khung giờ, vị trí)
         thoi_luong: Number,
-        khung_gio: {
+        khung_gio: [{
             bat_dau: Number,
             ket_thuc: Number
-        },
+        }],
         vi_tri: {
             tinh: String,
             quan_huyen: String
@@ -20,10 +27,10 @@ var PriceFactorSchema = new Schema({
     },
     gia_tri_ap_dung: String, //
     ti_le_tinh_gia: {
-        tang: Number, // %
+        loai_ti_le: Number, //1 - tang theo phan tram, 2 - tang theo gia tri, (-1) - giam theo phan tram, (-2) - giam theo gia tri
         gia_tri: Number
     },
-    gia_tri_thuc: Number,
+    gia_tri_thuc_tang_them: Number,
     start_date: {
         day: Number,
         month: Number,
@@ -42,6 +49,10 @@ var PriceFactorSchema = new Schema({
     updated_date: {
         type: Date,
         default: Date.now
+    },
+    nguoi_tao: {
+        type: String,
+        require: true
     }
 });
 

@@ -5,26 +5,26 @@ class Header extends Component {
     render() {
         return (
             <header>
-                <div className="cbp-af-header">
-                    <div className=" cbp-af-inner">
+                <div className="nav-af-header">
+                    <div className="nav-af-inner">
                         <div className="container">
                             <div className="row">
 
                                 <div className="span4">
                                     <div className="logo">
-                                        <h1><a href="index.html">X System</a></h1>
+                                        <h1><a href="/">X System</a></h1>
                                     </div>
                                 </div>
 
-                                <div className="span8">
+                                <div className="span8" style={{height: "30px", marginTop: "15px"}}>
                                     <div className="navbar">
                                         <div className="navbar-inner">
                                             <nav>
                                                 <ul className="nav topnav">
                                                     <li className="dropdown active">
-                                                        <a href="index.html">Home</a>
+                                                        <a href="/">Trang chủ</a>
                                                     </li>
-                                                    <li className="dropdown">
+                                                    {/* <li className="dropdown">
                                                         <a href="#1">Features</a>
                                                         <ul className="dropdown-menu">
                                                             <li><a href="scaffolding.html">Scaffolding</a></li>
@@ -40,6 +40,26 @@ class Header extends Component {
                                                                 </ul>
                                                             </li>
                                                         </ul>
+                                                    </li> */}
+                                                    {
+                                                        this.props.isAdmin ?
+                                                            <li>
+                                                                <a href="/pages">Trang quảng cáo</a>
+                                                            </li>
+                                                            : null
+                                                    }
+                                                    {
+                                                        this.props.isAdmin ?
+                                                            <li>
+                                                                <a href="/posttypes">Loại bài đăng</a>
+                                                            </li>
+                                                            : null
+                                                    }
+                                                    <li>
+                                                        <a href="/tin-rao-vat">Trang rao vặt</a>
+                                                    </li>
+                                                    <li className="dropdown" id="UserLoginInfo">
+
                                                     </li>
                                                 </ul>
                                             </nav>

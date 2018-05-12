@@ -1,0 +1,10 @@
+.div_post_campaign {
+    min-height: 1500px;
+}
+
+.iframe_post_campaign {
+    overflow: hidden;
+    height: 100%;
+    width: 70%;
+    position: absolute;
+}

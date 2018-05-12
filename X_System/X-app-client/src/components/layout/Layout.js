@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import App from '../../App';
 import Header from './Header';
 import Footer from './Footer';
 import './layout.css';
@@ -11,8 +9,13 @@ class Layout extends Component {
     render() {
         return (
             <div>
-                <Header />
-                    <div id="body" className="contents-margin" />
+                <div>
+
+                    <Header
+                        isAdmin={this.props.isAdmin}
+                    />
+                </div>
+                <div id="body" />
                 <Footer />
             </div>
         );

@@ -6,9 +6,8 @@ import DeleteForm from '../share/DeleteForm';
 import HeaderForm from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import UrlApi from '../share/UrlApi';
-import { TransferFactorUnitKeyToText, JsonDateToDate, TransferdisplayMechanismToText } from '../share/Mapper';
 
-import './user_management.css';
+import './user.css';
 import UserCreatorUpdater from './UserCreatorUpdater';
 
 function RenderRow(props) {
@@ -22,6 +21,7 @@ function RenderRow(props) {
                     nameId={props.trContent._id}
                     handleEditClick={props.handleEditClick}
                     handleDeleteClick={props.handleDeleteClick}
+                    ActiveIsNotShown={true}
                 />
             </td>
         </tr>
@@ -50,7 +50,11 @@ function RenderBody(props) {
 
 class UserContents extends Component {
     render() {
-        var theader = ["User name", "Email", "Loại user"];
+        var theader = {
+            keys: [],
+            values: ["User name", "Email", "Loại user"]
+        };
+
         return (
             <div className="table-content">
                 <table className="table table-striped">
@@ -84,10 +88,29 @@ class UserManagement extends Component {
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
         this.handleClosePopup = this.handleClosePopup.bind(this);
+
+        this._onKeyDown = this._onKeyDown.bind(this);
     }
 
     componentDidMount() {
         this.getUsers();
+    }
+
+    _onKeyDown(e) {
+        if (e.key === "Escape") {
+            this.setState({
+                ShowCreatorUpdaterPopup: false,
+                ShowDeletePopup: false
+            });
+        }
+    }
+
+    componentWillMount() {
+        document.addEventListener("keydown", this._onKeyDown);
+    }
+
+    componentWillUnmount() {
+        document.addEventListener("keydown", this._onKeyDown);
     }
 
     getUsers() {

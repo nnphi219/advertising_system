@@ -1,0 +1,3 @@
+CPC: pay per click
+CPD: pay per day
+CPM: pay per 1000 view

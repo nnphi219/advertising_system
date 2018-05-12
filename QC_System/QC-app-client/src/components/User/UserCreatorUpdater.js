@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
-import { JsonDateToDate, DateToJsonDate, TransferTimeLogJsonToString, TransferTimeLogStringToJson } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
-import './user_management.css';
+import { RenderInput, RenderSelect } from '../share/InputsRender';
+import './user.css';
 
 class RenderProperties extends Component {
     render() {
         return (
-            <div style={{paddingLeft: "30px"}}>
+            <div style={{ paddingLeft: "30px" }}>
                 <RenderInput
                     nameId={"username"}
                     title={"User name"}
@@ -32,7 +30,7 @@ class RenderProperties extends Component {
                     nameId={"password"}
                     title={"Password"}
                     value={this.props.stateValues.password}
-                    type={"text"}
+                    type={"password"}
                     className={"user--input"}
                     OnChangeInput={this.props.OnChangeInput}
                 />
@@ -40,9 +38,9 @@ class RenderProperties extends Component {
                 <RenderSelect
                     nameId={"user_type"}
                     title={"Loại user"}
-                    keys={["user", "admin", "superadmin"]}
-                    values={["user", "admin", "superadmin"]}
-                    selectedValue={this.props.stateValues.user_type }
+                    keys={userInputsData.user_type.keys}
+                    values={userInputsData.user_type.values}
+                    selectedValue={this.props.stateValues.user_type}
                     OnChangeSelect={this.props.OnChangeInput}
                     className={"input--select"}
                 />
@@ -69,7 +67,10 @@ class UserCreatorUpdaterForm extends Component {
     render() {
         return (
             <div className='popup_inner user_createform_size div_scroll_bar'>
-                <h1>{this.props.titleForm}</h1>
+                <div>
+                    <a className="close popup-button-close user_margin_button-close" onClick={this.handleClosePopup}>×</a>
+                    <h1>{this.props.titleForm}</h1>
+                </div>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}
 
@@ -94,10 +95,13 @@ class UserCreatorUpdater extends Component {
     }
 
     SetInitState(jsonState) {
-        if (this.props.modeAction === "edit") {
+        if (this.props.modeAction === "create") {
+            jsonState.user_type = userInputsData.user_type.keys[0];
+        }
+        else if (this.props.modeAction === "edit") {
             var editContents = this.props.editContents;
 
-            jsonState.username = editContents.username; 
+            jsonState.username = editContents.username;
             jsonState.email = editContents.email;
             jsonState.user_type = editContents.user_type;
             console.log(jsonState);
@@ -158,7 +162,7 @@ class UserCreatorUpdater extends Component {
     }
 
     render() {
-        var titleForm = this.props.modeAction === "create" ? "Tạo chiến dịch tin đăng" : "Chỉnh sửa chiến dịch tin đăng";
+        var titleForm = this.props.modeAction === "create" ? "Tạo user" : "Chỉnh sửa user";
         return (
             <div className='popup'>
                 <UserCreatorUpdaterForm
@@ -170,6 +174,12 @@ class UserCreatorUpdater extends Component {
                 />
             </div>
         );
+    }
+}
+var userInputsData = {
+    user_type: {
+        keys: ["user", "admin"],
+        values: ["user", "admin"]
     }
 }
 

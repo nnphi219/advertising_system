@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+import UrlApi from '../share/UrlApi';
+import Request from 'superagent';
 import './NavigationXSystem.css';
+
 
 class NavbarHeader extends Component {
     render() {
@@ -14,6 +17,41 @@ class NavbarHeader extends Component {
 }
 
 class NavTopLinks extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: ""
+        }
+
+        this.GetCurrentUser();
+        
+        this.logout = this.logout.bind(this);
+    }
+
+    GetCurrentUser(){
+        var $this = this;
+
+        Request.get(UrlApi.UserAuthen)
+        .set('x-auth', localStorage.getItem('x-auth'))
+        .then((res) => {
+            $this.setState({
+                username: res.body.username
+            });
+        });
+    }
+
+    logout() {
+        var token = localStorage.getItem('x-auth');
+
+        Request.delete(UrlApi.UserLogout)
+            .set('x-auth', token)
+            .end(function (err, res) {
+                localStorage.setItem('x-auth', '');
+                localStorage.setItem('x-urlapi', '');
+                window.location.href = '/login';
+            });
+    }
+
     render() {
         return (
             <ul className="nav navbar-top-links navbar-right">
@@ -76,12 +114,13 @@ class NavTopLinks extends Component {
                         <i className="fa fa-user fa-fw"></i> <i className="fa fa-caret-down"></i>
                     </a>
                     <ul className="dropdown-menu dropdown-user">
-                        <li><a href="#8"><i className="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a href="#8"><i className="fa fa-user fa-fw"></i> {this.state.username}</a>
                         </li>
                         <li><a href="#9"><i className="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li className="divider"></li>
-                        <li><a href="login.html"><i className="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li>
+                        <button onClick={this.logout}><i className="fa fa-sign-out fa-fw"></i>Logout</button>
                         </li>
                     </ul>
                 </li>
@@ -96,9 +135,6 @@ class NavbarDefault extends Component {
             <div className="navbar-default sidebar" role="navigation">
                 <div className="sidebar-nav navbar-collapse">
                     <ul className="nav" id="side-menu">
-                        <li>
-                            <a href="/x-system/post-management"><i className="fa fa-dashboard fa-fw"></i>Bảng tin đăng</a>
-                        </li>
                         <li>
                             <a href="/x-system/promotion-management"><i className="fa fa-dashboard fa-fw"></i>Bảng khuyến mãi</a>
                         </li>

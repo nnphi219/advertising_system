@@ -8,20 +8,26 @@ var express = require('express'),
     PriceFactor = require('./api/models/PriceFactorModel'),
     ServicePrice = require('./api/models/ServicePriceModel'),
     PromotionManagement = require('./api/models/PromotionManagementModel'),
-    PostCampaignManagement = require('./api/models/PostCampaignManagementModel'),
+    PostCampaign = require('./api/models/PostCampaignManagementModel'),
+    PostManagement = require('./api/models/PostManagementModel'),
     bodyParser = require('body-parser');
+    
 var cors = require('cors');
 const {users, populateUsers} = require('./seed/seed');
-
-// beforeEach(populateUsers);
-
+const fileUpload = require('express-fileupload');
 // mongoose instance connection url connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/ads_system');
+
+mongoose.connect('mongodb://localhost:27017/thesis');
+// mongoose.connect('mongodb://admin:admin@ds263847.mlab.com:63847/thesis');
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Use for upload file
+app.use(fileUpload());
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 var todoListRoute = require('./api/routes/todoListRoute'); //importing route
 var userRoute = require('./api/routes/UserRoute');
@@ -30,6 +36,9 @@ var priceFactorRoute = require('./api/routes/PriceFactorRoute');
 var servicePriceRoute = require('./api/routes/ServicePriceRoute');
 var promotionManagement = require('./api/routes/PromotionManagementRoute');
 var postCampaignManagement = require('./api/routes/PostCampaignManagementRoute');
+let postManagement = require('./api/routes/PostManagementRoute');
+
+var xSystemInteractionRoute = require('./api/routes/XSystemInteractionRoute');
 
 todoListRoute(app); //register the route
 userRoute(app);
@@ -38,6 +47,8 @@ priceFactorRoute(app);
 servicePriceRoute(app);
 promotionManagement(app);
 postCampaignManagement(app);
+postManagement(app);
+xSystemInteractionRoute(app);
 
 app.listen(port);
 

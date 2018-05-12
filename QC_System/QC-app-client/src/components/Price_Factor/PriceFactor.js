@@ -11,21 +11,30 @@ import './price_factor.css';
 import '../Ads_Area/ads_area.css';
 
 import UrlApi from "../share/UrlApi";
+import { TransferTimeLogJsonToString } from '../share/Mapper';
 
 function RenderRow(props) {
     var factorType = props.trContentPriceFactor.loai_nhan_to;
-    var timeLot = `${factorType.khung_gio.bat_dau.toString()}h-${factorType.khung_gio.ket_thuc.toString()}h`;
+    var timeSlots = factorType.khung_gio;
+
+    var timeSlotStrings = "";
+    timeSlots.forEach(timeSlot => {
+        timeSlotStrings += (timeSlotStrings !== "" ? ", " : "");
+        timeSlotStrings += TransferTimeLogJsonToString(timeSlot);
+    });
+
     var location = (factorType.vi_tri !== undefined && factorType.vi_tri !== null) ? factorType.vi_tri.quan_huyen + "," + factorType.vi_tri.tinh : "";
-    
+
     var rateCalculationJson = props.trContentPriceFactor.ti_le_tinh_gia;
     var rateCalculationString = (rateCalculationJson.tang === 1 ? "+ " : "- ") + rateCalculationJson.gia_tri.toString() + "%";
     var status = (props.trContentPriceFactor.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
     return (
         <tr>
+            <td>{props.trContentPriceFactor.ma_chi_so}</td>
             <td>{props.trContentPriceFactor.ten_chi_so}</td>
             <td>{props.trContentPriceFactor.ma_gia}</td>
-            <td>{timeLot}</td>
+            <td>{timeSlotStrings}</td>
             <td>{location}</td>
             <td>{rateCalculationString}</td>
             <td>{status}</td>
@@ -34,6 +43,9 @@ function RenderRow(props) {
                     nameId={props.trContentPriceFactor._id}
                     handleEditClick={props.handleEditClick}
                     handleDeleteClick={props.handleDeleteClick}
+                    handleActiveClick={props.handleActiveClick}
+
+                    trang_thai={props.trContentPriceFactor.trang_thai}
                 />
             </td>
         </tr>
@@ -49,6 +61,7 @@ function RenderBody(props) {
                 key={id}
                 handleEditClick={props.handleEditClick}
                 handleDeleteClick={props.handleDeleteClick}
+                handleActiveClick={props.handleActiveClick}
             />
         );
     });
@@ -63,15 +76,22 @@ function RenderBody(props) {
 class PriceFactorContents extends Component {
 
     render() {
-        var theadPriceFactors = ["Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"];
+        var theadPriceFactors = {
+            keys: [],
+            values: ["Mã nhân tố", "Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"]
+        };
+
+        var props = this.props;
+
         return (
             <div className="adsarea-content">
                 <table className="table table-striped">
                     <RenderHeader theader={theadPriceFactors} />
                     <RenderBody
-                        tbody={this.props.tbodyPriceFactors}
-                        handleEditClick={this.props.handleEditClick}
-                        handleDeleteClick={this.props.handleDeleteClick}
+                        tbody={props.tbodyPriceFactors}
+                        handleEditClick={props.handleEditClick}
+                        handleDeleteClick={props.handleDeleteClick}
+                        handleActiveClick={props.handleActiveClick}
                     />
                 </table>
             </div>
@@ -94,16 +114,37 @@ class PriceFactor extends Component {
         this.handleShowCreatorUpdaterPopup = this.handleShowCreatorUpdaterPopup.bind(this);
         this.handleEditClick = this.handleEditClick.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleActiveClick = this.handleActiveClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
+
+        this._onKeyDown = this._onKeyDown.bind(this);
     }
 
     componentDidMount() {
         this.getPriceFactors();
     }
 
+    _onKeyDown(e) {
+        if (e.key === "Escape") {
+            this.setState({
+                ShowCreatorUpdaterPopup: false,
+                ShowDeletePopup: false
+            });
+        }
+    }
+
+    componentWillMount() {
+        document.addEventListener("keydown", this._onKeyDown);
+    }
+
+    componentWillUnmount() {
+        document.addEventListener("keydown", this._onKeyDown);
+    }
+
     getPriceFactors() {
         Request.get(UrlApi.PriceFactor)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({
                     tbodyPriceFactors: res.body
@@ -130,7 +171,23 @@ class PriceFactor extends Component {
             ModeAction: "edit",
             EditContents: editContents,
             ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
-          });
+        });
+    }
+
+    handleActiveClick(event) {
+        var url = UrlApi.PriceFactor + "/" + event.target.name;
+        var $this = this;
+        var updatePriceFactorJson = {
+            trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
+        };
+
+        Request.put(url)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .send(updatePriceFactorJson)
+            .end(function (err, res) {
+                $this.getPriceFactors();
+            });
     }
 
     handleDeleteClick(event) {
@@ -139,7 +196,6 @@ class PriceFactor extends Component {
             SelectedItemId: event.target.name
         });
     }
-
 
     handleShowCreatorUpdaterPopup() {
         this.setState({
@@ -160,7 +216,7 @@ class PriceFactor extends Component {
 
     render() {
         return (
-            <div id="page-wrapper">
+            <div id="page-wrapper" onKeyDown={this.onKeyDown}>
                 <div className="row">
                     <div>
                         <HeadForm title={"chỉ số ảnh hưởng"} showCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup} />
@@ -168,6 +224,7 @@ class PriceFactor extends Component {
                             tbodyPriceFactors={this.state.tbodyPriceFactors}
                             handleEditClick={this.handleEditClick}
                             handleDeleteClick={this.handleDeleteClick}
+                            handleActiveClick={this.handleActiveClick}
                         />
 
                         {

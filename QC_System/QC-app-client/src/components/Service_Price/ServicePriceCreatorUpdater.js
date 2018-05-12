@@ -3,45 +3,63 @@ import Request from 'superagent';
 import DatePicker from 'react-date-picker';
 import UrlApi from '../share/UrlApi';
 import './service_price.css';
-import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { JsonDateToDate, DateToJsonDate, TransferSelectInputKeyToValue } from '../share/Mapper';
+import { RenderInput, RenderSelect, RenderRadioButon } from '../share/InputsRender';
+import { Date2GreaterThanOrEqualDate1 } from '../share/DateFormat';
+import { DescriptionDetail } from '../share/CommonComponent';
 
 class RenderLeftForm extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
+        var props = this.props;
+        var stateValues = props.stateValues;
         var ma_dich_vu_ap_dung = this.props.stateValues.ma_dich_vu_ap_dung === undefined ? "" : this.props.stateValues.ma_dich_vu_ap_dung;
         var AdsAreaIdsKeys = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.keys;
         var AdsAreaIdsValues = this.props.stateValues.AdsAreaIds === undefined ? [] : this.props.stateValues.AdsAreaIds.values;
+
+        var ma_gia_isReadOnly = this.props.modeAction === 'edit' ? 1 : 0;
+
+        var arrayAdsAreaTitles = [];
+        if (stateValues.AdsAreaIds !== undefined) {
+            var indexOfAdsArea = stateValues.AdsAreaIds.keys.indexOf(stateValues.ma_dich_vu_ap_dung);
+            arrayAdsAreaTitles.push("Loại quảng cáo: " + stateValues.AdsAreaIds.list_loai_quang_cao[indexOfAdsArea]);
+            arrayAdsAreaTitles.push("Trang áp dụng: " + stateValues.AdsAreaIds.list_loai_trang_ap_dung[indexOfAdsArea]);
+        }
 
         return (
             <div key="left" className="serviceprice_information_left">
                 <h2>Thông tin giá dịch vụ</h2>
                 <div>
+                    <RenderInput
+                        nameId={"ma_gia"}
+                        title={"Mã giá"}
+                        value={this.props.stateValues.ma_gia}
+                        errorTitle={props.stateValues.error_ma_gia}
+                        type={"text"}
+                        className={"serviceprice--input"}
+                        isReadOnly={ma_gia_isReadOnly}
+                        OnChangeInput={this.props.OnChangeInput}
+                    />
                     <RenderSelect
                         nameId={"ma_dich_vu_ap_dung"}
-                        title={"Mã dịch vụ quảng cáo"}
+                        title={"Dịch vụ quảng cáo"}
                         keys={AdsAreaIdsKeys}
                         values={AdsAreaIdsValues}
                         selectedValue={ma_dich_vu_ap_dung}
                         OnChangeSelect={this.props.OnChangeSelect}
                         className={"serviceprice--select"}
                     />
-                    <div>
-                        <label key={"ma_gia"} className="fullwidth">
-                            {"Nhập mã giá"}
-                            <input type="text" key={"ma_gia"} name={"ma_gia"} value={this.props.stateValues.ma_gia} onChange={this.props.OnChangeInput} className="serviceprice--input" />
-                        </label>
-                    </div>
+                    <DescriptionDetail
+                        arrayTitles={arrayAdsAreaTitles}
+                    />
+
                     <div>
                         <div className="">
                             <label className="fullwidth">
-                                {"Thời điểm đấu giá"}
+                                {"Thời điểm bắt đầu giá"}
                                 <div>
                                     <DatePicker name="start_date" value={this.props.stateValues.start_date} onChange={this.props.OnchangeStartDate} className="input-date" />
                                 </div>
+                                <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_start_date}</p>
                             </label>
                         </div>
                     </div>
@@ -61,6 +79,7 @@ class RenderLeftForm extends Component {
                                 <div>
                                     <DatePicker name="end_date" value={this.props.stateValues.end_date} onChange={this.props.OnchangeEndDate} className="input-date" />
                                 </div>
+                                <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_end_date}</p>
                             </label>
                         </div>
                     </div>
@@ -73,22 +92,25 @@ class RenderLeftForm extends Component {
 
 class RenderRightForm extends Component {
     render() {
-        var loai_co_che = this.props.stateValues.loai_co_che === undefined ? "" : this.props.stateValues.loai_co_che;
+        var loai_co_che = {};
+        loai_co_che.selectedValue = this.props.stateValues.loai_co_che === undefined ? "" : this.props.stateValues.loai_co_che;
+        loai_co_che.keys = servicePriceInputs.loai_co_che.keys;
+        loai_co_che.values = servicePriceInputs.loai_co_che.values;
+
+        var props = this.props;
         return (
             <div key="right" className="serviceprice_information_right">
                 <h2>Thông số giá</h2>
                 <div>
-                    <div>
-                        <label className="fullwidth" >
-                            {"Cơ chế hiển thị"}
-                            <select name={"loai_co_che"} key={"loai_co_che"} value={loai_co_che} onChange={this.props.OnChangeSelect} className="serviceprice--select">
-                                <option value={"doc_quyen"} >{"Độc quyền"}</option>
-                                <option value={"co_dinh_vi_tri"} >{"Cố định vị trí"}</option>
-                                <option value={"chia_se_co_dinh"} >{"Chia sẻ cố định"}</option>
-                                <option value={"ngau_nhien"} >{"Ngẫu nhiên"}</option>
-                            </select>
-                        </label>
-                    </div>
+                    <RenderSelect
+                        nameId={"loai_co_che"}
+                        title={"Cơ chế hiển thị"}
+                        keys={loai_co_che.keys}
+                        values={loai_co_che.values}
+                        selectedValue={loai_co_che.selectedValue}
+                        OnChangeSelect={this.props.OnChangeSelect}
+                        className={"serviceprice--select"}
+                    />
                     <RenderRadioButon
                         nameId={"loai_gia"}
                         title={"Mô hình giá"}
@@ -98,25 +120,33 @@ class RenderRightForm extends Component {
                         OnChangeRadioButton={this.props.OnChangeRadioButton}
                         className={"input-radio"}
                     />
-                    <div>
-                        <label className="fullwidth">
-                            {"Giá (VND)"}
-                        </label>
-                        <input type="number" key={"gia_tri"} name={"gia_tri"} value={this.props.stateValues.gia_tri} onChange={this.props.OnChangeInput} className="serviceprice--input" />
-                    </div>
-                    <div>
-                        <label className="fullwidth">
-                            {"Số ngày áp dụng"}
-                        </label>
-                        <input type="number" key={"so_ngay_ap_dung"} name={"so_ngay_ap_dung"} value={this.props.stateValues.so_ngay_ap_dung} onChange={this.props.OnChangeInput} className="serviceprice--input" />
-                    </div>
-                    <div>
-                        <label className="fullwidth">
-                            {"Số lượng click / view tối đa"}
-                        </label>
-                        <input type="number" key={"so_click_tren_view"} name={"so_click_tren_view"} value={this.props.stateValues.so_click_tren_view} onChange={this.props.OnChangeInput} className="serviceprice--input" />
-                    </div>
-
+                    <RenderInput
+                        nameId={"gia_tri"}
+                        title={"Giá (VND)"}
+                        value={this.props.stateValues.gia_tri}
+                        errorTitle={props.stateValues.error_gia_tri}
+                        type={"number"}
+                        className={"serviceprice--input"}
+                        OnChangeInput={this.props.OnChangeInput}
+                    />
+                    <RenderInput
+                        nameId={"so_ngay_ap_dung"}
+                        title={"Số ngày áp dụng"}
+                        value={this.props.stateValues.so_ngay_ap_dung}
+                        errorTitle={props.stateValues.error_so_ngay_ap_dung}
+                        type={"number"}
+                        className={"serviceprice--input"}
+                        OnChangeInput={this.props.OnChangeInput}
+                    />
+                    <RenderInput
+                        nameId={"so_click_tren_view"}
+                        title={"Số lượng click / view tối đa"}
+                        value={this.props.stateValues.so_click_tren_view}
+                        errorTitle={props.stateValues.error_so_click_tren_view}
+                        type={"number"}
+                        className={"serviceprice--input"}
+                        OnChangeInput={this.props.OnChangeInput}
+                    />
                 </div>
             </div>
         );
@@ -136,12 +166,14 @@ class RenderProperties extends Component {
                     OnchangeEndDate={this.props.OnchangeEndDate}
 
                     stateValues={this.props.stateValues}
+                    modeAction={this.props.modeAction}
                 />
 
                 <RenderRightForm
                     OnChangeInput={this.props.OnChangeInput}
                     OnChangeSelect={this.props.OnChangeSelect}
                     OnChangeRadioButton={this.props.OnChangeRadioButton}
+
                     stateValues={this.props.stateValues}
                 />
             </div>
@@ -161,13 +193,37 @@ class ServicePriceCreatorUpdaterForm extends Component {
         this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
     }
 
-    OnchangeStartDate(date) {
-        var jsonState = { "start_date": date }
+    OnchangeStartDate(start_date) {
+        let end_date = this.props.stateValues.end_date;
+        var jsonState = {
+            error_start_date: "",
+            error_end_date: ""
+        };
+
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
+            jsonState.start_date = start_date;
+        }
+        else {
+            jsonState.error_start_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+
         this.props.UpdateState(jsonState);
     }
 
-    OnchangeEndDate(date) {
-        var jsonState = { "end_date": date }
+    OnchangeEndDate(end_date) {
+        let start_date = this.props.stateValues.start_date;
+        var jsonState = {
+            error_start_date: "",
+            error_end_date: ""
+        };
+
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
+            jsonState.end_date = end_date;
+        }
+        else {
+            jsonState.error_end_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+    
         this.props.UpdateState(jsonState);
     }
 
@@ -192,7 +248,10 @@ class ServicePriceCreatorUpdaterForm extends Component {
     render() {
         return (
             <div className='popup_inner serviceprice_createform_size div_scroll_bar'>
-                <h1>{this.props.titleForm}</h1>
+                <div>
+                    <a className="close popup-button-close serviceprice_margin_button-close" onClick={this.props.handleClosePopup}>×</a>
+                    <h1>{this.props.titleForm}</h1>
+                </div>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}
                     OnChangeSelect={this.OnChangeSelect}
@@ -201,6 +260,7 @@ class ServicePriceCreatorUpdaterForm extends Component {
                     OnchangeEndDate={this.OnchangeEndDate}
 
                     stateValues={this.props.stateValues}
+                    modeAction={this.props.modeAction}
                 />
                 <div className="submit">
                     <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
@@ -215,37 +275,48 @@ class ServicePriceCreatorUpdater extends Component {
     constructor(props) {
         super(props);
 
-        var jsonState = {};
-        this.state = this.SetInitState(jsonState);
-        this.GetAdsAreaIdInfos();
+        var jsonState = {
+            error_start_date: "",
+            error_end_date: ""
+        };
+        jsonState = this.SetInitState(jsonState);
+        this.state = this.SetInitError(jsonState);
+        this.GetAdsAreasByUser();
     }
 
-    GetAdsAreaIdInfos() {
+    GetAdsAreasByUser() {
         var $this = this;
-        Request.get(UrlApi.GetAdsAreaIdInfo)
+        Request.get(UrlApi.GetAdsAreaInfo)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 var _ids = [];
                 var keys = [];
                 var values = [];
+                var list_loai_trang_ap_dung = [];
+                var list_loai_quang_cao = [];
 
-                res.body.map((adsArea) => {
+                res.body.forEach((adsArea) => {
                     _ids.push(adsArea._id);
                     keys.push(adsArea.ma_dich_vu);
                     values.push(adsArea.ten_hien_thi);
+                    list_loai_trang_ap_dung.push(adsArea.loai_trang_ap_dung.value);
+                    list_loai_quang_cao.push(adsArea.loai_quang_cao.value);
                 });
 
                 var jsonAdsAreaIds = {
                     AdsAreaIds: {
                         _ids: _ids,
                         keys: keys,
-                        values: values
+                        values: values,
+                        list_loai_trang_ap_dung: list_loai_trang_ap_dung,
+                        list_loai_quang_cao: list_loai_quang_cao
                     },
-                    
+
                 };
-                if(this.props.modeAction === "create"){
+                if (this.props.modeAction === "create") {
                     jsonAdsAreaIds.ma_dich_vu_ap_dung = keys[0];
                 }
-                
+
                 $this.setState(jsonAdsAreaIds);
             });
     }
@@ -270,7 +341,7 @@ class ServicePriceCreatorUpdater extends Component {
 
             jsonState.ma_gia = editContents.ma_gia;
             jsonState.ma_dich_vu_ap_dung = editContents.ma_dich_vu_ap_dung;
-            jsonState.loai_co_che = editContents.loai_co_che;
+            jsonState.loai_co_che = editContents.loai_co_che.key;
             jsonState.loai_gia = editContents.loai_gia;
             jsonState.gia_tri = editContents.gia_tri;
             jsonState.so_ngay_ap_dung = editContents.so_luong_don_vi_ap_dung.so_ngay_ap_dung;
@@ -290,48 +361,138 @@ class ServicePriceCreatorUpdater extends Component {
     }
 
     handleUpdateState(jsonState) {
+        jsonState = this.SetInitError(jsonState);
         this.setState(jsonState);
+    }
+
+    SetInitError(jsonState) {
+        jsonState.error_ma_gia = '';
+        jsonState.error_gia_tri = '';
+        jsonState.error_so_ngay_ap_dung = '';
+        jsonState.error_so_click_tren_view = '';
+
+        return jsonState;
+    }
+
+    CheckValid(state) {
+        var isValid = true;
+        var jsonError = {};
+
+        if (state.ma_gia === "" || state.ma_gia.trim().includes(' ')) {
+            jsonError.error_ma_gia = "Mã giá không hợp lệ";
+            isValid = false;
+        }
+
+        if (parseInt(state.gia_tri, 10) <= 0) {
+            jsonError.error_gia_tri = "Yêu cầu lớn hơn 0";
+            isValid = false;
+        }
+
+        if (parseInt(state.so_ngay_ap_dung, 10) <= 0) {
+            jsonError.error_so_ngay_ap_dung = "Yêu cầu lớn hơn 0";
+            isValid = false;
+        }
+
+        if (parseInt(state.so_click_tren_view, 10) <= 0) {
+            jsonError.error_so_click_tren_view = "Yêu cầu lớn hơn 0";
+            isValid = false;
+        }
+
+        if (!isValid) {
+            this.setState(jsonError);
+        }
+
+        return isValid;
     }
 
     GetModelStateJson() {
         var state = this.state;
+        var isValid = this.CheckValid(state);
 
-        var startDateJson = DateToJsonDate(state.start_date);
-        var endDateJson = parseInt(state.co_thoi_diem_ket_thuc) === 1 ? DateToJsonDate(state.end_date) : null;
+        if (isValid) {
+            var startDateJson = DateToJsonDate(state.start_date);
+            var endDateJson = parseInt(state.co_thoi_diem_ket_thuc, 10) === 1 ? DateToJsonDate(state.end_date) : null;
 
-        var servicePriceContent = {
-            ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
-            ma_gia: state.ma_gia,
-            start_date: startDateJson,
-            end_date: endDateJson,
-            loai_co_che: state.loai_co_che,
-            loai_gia: state.loai_gia,
-            gia_tri: state.gia_tri,
-            so_luong_don_vi_ap_dung: {
-                so_ngay_ap_dung: state.so_ngay_ap_dung
+            var servicePriceContent = {
+                ma_dich_vu_ap_dung: state.ma_dich_vu_ap_dung,
+                ma_gia: state.ma_gia,
+                start_date: startDateJson,
+                end_date: endDateJson,
+                loai_gia: state.loai_gia,
+                gia_tri: state.gia_tri,
+                so_luong_don_vi_ap_dung: {
+                    so_ngay_ap_dung: state.so_ngay_ap_dung
+                }
+            };
+            servicePriceContent.loai_co_che = {
+                key: state.loai_co_che,
+                value: TransferSelectInputKeyToValue(state.loai_co_che, servicePriceInputs.loai_co_che.keys, servicePriceInputs.loai_co_che.values)
             }
-        };
 
-        var so_click_tren_view = parseInt(state.so_click_tren_view);
+            var so_click_tren_view = parseInt(state.so_click_tren_view, 10);
 
-        if (so_click_tren_view > 0) {
-            servicePriceContent.so_luong_don_vi_ap_dung.so_click_tren_view = so_click_tren_view
+            if (so_click_tren_view > 0) {
+                servicePriceContent.so_luong_don_vi_ap_dung.so_click_tren_view = so_click_tren_view
+            }
+
+            if (this.props.modeAction === 'edit') {
+                return servicePriceContent;
+            }
+            else {
+                return Request.get(UrlApi.ReadA_ServicePrice + '/' + state.ma_gia)
+                    .set('x-auth', localStorage.getItem('x-auth'))
+                    .then((res) => {
+                        if (res.body) {
+                            isValid = false;
+                            this.setState({
+                                error_ma_gia: "Mã giá đã tồn tại!"
+                            });
+                            return 'error';
+                        }
+                        else {
+                            return servicePriceContent;
+                        }
+
+                    }).catch((e) => {
+                        return 'error';
+                    });
+            }
         }
-
-        return servicePriceContent;
+        else {
+            if (this.props.modeAction === 'edit') {
+                return "error";
+            }
+            else {
+                return Promise.reject();
+            }
+        }
     }
 
     CreateServicePrice() {
-        var servicePriceContent = this.GetModelStateJson();
+        this.GetModelStateJson().then((servicePriceContent) => {
+            if (servicePriceContent === 'error') {
+                return;
+            }
 
-        var $this = this;
-        Request.post(UrlApi.ServicePrice)
-            .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send(servicePriceContent)
-            .end(function (err, res) {
-                $this.props.closeCreatorUpdaterPopup();
-                $this.props.resetContentState();
-            });
+            var $this = this;
+            Request.post(UrlApi.ServicePrice)
+                .set('Content-Type', 'application/x-www-form-urlencoded')
+                .set('x-auth', localStorage.getItem('x-auth'))
+                .send(servicePriceContent)
+                .end(function (err, res) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        $this.props.closeCreatorUpdaterPopup();
+                        $this.props.resetContentState();
+                    }
+                });
+        }).catch((e) => {
+            // this.setState({
+            //     error_ma_gia: "Mã này đã tồn tại!"
+            // });
+        });
     }
 
     EditServicePrice() {
@@ -341,6 +502,7 @@ class ServicePriceCreatorUpdater extends Component {
         var $this = this;
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
+            .set('x-auth', localStorage.getItem('x-auth'))
             .send(servicePriceContent)
             .end(function (err, res) {
                 $this.props.closeCreatorUpdaterPopup();
@@ -368,6 +530,7 @@ class ServicePriceCreatorUpdater extends Component {
                     handleClosePopup={this.props.closeCreatorUpdaterPopup}
                     handleSubmit={this.handleSubmit.bind(this)}
                     UpdateState={this.handleUpdateState.bind(this)}
+                    modeAction={this.props.modeAction}
                 />
             </div>
         );
@@ -382,6 +545,10 @@ var servicePriceInputs = {
     co_thoi_diem_ket_thuc: {
         values: ["Có", "Không"],
         keys: [1, 0]
+    },
+    loai_co_che: {
+        keys: ["doc_quyen", "co_dinh_vi_tri", "chia_se_vi_tri_co_dinh", "ngau_nhien"],
+        values: ["Độc quyền", "Cố định vị trí", "Chia sẻ vị trí cố định", "Ngẫu nhiên"]
     }
 };
 
