@@ -47,7 +47,7 @@ class Home extends Component {
             link_page_url: thefirstBannerRightContent.link_page_url,
             resource_url: thefirstBannerRightContent.resource_url
         };
-      
+
         this.setState(jsonState);
     }
 
@@ -71,15 +71,15 @@ class Home extends Component {
         let banner_left_content = this.state.banner_left_content;
         return (
             <div>
-                <Banner />
-                <BannerLeft 
+                <BannerLeft
                     banner_left_content={banner_left_content}
                 />
-                <BannerRight />
+                <Banner />
                 <div className="content">
                     <Intro />
                     <MainContent />
                 </div>
+                <BannerRight />
             </div>
         );
     }
