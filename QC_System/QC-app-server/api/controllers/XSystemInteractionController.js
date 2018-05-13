@@ -42,6 +42,27 @@ function GetSelectedTimeSlotsArrayJson(selectedTimeSlots, next) {
     next(array_khung_gio);
 };
 
+/* Ham chuyen danh sach khung gio hien thi sang danh sach so
+Vi du
+Input:
+[ { bat_dau: 0, ket_thuc: 1, _id: 5aec94eb97c3d621a812cbbd },
+  { bat_dau: 1, ket_thuc: 2, _id: 5aec94eb97c3d621a812cbbc },
+  { bat_dau: 2, ket_thuc: 3, _id: 5aec94eb97c3d621a812cbbb } ]
+Output: [1, 3, 5]
+Giai thich: Voi moi khung gio hien thi, lay bat_dau + ket_thuc
+
+*/
+function ConvertKhungGioHienThi(khung_gio_hien_thi_list) {
+    let ret_list = new Array();
+    console.log(khung_gio_hien_thi_list);
+    for (let i = 0; i < khung_gio_hien_thi_list.length; i++) {
+        let bat_dau = khung_gio_hien_thi_list[i].bat_dau;
+        let ket_thuc = khung_gio_hien_thi_list[i].ket_thuc;
+        ret_list.push(bat_dau + ket_thuc);
+    }
+    return ret_list;
+}
+
 exports.read_Infos_ByUsername = (req, res) => {
     var username = req.header('Username');
 
@@ -92,7 +113,6 @@ exports.calculate_total_affect_value = (req, res) => {
     var location = content.vi_tri;
     var jsonStartDate = content.start_date;
     var jsonEndDate = content.end_date;
-
 
     var nguoitao = content.Username;
     var XSystemToken = content['xsystem-auth'];
@@ -182,7 +202,7 @@ exports.create_a_postCampaign_from_xsystemUser = function (req, res) {
         });
 };
 
-exports.get_posts_basic_on_applied_page = (req, res) => {
+exports.get_posts_basic_on_applied_page = async (req, res) => {
     let content = (req.body)
     let trang_ap_dung_id = content.trang_ap_dung_id
     let x_admin_username = content.x_admin_username
@@ -224,5 +244,44 @@ exports.get_posts_basic_on_applied_page = (req, res) => {
         }
     }
     // xu ly o day de lay cac postcampaignsid cua vung
+    // buoc 1: tim tat ca cac chien dich thoa man thoi gian hien tai
+    let satisfied_posts = new Array();
+    let d = new Date();
+    let curr_day = d.getDate();
+    let curr_month = d.getMonth();
+    let curr_year = d.getFullYear();
+    let curr_hour = d.getHours();
+
+    curr_day = 6;
+    curr_month = 5;
+    curr_hour = 2;
+    // buoc 1.1: query tat ca cac chien dich thoa man ngay hien tai
+
+    let query_json = { 
+        loai_dich_vu: "viphome",
+        "ngay_bat_dau.year": { $lte: curr_year },
+        "ngay_bat_dau.month": { $lte: curr_month },
+        "ngay_bat_dau.day": { $lte: curr_day },
+        "ngay_ket_thuc.year": { $gte: curr_year },
+        "ngay_ket_thuc.month": { $gte: curr_month },
+        "ngay_ket_thuc.day": { $gte: curr_day }                
+    };
+    console.log(query_json);
+    let postcampaigns_list = await PostCampaign.find(query_json).exec();
+
+    // buoc 1.2: loc tat ca cac chien dich thoa man gio` hien tai
+    for (let i = 0; i < postcampaigns_list.length; i++) {
+        console.log(postcampaigns_list[i].khung_gio_hien_thi)
+        let danh_sach_khung_gio = ConvertKhungGioHienThi(postcampaigns_list[i].khung_gio_hien_thi);
+        console.log(danh_sach_khung_gio)
+        let encoded_curr_hour = curr_hour*2 + 1;
+        for (let j = 0; j < danh_sach_khung_gio.length; j++) {
+            if (encoded_curr_hour === danh_sach_khung_gio[j]) {
+                satisfied_posts.push(postcampaigns_list[i]);
+            }
+        }
+    }
+    console.log(satisfied_posts);
+    
     res.json(resExample)
 }
