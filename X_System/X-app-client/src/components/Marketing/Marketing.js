@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 import { UrlApi } from '../share/Url';
 import './marketing_boostrap.css';
+import './marketing.css';
 
 const PAGE_NAME = 'trang_rao_vat';
 const MARKETING_AREA = 'tin_rao_vat';
@@ -10,14 +11,19 @@ class RenderAPost extends Component {
     render() {
         var post = this.props.post;
         return (
-            <div className="col-lg-3 col-md-6 mb-4">
+            <div className="col-lg-12 col-md-6 mb-4">
                 <div className="card h-100">
-                    {/* <a href={`/post/${post._id}`}><img className="card-img-top" src={imgUrl} alt="" /></a> */}
-                    <a href={`/post/${post._id}`}><img className="card-img-top" src={"/images/images2.jpg"} alt="" /></a>
-                    <div className="card-body">
-                        <h4 className="card-title">
-                            <a href={`/post/${post._id}`}>{post.tieu_de}</a>
-                        </h4>
+                    <div className="marketing_div_content">
+                        <div className="marketing_div_image">
+                            <a href={`/post/${post._id}`}>
+                                <img className="marketing--image" src={"/images/images2.jpg"} alt="" />
+                            </a>
+                        </div>
+                        <div className="card-body">
+                            <h4 className="card-title">
+                                <a href={`/post/${post._id}`}>{post.tieu_de}</a>
+                            </h4>
+                        </div>
                     </div>
                     <div className="card-footer">
                         <small className="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>

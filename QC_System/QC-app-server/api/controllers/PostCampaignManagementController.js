@@ -84,7 +84,7 @@ exports.read_list_postCampaign_by_listadsAreaIdsAndXAdminUsername = function (ad
     let conditionFilter = {
         loai_dich_vu: { $in: adsAreaIds }, 
         x_admin_username: x_admin_username,
-        'khung_gio_hien_thi.bat_dau': 0
+        'khung_gio_hien_thi.bat_dau': hours
     };
 
     PostCampaignManagement.find(conditionFilter, function (err, postCampaigns) {
