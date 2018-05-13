@@ -1,2 +1,2 @@
-export const UsernameOnQcSystem = "nnphi219";
-export const PasswordOnQcSystem = "ngocphi";
+exports.UsernameOnQcSystem = "nnphi219";
+exports.PasswordOnQcSystem = "ngocphi";

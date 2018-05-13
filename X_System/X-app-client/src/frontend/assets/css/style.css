@@ -1849,6 +1849,8 @@ footer {
 
 footer.footer {
 	background:#3a3a3a;
+	width: 1200px;
+	margin: auto;
 }
 
 footer h1, footer h2, footer h3, footer h4, footer h5, footer h6 {

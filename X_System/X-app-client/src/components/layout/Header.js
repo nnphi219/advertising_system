@@ -5,8 +5,8 @@ class Header extends Component {
     render() {
         return (
             <header>
-                <div className="cbp-af-header">
-                    <div className=" cbp-af-inner">
+                <div className="nav-af-header">
+                    <div className="nav-af-inner">
                         <div className="container">
                             <div className="row">
 
@@ -16,7 +16,7 @@ class Header extends Component {
                                     </div>
                                 </div>
 
-                                <div className="span8">
+                                <div className="span8" style={{height: "30px", marginTop: "15px"}}>
                                     <div className="navbar">
                                         <div className="navbar-inner">
                                             <nav>

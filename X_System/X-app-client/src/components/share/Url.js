@@ -11,12 +11,15 @@ export const UrlApi = {
     PostManagement: hostNameServer + "/posts",
     Post: hostNameServer + '/post',
     Marketing: hostNameServer + "/marketing",
+    GetPostsByPostIds: hostNameServer + "/GetPostsByPostIds",
 
     Pages: hostNameServer + "/pages",
     ReadAPage: hostNameServer + '/pages/check',
 
     PostTypes: hostNameServer + "/posttypes",
     ReadAPostType: hostNameServer + "/posttypes/check",
+
+    GetAdvertisement: hostNameServer + "/getPostsBasicOnAppliedPage",
 
     UploadFile: hostNameServer + "/uploads"
 };
