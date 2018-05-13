@@ -10,7 +10,10 @@ var express = require('express'),
     PromotionManagement = require('./api/models/PromotionManagementModel'),
     PostCampaign = require('./api/models/PostCampaignManagementModel'),
     PostManagement = require('./api/models/PostManagementModel'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    
+    XsystemPage = require('./api/models/Xsystem/XsystemPageModel')
+    ;
     
 var cors = require('cors');
 const {users, populateUsers} = require('./seed/seed');
@@ -38,6 +41,8 @@ var promotionManagement = require('./api/routes/PromotionManagementRoute');
 var postCampaignManagement = require('./api/routes/PostCampaignManagementRoute');
 let postManagement = require('./api/routes/PostManagementRoute');
 
+let xSystemPageRoute = require('./api/routes/Xsystem/XsystemPageRoute');
+
 var xSystemInteractionRoute = require('./api/routes/XSystemInteractionRoute');
 
 todoListRoute(app); //register the route
@@ -49,6 +54,8 @@ promotionManagement(app);
 postCampaignManagement(app);
 postManagement(app);
 xSystemInteractionRoute(app);
+
+xSystemPageRoute(app);
 
 app.listen(port);
 
