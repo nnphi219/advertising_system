@@ -31,10 +31,30 @@ function GetAddedAdsAreas(adsAreas, next) {
 };
 
 exports.list_all_xsystem_pages = function (req, res) {
-    XsystemPage.find({}, function (err, page) {
+    let creator = req.user.username;
+    let conditionFilter = {
+        nguoi_tao: creator
+    };
+
+    XsystemPage.find({conditionFilter}, function (err, page) {
         if (err)
             res.send(err);
         res.json(page);
+    });
+};
+
+exports.read_a_xsystem_page_by_pageId = (req, res) => {
+    let creator = req.user.username;
+    let pageId = req.params.pageId;
+    let conditionFilter = {
+        nguoi_tao: creator,
+        ma_trang_quang_cao: pageId
+    };
+
+    XsystemPage.findOne(conditionFilter, function (err, xSystemPage) {
+        if (err)
+            res.send(err);
+        res.json(xSystemPage);
     });
 };
 
@@ -57,11 +77,13 @@ exports.list_all_xsystem_pages_for_qc = function (req, res) {
 
 exports.create_a_xsystem_page = function (req, res) {
     var content = req.body;
+    let creator = req.user.username;
 
     GetAddedAdsAreas(content.vung_quang_cao, function (arrayJsonAdsArea) {
         content.vung_quang_cao = arrayJsonAdsArea;
 
         var new_page = new XsystemPage(content);
+        new_page.nguoi_tao = creator;
         new_page.save(function (err, page) {
             if (err)
                 res.send(err);
@@ -87,14 +109,6 @@ exports.read_a_xsystem_page_by_pageId = function (req, res) {
     });
 };
 
-exports.read_a_xsystem_page_by_PageId = function (req, res) {
-    XsystemPage.findOne({ ma_trang_quang_cao: req.params.pageId }, function (err, page) {
-        if (err)
-            res.send(err);
-        res.json(page);
-    });
-};
-
 exports.update_a_xsystem_page = function (req, res) {
     var content = req.body;
     
@@ -110,7 +124,6 @@ exports.update_a_xsystem_page = function (req, res) {
 
 
 };
-
 
 exports.delete_a_xsystem_page = function (req, res) {
     XsystemPage.remove({

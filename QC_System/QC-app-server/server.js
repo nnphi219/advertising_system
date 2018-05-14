@@ -12,7 +12,8 @@ var express = require('express'),
     PostManagement = require('./api/models/PostManagementModel'),
     bodyParser = require('body-parser'),
     
-    XsystemPage = require('./api/models/Xsystem/XsystemPageModel')
+    XsystemPage = require('./api/models/Xsystem/XsystemPageModel'),
+    XsystemPostType = require('./api/models/Xsystem/XsystemPostTypeModel')
     ;
     
 var cors = require('cors');
@@ -42,6 +43,7 @@ var postCampaignManagement = require('./api/routes/PostCampaignManagementRoute')
 let postManagement = require('./api/routes/PostManagementRoute');
 
 let xSystemPageRoute = require('./api/routes/Xsystem/XsystemPageRoute');
+let xSystemPostTypeRoute = require('./api/routes/Xsystem/XsystemPostTypeRoute');
 
 var xSystemInteractionRoute = require('./api/routes/XSystemInteractionRoute');
 
@@ -56,9 +58,8 @@ postManagement(app);
 xSystemInteractionRoute(app);
 
 xSystemPageRoute(app);
+xSystemPostTypeRoute(app);
 
 app.listen(port);
-
-
 
 console.log('todo list RESTful API server started on: ' + port);

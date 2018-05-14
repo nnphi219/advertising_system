@@ -14,7 +14,7 @@ module.exports = function (app) {
         .delete(authenticate, xsystemPageList.delete_a_xsystem_page);
 
     app.route('/xsystemPages/check/:pageId')
-        .get(authenticate, xsystemPageList.read_a_xsystem_page_by_PageId);
+        .get(authenticate, xsystemPageList.read_a_xsystem_page_by_pageId);
 
     app.route('/getXsystemPages')
         .get(xsystemPageList.list_all_xsystem_pages_for_qc);
