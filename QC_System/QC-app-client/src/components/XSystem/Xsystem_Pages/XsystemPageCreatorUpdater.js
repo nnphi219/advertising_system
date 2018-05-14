@@ -86,13 +86,13 @@ class RenderProperties extends Component {
                     OnChangeInput={this.props.OnChangeInput}
                 />
 
-                <div key="vung_quang_cao" style={{ height: "220px" }}>
+                <div key="vung_quang_cao" style={{ height: "310px" }}>
                     <div>
                         <label className="fullwidth">
                             {"Định nghĩa vùng quảng cáo"}
                         </label>
                     </div>
-                    <div style={{ height: "120px" }}>
+                    <div style={{ height: "92px" }}>
                         <div>
                             <div className="float-left page__area_margin_right">
                                 <RenderInput
@@ -161,7 +161,7 @@ class PageCreatorUpdaterForm extends Component {
 
 
     handleCancel() {
-        window.location.href = UrlRedirect.Pages;
+        window.location.href = UrlRedirect.XsystemPages;
     }
 
     GetAdsAreaState(stateValues) {
@@ -230,7 +230,7 @@ class PageCreatorUpdaterForm extends Component {
         return (
             <div>
                 <div>
-                    <h1>{this.props.titleForm}</h1>
+                    <h1 className="pages_title">{this.props.titleForm}</h1>
                     <RenderProperties
                         OnChangeInput={this.OnChangeInput}
                         modeAction={this.props.modeAction}
@@ -241,8 +241,8 @@ class PageCreatorUpdaterForm extends Component {
                     />
                 </div>
                 <div className="page__submit">
-                    <button className="btn btn-primary page__submit-button" onClick={this.props.handleSubmit}>Save</button>
-                    <button className="btn btn-primary" onClick={this.handleCancel}>Cancel</button>
+                    <button className="btn btn-primary page__submit-button" onClick={this.props.handleSubmit}>Lưu</button>
+                    <button className="btn btn-primary" onClick={this.handleCancel}>Hủy</button>
                 </div>
             </div>
         );
@@ -322,7 +322,7 @@ class PageCreatorUpdater extends Component {
         }
 
         if (isValid) {
-            return Request.get(UrlApi.ReadAPage + '/' + state.ma_trang_quang_cao)
+            return Request.get(UrlApi.ReadA_Xsystem_Pages + '/' + state.ma_trang_quang_cao)
                 .set('x-auth', localStorage.getItem('x-auth'))
                 .then((res) => {
                     if (res.body) {
@@ -358,7 +358,7 @@ class PageCreatorUpdater extends Component {
 
             var token = localStorage.getItem('x-auth');
 
-            Request.post(UrlApi.Pages)
+            Request.post(UrlApi.XsystemPages)
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .set('x-auth', token)
                 .send(content)
@@ -367,7 +367,7 @@ class PageCreatorUpdater extends Component {
                         console.log(err);
                     }
                     else {
-                        window.location.href = UrlRedirect.Pages;
+                        window.location.href = UrlRedirect.XsystemPages;
                     }
                 });
         }).catch((e) => {
@@ -383,7 +383,7 @@ class PageCreatorUpdater extends Component {
             return;
         }
 
-        var url = UrlApi.Pages + "/" + this.props.editContents._id;
+        var url = UrlApi.XsystemPages + "/" + this.props.editContents._id;
         var token = localStorage.getItem('x-auth');
 
         Request.put(url)
@@ -391,7 +391,7 @@ class PageCreatorUpdater extends Component {
             .set('x-auth', token)
             .send(content)
             .end(function (err, res) {
-                window.location.href = UrlRedirect.Pages;
+                window.location.href = UrlRedirect.XsystemPages;
             });
     }
 
@@ -407,7 +407,7 @@ class PageCreatorUpdater extends Component {
     render() {
         var titleForm = this.props.modeAction === "create" ? "Tạo trang áp dụng quảng cáo" : "Chỉnh sửa trang áp dụng quảng cáo";
         return (
-            <div className='div_createform'>
+            <div id="page-wrapper">
                 <PageCreatorUpdaterForm
                     titleForm={titleForm}
                     stateValues={this.state}
@@ -444,7 +444,7 @@ export class XsystemPageEditor extends Component {
         var urlSplit = window.location.href.split('/');
         var paraId = urlSplit[urlSplit.length - 1];
 
-        Request.get(UrlApi.Pages + "/" + paraId)
+        Request.get(UrlApi.XsystemPages + "/" + paraId)
             .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({

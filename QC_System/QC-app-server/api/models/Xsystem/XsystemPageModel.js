@@ -14,6 +14,7 @@ var XsystemPageSchema = new mongoose.Schema({
         trim: true,
         minlength: 1
     },
+    nguoi_tao: String,
     vung_quang_cao: [
         {
             ma_vung: String,

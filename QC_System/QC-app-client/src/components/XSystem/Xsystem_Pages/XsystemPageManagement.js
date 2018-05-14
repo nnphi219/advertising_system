@@ -89,7 +89,7 @@ class XsystemPages extends Component {
     }
 
     getPages() {
-        Request.get(UrlApi.Pages)
+        Request.get(UrlApi.XsystemPages)
             .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 if (res.body) {
@@ -101,11 +101,11 @@ class XsystemPages extends Component {
     }
 
     CreatePage() {
-        window.location.href = UrlRedirect.CreatePage;
+        window.location.href = UrlRedirect.XsystemCreatePage;
     }
 
     EditPage(event) {
-        window.location.href = UrlRedirect.EditPage + `/${event.target.name}`;
+        window.location.href = UrlRedirect.XsystemEditPage + `/${event.target.name}`;
     }
 
     handleDeleteClick(event) {
@@ -138,8 +138,8 @@ class XsystemPages extends Component {
                 {
                     this.state.ShowDeletePopup ?
                         <DeleteFormWithoutPopup
-                            url={UrlApi.Pages}
-                            urlRedirect={UrlRedirect.Pages}
+                            url={UrlApi.XsystemPages}
+                            urlRedirect={UrlRedirect.XsystemPages}
                             SelectedItemId={this.state.SelectedItemId}
                             closeDeletePopup={this.handleCloseDeletePop}
                             resetContentState={this.handleResetContentsState}

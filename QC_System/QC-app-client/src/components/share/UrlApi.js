@@ -36,6 +36,9 @@ const UrlApi = {
     PostCampaignManagement: hostNameServer + "/postcampaignmanagements",
     PostCampaignforXsystem: hostNameServer + "/PostCampaignforXsystem",
 
+    XsystemPages: hostNameServer + "/xsystemPages",
+    ReadA_Xsystem_Pages: hostNameServer + "/xsystemPages/check",
+
     UserManagement: hostNameServer + "/users",
     UserAuthen: hostNameServer + "/users/me",
     UserLogin: hostNameServer + "/users/login",
@@ -53,7 +56,11 @@ export const UrlRedirect = {
     EditUser: '/users/edit',
     UserLogin: '/login',
     UserRegister: '/register',
-    UserTokenMe: '/users/me/token'
+    UserTokenMe: '/users/me/token',
+
+    XsystemPages: '/xsystem-pages',
+    XsystemCreatePage: '/xsystem-pages/create',
+    XsystemEditPage: '/xsystem-pages/edit',
 }
 
 export default UrlApi;

@@ -70,9 +70,17 @@ exports.create_a_xsystem_page = function (req, res) {
     });
 };
 
-
 exports.read_a_xsystem_page = function (req, res) {
     XsystemPage.findById(req.params.pageId, function (err, page) {
+        if (err)
+            res.send(err);
+        res.json(page);
+    });
+};
+
+exports.read_a_xsystem_page_by_pageId = function (req, res) {
+    var username = req.user.username;
+    XsystemPage.findOne({ ma_trang_quang_cao: req.params.pageId, nguoi_tao: username }, function (err, page) {
         if (err)
             res.send(err);
         res.json(page);

@@ -284,7 +284,7 @@ class AdsAreaCreatorForm extends Component {
                         <h1>{this.props.titleForm}</h1>
                     </div>
                     <div key="left" className="adsarea_information_left">
-                        <h2>Thông tin vùng quảng cáo</h2>
+                        <h2>Thông tin dịch vụ quảng cáo</h2>
                         <RenderProperties
                             inputDatas={this.props.adsAreaInformationInputs}
                             handleOnchangeInput={this.handleOnchangeInput}
@@ -296,7 +296,7 @@ class AdsAreaCreatorForm extends Component {
                     </div>
 
                     <div key="right" className="adsarea_information_right">
-                        <h2>Đặc tả của vùng</h2>
+                        <h2>Đặc tả của dịch vụ</h2>
                         <RenderProperties
                             inputDatas={this.props.adsAreaDescriptionInputs}
                             handleOnchangeInput={this.handleOnchangeInput}
@@ -744,7 +744,7 @@ class AdsAreaCreatorUpdater extends Component {
     }
 
     render() {
-        var titleForm = this.props.modeAction === "create" ? "Tạo vùng quảng cáo" : "Chỉnh sửa vùng quảng cáo";
+        var titleForm = this.props.modeAction === "create" ? "Tạo dịch vụ quảng cáo" : "Chỉnh sửa dịch vụ";
         return (
             <div className='popup'>
                 <AdsAreaCreatorForm
