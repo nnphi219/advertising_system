@@ -1,0 +1,16 @@
+.page--tokenfield {
+    margin-top: 10px;
+    width: 60%;
+}
+
+.page__area_margin_right {
+    margin-right: 40px;
+}
+
+.page__submit {
+    text-align: center;
+}
+
+.page__submit-button {
+    margin: 0 10px;
+}

@@ -12,6 +12,9 @@ import UserManagement from './components/User/UserManagement';
 import UserLogin from './components/User/UserLogin';
 import UserRegister from './components/User/UserRegister';
 import XPostCampaign from './components/Post_Campaign_Management/XPostCampaign';
+import XsystemPages from './components/XSystem/Xsystem_Pages/XsystemPageManagement';
+import XsystemPageDetail from './components/XSystem/Xsystem_Pages/XsystemPageDetail';
+import { XsystemPageCreator, XsystemPageEditor } from './components/XSystem/Xsystem_Pages/XsystemPageCreatorUpdater';
 
 class AdminTitle extends Component {
     render() {
@@ -54,11 +57,11 @@ export class AppAdmin extends Component {
             <BrowserRouter>
                 <div>
                     <Route exact={true} path={"/"} component={AdminTitle} />
-                    
+
                     <Route exact={true} path={"/login"} component={UserLogin} />
                     <Route exact={true} path={"/register"} component={UserRegister} />
                     <Route exact={true} path={"/post-campaign"} component={XPostCampaign} />
-                    
+
                     <Route path={"/users-management"} component={UserManagement} />
                     <Route path={"/ads-area"} component={AdsArea} />
                     <Route path={"/service-price"} component={ServicePrice} />
@@ -67,6 +70,11 @@ export class AppAdmin extends Component {
                     <Route path={"/promotion-management"} component={PromotionManagement} />
                     <Route path={"/post-campaign-management"} component={PostCampaignManagement} />
                     <Route path={"/payment-management"} component={PaymentManagement} />
+
+                    <Route exact={true} path={"/xsystem-pages"} component={XsystemPages} />
+                    <Route exact={true} path={"/xsystem-page/:id"} component={XsystemPageDetail} />
+                    <Route exact={true} path={"/xsystem-pages/create"} component={XsystemPageCreator} />
+                    <Route exact={true} path={"/xsystem-pages/edit/:id"} component={XsystemPageEditor} />
 
                     {/* <Route path={"/user/:id"} component={User} />
           <Route path={"/home"} component={Home} />
