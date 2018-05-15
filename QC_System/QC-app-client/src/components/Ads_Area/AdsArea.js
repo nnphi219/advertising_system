@@ -138,8 +138,8 @@ class AdsAreaHeader extends Component {
   render() {
     return (
       <div className="adsarea--header">
-        <h2 className="adsarea--header-title float-left">Vùng quảng cáo</h2>
-        <button type="button" className="btn btn-primary float-left" onClick={this.handleCreateAdsAreaClick}>Tạo vùng quảng cáo</button>
+        <h2 className="adsarea--header-title float-left">Dịch vụ quảng cáo</h2>
+        <button type="button" className="btn btn-primary float-left" onClick={this.handleCreateAdsAreaClick}>Tạo dịch vụ quảng cáo</button>
       </div>
     );
   }
