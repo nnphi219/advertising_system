@@ -9,7 +9,7 @@ exports.list_all_postTypes = function (req, res) {
         nguoi_tao: creator
     };
 
-    XsystemPostType.find({conditionFilter}, function (err, postType) {
+    XsystemPostType.find(conditionFilter, function (err, postType) {
         if (err)
             res.send(err);
         res.json(postType);

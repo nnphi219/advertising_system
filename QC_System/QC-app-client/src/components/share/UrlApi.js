@@ -39,6 +39,9 @@ const UrlApi = {
     XsystemPages: hostNameServer + "/xsystemPages",
     ReadA_Xsystem_Pages: hostNameServer + "/xsystemPages/check",
 
+    XsystemPostTypes: hostNameServer + "/xsystemPostTypes",
+    ReadA_Xsystem_PostTypes: hostNameServer + "/xsystemPostTypes/check",
+
     UserManagement: hostNameServer + "/users",
     UserAuthen: hostNameServer + "/users/me",
     UserLogin: hostNameServer + "/users/login",
@@ -61,6 +64,10 @@ export const UrlRedirect = {
     XsystemPages: '/xsystem-pages',
     XsystemCreatePage: '/xsystem-pages/create',
     XsystemEditPage: '/xsystem-pages/edit',
+
+    XsystemPostTypes: '/xsystem-posttypes',
+    XsystemCreatePostType: '/xsystem-posttypes/create',
+    XsystemEditPostType: '/xsystem-posttypes/edit'
 }
 
 export default UrlApi;

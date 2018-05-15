@@ -15,6 +15,9 @@ import XPostCampaign from './components/Post_Campaign_Management/XPostCampaign';
 import XsystemPages from './components/XSystem/Xsystem_Pages/XsystemPageManagement';
 import XsystemPageDetail from './components/XSystem/Xsystem_Pages/XsystemPageDetail';
 import { XsystemPageCreator, XsystemPageEditor } from './components/XSystem/Xsystem_Pages/XsystemPageCreatorUpdater';
+import XsystemPostTypes from './components/XSystem/Post_Types/XsystemPostTypeManagement';
+import XsystemPostTypeDetail from './components/XSystem/Post_Types/PostTypeDetail';
+import { XsystemPostTypeCreator, XsystemPostTypeEditor } from './components/XSystem/Post_Types/XsystemPostTypeCreatorUpdater';
 
 class AdminTitle extends Component {
     render() {
@@ -76,9 +79,10 @@ export class AppAdmin extends Component {
                     <Route exact={true} path={"/xsystem-pages/create"} component={XsystemPageCreator} />
                     <Route exact={true} path={"/xsystem-pages/edit/:id"} component={XsystemPageEditor} />
 
-                    {/* <Route path={"/user/:id"} component={User} />
-          <Route path={"/home"} component={Home} />
-          <Route path={"home-single"} component={Home}/> */}
+                    <Route exact={true} path={"/xsystem-posttypes"} component={XsystemPostTypes} />
+                    <Route exact={true} path={"/xsystem-posttypes/:id"} component={XsystemPostTypeDetail} />
+                    <Route exact={true} path={"/xsystem-posttypes/create"} component={XsystemPostTypeCreator} />
+                    <Route exact={true} path={"/xsystem-posttypes/edit/:id"} component={XsystemPostTypeEditor} />
                 </div>
             </BrowserRouter>
         );
@@ -95,9 +99,6 @@ export class AppXSystem extends Component {
                     <Route path={"/x-system/promotion-management"} component={PromotionManagement} />
                     <Route path={"/x-system/post-campaign-management"} component={PostCampaignManagement} />
                     <Route path={"/x-system/payment-management"} component={PaymentManagement} />
-                    {/* <Route path={"/user/:id"} component={User} />
-          <Route path={"/home"} component={Home} />
-          <Route path={"home-single"} component={Home}/> */}
                 </div>
             </BrowserRouter>
         );

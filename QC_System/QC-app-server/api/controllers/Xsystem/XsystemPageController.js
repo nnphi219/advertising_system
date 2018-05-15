@@ -1,13 +1,13 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-XsystemPage = mongoose.model('xsystem_pages');
+    XsystemPage = mongoose.model('xsystem_pages');
 
 function GetAddedAdsAreas(adsAreas, next) {
     if (adsAreas) {
         var array_adsAreaIds = adsAreas.ma_vung;
         var array_adsAreaNames = adsAreas.ten_vung;
-        if(typeof(array_adsAreaIds) == 'string'){
+        if (typeof (array_adsAreaIds) == 'string') {
             array_adsAreaIds = [adsAreas.ma_vung];
             array_adsAreaNames = [adsAreas.ten_vung];
         }
@@ -35,11 +35,11 @@ exports.list_all_xsystem_pages = function (req, res) {
     let conditionFilter = {
         nguoi_tao: creator
     };
-
-    XsystemPage.find({conditionFilter}, function (err, page) {
+ 
+    XsystemPage.find(conditionFilter, function (err, pages) {
         if (err)
             res.send(err);
-        res.json(page);
+        res.json(pages);
     });
 };
 

@@ -181,6 +181,9 @@ class NavbarDefault extends Component {
                             <a href="/xsystem-pages"><i className="fa fa-dashboard fa-fw"></i>Quản lý trang quảng cáo</a>
                         </li>
                         <li>
+                            <a href="/xsystem-posttypes"><i className="fa fa-dashboard fa-fw"></i>Quản lý loại bài đăng</a>
+                        </li>
+                        <li>
                             <a href="/ads-area"><i className="fa fa-dashboard fa-fw"></i>Quản lý dịch vụ</a>
                         </li>
                         <li>
