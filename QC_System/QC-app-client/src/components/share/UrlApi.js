@@ -37,10 +37,10 @@ const UrlApi = {
     PostCampaignforXsystem: hostNameServer + "/PostCampaignforXsystem",
 
     XsystemPages: hostNameServer + "/xsystemPages",
-    ReadA_Xsystem_Pages: hostNameServer + "/xsystemPages/check",
+    ReadA_Xsystem_Page: hostNameServer + "/xsystemPages/check",
 
     XsystemPostTypes: hostNameServer + "/xsystemPostTypes",
-    ReadA_Xsystem_PostTypes: hostNameServer + "/xsystemPostTypes/check",
+    ReadA_Xsystem_PostType: hostNameServer + "/xsystemPostTypes/check",
 
     UserManagement: hostNameServer + "/users",
     UserAuthen: hostNameServer + "/users/me",

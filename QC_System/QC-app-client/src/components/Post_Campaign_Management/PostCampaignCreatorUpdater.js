@@ -312,8 +312,8 @@ class PostCampaignCreatorUpdaterForm extends Component {
                 </div>
                 <div className='pop_up_inner_footer'>
                     <div className="submit">
-                        <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
-                        <button className="btn btn-primary" onClick={this.props.handleClosePopup}>Cancel</button>
+                        <button className="btn btn-primary" onClick={this.props.handleSubmit}>Lưu</button>
+                        <button className="btn btn-primary" onClick={this.props.handleClosePopup}>Hủy</button>
                     </div>
                 </div>   
             </div>

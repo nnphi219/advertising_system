@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi, { UrlRedirect } from '../../share/UrlApi';
-import { RenderInput } from '../../share/InputsRender';
+import { RenderInput, RenderSelect } from '../../share/InputsRender';
 
 import './xsystempage.css';
 
 function GetAdsAreaModel(arrayJsonAdsAreas) {
     var array_ma_vung = [];
     var array_ten_vung = [];
+    var array_loai_quang_cao = [];
+
     arrayJsonAdsAreas.forEach(JsonAdsArea => {
         array_ma_vung.push(JsonAdsArea.ma_vung);
         array_ten_vung.push(JsonAdsArea.ten_vung);
+        array_loai_quang_cao.push(JsonAdsArea.loai_quang_cao);
     });
     return {
         ma_vung: array_ma_vung,
-        ten_vung: array_ten_vung
+        ten_vung: array_ten_vung,
+        loai_quang_cao: array_loai_quang_cao
     }
 }
 
@@ -54,7 +58,7 @@ class RenderProperties extends Component {
 
         let asdAreas = stateValues.adsAreas;
         let adsAreaTokenFields = asdAreas.map((adsArea) => {
-            var displayAdsArea = `${adsArea.ma_vung} (${adsArea.ten_vung})`;
+            var displayAdsArea = `${adsArea.ma_vung} (${adsArea.ten_vung}) - ${adsArea.loai_quang_cao}`;
             return (
                 <div key={adsArea.ma_vung} className="token">
                     <span className="token-label" style={{ maxWidth: "769px" }}>{displayAdsArea}</span>
@@ -117,6 +121,18 @@ class RenderProperties extends Component {
                                     OnChangeInput={props.OnChangeInput}
                                 />
                             </div>
+
+                            <div className="float-left">
+                                <p style={{fontWeight: "blod"}}>Loại quảng cáo</p>
+                                <RenderSelect
+                                    nameId={"loai_quang_cao"}
+                                    keys={['banner', 'tin_rao']}
+                                    values={['banner', ' Tin rao']}
+                                    selectedValue={stateValues.loai_quang_cao}
+                                    OnChangeSelect={props.OnChangeInput}
+                                    className={"input--select"}
+                                />
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -168,6 +184,7 @@ class PageCreatorUpdaterForm extends Component {
         let isValid = true;
         let ma_vung = stateValues.ma_vung.trim();
         let ten_vung = stateValues.ten_vung.trim();
+        let loai_quang_cao = stateValues.loai_quang_cao;
 
         if (ma_vung === "" || ma_vung.trim().includes(' ')) {
             stateValues.error_ma_vung = "Mã vùng không hợp lệ";
@@ -189,7 +206,8 @@ class PageCreatorUpdaterForm extends Component {
 
             return {
                 ma_vung: ma_vung,
-                ten_vung: ten_vung
+                ten_vung: ten_vung,
+                loai_quang_cao
             }
         }
         else {
@@ -207,6 +225,7 @@ class PageCreatorUpdaterForm extends Component {
         }
 
         var newAdsArea = this.GetAdsAreaState(stateValues);
+        console.log(newAdsArea);
         if (newAdsArea) {
             addedAdsAreas.push(newAdsArea);
         }
@@ -224,7 +243,6 @@ class PageCreatorUpdaterForm extends Component {
 
         this.props.UpdateState(stateValues);
     }
-
 
     render() {
         return (
@@ -269,6 +287,8 @@ class PageCreatorUpdater extends Component {
 
         jsonState.ma_vung = '';
         jsonState.ten_vung = '';
+
+        jsonState.loai_quang_cao = 'banner';
 
         if (this.props.modeAction === "create") {
             jsonState.ma_trang_quang_cao = '';
@@ -322,7 +342,7 @@ class PageCreatorUpdater extends Component {
         }
 
         if (isValid) {
-            return Request.get(UrlApi.ReadA_Xsystem_Pages + '/' + state.ma_trang_quang_cao)
+            return Request.get(UrlApi.ReadA_Xsystem_Page + '/' + state.ma_trang_quang_cao)
                 .set('x-auth', localStorage.getItem('x-auth'))
                 .then((res) => {
                     if (res.body) {

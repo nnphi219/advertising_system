@@ -57,7 +57,7 @@ class PostTypeCreatorUpdaterForm extends Component {
     }
 
     handleCancel() {
-        window.location.href = UrlRedirect.PostTypes;
+        window.location.href = UrlRedirect.XsystemPostTypes;
     }
 
     render() {
@@ -70,8 +70,8 @@ class PostTypeCreatorUpdaterForm extends Component {
                     stateValues={this.props.stateValues}
                 />
                 <div className="submit">
-                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
-                    <button className="btn btn-primary" onClick={this.handleCancel}>Cancel</button>
+                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Lưu</button>
+                    <button className="btn btn-primary" onClick={this.handleCancel}>Hủy</button>
                 </div>
             </div>
         );
@@ -142,7 +142,7 @@ class PostTypeCreatorUpdater extends Component {
         }
 
         if (isValid) {
-            return Request.get(UrlApi.ReadAPostType + '/' + state.ma_loai_bai_dang)
+            return Request.get(UrlApi.ReadA_Xsystem_PostType + '/' + state.ma_loai_bai_dang)
                 .set('x-auth', localStorage.getItem('x-auth'))
                 .then((res) => {
                     if (res.body) {
@@ -174,10 +174,9 @@ class PostTypeCreatorUpdater extends Component {
             if (content === 'error') {
                 return;
             }
-
             var token = localStorage.getItem('x-auth');
 
-            Request.post(UrlApi.PostTypes)
+            Request.post(UrlApi.XsystemPostTypes)
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .set('x-auth', token)
                 .send(content)
@@ -186,7 +185,7 @@ class PostTypeCreatorUpdater extends Component {
                         console.log(err);
                     }
                     else {
-                        window.location.href = UrlRedirect.PostTypes;
+                        window.location.href = UrlRedirect.XsystemPostTypes;
                     }
 
                 });
@@ -203,7 +202,7 @@ class PostTypeCreatorUpdater extends Component {
             return;
         }
 
-        var url = UrlApi.PostTypes + "/" + this.props.editContents._id;
+        var url = UrlApi.XsystemPostTypes + "/" + this.props.editContents._id;
         var token = localStorage.getItem('x-auth');
 
         Request.put(url)
@@ -211,7 +210,7 @@ class PostTypeCreatorUpdater extends Component {
             .set('x-auth', token)
             .send(content)
             .end(function (err, res) {
-                window.location.href = UrlRedirect.PostTypes;
+                window.location.href = UrlRedirect.XsystemPostTypes;
             });
     }
 
@@ -263,7 +262,7 @@ export class XsystemPostTypeEditor extends Component {
         var urlSplit = window.location.href.split('/');
         var paraId = urlSplit[urlSplit.length - 1];
 
-        Request.get(UrlApi.PostTypes + "/" + paraId)
+        Request.get(UrlApi.XsystemPostTypes + "/" + paraId)
             .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({

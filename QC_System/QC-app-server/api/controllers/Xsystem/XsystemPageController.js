@@ -7,9 +7,12 @@ function GetAddedAdsAreas(adsAreas, next) {
     if (adsAreas) {
         var array_adsAreaIds = adsAreas.ma_vung;
         var array_adsAreaNames = adsAreas.ten_vung;
+        var array_adsAreaAdsTypes = adsAreas.loai_quang_cao;
+
         if (typeof (array_adsAreaIds) == 'string') {
             array_adsAreaIds = [adsAreas.ma_vung];
             array_adsAreaNames = [adsAreas.ten_vung];
+            array_adsAreaAdsTypes = [adsAreas.loai_quang_cao];
         }
 
         var arrayJsonAdsAreas = [];
@@ -17,7 +20,8 @@ function GetAddedAdsAreas(adsAreas, next) {
         array_adsAreaIds.forEach((id, index) => {
             arrayJsonAdsAreas.push({
                 ma_vung: id,
-                ten_vung: array_adsAreaNames[index]
+                ten_vung: array_adsAreaNames[index],
+                loai_quang_cao: array_adsAreaAdsTypes[index]
             });
         });
 

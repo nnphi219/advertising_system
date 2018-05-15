@@ -17,6 +17,7 @@ var XsystemPageSchema = new mongoose.Schema({
     nguoi_tao: String,
     vung_quang_cao: [
         {
+            loai_quang_cao: String, //banner - tin_rao
             ma_vung: String,
             ten_vung: String
         }

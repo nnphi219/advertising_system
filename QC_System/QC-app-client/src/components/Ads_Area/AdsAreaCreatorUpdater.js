@@ -11,19 +11,56 @@ function GetSelectedXAdsArea(arrayAppliedPages, selectedAppliedPage) {
     let arrayXAdsAreas = arrayAppliedPages.adsAreas;
 
     let indexOfSelectedAppliedPage = arrayAppliedPages.keys.indexOf(selectedAppliedPage);
-    let selectedXAdsAreas = [];
+    let selectedXAdsArea = null;
     if (indexOfSelectedAppliedPage > -1) {
-        selectedXAdsAreas = arrayXAdsAreas[indexOfSelectedAppliedPage];
+        selectedXAdsArea = arrayXAdsAreas[indexOfSelectedAppliedPage];
     }
 
-    selectedXAdsAreas.forEach(XadsArea => {
-        keys.push(XadsArea.ma_vung);
-        values.push(XadsArea.ten_vung);
-    });
+    if (selectedXAdsArea) {
+        selectedXAdsArea.keys.forEach((key, index) => {
+            keys.push(key);
+            values.push(selectedXAdsArea.values[index]);
+        });
+    }
 
     return {
         keys, values
     }
+}
+
+function GetAppliedPageAndAppliedAreaState(currentState) {
+    let rawAppliedPages = currentState.RawAppliedPages;
+    let keys = [];
+    let values = [];
+    let adsAreas = [];
+
+    let selectedAdvertisingType = currentState.loai_quang_cao;
+    rawAppliedPages.adsAreas.forEach((pageAdsAreas, index) => {
+        let adsAreaKeys = [];
+        let adsAreaValues = [];
+
+        pageAdsAreas.forEach((pageAdsArea) => {
+            if (pageAdsArea.loai_quang_cao === selectedAdvertisingType) {
+                adsAreaKeys.push(pageAdsArea.ma_vung);
+                adsAreaValues.push(pageAdsArea.ten_vung);
+            }
+        });
+
+        if (adsAreaKeys.length > 0) {
+            keys.push(rawAppliedPages.keys[index]);
+            values.push(rawAppliedPages.values[index]);
+            adsAreas.push({
+                keys: adsAreaKeys,
+                values: adsAreaValues
+            });
+        }
+    });
+
+    currentState.AppliedPages = {
+        keys, values, adsAreas
+    };
+
+    return currentState;
 }
 
 function TransferSizeToString(size) {
@@ -102,9 +139,9 @@ function RenderCombobox(props) {
         values = props.stateValues.AppliedPages.values;
     }
     else if (props.inputData.id === "vung_ap_dung_quang_cao") {
-        let selectedXAdsAreas = stateValues.selectedXAdsAreas;
-        keys = selectedXAdsAreas.keys;
-        values = selectedXAdsAreas.values;
+        let selectedXAdsArea = stateValues.selectedXAdsArea;
+        keys = selectedXAdsArea.keys;
+        values = selectedXAdsArea.values;
     }
     else if (props.inputData.id === "loai_bai_dang_ap_dung") {
         keys = props.stateValues.AppliedPostTypes.keys;
@@ -256,8 +293,15 @@ class AdsAreaCreatorForm extends Component {
         stateValues[name] = value;
 
         if (name === "loai_trang_ap_dung") {
-            stateValues.selectedXAdsAreas = GetSelectedXAdsArea(stateValues.AppliedPages, value);
-            stateValues.vung_ap_dung_quang_cao = stateValues.selectedXAdsAreas.keys[0];
+            stateValues.selectedXAdsArea = GetSelectedXAdsArea(stateValues.AppliedPages, value);
+            stateValues.vung_ap_dung_quang_cao = stateValues.selectedXAdsArea.keys[0];
+        }
+
+        if (name === "loai_quang_cao") {
+            stateValues = GetAppliedPageAndAppliedAreaState(stateValues);
+            stateValues.loai_trang_ap_dung = stateValues.AppliedPages.keys[0];
+            stateValues.selectedXAdsArea = GetSelectedXAdsArea(stateValues.AppliedPages, stateValues.loai_trang_ap_dung);
+            stateValues.vung_ap_dung_quang_cao = stateValues.selectedXAdsArea.keys[0];
         }
 
         this.props.handleUpdateState(stateValues);
@@ -308,8 +352,8 @@ class AdsAreaCreatorForm extends Component {
                     </div>
                 </div>
                 <div className="submit">
-                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
-                    <button className="btn btn-primary" onClick={this.handleClosePopup}>Cancel</button>
+                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Lưu</button>
+                    <button className="btn btn-primary" onClick={this.handleClosePopup}>Hủy</button>
                 </div>
             </div>
         );
@@ -320,7 +364,7 @@ class AdsAreaCreatorUpdater extends Component {
     constructor(props) {
         super(props);
         var jsonState = {
-            selectedXAdsAreas: {
+            selectedXAdsArea: {
                 keys: [],
                 values: []
             },
@@ -345,24 +389,28 @@ class AdsAreaCreatorUpdater extends Component {
         jsonState = this.SetInitState(adsAreaDescriptionInputs, jsonState);
         this.state = this.SetInitError(jsonState);
 
-        this.GetAppliedPages();
-        this.GetAppliedPostTypes();
-        this.GetFontFamilies();
-
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUpdateState = this.handleUpdateState.bind(this);
     }
 
+    componentDidMount() {
+        this.GetAppliedPages();
+        this.GetAppliedPostTypes();
+        this.GetFontFamilies();
+    }
+
     GetAppliedPages() {
         var $this = this;
-        var x_urlapi = localStorage.getItem("x-urlapi");
+        let url = UrlApi.XsystemPages;
 
-        Request.get(x_urlapi + "/getPages")
+        Request.get(url)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
-                var _ids = [];
-                var keys = [];
-                var values = [];
-                var adsAreas = [];
+                let _ids = [];
+                let keys = [];
+                let values = [];
+                let adsAreas = [];
+                let adsTypes = [];
 
                 if (res.body) {
                     res.body.forEach((appliedPage) => {
@@ -375,35 +423,34 @@ class AdsAreaCreatorUpdater extends Component {
                     });
                 }
 
+                let state = this.state;
 
-                var jsonAppliedPages = {
-                    AppliedPages: {
-                        _ids,
-                        keys,
-                        values,
-                        adsAreas
-                    },
-
+                let rawAppliedPages = {
+                    _ids, keys, values, adsAreas
                 };
 
+                state.RawAppliedPages = rawAppliedPages;
+                state = GetAppliedPageAndAppliedAreaState(state);
+
                 if (this.props.modeAction === "create" && keys.length > 0) {
-                    jsonAppliedPages.selectedXAdsAreas = GetSelectedXAdsArea(jsonAppliedPages.AppliedPages, keys[0]);
-                    jsonAppliedPages.vung_ap_dung_quang_cao = jsonAppliedPages.selectedXAdsAreas.keys[0];
-                    jsonAppliedPages.loai_trang_ap_dung = keys[0];
+                    state.selectedXAdsArea = GetSelectedXAdsArea(state.AppliedPages, keys[0]);
+                    state.loai_trang_ap_dung = keys[0];
+                    state.vung_ap_dung_quang_cao = state.selectedXAdsArea.keys[0];
                 }
                 else {
-                    jsonAppliedPages.selectedXAdsAreas = GetSelectedXAdsArea(jsonAppliedPages.AppliedPages, this.state.loai_trang_ap_dung);
+                    state.selectedXAdsArea = GetSelectedXAdsArea(state.AppliedPages, this.state.loai_trang_ap_dung);
                 }
 
-                $this.setState(jsonAppliedPages);
+                $this.setState(state);
             });
     }
 
     GetAppliedPostTypes() {
         var $this = this;
-        var x_urlapi = localStorage.getItem("x-urlapi");
+        let url = UrlApi.XsystemPostTypes
 
-        Request.get(x_urlapi + "/getPostTypes")
+        Request.get(url)
+            .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 var _ids = [];
                 var keys = [];
@@ -520,7 +567,7 @@ class AdsAreaCreatorUpdater extends Component {
                     }
                     else if (element.id === "loai_quang_cao") {
                         jsonState[element.id] = this.props.editContents[element.id].key;
-                    }   
+                    }
                     else {
                         jsonState[element.id] = this.props.editContents[element.id];
                     }
@@ -550,6 +597,7 @@ class AdsAreaCreatorUpdater extends Component {
     }
 
     handleUpdateState(jsonState) {
+        console.log(this.state);
         jsonState = this.SetInitError(jsonState);
         this.setState(jsonState);
     }
@@ -617,7 +665,7 @@ class AdsAreaCreatorUpdater extends Component {
         if (isValid) {
             var indexOfAppliedPage = state.AppliedPages.keys.indexOf(state.loai_trang_ap_dung);
             var indexOfAppliedPostType = state.AppliedPostTypes.keys.indexOf(state.loai_bai_dang_ap_dung);
-            var indexOfAppliedAdsArea = state.selectedXAdsAreas.keys.indexOf(state.vung_ap_dung_quang_cao);
+            var indexOfAppliedAdsArea = state.selectedXAdsArea.keys.indexOf(state.vung_ap_dung_quang_cao);
 
             var indexOfAdsType = state.AdsAreaTypes.keys.indexOf(state.loai_quang_cao);
             var loai_quang_cao = {
@@ -635,7 +683,7 @@ class AdsAreaCreatorUpdater extends Component {
                 },
                 vung_ap_dung_quang_cao: {
                     key: state.vung_ap_dung_quang_cao,
-                    value: state.selectedXAdsAreas.values[indexOfAppliedAdsArea]
+                    value: state.selectedXAdsArea.values[indexOfAppliedAdsArea]
                 },
                 loai_bai_dang_ap_dung: {
                     key: state.loai_bai_dang_ap_dung,
@@ -697,7 +745,7 @@ class AdsAreaCreatorUpdater extends Component {
             if (adsAreaContent === 'error') {
                 return;
             }
-            console.log(adsAreaContent);
+
             var $this = this;
             Request.post(UrlApi.AdsArea)
                 .set('Content-Type', 'application/x-www-form-urlencoded')
