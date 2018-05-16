@@ -13,7 +13,9 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     
     XsystemPage = require('./api/models/Xsystem/XsystemPageModel'),
-    XsystemPostType = require('./api/models/Xsystem/XsystemPostTypeModel')
+    XsystemPostType = require('./api/models/Xsystem/XsystemPostTypeModel'),
+    XsystemDomainUrl = require('./api/models/Xsystem/XsystemDomainUrlModel'),
+    XsystemApiUrl = require('./api/models/Xsystem/XsystemApiUrlModel')
     ;
     
 var cors = require('cors');
@@ -33,19 +35,21 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
-var todoListRoute = require('./api/routes/todoListRoute'); //importing route
-var userRoute = require('./api/routes/UserRoute');
-var adsAreaRoute = require('./api/routes/AdsAreaRoute');
-var priceFactorRoute = require('./api/routes/PriceFactorRoute');
-var servicePriceRoute = require('./api/routes/ServicePriceRoute');
-var promotionManagement = require('./api/routes/PromotionManagementRoute');
-var postCampaignManagement = require('./api/routes/PostCampaignManagementRoute');
+let todoListRoute = require('./api/routes/todoListRoute'); //importing route
+let userRoute = require('./api/routes/UserRoute');
+let adsAreaRoute = require('./api/routes/AdsAreaRoute');
+let priceFactorRoute = require('./api/routes/PriceFactorRoute');
+let servicePriceRoute = require('./api/routes/ServicePriceRoute');
+let promotionManagement = require('./api/routes/PromotionManagementRoute');
+let postCampaignManagement = require('./api/routes/PostCampaignManagementRoute');
 let postManagement = require('./api/routes/PostManagementRoute');
 
 let xSystemPageRoute = require('./api/routes/Xsystem/XsystemPageRoute');
 let xSystemPostTypeRoute = require('./api/routes/Xsystem/XsystemPostTypeRoute');
+let xSystemDomainUrlRoute = require('./api/routes/Xsystem/XsystemDomainUrlRoute');
+let xSystemApiUrlRoute = require('./api/routes/Xsystem/XsystemApiUrlRoute');
 
-var xSystemInteractionRoute = require('./api/routes/XSystemInteractionRoute');
+let xSystemInteractionRoute = require('./api/routes/XSystemInteractionRoute');
 
 todoListRoute(app); //register the route
 userRoute(app);
@@ -59,6 +63,8 @@ xSystemInteractionRoute(app);
 
 xSystemPageRoute(app);
 xSystemPostTypeRoute(app);
+xSystemDomainUrlRoute(app);
+xSystemApiUrlRoute(app);
 
 app.listen(port);
 
