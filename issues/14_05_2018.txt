@@ -1,0 +1,22 @@
+So luong chia se vung: 6
+So luong bai dang toi da: 30
+So luong bai dang toi da tren 1 vung: 5
+
+1. Doc quyen hien thi
+2. Co dinh hien thi
+3. Chia se vi tri co dinh
+4. Ngau nhien hien thi
+
+
+Issue 1: Chuyen trang dang ky cac trang quang cao va dang ky cac collection tu` X sang QC
+Issue 2: CHo QC user dang ky nhieu domain, dang ky cac url de lay cac collection
+
+
+[{
+	bat_dau:
+	ket_thuc:
+},{
+	bat_dau:
+	ket_thuc:
+}]
+
