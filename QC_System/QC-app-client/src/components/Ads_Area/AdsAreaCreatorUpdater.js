@@ -410,7 +410,6 @@ class AdsAreaCreatorUpdater extends Component {
                 let keys = [];
                 let values = [];
                 let adsAreas = [];
-                let adsTypes = [];
 
                 if (res.body) {
                     res.body.forEach((appliedPage) => {
