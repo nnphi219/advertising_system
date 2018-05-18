@@ -3,22 +3,20 @@ import Request from 'superagent';
 
 import RenderHeader from '../../share/RenderHeader';
 import DeleteFormWithoutPopup from '../../share/DeleteFormWithoutPopup';
-import RenderEditDeleteButton from '../../share/RenderEditDeleteButton';
+import { RenderDeleteButton } from '../../share/RenderEditDeleteButton';
 import UrlApi, { UrlRedirect } from '../../share/UrlApi';
 
-import { HeaderForm2 } from '../../share/HeaderForm/HeaderForm';
+import { HeaderForm3 } from '../../share/HeaderForm/HeaderForm';
 
 import './domain_url.css';
 
 function RenderRow(props) {
     return (
         <tr>
-            <td>{props.trContent.ma_loai_bai_dang}</td>
-            <td>{props.trContent.ten_loai_bai_dang}</td>
+            <td>{props.trContent.domain}</td>
             <td>
-                <RenderEditDeleteButton
+                <RenderDeleteButton
                     nameId={props.trContent._id}
-                    handleEditClick={props.handleEditClick}
                     handleDeleteClick={props.handleDeleteClick}
                 />
             </td>
@@ -78,7 +76,7 @@ class XsystemDomainUrl extends Component {
             tbodyContents: []
         };
 
-        this.CreateDomainUrl = this.CreateDomainUrl.bind(this);
+        this.UpdateDomain = this.UpdateDomain.bind(this);
         this.EditDomainUrl = this.EditDomainUrl.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
@@ -99,7 +97,7 @@ class XsystemDomainUrl extends Component {
             });
     }
 
-    CreateDomainUrl() {
+    UpdateDomain() {
         window.location.href = UrlRedirect.XsystemCreateDomainUrl;
     }
 
@@ -127,7 +125,7 @@ class XsystemDomainUrl extends Component {
     render() {
         return (
             <div id="page-wrapper">
-                <HeaderForm2 title={"Domain"} buttonTitle={"domain"} CreateItem={this.CreateDomainUrl} />
+                <HeaderForm3 title={"Domain"} buttonTitle={"Cập nhật domain"} CreateItem={this.UpdateDomain} />
                 <DomainUrlContents
                     tbodyContents={this.state.tbodyContents}
                     handleEditClick={this.EditDomainUrl}

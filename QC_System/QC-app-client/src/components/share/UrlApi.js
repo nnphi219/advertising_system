@@ -47,6 +47,7 @@ const UrlApi = {
     
     XsystemApiUrls: hostNameServer + "/XsystemApiUrls",
     Read_A_Xsystem_ApiUrl: hostNameServer + "/XsystemApiUrls/check",
+    XsystemDomainUrlsCreateManyItem: hostNameServer + "/XsystemDomainUrlsCreateManyDomain",
 
     UserManagement: hostNameServer + "/users",
     UserAuthen: hostNameServer + "/users/me",
@@ -76,8 +77,7 @@ export const UrlRedirect = {
     XsystemEditPostType: '/xsystem-posttypes/edit',
 
     XsystemDomainUrls: '/domain-urls',
-    XsystemCreateDomainUrl: '/domain-urls/create',
-    XsystemEditDomainUrl: '/domain-urls/edit',
+    XsystemCreateDomainUrl: '/domain-urls/update',
 
     XsystemApiUrls: '/api-urls',
     XsystemCreateApiUrl: '/api-urls/create',
