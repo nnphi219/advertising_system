@@ -32,14 +32,14 @@ exports.create_many_domainUrls = function (req, res) {
     let creator = req.user.username;
     XsystemDomainUrl.deleteMany({ nguoi_tao: creator }, function (err, domainUrl) {
         let domains = req.body;
-       console.log(domains);
-        let arrayJsonInsertedDomains = domains.map(function(domain){
+
+        let arrayJsonInsertedDomains = domains.map(function (domain) {
             return {
                 nguoi_tao: creator,
                 domain: domain
             };
         });
-       
+
         XsystemDomainUrl.insertMany(arrayJsonInsertedDomains, function (err, domainUrls) {
             if (err)
                 res.send(err);
