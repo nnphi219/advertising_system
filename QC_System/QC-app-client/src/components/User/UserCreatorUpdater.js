@@ -77,8 +77,8 @@ class UserCreatorUpdaterForm extends Component {
                     stateValues={this.props.stateValues}
                 />
                 <div className="submit">
-                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Save</button>
-                    <button className="btn btn-primary" onClick={this.props.handleClosePopup}>Cancel</button>
+                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Lưu</button>
+                    <button className="btn btn-primary" onClick={this.props.handleClosePopup}>Hủy</button>
                 </div>
             </div>
         );

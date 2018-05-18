@@ -46,6 +46,27 @@ function GetSelectedTimeSlotsArrayJson(selectedTimeSlots, next) {
     next(array_khung_gio);
 };
 
+/* Ham chuyen danh sach khung gio hien thi sang danh sach so
+Vi du
+Input:
+[ { bat_dau: 0, ket_thuc: 1, _id: 5aec94eb97c3d621a812cbbd },
+  { bat_dau: 1, ket_thuc: 2, _id: 5aec94eb97c3d621a812cbbc },
+  { bat_dau: 2, ket_thuc: 3, _id: 5aec94eb97c3d621a812cbbb } ]
+Output: [1, 3, 5]
+Giai thich: Voi moi khung gio hien thi, lay bat_dau + ket_thuc
+
+*/
+function ConvertKhungGioHienThi(khung_gio_hien_thi_list) {
+    let ret_list = new Array();
+    console.log(khung_gio_hien_thi_list);
+    for (let i = 0; i < khung_gio_hien_thi_list.length; i++) {
+        let bat_dau = khung_gio_hien_thi_list[i].bat_dau;
+        let ket_thuc = khung_gio_hien_thi_list[i].ket_thuc;
+        ret_list.push(bat_dau + ket_thuc);
+    }
+    return ret_list;
+}
+
 exports.read_Infos_ByUsername = (req, res) => {
     var username = req.header('Username');
 
@@ -96,7 +117,6 @@ exports.calculate_total_affect_value = (req, res) => {
     var location = content.vi_tri;
     var jsonStartDate = content.start_date;
     var jsonEndDate = content.end_date;
-
 
     var nguoitao = content.Username;
     var XSystemToken = content['xsystem-auth'];

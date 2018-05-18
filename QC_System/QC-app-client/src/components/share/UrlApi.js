@@ -36,6 +36,20 @@ const UrlApi = {
     PostCampaignManagement: hostNameServer + "/postcampaignmanagements",
     PostCampaignforXsystem: hostNameServer + "/PostCampaignforXsystem",
 
+    XsystemPages: hostNameServer + "/xsystemPages",
+    ReadA_Xsystem_Page: hostNameServer + "/xsystemPages/check",
+
+    XsystemPostTypes: hostNameServer + "/xsystemPostTypes",
+    ReadA_Xsystem_PostType: hostNameServer + "/xsystemPostTypes/check",
+
+    XsystemDomainUrls: hostNameServer + "/XsystemDomainUrls",
+    Read_A_Xsystem_DomainUrl: hostNameServer + "/XsystemDomainUrls/check",
+    XsystemDomainUrlsCreateManyItem: hostNameServer + "/XsystemDomainUrlsCreateManyDomain",
+    
+    XsystemApiUrls: hostNameServer + "/XsystemApiUrls",
+    Read_A_Xsystem_ApiUrl: hostNameServer + "/XsystemApiUrls/check",
+    XsystemApiUrlsCreateManyItem: hostNameServer + "/XsystemApiUrlsCreateManyApiUrl",
+
     UserManagement: hostNameServer + "/users",
     UserAuthen: hostNameServer + "/users/me",
     UserLogin: hostNameServer + "/users/login",
@@ -53,7 +67,21 @@ export const UrlRedirect = {
     EditUser: '/users/edit',
     UserLogin: '/login',
     UserRegister: '/register',
-    UserTokenMe: '/users/me/token'
+    UserTokenMe: '/users/me/token',
+
+    XsystemPages: '/xsystem-pages',
+    XsystemCreatePage: '/xsystem-pages/create',
+    XsystemEditPage: '/xsystem-pages/edit',
+
+    XsystemPostTypes: '/xsystem-posttypes',
+    XsystemCreatePostType: '/xsystem-posttypes/create',
+    XsystemEditPostType: '/xsystem-posttypes/edit',
+
+    XsystemDomainUrls: '/domain-urls',
+    XsystemCreateDomainUrl: '/domain-urls/update',
+
+    XsystemApiUrls: '/api-urls',
+    XsystemCreateApiUrl: '/api-urls/update'
 }
 
 export default UrlApi;

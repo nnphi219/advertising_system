@@ -28,8 +28,6 @@
     }
   }
   .tokenfield {
-    height: auto;
-    min-height: 34px;
     padding-bottom: 0px;
   }
   .tokenfield.focus {
