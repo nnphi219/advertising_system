@@ -21,6 +21,7 @@ import { XsystemPostTypeCreator, XsystemPostTypeEditor } from './components/XSys
 import XsystemDomainUrl from './components/XSystem/Domain_Url/DomainUrlManagement';
 import XsystemApiUrl from './components/XSystem/Api_Url/ApiUrlManagement';
 import { XsystemDomainUrlCreator } from './components/XSystem/Domain_Url/DomainUrlCreatorUpdater';
+import { XsystemApiUrlCreator } from './components/XSystem/Api_Url/ApiUrlCreatorUpdater';
 
 class AdminTitle extends Component {
     render() {
@@ -91,8 +92,7 @@ export class AppAdmin extends Component {
                     <Route exact={true} path={"/domain-urls/update"} component={XsystemDomainUrlCreator} />
 
                     <Route exact={true} path={"/api-urls"} component={XsystemApiUrl} />
-                    <Route exact={true} path={"/api-urls/create"} component={XsystemApiUrl} />
-                    <Route exact={true} path={"/api-urls/edit/:id"} component={XsystemApiUrl} />
+                    <Route exact={true} path={"/api-urls/update"} component={XsystemApiUrlCreator} />
                 </div>
             </BrowserRouter>
         );
