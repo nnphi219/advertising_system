@@ -3,6 +3,8 @@ import Request from 'superagent';
 import UrlApi, { UrlRedirect } from '../../share/UrlApi';
 import { RenderInput } from '../../share/InputsRender';
 
+import { ArrayRemoveItem } from '../../share/CommonFunction';
+
 import './domain_url.css';
 
 var validUrl = require('valid-url');
@@ -10,12 +12,15 @@ var validUrl = require('valid-url');
 class RenderProperties extends Component {
     render() {
         let props = this.props;
-        let domain_isReadOnly = this.props.modeAction === 'edit' ? 1 : 0;
-        let domains = props.stateValues.domains;
+        let domains = props.stateValues.domains || [];
+   
         let domainTokenFields = domains.map((domain) => {
             return (
                 <div key={domain} className="token domain--token">
                     <span className="token-label" style={{ maxWidth: "769px" }}>{domain}</span>
+                    <a name={domain} className="close" tabIndex="-1" onClick={props.OnEditTokenField}>
+                        <img name={domain} src="/icons/icons8-edit-50.png" onClick={props.OnEditTokenField} alt="Smiley face" width="10" height="10" />
+                    </a>
                     <a name={domain} className="close" tabIndex="-1" onClick={props.OnRemoveTokenField}>×</a>
                 </div>
             );
@@ -41,10 +46,11 @@ class RenderProperties extends Component {
                     <div className="domain_user--tokenfield tokenfield div_property_margin_bottom">
                         {domainTokenFields}
                     </div>
+                    <p style={{ color: "red", marginTop: "3px" }}>{this.props.error_domain}</p>
                 </div>
                 <div className="domain_submit">
-                    <button className="btn btn-primary" onClick={this.props.handleSubmit}>Lưu</button>
-                    <button className="btn btn-primary" onClick={this.handleCancel}>Hủy</button>
+                    <button className="btn btn-primary" onClick={props.handleSubmit}>Lưu</button>
+                    <button className="btn btn-primary" onClick={props.handleCancel}>Hủy</button>
                 </div>
             </div>
         );
@@ -81,9 +87,12 @@ class DomainUrlCreatorUpdaterForm extends Component {
                 <h1 className="domain_title">{this.props.titleForm}</h1>
                 <RenderProperties
                     OnChangeInput={this.OnChangeInput}
-                    modeAction={this.props.modeAction}
                     stateValues={this.props.stateValues}
                     OnAddTokenField={props.OnAddTokenField}
+                    OnRemoveTokenField={props.OnRemoveTokenField}
+                    OnEditTokenField={props.OnEditTokenField}
+                    handleCancel={this.handleCancel}
+                    handleSubmit={props.handleSubmit}
                 />
             </div>
         );
@@ -99,21 +108,35 @@ class DomainUrlCreatorUpdater extends Component {
         };
         this.SetInitState(jsonState);
         this.state = jsonState;
+    
         this.OnAddTokenField = this.OnAddTokenField.bind(this);
         this.OnRemoveTokenField = this.OnRemoveTokenField.bind(this);
+        this.OnEditTokenField = this.OnEditTokenField.bind(this);
+    }
+
+    componentDidMount() {
+        Request.get(UrlApi.XsystemDomainUrls)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .then((res) => {
+                let jsonDomains = res.body;
+                let stringDomains = jsonDomains.map((jsonDomain) => {
+                    return jsonDomain.domain;
+                });
+
+                this.setState({
+                    domains: stringDomains
+                });
+
+            })
+            .catch((e) => {
+                // window.location.href = UrlRedirect.DomainUrls;
+            });
     }
 
     SetInitState(jsonState) {
         jsonState.error_domain = '';
-
-        if (this.props.modeAction === "create") {
-            jsonState.domain = '';
-        }
-        else if (this.props.modeAction === "edit") {
-            var editContents = this.props.editContents;
-
-            jsonState.domain = editContents.domain;
-        }
+        jsonState.domain = '';
+        jsonState.domains = this.props.editContents;
     }
 
     handleUpdateState(jsonState) {
@@ -121,154 +144,107 @@ class DomainUrlCreatorUpdater extends Component {
     }
 
     GetModelStateJson() {
-        var state = this.state;
-
-        var isValid = true;
-        var jsonError = {};
-        if (state.domain === "" || state.domain.trim().includes(' ')) {
-            jsonError.error_domain = "Mã này không hợp lệ";
+        let domains = this.state.domains;
+        let isValid = true;
+        let jsonError = {};
+        if (domains.length === 0) {
+            jsonError.error_domain = "Không tồn tại domain nào";
             isValid = false;
         }
-
-        var content = null;
 
         if (jsonError !== {}) {
             this.setState(jsonError);
         }
 
-        if (this.props.modeAction === 'edit') {
-            if (isValid) {
-                return {
-                    domain: state.domain
-                };
-            }
-            else {
-                return "error";
-            }
-        }
-
         if (isValid) {
-            return Request.get(UrlApi.ReadA_Xsystem_DomainUrl + '/' + state.domain)
-                .set('x-auth', localStorage.getItem('x-auth'))
-                .then((res) => {
-                    if (res.body) {
-                        isValid = false;
-                        this.setState({
-                            error_domain: ""
-                        });
-                        return 'error';
-                    }
-                    else {
-                        content = {
-                            domain: state.domain
-                        };
-                        return content;
-                    }
-
-                }).catch((e) => {
-                    return 'error';
-                });
+            return domains;
         }
         else {
-            return Promise.reject();
+            return "error";
         }
     }
 
-    CreateDomainUrl() {
-        this.GetModelStateJson().then((content) => {
-            if (content === 'error') {
-                return;
-            }
-            var token = localStorage.getItem('x-auth');
-
-            Request.post(UrlApi.XsystemDomainUrls)
-                .set('Content-Type', 'application/x-www-form-urlencoded')
-                .set('x-auth', token)
-                .send(content)
-                .end(function (err, res) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else {
-                        window.location.href = UrlRedirect.XsystemDomainUrls;
-                    }
-
-                });
-        }).catch((e) => {
-            this.setState({
-                error_domain: "Mã này đã tồn tại!"
-            });
-        });
-    }
-
-    EditDomainUrl() {
-        var content = this.GetModelStateJson();
-        if (content === 'error') {
+    UpdateDomainUrl() {
+        let domains = this.GetModelStateJson();
+        if (domains === "error") {
             return;
         }
-
-        var url = UrlApi.XsystemDomainUrls + "/" + this.props.editContents._id;
-        var token = localStorage.getItem('x-auth');
-
-        Request.put(url)
-            .set('Content-Type', 'application/x-www-form-urlencoded')
+        console.log(domains);
+        let token = localStorage.getItem('x-auth');
+        Request.post(UrlApi.XsystemDomainUrlsCreateManyItem)
             .set('x-auth', token)
-            .send(content)
+            .send(domains)
             .end(function (err, res) {
-                window.location.href = UrlRedirect.XsystemDomainUrls;
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    window.location.href = UrlRedirect.XsystemDomainUrls;
+                }
             });
     }
 
     handleSubmit() {
-        if (this.props.modeAction === "create") {
-            this.CreateDomainUrl();
-        }
-        else {
-            this.EditDomainUrl();
-        }
+        this.UpdateDomainUrl();
     }
 
     OnAddTokenField(e) {
         let stateValues = this.state;
-        let currentInputDomain = stateValues.domain;
+        let currentInputDomain = stateValues.domain.trim();
         let currentDomains = stateValues.domains;
 
         if (!validUrl.isUri(currentInputDomain)) {
-            e.preventDefault();
+            return;
+        }
+
+        if (currentDomains.indexOf(currentInputDomain) > -1) {
             return;
         }
 
         currentDomains.push(currentInputDomain);
         let jsonNewState = {
-            domains: currentDomains
+            domains: currentDomains,
+            domain: ''
         };
-        this.props.UpdateState(jsonNewState);
+
+        this.handleUpdateState(jsonNewState);
+        e.preventDefault();
     }
 
     OnRemoveTokenField(e) {
-        // var stateValues = this.props.stateValues;
-        // var removedTimeSlot = e.target.name;
-        // var selectedTimeSlots = stateValues.selectedTimeSlots.slice();
-        // var array_khung_gio = stateValues.array_khung_gio.slice();
-        // var jsonState = {};
+        let stateValues = this.state;
+        let currentDomains = stateValues.domains;
 
-        // if (removedTimeSlot === "all") {
-        //     jsonState.allowAddTimeSlot = true;
-        // }
+        let removedDomain = e.target.name;
 
-        // ArrayRemoveItem(selectedTimeSlots, removedTimeSlot);
-        // var remainingTimeSlots = GetRemainingTimeSlots(array_khung_gio, selectedTimeSlots);
+        ArrayRemoveItem(currentDomains, removedDomain);
 
-        // jsonState.selectedTimeSlots = selectedTimeSlots;
-        // jsonState.remainingTimeSlots = remainingTimeSlots;
-        // jsonState.time_slot = remainingTimeSlots.length > 0 ? remainingTimeSlots[0] : null;
+        let jsonNewState = {
+            domains: currentDomains
+        };
 
-        // this.props.UpdateState(jsonState);
+        this.handleUpdateState(jsonNewState);
+        e.preventDefault();
+    }
+
+    OnEditTokenField(e) {
+        let stateValues = this.state;
+        let currentDomains = stateValues.domains;
+
+        let editedDomain = e.target.name;
+        ArrayRemoveItem(currentDomains, editedDomain);
+
+        let jsonNewState = {
+            domain: editedDomain,
+            domains: currentDomains
+        };
+
+        this.handleUpdateState(jsonNewState);
+        e.preventDefault();
     }
 
     render() {
-        console.log(this.state);
-        var titleForm = this.props.modeAction === "create" ? "Tạo domain" : "Chỉnh loại domain";
+        var titleForm = "Cập nhật domain";
         return (
             <div className='div_createform'>
                 <DomainUrlCreatorUpdaterForm
@@ -276,8 +252,9 @@ class DomainUrlCreatorUpdater extends Component {
                     stateValues={this.state}
                     handleSubmit={this.handleSubmit.bind(this)}
                     UpdateState={this.handleUpdateState.bind(this)}
-                    modeAction={this.props.modeAction}
                     OnAddTokenField={this.OnAddTokenField}
+                    OnRemoveTokenField={this.OnRemoveTokenField}
+                    OnEditTokenField={this.OnEditTokenField}
                 />
             </div>
         );
@@ -288,45 +265,7 @@ export class XsystemDomainUrlCreator extends Component {
     render() {
         return (
             <DomainUrlCreatorUpdater
-                modeAction={"create"}
             />
-        );
-    }
-}
-
-export class XsystemDomainUrlEditor extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isLoad: false,
-            editContents: null
-        };
-    }
-    render() {
-        var urlSplit = window.location.href.split('/');
-        var paraId = urlSplit[urlSplit.length - 1];
-
-        Request.get(UrlApi.XsystemDomainUrls + "/" + paraId)
-            .set('x-auth', localStorage.getItem('x-auth'))
-            .then((res) => {
-                this.setState({
-                    editContents: res.body,
-                    isLoad: true
-                });
-
-            })
-            .catch((e) => {
-                // window.location.href = UrlRedirect.DomainUrls;
-            });
-
-        return (
-            this.state.isLoad ?
-                <DomainUrlCreatorUpdater
-                    modeAction={"edit"}
-                    editContents={this.state.editContents}
-                />
-                : null
         );
     }
 }
