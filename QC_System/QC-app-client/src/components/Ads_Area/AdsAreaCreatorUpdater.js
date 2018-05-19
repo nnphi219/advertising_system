@@ -238,7 +238,7 @@ function RenderProperties(props) {
             inputs.push(<ColorPickerInput key={element.id} valueColor={valueColor} inputData={element} handleOnchangeColor={props.handleOnchangeColor} />);
         }
         else if (element.type === "combobox") {
-            if (!((element.id === "domain" || element.id === "api_url") && props.stateValues.loai_quang_cao === "banner")) {
+            if (!((element.id === "domain" || element.id === "api_url") && props.stateValues.loai_quang_cao === BANNER)) {
                 inputs.push(<RenderCombobox key={element.id} inputData={element} stateValues={props.stateValues} handleOnchangeSelect={props.handleOnchangeSelect} />);
             }
         }

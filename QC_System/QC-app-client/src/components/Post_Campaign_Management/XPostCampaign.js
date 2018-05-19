@@ -19,7 +19,7 @@ function IsBannerAds(stateValues) {
         var indexOfAdsAreas = AdsAreaIdsKeys.indexOf(stateValues.loai_dich_vu);
 
         if (indexOfAdsAreas !== -1) {
-            if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === "banner") {
+            if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === BANNER) {
                 isBannerAds = true;
             }
         }
@@ -115,7 +115,7 @@ function RenderForm(props) {
         var adsAreaDetailDescription = [];
         if (indexOfAdsAreas !== -1) {
             trang_hien_thi = stateValues.AdsAreaIds.appliedPageTypeKeys[indexOfAdsAreas].value;
-            if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === "banner") {
+            if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === BANNER) {
                 isBannerAds = true;
             }
             adsAreaDetailDescription.push(<p key="1" className="margin_zero"> {"Tên dịch vụ: " + stateValues.AdsAreaIds.values[indexOfAdsAreas] + "."}</p>)
