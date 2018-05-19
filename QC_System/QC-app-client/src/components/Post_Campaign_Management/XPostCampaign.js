@@ -3,7 +3,7 @@ import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, GetDistrictsBasicOnProvince, Transfer_Provice_District_JsonToArray, GetProvinces, TransferTimeLogStringToArrayElement } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
-import { KHUNG_GIO, PROMOTION_PHAN_TRAM } from '../share/constant';
+import { KHUNG_GIO, PROMOTION_PHAN_TRAM, BANNER } from '../share/constant';
 import { ArrayRemoveItem, NumberFormat } from '../share/CommonFunction';
 
 import Img from 'react-image';
@@ -543,12 +543,14 @@ class PostCampaignCreatorUpdaterForm extends Component {
             stateValues.url_redirect = '';
 
             let $this = this;
-            this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
-                .then((stateValues) => {
-                    $this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
-                        $this.props.UpdateState(stateValues);
+            stateValues = this.props.handleUpdatePostOfSystemByServiceOnChange(stateValues, function (stateValues) {
+                $this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
+                    .then((stateValues) => {
+                        $this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
+                            $this.props.UpdateState(stateValues);
+                        });
                     });
-                });
+            });
         }
         else if (name === "co_che_hien_thi") {
             let $this = this;
@@ -726,6 +728,7 @@ class XPostCampaign extends Component {
         this.CalculatedIntoMoney = this.CalculatedIntoMoney.bind(this);
         this.GetBasicPriceByAreaAndDisplayedMode = this.GetBasicPriceByAreaAndDisplayedMode.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleUpdatePostOfSystemByServiceOnChange = this.handleUpdatePostOfSystemByServiceOnChange.bind(this);
     }
 
     SetInitError(jsonState) {
@@ -744,11 +747,12 @@ class XPostCampaign extends Component {
         var $this = this;
         this.GetInfosByUsernameOfQCSystem(jsonSetInfosOfUser, XAdminUsername, modeAction)
             .then((jsonSetInfosOfUser) => {
-                return this.GetPostsOfXsystemByUserToken(jsonSetInfosOfUser, jsonSetInfosOfUser.XsystemUrlApi, USerOfXSysyemAccessToken, modeAction);
-            }).then((jsonSetInfosOfUser) => {
-                return $this.GetBasicPriceByAreaAndDisplayedMode(jsonSetInfosOfUser, $this.state.co_che_hien_thi, XAdminUsername, USerOfXSysyemAccessToken);
-            }).then((jsonSetInfosOfUser) => {
-                $this.setState(jsonSetInfosOfUser);
+                this.getPostsOfXsystemByUserToken(jsonSetInfosOfUser, USerOfXSysyemAccessToken, modeAction, function (jsonSetInfosOfUser) {
+                    return $this.GetBasicPriceByAreaAndDisplayedMode(jsonSetInfosOfUser, $this.state.co_che_hien_thi, XAdminUsername, USerOfXSysyemAccessToken)
+                        .then((jsonSetInfosOfUser) => {
+                            $this.setState(jsonSetInfosOfUser);
+                        });
+                });
             });
     }
 
@@ -824,6 +828,7 @@ class XPostCampaign extends Component {
         var values = [];
         var appliedPageTypeKeys = [];
         var adsTypes = [];
+        var post_api_urls = [];
 
         adsAreas.forEach((adsArea) => {
             _ids.push(adsArea._id);
@@ -831,6 +836,7 @@ class XPostCampaign extends Component {
             values.push(adsArea.ten_hien_thi);
             appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
             adsTypes.push(adsArea.loai_quang_cao);
+            post_api_urls.push(adsArea.tin_rao_api.domain + "/" + adsArea.tin_rao_api.url);
         });
 
         jsonSetInfosOfUser.AdsAreaIds = {
@@ -838,7 +844,8 @@ class XPostCampaign extends Component {
             keys,
             values,
             appliedPageTypeKeys,
-            adsTypes
+            adsTypes,
+            post_api_urls
         };
 
         if (modeAction === "create") {
@@ -849,8 +856,24 @@ class XPostCampaign extends Component {
         return jsonSetInfosOfUser;
     }
 
-    GetPostsOfXsystemByUserToken(jsonSetInfosOfUser, XsystemUrlApi, USerOfXSysyemAccessToken, modeAction) {
-        return Request.get(XsystemUrlApi + "/getPostByUserToken")
+    getPostsOfXsystemByUserToken(jsonSetInfosOfUser, USerOfXSysyemAccessToken, modeAction, next) {
+        let adsAreaIds = jsonSetInfosOfUser.AdsAreaIds;
+        let loai_dich_vu = jsonSetInfosOfUser.loai_dich_vu;
+        let indexOfServiceType = adsAreaIds.keys.indexOf(loai_dich_vu);
+
+        if (indexOfServiceType === -1) {
+            jsonSetInfosOfUser.XSystemPosts = {
+                _ids: [],
+                keys: [],
+                titles: []
+            };
+            jsonSetInfosOfUser.ma_bai_dang = '';
+            next(jsonSetInfosOfUser);
+        }
+
+        let post_api_url = adsAreaIds.post_api_urls[indexOfServiceType];
+
+        return Request.get(post_api_url)
             .set('xsystem-auth', USerOfXSysyemAccessToken)
             .then((res) => {
                 var _ids = [];
@@ -858,25 +881,48 @@ class XPostCampaign extends Component {
                 var titles = [];
 
                 var xSystemPosts = res.body;
+                if (xSystemPosts) {
+                    xSystemPosts.forEach((xSystemPost) => {
+                        _ids.push(xSystemPost._id);
+                        keys.push(xSystemPost.ma_bai_dang);
+                        titles.push(xSystemPost.tieu_de);
+                    });
 
-                xSystemPosts.forEach((xSystemPost) => {
-                    _ids.push(xSystemPost._id);
-                    keys.push(xSystemPost.ma_bai_dang);
-                    titles.push(xSystemPost.tieu_de);
-                });
+                    jsonSetInfosOfUser.XSystemPosts = {
+                        _ids,
+                        keys,
+                        titles
+                    };
 
-                jsonSetInfosOfUser.XSystemPosts = {
-                    _ids,
-                    keys,
-                    titles
-                };
+                    if (modeAction === "create") {
+                        jsonSetInfosOfUser.ma_bai_dang = keys[0];
+                    }
 
-                if (modeAction === "create") {
-                    jsonSetInfosOfUser.ma_bai_dang = keys[0];
+                    next(jsonSetInfosOfUser);
                 }
-
-                return jsonSetInfosOfUser;
+                else {
+                    jsonSetInfosOfUser.XSystemPosts = {
+                        _ids: [],
+                        keys: [],
+                        titles: []
+                    };
+                    jsonSetInfosOfUser.ma_bai_dang = '';
+                    next(jsonSetInfosOfUser);
+                }
             });
+    }
+
+    handleUpdatePostOfSystemByServiceOnChange(stateValues, next) {
+        let loai_dich_vu = stateValues.loai_dich_vu;
+        if(loai_dich_vu === BANNER){
+            next(stateValues);
+        }
+        else{
+            let USerOfXSysyemAccessToken = stateValues.USerOfXSysyemAccessToken;
+            this.getPostsOfXsystemByUserToken(stateValues, USerOfXSysyemAccessToken, "create", function (stateValues) {
+                next(stateValues);
+            });
+        }
     }
 
     GetInfosByUsernameOfQCSystem(jsonSetInfosOfUser, XAdminUsername, modeAction) {
@@ -1165,6 +1211,7 @@ class XPostCampaign extends Component {
                     UpdateState={this.handleUpdateState}
                     CalculatedIntoMoney={this.CalculatedIntoMoney}
                     GetBasicPriceByAreaAndDisplayedMode={this.GetBasicPriceByAreaAndDisplayedMode}
+                    handleUpdatePostOfSystemByServiceOnChange={this.handleUpdatePostOfSystemByServiceOnChange}
 
                     handleSubmit={this.handleSubmit}
                 />
