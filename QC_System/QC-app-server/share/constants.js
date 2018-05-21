@@ -1,2 +1,6 @@
-export const BANNER = 'banner';
-export const TINRAO = 'tin_rao';
+const BANNER = 'banner';
+const TINRAO = 'tin_rao';
+
+module.exports = {
+    BANNER, TINRAO
+}

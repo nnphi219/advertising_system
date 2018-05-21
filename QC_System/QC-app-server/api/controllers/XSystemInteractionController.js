@@ -7,7 +7,7 @@ var dateFormat = require('../../share/DateFormat');
 var commonFunction = require('../../share/CommonFunction');
 var Promise = require('promise');
 
-var BANNER = require('../../share/constants');
+var {BANNER} = require('../../share/constants');
 
 var { authenticate } = require('../../middleware/authenticate');
 
