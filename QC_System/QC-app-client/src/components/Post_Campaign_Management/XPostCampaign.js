@@ -1088,11 +1088,6 @@ class XPostCampaign extends Component {
             var startDateJson = DateToJsonDate(state.ngay_bat_dau);
             var endDateJson = DateToJsonDate(state.ngay_ket_thuc);
 
-            var vi_tri = {
-                tinh: state.lnt_tinh,
-                quan_huyen: state.lnt_quan_huyen
-            }
-
             var khung_gio = {};
             var remainingTimeSlots = state.remainingTimeSlots;
             var selectedTimeSlots = state.selectedTimeSlots;
@@ -1124,7 +1119,6 @@ class XPostCampaign extends Component {
                 trang_hien_thi: trang_hien_thi,
                 co_che_hien_thi: state.co_che_hien_thi,
                 tinh_gia_theo: state.tinh_gia_theo,
-                vi_tri: vi_tri,
                 khung_gio_hien_thi: khung_gio,
                 ngay_bat_dau: startDateJson,
                 ngay_ket_thuc: endDateJson,
@@ -1136,6 +1130,20 @@ class XPostCampaign extends Component {
                 x_user_accessToken: state.USerOfXSysyemAccessToken,
                 trang_thai: 1
             };
+
+            if(state.lnt_tinh && state.lnt_tinh != ""){
+                var vi_tri = {
+                    tinh: state.lnt_tinh,
+                    quan_huyen: state.lnt_quan_huyen
+                }; 
+
+                if(state.quan_huyen && state.quan_huyen != ""){
+                    vi_tri.quan_huyen = state.lnt_quan_huyen;
+                }
+
+                postCampaignContent.vi_tri = vi_tri;
+            }
+            
 
             if (IsBannerAds(state)) {
                 postCampaignContent.url_image = state.url_image;
