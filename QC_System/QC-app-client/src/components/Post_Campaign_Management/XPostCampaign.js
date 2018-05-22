@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, GetDistrictsBasicOnProvince, Transfer_Provice_District_JsonToArray, GetProvinces, TransferTimeLogStringToArrayElement } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
+import { RenderInput, RenderSelect, RenderDate, RenderRadioButon } from '../share/InputsRender';
 import { KHUNG_GIO, PROMOTION_PHAN_TRAM, BANNER } from '../share/constant';
 import { ArrayRemoveItem, NumberFormat } from '../share/CommonFunction';
 
@@ -177,7 +177,9 @@ function RenderForm(props) {
             stateValues={stateValues}
             OnChangeInput={props.OnChangeInput}
             postDetailDescription={postDetailDescription}
-        />
+        />;
+
+    let positionAreaKeys = Array.from(Array(stateValues.ldv_so_luong_vung_chia_se).keys());
 
     return (
         <div>
@@ -255,39 +257,6 @@ function RenderForm(props) {
                     className={"input--select"}
                 />
 
-                <div key="khung_gio_hien_thi" className="div_property_margin_bottom">
-                    <div>
-                        <label className="fullwidth">
-                            {"Khung giờ hiển thị"}
-                        </label>
-                    </div>
-                    <div>
-                        <div className="float-left timeslot_margin_right">
-                            <RenderSelect
-                                nameId={"time_slot"}
-                                keys={remainingTimeSlots}
-                                values={remainingTimeSlots}
-                                selectedValue={stateValues.time_slot}
-                                OnChangeSelect={props.OnChangeInput}
-                                className={"pricefactor--select"}
-                            />
-                        </div>
-                        {
-                            stateValues.allowAddTimeSlot ?
-                                <div className="float-left timeslot_margin_right">
-                                    <button type="button" className="btn timeslot_button" onClick={props.OnAddTokenField}>Thêm</button>
-                                </div>
-                                : null
-                        }
-                        <div className="float-left pricefactor_tokenfield tokenfield div_property_margin_bottom">
-                            {timeSlotTokenFields}
-                        </div>
-                        <div className="float-left" style={{ paddingTop: "5px", marginLeft: "5px" }}>
-                            <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_time_slots}</p>
-                        </div>
-                    </div>
-                </div>
-
                 <RenderSelect
                     nameId={"lnt_tinh"}
                     title={"Tỉnh thành"}
@@ -337,6 +306,49 @@ function RenderForm(props) {
                     value={stateValues.ngay_ket_thuc}
                     OnchangeDate={props.OnchangeEndDate}
                 />
+
+                <RenderRadioButon
+                    nameId={"vi_tri_vung_chia_se"}
+                    title={"Vị trí quảng cáo"}
+                    keys={positionAreaKeys}
+                    values={positionAreaKeys}
+                    selectedValue={stateValues.vi_tri_vung_chia_se}
+                    OnChangeRadioButton={props.OnChangeInput}
+                    className={"input-radio"}
+                />
+
+                <div key="khung_gio_hien_thi" className="div_property_margin_bottom">
+                    <div>
+                        <label className="fullwidth">
+                            {"Khung giờ hiển thị"}
+                        </label>
+                    </div>
+                    <div>
+                        <div className="float-left timeslot_margin_right">
+                            <RenderSelect
+                                nameId={"time_slot"}
+                                keys={remainingTimeSlots}
+                                values={remainingTimeSlots}
+                                selectedValue={stateValues.time_slot}
+                                OnChangeSelect={props.OnChangeInput}
+                                className={"pricefactor--select"}
+                            />
+                        </div>
+                        {
+                            stateValues.allowAddTimeSlot ?
+                                <div className="float-left timeslot_margin_right">
+                                    <button type="button" className="btn timeslot_button" onClick={props.OnAddTokenField}>Thêm</button>
+                                </div>
+                                : null
+                        }
+                        <div className="float-left pricefactor_tokenfield tokenfield div_property_margin_bottom">
+                            {timeSlotTokenFields}
+                        </div>
+                        <div className="float-left" style={{ paddingTop: "5px", marginLeft: "5px" }}>
+                            <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_time_slots}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div className="post_campaign__info--header">
@@ -823,12 +835,14 @@ class XPostCampaign extends Component {
     }
 
     GetAdsAreaInfos(jsonSetInfosOfUser, adsAreas, modeAction) {
-        var _ids = [];
-        var keys = [];
-        var values = [];
-        var appliedPageTypeKeys = [];
-        var adsTypes = [];
-        var post_api_urls = [];
+        let _ids = [];
+        let keys = [];
+        let values = [];
+        let appliedPageTypeKeys = [];
+        let adsTypes = [];
+        let post_api_urls = [];
+        let max_shared_areas = [];
+        let max_quantity_posts = [];
 
         adsAreas.forEach((adsArea) => {
             _ids.push(adsArea._id);
@@ -837,6 +851,8 @@ class XPostCampaign extends Component {
             appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
             adsTypes.push(adsArea.loai_quang_cao);
             post_api_urls.push(adsArea.tin_rao_api.domain + "/" + adsArea.tin_rao_api.url);
+            max_shared_areas.push(adsArea.so_luong_chia_se_vung);
+            max_quantity_posts.push(adsArea.so_luong_tin_toi_da);
         });
 
         jsonSetInfosOfUser.AdsAreaIds = {
@@ -845,12 +861,15 @@ class XPostCampaign extends Component {
             values,
             appliedPageTypeKeys,
             adsTypes,
-            post_api_urls
+            post_api_urls,
+            max_shared_areas,
+            max_quantity_posts
         };
 
         if (modeAction === "create") {
             jsonSetInfosOfUser.loai_dich_vu = keys[0];
             jsonSetInfosOfUser.trang_hien_thi = appliedPageTypeKeys[0];
+            jsonSetInfosOfUser.ldv_so_luong_vung_chia_se = max_shared_areas[0];
         }
 
         return jsonSetInfosOfUser;
@@ -914,10 +933,10 @@ class XPostCampaign extends Component {
 
     handleUpdatePostOfSystemByServiceOnChange(stateValues, next) {
         let loai_dich_vu = stateValues.loai_dich_vu;
-        if(loai_dich_vu === BANNER){
+        if (loai_dich_vu === BANNER) {
             next(stateValues);
         }
-        else{
+        else {
             let USerOfXSysyemAccessToken = stateValues.USerOfXSysyemAccessToken;
             this.getPostsOfXsystemByUserToken(stateValues, USerOfXSysyemAccessToken, "create", function (stateValues) {
                 next(stateValues);
@@ -1131,19 +1150,19 @@ class XPostCampaign extends Component {
                 trang_thai: 1
             };
 
-            if(state.lnt_tinh && state.lnt_tinh != ""){
+            if (state.lnt_tinh && state.lnt_tinh != "") {
                 var vi_tri = {
                     tinh: state.lnt_tinh,
                     quan_huyen: state.lnt_quan_huyen
-                }; 
+                };
 
-                if(state.quan_huyen && state.quan_huyen != ""){
+                if (state.quan_huyen && state.quan_huyen != "") {
                     vi_tri.quan_huyen = state.lnt_quan_huyen;
                 }
 
                 postCampaignContent.vi_tri = vi_tri;
             }
-            
+
 
             if (IsBannerAds(state)) {
                 postCampaignContent.url_image = state.url_image;

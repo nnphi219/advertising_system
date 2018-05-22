@@ -53,7 +53,7 @@ exports.read_adsArea_infos_by_username = function (username, next) {
         }
         else {
             let adsareaIdInfo = adsAreas.map((adsArea) => {
-                return _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung', 'loai_quang_cao', 'tin_rao_api'])
+                return _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung', 'loai_quang_cao', 'tin_rao_api', 'so_luong_chia_se_vung', 'so_luong_tin_toi_da']);
             });
             next(adsareaIdInfo);
         }
