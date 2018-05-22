@@ -148,6 +148,10 @@ body {
   margin-bottom: 20px;
 }
 
+.div_time_slots {
+  display: grid;
+}
+
 .timeslot_margin_right {
   margin-right: 10px;
 }

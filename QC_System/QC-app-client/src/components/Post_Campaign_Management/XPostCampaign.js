@@ -38,6 +38,45 @@ function GetBasicPrice(basicPriceOnTimeSlot, selectedTimeSlots) {
     return parseFloat(basicPriceOnTimeSlot) * selectedTimeSlots.length;
 }
 
+function RenderSharedAreaRadioButton(props) {
+    var keys = props.keys;
+    var values = props.values;
+    var readOnlyValues = props.readOnlyValues;
+    var selectedValue = props.selectedValue;
+
+    var elementTypeRadioButtons = [];
+
+    keys.forEach((key, index) => {
+        let isReadOnly = readOnlyValues[index] === 1 ? true : false;
+        if (selectedValue === key) {
+            elementTypeRadioButtons.push(
+                <div key={key} className={props.className}>
+                    <input className="radiobutton" type="radio" value={key} name={props.nameId} defaultChecked readOnly={isReadOnly} />
+                    {values[index]}
+                </div>
+            );
+        }
+        else {
+            elementTypeRadioButtons.push(
+                <div key={key} className={props.className}>
+                    {
+                        isReadOnly ? null
+                            : <input className="radiobutton" type="radio" value={key} name={props.nameId} readOnly={isReadOnly} />
+                    }
+                    {values[index]}
+                </div>
+            );
+        }
+
+    });
+    return (
+        <div key={props.nameId} name={props.nameId} onChange={props.OnChangeRadioButton}>
+            <label className="fullwidth">{props.title}</label>
+            {elementTypeRadioButtons}
+        </div>
+    );
+}
+
 function RenderBannerOption(props) {
     let url_image = props.stateValues.url_image;
     let error_url_image = props.stateValues.error_url_image;
@@ -180,6 +219,13 @@ function RenderForm(props) {
         />;
 
     let positionAreaKeys = Array.from(Array(stateValues.ldv_so_luong_vung_chia_se).keys());
+    let positionAreaValues = positionAreaKeys.map((positionAreaKey) => {
+        return positionAreaKey + 1;
+    });
+    let positionAreaReadOnlyValues = positionAreaKeys.map((positionAreaKey) => {
+        return positionAreaKey % 2 === 0 ? 1 : 0;
+    });
+
 
     return (
         <div>
@@ -307,17 +353,18 @@ function RenderForm(props) {
                     OnchangeDate={props.OnchangeEndDate}
                 />
 
-                <RenderRadioButon
+                <RenderSharedAreaRadioButton
                     nameId={"vi_tri_vung_chia_se"}
                     title={"Vị trí quảng cáo"}
                     keys={positionAreaKeys}
-                    values={positionAreaKeys}
+                    values={positionAreaValues}
+                    readOnlyValues={positionAreaReadOnlyValues}
                     selectedValue={stateValues.vi_tri_vung_chia_se}
                     OnChangeRadioButton={props.OnChangeInput}
-                    className={"input-radio"}
+                    className={"input-radio-timeslot"}
                 />
 
-                <div key="khung_gio_hien_thi" className="div_property_margin_bottom">
+                <div key="khung_gio_hien_thi" className="div_property_margin_bottom div_time_slots">
                     <div>
                         <label className="fullwidth">
                             {"Khung giờ hiển thị"}
@@ -341,7 +388,7 @@ function RenderForm(props) {
                                 </div>
                                 : null
                         }
-                        <div className="float-left pricefactor_tokenfield tokenfield div_property_margin_bottom">
+                        <div className="float-left pricefactor_tokenfield tokenfield">
                             {timeSlotTokenFields}
                         </div>
                         <div className="float-left" style={{ paddingTop: "5px", marginLeft: "5px" }}>
