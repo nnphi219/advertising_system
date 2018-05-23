@@ -38,6 +38,32 @@ function GetBasicPrice(basicPriceOnTimeSlot, selectedTimeSlots) {
     return parseFloat(basicPriceOnTimeSlot) * selectedTimeSlots.length;
 }
 
+function RenderSharedAreaButtons(props) {
+    var keys = props.keys;
+    var values = props.values;
+    var readOnlyValues = props.readOnlyValues;
+    var selectedValue = props.selectedValue;
+
+    var elementTypeRadioButtons = [];
+
+    keys.forEach((key, index) => {
+        let isReadOnly = readOnlyValues[index] === 1 ? true : false;
+        let positionClass = isReadOnly ? "text_color-red" : "";
+        positionClass = selectedValue === key ? "text_color-blue" : positionClass;
+        elementTypeRadioButtons.push(
+            <div key={key} className={props.className + " " + positionClass}>
+                <button id={key} name={props.nameId} onClick={props.OnClickButton} className="xpostcampaign_sharedarea--button">{values[index]}</button>
+            </div>
+        );
+    });
+    return (
+        <div key={props.nameId} name={props.nameId} onChange={props.OnChangeRadioButton}>
+            <label className="fullwidth">{props.title}</label>
+            {elementTypeRadioButtons}
+        </div>
+    );
+}
+
 function RenderBannerOption(props) {
     let url_image = props.stateValues.url_image;
     let error_url_image = props.stateValues.error_url_image;
@@ -177,7 +203,15 @@ function RenderForm(props) {
             stateValues={stateValues}
             OnChangeInput={props.OnChangeInput}
             postDetailDescription={postDetailDescription}
-        />
+        />;
+
+    let positionAreaKeys = Array.from(Array(stateValues.ldv_so_luong_vung_chia_se).keys());
+    let positionAreaValues = positionAreaKeys.map((positionAreaKey) => {
+        return positionAreaKey + 1;
+    });
+    let positionAreaReadOnlyValues = positionAreaKeys.map((positionAreaKey) => {
+        return positionAreaKey % 2 === 0 ? 1 : 0;
+    });
 
     return (
         <div>
@@ -255,39 +289,6 @@ function RenderForm(props) {
                     className={"input--select"}
                 />
 
-                <div key="khung_gio_hien_thi" className="div_property_margin_bottom">
-                    <div>
-                        <label className="fullwidth">
-                            {"Khung giờ hiển thị"}
-                        </label>
-                    </div>
-                    <div>
-                        <div className="float-left timeslot_margin_right">
-                            <RenderSelect
-                                nameId={"time_slot"}
-                                keys={remainingTimeSlots}
-                                values={remainingTimeSlots}
-                                selectedValue={stateValues.time_slot}
-                                OnChangeSelect={props.OnChangeInput}
-                                className={"pricefactor--select"}
-                            />
-                        </div>
-                        {
-                            stateValues.allowAddTimeSlot ?
-                                <div className="float-left timeslot_margin_right">
-                                    <button type="button" className="btn timeslot_button" onClick={props.OnAddTokenField}>Thêm</button>
-                                </div>
-                                : null
-                        }
-                        <div className="float-left pricefactor_tokenfield tokenfield div_property_margin_bottom">
-                            {timeSlotTokenFields}
-                        </div>
-                        <div className="float-left" style={{ paddingTop: "5px", marginLeft: "5px" }}>
-                            <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_time_slots}</p>
-                        </div>
-                    </div>
-                </div>
-
                 <RenderSelect
                     nameId={"lnt_tinh"}
                     title={"Tỉnh thành"}
@@ -337,6 +338,54 @@ function RenderForm(props) {
                     value={stateValues.ngay_ket_thuc}
                     OnchangeDate={props.OnchangeEndDate}
                 />
+
+                {
+                    isBannerAds ? null
+                        : <RenderSharedAreaButtons
+                            nameId={"vi_tri_vung_chia_se"}
+                            title={"Vị trí quảng cáo"}
+                            keys={positionAreaKeys}
+                            values={positionAreaValues}
+                            readOnlyValues={positionAreaReadOnlyValues}
+                            selectedValue={stateValues.vi_tri_vung_chia_se}
+                            OnChangeRadioButton={props.OnChangeInput}
+                            OnClickButton={props.OnChangeInput}
+                            className={"input-radio-timeslot"}
+                        />
+                }
+
+                <div key="khung_gio_hien_thi" className="div_property_margin_bottom div_time_slots">
+                    <div>
+                        <label className="fullwidth">
+                            {"Khung giờ hiển thị"}
+                        </label>
+                    </div>
+                    <div>
+                        <div className="float-left timeslot_margin_right">
+                            <RenderSelect
+                                nameId={"time_slot"}
+                                keys={remainingTimeSlots}
+                                values={remainingTimeSlots}
+                                selectedValue={stateValues.time_slot}
+                                OnChangeSelect={props.OnChangeInput}
+                                className={"pricefactor--select"}
+                            />
+                        </div>
+                        {
+                            stateValues.allowAddTimeSlot ?
+                                <div className="float-left timeslot_margin_right">
+                                    <button type="button" className="btn timeslot_button" onClick={props.OnAddTokenField}>Thêm</button>
+                                </div>
+                                : null
+                        }
+                        <div className="float-left pricefactor_tokenfield tokenfield">
+                            {timeSlotTokenFields}
+                        </div>
+                        <div className="float-left" style={{ paddingTop: "5px", marginLeft: "5px" }}>
+                            <p style={{ color: "red", marginTop: "3px" }}>{stateValues.error_time_slots}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div className="post_campaign__info--header">
@@ -537,6 +586,8 @@ class PostCampaignCreatorUpdaterForm extends Component {
 
             var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
             stateValues.trang_hien_thi = appliedPageType;
+            stateValues.ldv_so_luong_vung_chia_se = stateValues.AdsAreaIds.max_shared_areas[indexOfValueInKeys];
+            stateValues.vi_tri_vung_chia_se = -1;
 
             stateValues.co_che_hien_thi = stateValues.co_che_hien_thi;
             stateValues.url_image = '';
@@ -566,6 +617,10 @@ class PostCampaignCreatorUpdaterForm extends Component {
             this.GetPromotionByPromotionCode(value, stateValues, function (stateValues) {
                 $this.props.UpdateState(stateValues);
             });
+        }
+        else if (name === "vi_tri_vung_chia_se") {
+            stateValues[name] = parseInt(e.target.id, 10);
+            this.props.UpdateState(stateValues);
         }
         else {
             this.props.UpdateState(stateValues);
@@ -823,12 +878,14 @@ class XPostCampaign extends Component {
     }
 
     GetAdsAreaInfos(jsonSetInfosOfUser, adsAreas, modeAction) {
-        var _ids = [];
-        var keys = [];
-        var values = [];
-        var appliedPageTypeKeys = [];
-        var adsTypes = [];
-        var post_api_urls = [];
+        let _ids = [];
+        let keys = [];
+        let values = [];
+        let appliedPageTypeKeys = [];
+        let adsTypes = [];
+        let post_api_urls = [];
+        let max_shared_areas = [];
+        let max_quantity_posts = [];
 
         adsAreas.forEach((adsArea) => {
             _ids.push(adsArea._id);
@@ -837,6 +894,8 @@ class XPostCampaign extends Component {
             appliedPageTypeKeys.push(adsArea.loai_trang_ap_dung);
             adsTypes.push(adsArea.loai_quang_cao);
             post_api_urls.push(adsArea.tin_rao_api.domain + "/" + adsArea.tin_rao_api.url);
+            max_shared_areas.push(adsArea.so_luong_chia_se_vung);
+            max_quantity_posts.push(adsArea.so_luong_tin_toi_da);
         });
 
         jsonSetInfosOfUser.AdsAreaIds = {
@@ -845,12 +904,16 @@ class XPostCampaign extends Component {
             values,
             appliedPageTypeKeys,
             adsTypes,
-            post_api_urls
+            post_api_urls,
+            max_shared_areas,
+            max_quantity_posts
         };
 
         if (modeAction === "create") {
             jsonSetInfosOfUser.loai_dich_vu = keys[0];
             jsonSetInfosOfUser.trang_hien_thi = appliedPageTypeKeys[0];
+            jsonSetInfosOfUser.ldv_so_luong_vung_chia_se = max_shared_areas[0];
+            jsonSetInfosOfUser.vi_tri_vung_chia_se = -1;
         }
 
         return jsonSetInfosOfUser;
@@ -914,10 +977,10 @@ class XPostCampaign extends Component {
 
     handleUpdatePostOfSystemByServiceOnChange(stateValues, next) {
         let loai_dich_vu = stateValues.loai_dich_vu;
-        if(loai_dich_vu === BANNER){
+        if (loai_dich_vu === BANNER) {
             next(stateValues);
         }
-        else{
+        else {
             let USerOfXSysyemAccessToken = stateValues.USerOfXSysyemAccessToken;
             this.getPostsOfXsystemByUserToken(stateValues, USerOfXSysyemAccessToken, "create", function (stateValues) {
                 next(stateValues);
@@ -1131,19 +1194,19 @@ class XPostCampaign extends Component {
                 trang_thai: 1
             };
 
-            if(state.lnt_tinh && state.lnt_tinh != ""){
+            if (state.lnt_tinh && state.lnt_tinh !== "") {
                 var vi_tri = {
                     tinh: state.lnt_tinh,
                     quan_huyen: state.lnt_quan_huyen
-                }; 
+                };
 
-                if(state.quan_huyen && state.quan_huyen != ""){
+                if (state.quan_huyen && state.quan_huyen !== "") {
                     vi_tri.quan_huyen = state.lnt_quan_huyen;
                 }
 
                 postCampaignContent.vi_tri = vi_tri;
             }
-            
+
 
             if (IsBannerAds(state)) {
                 postCampaignContent.url_image = state.url_image;
@@ -1151,6 +1214,7 @@ class XPostCampaign extends Component {
             }
             else {
                 postCampaignContent.ma_bai_dang = state.ma_bai_dang;
+                postCampaignContent.vi_tri_vung_chia_se = state.vi_tri_vung_chia_se;
             }
 
             return postCampaignContent;

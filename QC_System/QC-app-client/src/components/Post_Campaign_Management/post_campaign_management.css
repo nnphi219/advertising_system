@@ -200,3 +200,22 @@
     width: 550px;
     margin-top: 15px;
 }
+
+.input-radio-timeslot {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.input-radio-timeslot .radiobutton {
+    transform: scale(1.5);
+    margin-right: 5px;
+}
+
+.xpostcampaign_sharedarea--button {
+    width: 100px;
+    height: 100px;
+    background-color: transparent;
+    font-size: 30px;
+    border-radius: 10px;
+}

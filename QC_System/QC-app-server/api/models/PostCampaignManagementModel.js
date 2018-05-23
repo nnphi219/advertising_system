@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 
 var PostCampaignManagementSchema = new Schema({
     ma_bai_dang: String,
+    vi_tri_vung_chia_se: Number,
     loai_dich_vu: String, //Lay tu vung quang cao
     loai_quang_cao: String,
     trang_hien_thi: String,
