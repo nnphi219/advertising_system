@@ -191,3 +191,11 @@ body {
   margin: 0 5px;
   font-size: 30px;
 }
+
+.text_color-red {
+  color: red;
+}
+
+.text_color-blue {
+  color: #3958d0;
+}

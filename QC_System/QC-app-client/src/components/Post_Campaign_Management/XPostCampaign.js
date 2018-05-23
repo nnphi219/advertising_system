@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, GetDistrictsBasicOnProvince, Transfer_Provice_District_JsonToArray, GetProvinces, TransferTimeLogStringToArrayElement } from '../share/Mapper';
-import { RenderInput, RenderSelect, RenderDate, RenderRadioButon } from '../share/InputsRender';
+import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
 import { KHUNG_GIO, PROMOTION_PHAN_TRAM, BANNER } from '../share/constant';
 import { ArrayRemoveItem, NumberFormat } from '../share/CommonFunction';
 
@@ -38,7 +38,7 @@ function GetBasicPrice(basicPriceOnTimeSlot, selectedTimeSlots) {
     return parseFloat(basicPriceOnTimeSlot) * selectedTimeSlots.length;
 }
 
-function RenderSharedAreaRadioButton(props) {
+function RenderSharedAreaButtons(props) {
     var keys = props.keys;
     var values = props.values;
     var readOnlyValues = props.readOnlyValues;
@@ -48,26 +48,13 @@ function RenderSharedAreaRadioButton(props) {
 
     keys.forEach((key, index) => {
         let isReadOnly = readOnlyValues[index] === 1 ? true : false;
-        if (selectedValue === key) {
-            elementTypeRadioButtons.push(
-                <div key={key} className={props.className}>
-                    <input className="radiobutton" type="radio" value={key} name={props.nameId} defaultChecked readOnly={isReadOnly} />
-                    {values[index]}
-                </div>
-            );
-        }
-        else {
-            elementTypeRadioButtons.push(
-                <div key={key} className={props.className}>
-                    {
-                        isReadOnly ? null
-                            : <input className="radiobutton" type="radio" value={key} name={props.nameId} readOnly={isReadOnly} />
-                    }
-                    {values[index]}
-                </div>
-            );
-        }
-
+        let positionClass = isReadOnly ? "text_color-red" : "";
+        positionClass = selectedValue === key ? "text_color-blue" : positionClass;
+        elementTypeRadioButtons.push(
+            <div key={key} className={props.className + " " + positionClass}>
+                <button id={key} name={props.nameId} onClick={props.OnClickButton} className="xpostcampaign_sharedarea--button">{values[index]}</button>
+            </div>
+        );
     });
     return (
         <div key={props.nameId} name={props.nameId} onChange={props.OnChangeRadioButton}>
@@ -226,7 +213,6 @@ function RenderForm(props) {
         return positionAreaKey % 2 === 0 ? 1 : 0;
     });
 
-
     return (
         <div>
             <div className="post_campaign__info--header">
@@ -353,16 +339,20 @@ function RenderForm(props) {
                     OnchangeDate={props.OnchangeEndDate}
                 />
 
-                <RenderSharedAreaRadioButton
-                    nameId={"vi_tri_vung_chia_se"}
-                    title={"Vị trí quảng cáo"}
-                    keys={positionAreaKeys}
-                    values={positionAreaValues}
-                    readOnlyValues={positionAreaReadOnlyValues}
-                    selectedValue={stateValues.vi_tri_vung_chia_se}
-                    OnChangeRadioButton={props.OnChangeInput}
-                    className={"input-radio-timeslot"}
-                />
+                {
+                    isBannerAds ? null
+                        : <RenderSharedAreaButtons
+                            nameId={"vi_tri_vung_chia_se"}
+                            title={"Vị trí quảng cáo"}
+                            keys={positionAreaKeys}
+                            values={positionAreaValues}
+                            readOnlyValues={positionAreaReadOnlyValues}
+                            selectedValue={stateValues.vi_tri_vung_chia_se}
+                            OnChangeRadioButton={props.OnChangeInput}
+                            OnClickButton={props.OnChangeInput}
+                            className={"input-radio-timeslot"}
+                        />
+                }
 
                 <div key="khung_gio_hien_thi" className="div_property_margin_bottom div_time_slots">
                     <div>
@@ -596,6 +586,8 @@ class PostCampaignCreatorUpdaterForm extends Component {
 
             var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
             stateValues.trang_hien_thi = appliedPageType;
+            stateValues.ldv_so_luong_vung_chia_se = stateValues.AdsAreaIds.max_shared_areas[indexOfValueInKeys];
+            stateValues.vi_tri_vung_chia_se = -1;
 
             stateValues.co_che_hien_thi = stateValues.co_che_hien_thi;
             stateValues.url_image = '';
@@ -625,6 +617,10 @@ class PostCampaignCreatorUpdaterForm extends Component {
             this.GetPromotionByPromotionCode(value, stateValues, function (stateValues) {
                 $this.props.UpdateState(stateValues);
             });
+        }
+        else if (name === "vi_tri_vung_chia_se") {
+            stateValues[name] = parseInt(e.target.id, 10);
+            this.props.UpdateState(stateValues);
         }
         else {
             this.props.UpdateState(stateValues);
@@ -917,6 +913,7 @@ class XPostCampaign extends Component {
             jsonSetInfosOfUser.loai_dich_vu = keys[0];
             jsonSetInfosOfUser.trang_hien_thi = appliedPageTypeKeys[0];
             jsonSetInfosOfUser.ldv_so_luong_vung_chia_se = max_shared_areas[0];
+            jsonSetInfosOfUser.vi_tri_vung_chia_se = -1;
         }
 
         return jsonSetInfosOfUser;
@@ -1197,13 +1194,13 @@ class XPostCampaign extends Component {
                 trang_thai: 1
             };
 
-            if (state.lnt_tinh && state.lnt_tinh != "") {
+            if (state.lnt_tinh && state.lnt_tinh !== "") {
                 var vi_tri = {
                     tinh: state.lnt_tinh,
                     quan_huyen: state.lnt_quan_huyen
                 };
 
-                if (state.quan_huyen && state.quan_huyen != "") {
+                if (state.quan_huyen && state.quan_huyen !== "") {
                     vi_tri.quan_huyen = state.lnt_quan_huyen;
                 }
 
@@ -1217,6 +1214,7 @@ class XPostCampaign extends Component {
             }
             else {
                 postCampaignContent.ma_bai_dang = state.ma_bai_dang;
+                postCampaignContent.vi_tri_vung_chia_se = state.vi_tri_vung_chia_se;
             }
 
             return postCampaignContent;
