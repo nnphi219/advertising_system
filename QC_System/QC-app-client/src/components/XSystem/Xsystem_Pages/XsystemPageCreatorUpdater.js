@@ -4,6 +4,7 @@ import UrlApi, { UrlRedirect } from '../../share/UrlApi';
 import { RenderInput, RenderSelect } from '../../share/InputsRender';
 
 import './xsystempage.css';
+import { BANNER, TINRAO } from '../../share/constant';
 
 function GetAdsAreaModel(arrayJsonAdsAreas) {
     var array_ma_vung = [];
@@ -126,8 +127,8 @@ class RenderProperties extends Component {
                                 <p style={{fontWeight: "blod"}}>Loại quảng cáo</p>
                                 <RenderSelect
                                     nameId={"loai_quang_cao"}
-                                    keys={['banner', 'tin_rao']}
-                                    values={['banner', ' Tin rao']}
+                                    keys={[BANNER, TINRAO]}
+                                    values={[BANNER, TINRAO]}
                                     selectedValue={stateValues.loai_quang_cao}
                                     OnChangeSelect={props.OnChangeInput}
                                     className={"input--select"}
@@ -288,7 +289,7 @@ class PageCreatorUpdater extends Component {
         jsonState.ma_vung = '';
         jsonState.ten_vung = '';
 
-        jsonState.loai_quang_cao = 'banner';
+        jsonState.loai_quang_cao = BANNER;
 
         if (this.props.modeAction === "create") {
             jsonState.ma_trang_quang_cao = '';

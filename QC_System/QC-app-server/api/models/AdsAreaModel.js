@@ -9,6 +9,10 @@ var AdsAreaSchema = new Schema({
         key: String,
         value: String
     },
+    tin_rao_api: {
+        domain: String,
+        url: String
+    },
     mo_ta_dich_vu: String,
     loai_bai_dang_ap_dung: {
         key: String,

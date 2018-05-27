@@ -178,6 +178,12 @@ class NavbarDefault extends Component {
                                 : null
                         }
                         <li>
+                            <a href="/domain-urls"><i className="fa fa-dashboard fa-fw"></i>Quản lý domain</a>
+                        </li>
+                        <li>
+                            <a href="/api-urls"><i className="fa fa-dashboard fa-fw"></i>Quản lý url</a>
+                        </li>
+                        <li>
                             <a href="/xsystem-pages"><i className="fa fa-dashboard fa-fw"></i>Quản lý trang quảng cáo</a>
                         </li>
                         <li>

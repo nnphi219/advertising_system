@@ -18,6 +18,10 @@ import { XsystemPageCreator, XsystemPageEditor } from './components/XSystem/Xsys
 import XsystemPostTypes from './components/XSystem/Post_Types/XsystemPostTypeManagement';
 import XsystemPostTypeDetail from './components/XSystem/Post_Types/PostTypeDetail';
 import { XsystemPostTypeCreator, XsystemPostTypeEditor } from './components/XSystem/Post_Types/XsystemPostTypeCreatorUpdater';
+import XsystemDomainUrl from './components/XSystem/Domain_Url/DomainUrlManagement';
+import XsystemApiUrl from './components/XSystem/Api_Url/ApiUrlManagement';
+import { XsystemDomainUrlCreator } from './components/XSystem/Domain_Url/DomainUrlCreatorUpdater';
+import { XsystemApiUrlCreator } from './components/XSystem/Api_Url/ApiUrlCreatorUpdater';
 
 class AdminTitle extends Component {
     render() {
@@ -83,6 +87,12 @@ export class AppAdmin extends Component {
                     <Route exact={true} path={"/xsystem-posttypes/:id"} component={XsystemPostTypeDetail} />
                     <Route exact={true} path={"/xsystem-posttypes/create"} component={XsystemPostTypeCreator} />
                     <Route exact={true} path={"/xsystem-posttypes/edit/:id"} component={XsystemPostTypeEditor} />
+
+                    <Route exact={true} path={"/domain-urls"} component={XsystemDomainUrl} />
+                    <Route exact={true} path={"/domain-urls/update"} component={XsystemDomainUrlCreator} />
+
+                    <Route exact={true} path={"/api-urls"} component={XsystemApiUrl} />
+                    <Route exact={true} path={"/api-urls/update"} component={XsystemApiUrlCreator} />
                 </div>
             </BrowserRouter>
         );

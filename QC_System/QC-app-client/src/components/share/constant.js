@@ -9,3 +9,6 @@ export const KHUNG_GIO = [
 
 export const PROMOTION_PHAN_TRAM = 1;
 export const PROMOTION_GIA_TRI = 2;
+
+export const BANNER = 'banner';
+export const TINRAO = 'tin_rao';

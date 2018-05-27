@@ -52,9 +52,9 @@ exports.read_adsArea_infos_by_username = function (username, next) {
             next(null);
         }
         else {
-            var adsareaIdInfo = adsAreas.map((adsArea) =>
-                _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung', 'loai_quang_cao'])
-            );
+            let adsareaIdInfo = adsAreas.map((adsArea) => {
+                return _.pick(adsArea, ['_id', 'ma_dich_vu', 'ten_hien_thi', 'loai_trang_ap_dung', 'loai_quang_cao', 'tin_rao_api', 'so_luong_chia_se_vung', 'so_luong_tin_toi_da']);
+            });
             next(adsareaIdInfo);
         }
     });
@@ -112,12 +112,12 @@ exports.delete_a_adsArea = function (req, res) {
     });
 };
 
-exports.read_list_adsArea_by_appliedPageAndUsername = function(appliedPage, username, next) {
-    AdsArea.find({"loai_trang_ap_dung.key": appliedPage, nguoi_tao: username}, function(err, adsAreas){
-        if(err){
+exports.read_list_adsArea_by_appliedPageAndUsername = function (appliedPage, username, next) {
+    AdsArea.find({ "loai_trang_ap_dung.key": appliedPage, nguoi_tao: username }, function (err, adsAreas) {
+        if (err) {
             next(null);
         }
-        else{
+        else {
             next(adsAreas);
         }
     });

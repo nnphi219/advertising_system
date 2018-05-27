@@ -4,6 +4,7 @@ import ColorPickerInput from '../share/color_picker_input';
 import UrlApi from '../share/UrlApi';
 import { RenderSelect, RenderInput } from '../share/InputsRender';
 import './ads_area.css';
+import { BANNER, TINRAO } from '../share/constant';
 
 function GetSelectedXAdsArea(arrayAppliedPages, selectedAppliedPage) {
     let keys = [];
@@ -169,6 +170,14 @@ function RenderCombobox(props) {
             />
         );
     }
+    else if (props.inputData.id === "domain") {
+        keys = props.stateValues.Domains._ids;
+        values = props.stateValues.Domains.names;
+    }
+    else if (props.inputData.id === "api_url") {
+        keys = props.stateValues.ApiUrls._ids;
+        values = props.stateValues.ApiUrls.names;
+    }
     else {
         keys = props.inputData.keys;
         values = props.inputData.values;
@@ -229,7 +238,9 @@ function RenderProperties(props) {
             inputs.push(<ColorPickerInput key={element.id} valueColor={valueColor} inputData={element} handleOnchangeColor={props.handleOnchangeColor} />);
         }
         else if (element.type === "combobox") {
-            inputs.push(<RenderCombobox key={element.id} inputData={element} stateValues={props.stateValues} handleOnchangeSelect={props.handleOnchangeSelect} />);
+            if (!((element.id === "domain" || element.id === "api_url") && props.stateValues.loai_quang_cao === BANNER)) {
+                inputs.push(<RenderCombobox key={element.id} inputData={element} stateValues={props.stateValues} handleOnchangeSelect={props.handleOnchangeSelect} />);
+            }
         }
         else if (element.type === "radio") {
             var keySelectedItem = props.stateValues[element.id];
@@ -381,6 +392,14 @@ class AdsAreaCreatorUpdater extends Component {
                 keys: [],
                 values: []
             },
+            Domains: {
+                _ids: [],
+                names: []
+            },
+            ApiUrls: {
+                _ids: [],
+                names: []
+            },
             ktv_chieu_rong: 0,
             ktv_chieu_cao: 0
         };
@@ -397,6 +416,8 @@ class AdsAreaCreatorUpdater extends Component {
         this.GetAppliedPages();
         this.GetAppliedPostTypes();
         this.GetFontFamilies();
+        this.GetDomains();
+        this.GetUrlApiNames();
     }
 
     GetAppliedPages() {
@@ -410,7 +431,6 @@ class AdsAreaCreatorUpdater extends Component {
                 let keys = [];
                 let values = [];
                 let adsAreas = [];
-                let adsTypes = [];
 
                 if (res.body) {
                     res.body.forEach((appliedPage) => {
@@ -511,6 +531,82 @@ class AdsAreaCreatorUpdater extends Component {
             });
     }
 
+    GetDomains() {
+        var $this = this;
+        let url = UrlApi.XsystemDomainUrls;
+
+        Request.get(url)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .then((res) => {
+                let arrayJsonDomains = res.body;
+                let _ids = [];
+                let names = [];
+
+                if (arrayJsonDomains) {
+                    arrayJsonDomains.forEach((jsonDomain) => {
+                        _ids.push(jsonDomain.domain);
+                        names.push(jsonDomain.domain);
+                    });
+                }
+
+                let jsonDomains = {
+                    Domains: {
+                        _ids,
+                        names
+                    }
+                };
+
+                if (this.props.modeAction === "create") {
+                    jsonDomains.domain = _ids[0];
+                }
+                else {
+                    if ($this.state.domain === '' || _ids.indexOf($this.state.domain) === -1) {
+                        jsonDomains.domain = _ids[0];
+                    }
+                }
+
+                $this.setState(jsonDomains);
+            });
+    }
+
+    GetUrlApiNames() {
+        var $this = this;
+        let url = UrlApi.XsystemApiUrls;
+
+        Request.get(url)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .then((res) => {
+                let arrayJsonApiUrls = res.body;
+                let _ids = [];
+                let names = [];
+
+                if (arrayJsonApiUrls) {
+                    arrayJsonApiUrls.forEach((jsonApiUrl) => {
+                        _ids.push(jsonApiUrl.api_url);
+                        names.push(jsonApiUrl.api_url);
+                    });
+                }
+
+                let jsonApiUrls = {
+                    ApiUrls: {
+                        _ids,
+                        names
+                    }
+                };
+
+                if (this.props.modeAction === "create") {
+                    jsonApiUrls.api_url = _ids[0];
+                }
+                else {
+                    if ($this.state.api_url === '' || _ids.indexOf($this.state.api_url) === -1) {
+                        jsonApiUrls.api_url = _ids[0];
+                    }
+                }
+
+                $this.setState(jsonApiUrls);
+            });
+    }
+
     SetInitError(jsonState) {
         jsonState.error_ma_dich_vu = '';
         jsonState.error_ten_hien_thi = '';
@@ -528,8 +624,8 @@ class AdsAreaCreatorUpdater extends Component {
 
     SetInitState(inputs, jsonState) {
         jsonState.AdsAreaTypes = {
-            keys: ["banner", "tin_rao"],
-            values: ["banner", "Tin rao"]
+            keys: [BANNER, TINRAO],
+            values: [BANNER, TINRAO]
         };
 
         if (this.props.modeAction === "create") {
@@ -568,6 +664,14 @@ class AdsAreaCreatorUpdater extends Component {
                     else if (element.id === "loai_quang_cao") {
                         jsonState[element.id] = this.props.editContents[element.id].key;
                     }
+                    else if (element.id === "domain") {
+                        jsonState[element.id] = (this.props.editContents.tin_rao_api && this.props.editContents.tin_rao_api.domain) ?
+                            this.props.editContents.tin_rao_api.domain : '';
+                    }
+                    else if (element.id === "api_url") {
+                        jsonState[element.id] = (this.props.editContents.tin_rao_api && this.props.editContents.tin_rao_api.url) ?
+                            this.props.editContents.tin_rao_api.url : '';
+                    }
                     else {
                         jsonState[element.id] = this.props.editContents[element.id];
                     }
@@ -597,7 +701,6 @@ class AdsAreaCreatorUpdater extends Component {
     }
 
     handleUpdateState(jsonState) {
-        console.log(this.state);
         jsonState = this.SetInitError(jsonState);
         this.setState(jsonState);
     }
@@ -706,6 +809,13 @@ class AdsAreaCreatorUpdater extends Component {
                 so_luong_chu_xem_truoc: state.so_luong_chu_xem_truoc,
                 hien_thi_video_thay_the_anh: state.hien_thi_video_thay_the_anh
             };
+
+            if (state.loai_quang_cao === TINRAO) {
+                adsAreaContent.tin_rao_api = {
+                    domain: state.domain,
+                    url: state.api_url
+                };
+            }
 
             if (this.props.modeAction === 'edit') {
                 return adsAreaContent;
@@ -829,8 +939,22 @@ var adsAreaInformationInputs = [
         "description": "Loại quảng cáo",
         "id": "loai_quang_cao",
         "type": "combobox",
-        "keys": ["banner", "tin_rao"],
-        "values": ["banner", "Tin rao"]
+        "keys": [BANNER, TINRAO],
+        "values": [BANNER, TINRAO]
+    },
+    {
+        "description": "Domain",
+        "id": "domain",
+        "type": "combobox",
+        "keys": [],
+        "values": []
+    },
+    {
+        "description": "Url api lấy tin rao",
+        "id": "api_url",
+        "type": "combobox",
+        "keys": [],
+        "values": []
     },
     {
         "description": "Trang áp dụng quảng cáo",

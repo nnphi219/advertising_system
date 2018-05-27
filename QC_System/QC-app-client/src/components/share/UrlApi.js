@@ -42,6 +42,14 @@ const UrlApi = {
     XsystemPostTypes: hostNameServer + "/xsystemPostTypes",
     ReadA_Xsystem_PostType: hostNameServer + "/xsystemPostTypes/check",
 
+    XsystemDomainUrls: hostNameServer + "/XsystemDomainUrls",
+    Read_A_Xsystem_DomainUrl: hostNameServer + "/XsystemDomainUrls/check",
+    XsystemDomainUrlsCreateManyItem: hostNameServer + "/XsystemDomainUrlsCreateManyDomain",
+    
+    XsystemApiUrls: hostNameServer + "/XsystemApiUrls",
+    Read_A_Xsystem_ApiUrl: hostNameServer + "/XsystemApiUrls/check",
+    XsystemApiUrlsCreateManyItem: hostNameServer + "/XsystemApiUrlsCreateManyApiUrl",
+
     UserManagement: hostNameServer + "/users",
     UserAuthen: hostNameServer + "/users/me",
     UserLogin: hostNameServer + "/users/login",
@@ -67,7 +75,13 @@ export const UrlRedirect = {
 
     XsystemPostTypes: '/xsystem-posttypes',
     XsystemCreatePostType: '/xsystem-posttypes/create',
-    XsystemEditPostType: '/xsystem-posttypes/edit'
+    XsystemEditPostType: '/xsystem-posttypes/edit',
+
+    XsystemDomainUrls: '/domain-urls',
+    XsystemCreateDomainUrl: '/domain-urls/update',
+
+    XsystemApiUrls: '/api-urls',
+    XsystemCreateApiUrl: '/api-urls/update'
 }
 
 export default UrlApi;

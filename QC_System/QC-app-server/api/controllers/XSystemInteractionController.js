@@ -7,6 +7,8 @@ var dateFormat = require('../../share/DateFormat');
 var commonFunction = require('../../share/CommonFunction');
 var Promise = require('promise');
 
+var {BANNER} = require('../../share/constants');
+
 var { authenticate } = require('../../middleware/authenticate');
 
 const _ = require('lodash');
@@ -443,7 +445,7 @@ exports.get_posts_basic_on_applied_page = (req, res) => {
                                 }
 
                                 let contentPostCampaign = null;
-                                if (adsArea_adsTypeKey === 'banner') {
+                                if (adsArea_adsTypeKey === BANNER) {
                                     contentPostCampaign = {
                                         banner_type: 'image',
                                         resource_url: postCampaign.url_image,
