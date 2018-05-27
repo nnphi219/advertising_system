@@ -1,0 +1,115 @@
+Phi:
+	- Xem xet lai luan ly cua vi tri chia se
+
+http://localhost:8080/getAvailableTimeSlot
+
+POST JSON:
+{
+	"loai_dich_vu": "viphome",
+	"co_che_hien_thi": "doc_quyen",
+	"vi_tri_vung_chia_se": 1,
+	"ngay_bat_dau": {
+		"day": 5,
+		"month": 5,
+		"year": 2018
+	},
+	"ngay_ket_thuc": {
+		"day": 6,
+		"month": 5,
+		"year": 2018
+	}
+}
+
+Response:
+{
+    "Response": [
+        {
+            "bat_dau": 2,
+            "ket_thuc": 3
+        },
+        {
+            "bat_dau": 3,
+            "ket_thuc": 4
+        },
+        {
+            "bat_dau": 4,
+            "ket_thuc": 5
+        },
+        {
+            "bat_dau": 5,
+            "ket_thuc": 6
+        },
+        {
+            "bat_dau": 6,
+            "ket_thuc": 7
+        },
+        {
+            "bat_dau": 7,
+            "ket_thuc": 8
+        },
+        {
+            "bat_dau": 8,
+            "ket_thuc": 9
+        },
+        {
+            "bat_dau": 9,
+            "ket_thuc": 10
+        },
+        {
+            "bat_dau": 10,
+            "ket_thuc": 11
+        },
+        {
+            "bat_dau": 11,
+            "ket_thuc": 12
+        },
+        {
+            "bat_dau": 12,
+            "ket_thuc": 13
+        },
+        {
+            "bat_dau": 13,
+            "ket_thuc": 14
+        },
+        {
+            "bat_dau": 14,
+            "ket_thuc": 15
+        },
+        {
+            "bat_dau": 15,
+            "ket_thuc": 16
+        },
+        {
+            "bat_dau": 16,
+            "ket_thuc": 17
+        },
+        {
+            "bat_dau": 17,
+            "ket_thuc": 18
+        },
+        {
+            "bat_dau": 18,
+            "ket_thuc": 19
+        },
+        {
+            "bat_dau": 19,
+            "ket_thuc": 20
+        },
+        {
+            "bat_dau": 20,
+            "ket_thuc": 21
+        },
+        {
+            "bat_dau": 21,
+            "ket_thuc": 22
+        },
+        {
+            "bat_dau": 22,
+            "ket_thuc": 23
+        },
+        {
+            "bat_dau": 23,
+            "ket_thuc": 24
+        }
+    ]
+}
