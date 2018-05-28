@@ -19,6 +19,9 @@ module.exports = function (app) {
     app.route('/postCampaignforXsystem')
         .post(xsystemController.create_a_postCampaign_from_xsystemUser)
 
+    app.route('/getAvailableTimeSlot')
+        .post(xsystemController.get_available_time_slot)
+
     app.route('/GetPostsBasicOnAppliedPageAndXAdminUsername')
         .post(xsystemController.get_posts_basic_on_applied_page)
 };

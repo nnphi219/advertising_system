@@ -69,6 +69,15 @@ function ConvertKhungGioHienThi(khung_gio_hien_thi_list) {
     return ret_list;
 }
 
+function FindIndexOfJsonInJsonArray(json_array, json_object_compare) {
+    for (let i = 0; i < json_array.length; i++) {
+        if (json_array[i].bat_dau === json_object_compare.bat_dau){
+            return i;
+        }
+    }
+    return -1;
+}
+
 exports.read_Infos_ByUsername = (req, res) => {
     var username = req.header('Username');
 
@@ -207,6 +216,194 @@ exports.create_a_postCampaign_from_xsystemUser = function (req, res) {
             }
         });
 };
+
+exports.get_available_time_slot = async (req, res) => {
+    let req_contents = req.body;
+    let has_error = false;
+    let res_json = {
+        "Response": []
+    };
+    if (!req_contents.hasOwnProperty("loai_dich_vu")){
+        res_json.Response.push("Missing property 'loai_dich_vu'");
+        has_error = true;
+    }
+    if (!req_contents.hasOwnProperty("co_che_hien_thi")){
+        res_json.Response.push("Missing property 'co_che_hien_thi'");
+        has_error = true;
+    }
+    if (!req_contents.hasOwnProperty("ngay_bat_dau")){
+        res_json.Response.push("Missing property 'ngay_bat_dau'");
+        has_error = true;
+    }
+    if (!req_contents.hasOwnProperty("ngay_ket_thuc")){
+        res_json.Response.push("Missing property 'ngay_ket_thuc'");
+        has_error = true;
+    }
+    // if (!req_contents.hasOwnProperty("vi_tri_vung_chia_se")){
+    //     res_json.Response.push("Missing property 'vi_tri_vung_chia_se'");
+    //     has_error = true;
+    // }
+    if (has_error) {
+        res.json(res_json);
+        return null;
+    }
+    let loai_dich_vu = req_contents.loai_dich_vu;
+    let co_che_hien_thi = req_contents.co_che_hien_thi;
+    let ngay_bat_dau = req_contents.ngay_bat_dau;
+    let ngay_ket_thuc = req_contents.ngay_ket_thuc;
+    let vi_tri_vung_chia_se = req_contents.vi_tri_vung_chia_se;
+
+    let adsArea = await AdsArea.find({
+        ma_dich_vu: loai_dich_vu
+    }).exec();
+
+    let so_luong_chia_se_vung;
+    let so_luong_bai_dang_toi_da;
+    if (adsArea !== [] && adsArea.length === 1) {
+        // console.log(adsArea);
+        so_luong_chia_se_vung = adsArea[0].so_luong_chia_se_vung;
+        so_luong_bai_dang_toi_da = adsArea[0].so_luong_tin_toi_da;
+    }
+    if (so_luong_chia_se_vung === undefined) {
+        res_json.Response.push("Đã có lỗi xảy ra, không tìm thấy giá trị số lượng chia sẻ vùng!");
+        has_error = true;
+    }
+    if (so_luong_bai_dang_toi_da === undefined) {
+        res_json.Response.push("Đã có lỗi xảy ra, không tìm thấy giá trị số lượng bài đăng tối đa!");
+        has_error = true;
+    }
+    if (has_error) {
+        res.json(res_json);
+        return null;
+    }
+    let query_json = {
+        loai_dich_vu: loai_dich_vu,
+        "ngay_bat_dau.year": { $lte: ngay_bat_dau.year },
+        "ngay_bat_dau.month": { $lte: ngay_bat_dau.month },
+        "ngay_bat_dau.day": { $lte: ngay_bat_dau.day },
+        "ngay_ket_thuc.year": { $gte: ngay_ket_thuc.year },
+        "ngay_ket_thuc.month": { $gte: ngay_ket_thuc.month },
+        "ngay_ket_thuc.day": { $gte: ngay_ket_thuc.day }                
+    };
+    console.log("query_json:");
+    console.log(query_json);
+    let postcampaigns_list = await PostCampaign.find(query_json).exec();
+    let doc_quyen_posts_list = [];
+    let co_dinh_vi_tri_posts_list = [];
+    let cs_vi_tri_co_dinh_posts_list = [];
+    let ngau_nhien_posts_list = [];
+    postcampaigns_list.forEach(function (post) {
+        switch (post.co_che_hien_thi) {
+            case "doc_quyen":
+            doc_quyen_posts_list.push(post);
+            break;
+            case "co_dinh_vi_tri":
+            // Can loc ra cac vung
+            co_dinh_vi_tri_posts_list.push(post);
+            break;
+            case "chia_se_vi_tri_co_dinh":
+            // Can loc ra cac vung
+            cs_vi_tri_co_dinh_posts_list.push(post);
+            break;
+            case "ngau_nhien":
+            // Can loc ra cac vung
+            ngau_nhien_posts_list.push(post);
+            break;
+        }
+    });
+    let available_time_slots = [];
+    for (let i = 0; i < 24; i++){
+        available_time_slots.push({
+            "bat_dau": i,
+            "ket_thuc": i + 1
+        });
+    };
+    if (postcampaigns_list === []) {
+        res_json.Response = available_time_slots;
+        res.send(res_json);
+        return null;    
+    }
+    // console.log(available_time_slots);
+    // tao mang de dem so lan dang ki tren khung gio do,
+    // su dung cho loai post chia_se_vi_tri_co_dinh, ngau_nhien
+    let so_lan_dk_tren_khung_gio = [];
+    // khoi tao mang 24 phan tu 0 (tuong ung moi khung gio co 0 dang ky)
+    for (let i = 0; i < 24; i++){
+        so_lan_dk_tren_khung_gio.push(0);
+    };
+    let khung_gio_bi_chiem;
+    let so_bai_dang_toi_da_tren_vi_tri = Math.round(so_luong_bai_dang_toi_da/so_luong_chia_se_vung);
+    switch (co_che_hien_thi) {
+        case "doc_quyen":
+        doc_quyen_posts_list.forEach(function(post) {
+            post.khung_gio_hien_thi.forEach(function (khung_gio) {
+                let index = FindIndexOfJsonInJsonArray(available_time_slots, khung_gio);
+                if (index > -1) {
+                    // xoa khung_gio tai vi tri index
+                    available_time_slots.splice(index, 1);
+                }
+            });
+        });
+        break;
+        case "co_dinh_vi_tri":
+        co_dinh_vi_tri_posts_list.forEach(function(post) {
+            post.khung_gio_hien_thi.forEach(function (khung_gio) {
+                let index = FindIndexOfJsonInJsonArray(available_time_slots, khung_gio);
+                if (index > -1) {
+                    // xoa khung_gio tai vi tri index
+                    available_time_slots.splice(index, 1);
+                }
+            });
+        });
+        break;
+        case "chia_se_vi_tri_co_dinh":
+        cs_vi_tri_co_dinh_posts_list.forEach(function(post) {
+            post.khung_gio_hien_thi.forEach(function (khung_gio) {
+                let index = FindIndexOfJsonInJsonArray(available_time_slots, khung_gio);
+                if (index > -1) {
+                    // cong don gia tri len 1 neu nhu tim thay index
+                    so_lan_dk_tren_khung_gio[index] += 1;
+                }
+            });
+        });
+        for (let i = 0; i < 24; i++){
+            if (so_lan_dk_tren_khung_gio[i] >= so_bai_dang_toi_da_tren_vi_tri){
+                //neu nhu so lan dang ky tai khung gio do (i) lon hon hay bang so bai dang toi da tren vi tri
+                // chung ta se ko cho nguoi dung dang ky vao vi tri do nua
+                // tien hanh xoa khung gio ra khoi time slot
+                // xoa khung_gio tai vi tri i
+                available_time_slots.splice(i, 1);
+            }
+        };
+        break;
+        case "ngau_nhien":
+        ngau_nhien_posts_list.forEach(function(post) {
+            post.khung_gio_hien_thi.forEach(function (khung_gio) {
+                let index = FindIndexOfJsonInJsonArray(available_time_slots, khung_gio);
+                if (index > -1) {
+                    // cong don gia tri len 1 neu nhu tim thay index
+                    so_lan_dk_tren_khung_gio[index] += 1;
+                }
+            });
+        });
+        for (let i = 0; i < 24; i++){
+            if (so_lan_dk_tren_khung_gio[i] >= so_bai_dang_toi_da_tren_vi_tri){
+                //neu nhu so lan dang ky tai khung gio do (i) lon hon hay bang so bai dang toi da tren vi tri
+                // chung ta se ko cho nguoi dung dang ky vao vi tri do nua
+                // tien hanh xoa khung gio ra khoi time slot
+                // xoa khung_gio tai vi tri i
+                available_time_slots.splice(i, 1);
+            }
+        };
+        break;
+        default:
+        console.log("Không hỗ trợ cơ chế hiển thị: " + co_che_hien_thi);
+    }
+    // console.log(postcampaigns_list);
+    res_json.Response = available_time_slots;
+    res.send(res_json);
+    return null;
+}
 
 exports.get_posts_basic_on_applied_page = (req, res) => {
     let content = (req.body);
