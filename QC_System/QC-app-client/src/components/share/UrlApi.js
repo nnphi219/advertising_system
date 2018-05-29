@@ -35,6 +35,7 @@ const UrlApi = {
 
     PostCampaignManagement: hostNameServer + "/postcampaignmanagements",
     PostCampaignforXsystem: hostNameServer + "/PostCampaignforXsystem",
+    GetAvailableTimeSlots: hostNameServer + "/GetAvailableTimeSlot",
 
     XsystemPages: hostNameServer + "/xsystemPages",
     ReadA_Xsystem_Page: hostNameServer + "/xsystemPages/check",

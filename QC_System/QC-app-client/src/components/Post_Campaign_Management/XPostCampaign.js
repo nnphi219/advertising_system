@@ -3,7 +3,7 @@ import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
 import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, GetDistrictsBasicOnProvince, Transfer_Provice_District_JsonToArray, GetProvinces, TransferTimeLogStringToArrayElement } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
-import { KHUNG_GIO, PROMOTION_PHAN_TRAM, BANNER } from '../share/constant';
+import { KHUNG_GIO, PROMOTION_PHAN_TRAM, BANNER, CO_CHE_HIEN_THI } from '../share/constant';
 import { ArrayRemoveItem, NumberFormat } from '../share/CommonFunction';
 
 import Img from 'react-image';
@@ -48,11 +48,12 @@ function RenderSharedAreaButtons(props) {
 
     keys.forEach((key, index) => {
         let isReadOnly = readOnlyValues[index] === 1 ? true : false;
-        let positionClass = isReadOnly ? "text_color-red" : "";
+        let positionClass = "";//isReadOnly ? "text_color-red" : "";
+        let selectedBackGroundColorClass = selectedValue === key ? "background_color-grey" : "";
         positionClass = selectedValue === key ? "text_color-blue" : positionClass;
         elementTypeRadioButtons.push(
             <div key={key} className={props.className + " " + positionClass}>
-                <button id={key} name={props.nameId} onClick={props.OnClickButton} className="xpostcampaign_sharedarea--button">{values[index]}</button>
+                <button id={key} name={props.nameId} onClick={props.OnClickButton} className={`xpostcampaign_sharedarea--button ${selectedBackGroundColorClass}`}>{values[index]}</button>
             </div>
         );
     });
@@ -340,7 +341,7 @@ function RenderForm(props) {
                 />
 
                 {
-                    isBannerAds ? null
+                    isBannerAds || stateValues.co_che_hien_thi === CO_CHE_HIEN_THI.NGAU_NHIEN ? null
                         : <RenderSharedAreaButtons
                             nameId={"vi_tri_vung_chia_se"}
                             title={"Vị trí quảng cáo"}
@@ -587,7 +588,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
             var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
             stateValues.trang_hien_thi = appliedPageType;
             stateValues.ldv_so_luong_vung_chia_se = stateValues.AdsAreaIds.max_shared_areas[indexOfValueInKeys];
-            stateValues.vi_tri_vung_chia_se = -1;
+            stateValues.vi_tri_vung_chia_se = 0;
 
             stateValues.co_che_hien_thi = stateValues.co_che_hien_thi;
             stateValues.url_image = '';
@@ -811,6 +812,35 @@ class XPostCampaign extends Component {
             });
     }
 
+    GetTimeSlots() {
+        let {
+            loai_dich_vu,
+            co_che_hien_thi,
+            vi_tri_vung_chia_se
+        } = this.state;
+
+        let ngay_bat_dau = DateToJsonDate(this.state.ngay_bat_dau);
+        let ngay_ket_thuc = DateToJsonDate(this.state.ngay_ket_thuc);
+        let content = {
+            loai_dich_vu,
+            co_che_hien_thi,
+            vi_tri_vung_chia_se,
+            ngay_bat_dau,
+            ngay_ket_thuc
+        };
+        Request.post(UrlApi.GetAvailableTimeSlots)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .send(content)
+            .end((err, res) => {
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    console.log(res.body);
+                }
+            });
+    }
+
     GetBasicPriceByAreaAndDisplayedMode(jsonState, displayedMode, XAdminUsername, USerOfXSysyemAccessToken) {
         return Request.get(UrlApi.GetServicePriceByAreaIdAndDisplayMode)
             .set('Username', XAdminUsername)
@@ -913,7 +943,7 @@ class XPostCampaign extends Component {
             jsonSetInfosOfUser.loai_dich_vu = keys[0];
             jsonSetInfosOfUser.trang_hien_thi = appliedPageTypeKeys[0];
             jsonSetInfosOfUser.ldv_so_luong_vung_chia_se = max_shared_areas[0];
-            jsonSetInfosOfUser.vi_tri_vung_chia_se = -1;
+            jsonSetInfosOfUser.vi_tri_vung_chia_se = 0;
         }
 
         return jsonSetInfosOfUser;
@@ -1116,7 +1146,7 @@ class XPostCampaign extends Component {
     handleUpdateState(jsonState) {
         jsonState = this.SetInitError(jsonState);
         jsonState.tong_cong = this.GetTotalHaveToPay(jsonState);
-
+        this.GetTimeSlots();
         this.setState(jsonState);
     }
 

@@ -12,3 +12,10 @@ export const PROMOTION_GIA_TRI = 2;
 
 export const BANNER = 'banner';
 export const TINRAO = 'tin_rao';
+
+export const CO_CHE_HIEN_THI = {
+    DOC_QUYEN: "doc_quyen", 
+    CO_DINH_VI_TRI: "co_dinh_vi_tri", 
+    CHIA_SE_VI_TRI_CO_DINH: "chia_se_vi_tri_co_dinh", 
+    NGAU_NHIEN: "ngau_nhien"
+}

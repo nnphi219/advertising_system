@@ -199,3 +199,7 @@ body {
 .text_color-blue {
   color: #3958d0;
 }
+
+.background_color-grey {
+  background-color: grey;
+}
