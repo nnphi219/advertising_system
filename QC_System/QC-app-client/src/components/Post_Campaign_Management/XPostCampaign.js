@@ -1,16 +1,104 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi from '../share/UrlApi';
-import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, GetDistrictsBasicOnProvince, Transfer_Provice_District_JsonToArray, GetProvinces, TransferTimeLogStringToArrayElement } from '../share/Mapper';
+import { JsonDateToDate, DateToJsonDate, TransferTimeLogStringToJson, TransferTimeLogJsonToString, GetDistrictsBasicOnProvince, Transfer_Provice_District_JsonToArray, GetProvinces, TransferTimeLogStringToArrayElement } from '../share/Mapper';
 import { RenderInput, RenderSelect, RenderDate } from '../share/InputsRender';
-import { KHUNG_GIO, PROMOTION_PHAN_TRAM, BANNER } from '../share/constant';
+import { KHUNG_GIO, PROMOTION_PHAN_TRAM, BANNER, CO_CHE_HIEN_THI } from '../share/constant';
 import { ArrayRemoveItem, NumberFormat } from '../share/CommonFunction';
 
 import Img from 'react-image';
+import { Date2GreaterThanOrEqualDate1 } from '../share/DateFormat';
 
 const uuidv4 = require('uuid/v4');
 
 const data_tinh_thanh_quan_huyen = require("../../data_sheet/tinh_thanh_quan_huyen.json");
+
+var calculateTimeSlotsOnState = async (state, next) => {
+    let {
+        loai_dich_vu,
+        co_che_hien_thi,
+        vi_tri_vung_chia_se
+    } = state;
+
+    let ngay_bat_dau = DateToJsonDate(state.ngay_bat_dau);
+    let ngay_ket_thuc = DateToJsonDate(state.ngay_ket_thuc);
+    let content = {
+        loai_dich_vu,
+        co_che_hien_thi,
+        vi_tri_vung_chia_se,
+        ngay_bat_dau,
+        ngay_ket_thuc
+    };
+    Request.post(UrlApi.GetAvailableTimeSlots)
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(content)
+        .end((err, res) => {
+            if (err) {
+                next("error");
+            }
+            else {
+                next(res.body.Response);
+            }
+        });
+}
+
+function getStateOnChangeInput(selfObject, oldState, eventInput, next) {
+    let name = eventInput.target.name;
+    let value = eventInput.target.value;
+    let newState = Object.assign({}, oldState);
+    newState[name] = value;
+
+    if (name === "khung_gio_hien_thi") {
+        value = TransferTimeLogStringToJson(value);
+
+        next(newState);
+    }
+    else if (name === "loai_dich_vu") {
+        var adsAreaKeys = newState.AdsAreaIds.keys;
+        var appliedPageTypeKeys = newState.AdsAreaIds.appliedPageTypeKeys;
+        var indexOfValueInKeys = adsAreaKeys.indexOf(value);
+
+        var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
+        newState.trang_hien_thi = appliedPageType;
+        newState.ldv_so_luong_vung_chia_se = newState.AdsAreaIds.max_shared_areas[indexOfValueInKeys];
+        newState.vi_tri_vung_chia_se = 0;
+
+        newState.co_che_hien_thi = newState.co_che_hien_thi;
+        newState.url_image = '';
+        newState.url_redirect = '';
+
+        let $this = selfObject;
+        newState = selfObject.props.handleUpdatePostOfSystemByServiceOnChange(newState, function (newState) {
+            $this.props.GetBasicPriceByAreaAndDisplayedMode(newState, newState.co_che_hien_thi, newState.XAdminUsername)
+                .then((newState) => {
+                    $this.props.CalculatedIntoMoney(newState, function (newState) {
+                        next(newState);
+                    });
+                });
+        });
+    }
+    else if (name === "co_che_hien_thi") {
+        let $this = selfObject;
+        selfObject.props.GetBasicPriceByAreaAndDisplayedMode(newState, newState.co_che_hien_thi, newState.XAdminUsername)
+            .then((newState) => {
+                $this.props.CalculatedIntoMoney(newState, function (newState) {
+                    next(newState);
+                });
+            });
+    }
+    else if (name === "ma_khuyen_mai") {
+        this.GetPromotionByPromotionCode(value, newState, function (newState) {
+            next(newState);
+        });
+    }
+    else if (name === "vi_tri_vung_chia_se") {
+        newState[name] = parseInt(eventInput.target.id, 10);
+        next(newState);
+    }
+    else {
+        next(newState);
+    }
+}
 
 function IsBannerAds(stateValues) {
     let isBannerAds = false;
@@ -41,18 +129,19 @@ function GetBasicPrice(basicPriceOnTimeSlot, selectedTimeSlots) {
 function RenderSharedAreaButtons(props) {
     var keys = props.keys;
     var values = props.values;
-    var readOnlyValues = props.readOnlyValues;
+    // var readOnlyValues = props.readOnlyValues;
     var selectedValue = props.selectedValue;
 
     var elementTypeRadioButtons = [];
 
     keys.forEach((key, index) => {
-        let isReadOnly = readOnlyValues[index] === 1 ? true : false;
-        let positionClass = isReadOnly ? "text_color-red" : "";
+        // let isReadOnly = readOnlyValues[index] === 1 ? true : false;
+        let positionClass = "";//isReadOnly ? "text_color-red" : "";
+        let selectedBackGroundColorClass = selectedValue === key ? "background_color-grey" : "";
         positionClass = selectedValue === key ? "text_color-blue" : positionClass;
         elementTypeRadioButtons.push(
             <div key={key} className={props.className + " " + positionClass}>
-                <button id={key} name={props.nameId} onClick={props.OnClickButton} className="xpostcampaign_sharedarea--button">{values[index]}</button>
+                <button id={key} name={props.nameId} onClick={props.OnClickButton} className={`xpostcampaign_sharedarea--button ${selectedBackGroundColorClass}`}>{values[index]}</button>
             </div>
         );
     });
@@ -340,7 +429,7 @@ function RenderForm(props) {
                 />
 
                 {
-                    isBannerAds ? null
+                    isBannerAds || stateValues.co_che_hien_thi === CO_CHE_HIEN_THI.NGAU_NHIEN ? null
                         : <RenderSharedAreaButtons
                             nameId={"vi_tri_vung_chia_se"}
                             title={"Vị trí quảng cáo"}
@@ -569,88 +658,76 @@ class PostCampaignCreatorUpdaterForm extends Component {
     }
 
     OnChangeInput(e) {
-        var stateValues = this.props.stateValues;
-        var name = e.target.name;
-        var value = e.target.value;
-        stateValues[name] = value;
-
-        if (name === "khung_gio_hien_thi") {
-            value = TransferTimeLogStringToJson(value);
-
-            this.props.UpdateState(stateValues);
-        }
-        else if (name === "loai_dich_vu") {
-            var adsAreaKeys = stateValues.AdsAreaIds.keys;
-            var appliedPageTypeKeys = stateValues.AdsAreaIds.appliedPageTypeKeys;
-            var indexOfValueInKeys = adsAreaKeys.indexOf(value);
-
-            var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
-            stateValues.trang_hien_thi = appliedPageType;
-            stateValues.ldv_so_luong_vung_chia_se = stateValues.AdsAreaIds.max_shared_areas[indexOfValueInKeys];
-            stateValues.vi_tri_vung_chia_se = -1;
-
-            stateValues.co_che_hien_thi = stateValues.co_che_hien_thi;
-            stateValues.url_image = '';
-            stateValues.url_redirect = '';
-
-            let $this = this;
-            stateValues = this.props.handleUpdatePostOfSystemByServiceOnChange(stateValues, function (stateValues) {
-                $this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
-                    .then((stateValues) => {
-                        $this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
-                            $this.props.UpdateState(stateValues);
-                        });
+        let stateValues = this.props.stateValues;
+        let name = e.target.name;
+        let $this = this;
+        getStateOnChangeInput(this, stateValues, e, function (newState) {
+            if (name === "loai_dich_vu" || name === "co_che_hien_thi" || name === "vi_tri_vung_chia_se"
+                || name === "ngay_bat_dau" || name === "ngay_ket_thuc") {
+                calculateTimeSlotsOnState(newState, function (filteredJsonTimeSolts) {
+                    newState.array_khung_gio = filteredJsonTimeSolts.map((filteredJsonTimeSolt) => {
+                        return TransferTimeLogJsonToString(filteredJsonTimeSolt);
                     });
-            });
-        }
-        else if (name === "co_che_hien_thi") {
-            let $this = this;
-            this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
-                .then((stateValues) => {
-                    $this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
-                        $this.props.UpdateState(stateValues);
-                    });
+                    newState.remainingTimeSlots = newState.array_khung_gio.slice();
+                    newState.selectedTimeSlots = [];
+
+                    $this.props.UpdateState(newState);
                 });
-        }
-        else if (name === "ma_khuyen_mai") {
+            }
+            else {
+                $this.props.UpdateState(newState);
+            }
+
+        });
+        e.preventDefault();
+    }
+
+    OnchangeStartDate(start_date) {
+        let newState = this.props.stateValues;
+        let end_date = newState.ngay_ket_thuc;
+        let thoi_luong = new Date(end_date - start_date).getDate();
+
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
+            newState.ngay_bat_dau = start_date;
+            newState.thoi_luong_ap_dung = thoi_luong;
             let $this = this;
-            this.GetPromotionByPromotionCode(value, stateValues, function (stateValues) {
-                $this.props.UpdateState(stateValues);
+            calculateTimeSlotsOnState(newState, function (filteredJsonTimeSolts) {
+                newState.array_khung_gio = filteredJsonTimeSolts.map((filteredJsonTimeSolt) => {
+                    return TransferTimeLogJsonToString(filteredJsonTimeSolt);
+                });
+                newState.remainingTimeSlots = newState.array_khung_gio.slice();
+                newState.selectedTimeSlots = [];
+
+                $this.props.UpdateState(newState);
             });
-        }
-        else if (name === "vi_tri_vung_chia_se") {
-            stateValues[name] = parseInt(e.target.id, 10);
-            this.props.UpdateState(stateValues);
         }
         else {
-            this.props.UpdateState(stateValues);
+            newState.error_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
         }
     }
 
-    OnchangeStartDate(date) {
-        var stateValues = this.props.stateValues;
-        stateValues.ngay_bat_dau = date;
-        this.props.UpdateState(stateValues);
-        let ngay_ket_thuc = new Date();
-        let thoi_luong_ap_dung = this.props.stateValues.thoi_luong_ap_dung;
-        ngay_ket_thuc.setDate(this.props.stateValues.ngay_ket_thuc.getDate() + parseInt(thoi_luong_ap_dung, 10));
-        this.OnchangeEndDate(ngay_ket_thuc);
-    }
+    OnchangeEndDate(end_date) {
+        let newState = this.props.stateValues;
+        let start_date = newState.ngay_bat_dau;
+        let thoi_luong = new Date(end_date - start_date).getDate();
 
-    OnchangeEndDate(date) {
-        var stateValues = this.props.stateValues;
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
+            newState.ngay_ket_thuc = end_date;
+            newState.thoi_luong_ap_dung = thoi_luong;
+            let $this = this;
+            calculateTimeSlotsOnState(newState, function (filteredJsonTimeSolts) {
+                newState.array_khung_gio = filteredJsonTimeSolts.map((filteredJsonTimeSolt) => {
+                    return TransferTimeLogJsonToString(filteredJsonTimeSolt);
+                });
+                newState.remainingTimeSlots = newState.array_khung_gio.slice();
+                newState.selectedTimeSlots = [];
 
-        let ngay_bat_dau = this.props.stateValues.ngay_bat_dau;
-        let thoi_luong = new Date(date - ngay_bat_dau).getDate();
-
-        if (parseInt(date.getTime() - ngay_bat_dau.getTime(), 10) >= 0) {
-            stateValues.ngay_ket_thuc = date;
-            stateValues.thoi_luong_ap_dung = thoi_luong;
-
-            this.props.UpdateState(stateValues);
+                $this.props.UpdateState(newState);
+            });
         }
-
-        // this.props.UpdateState({"thoi_luong_ap_dung": new Date(date - ngay_bat_dau).getDate()});
+        else {
+            newState.error_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
     }
 
     OnAddTokenField(e) {
@@ -913,7 +990,7 @@ class XPostCampaign extends Component {
             jsonSetInfosOfUser.loai_dich_vu = keys[0];
             jsonSetInfosOfUser.trang_hien_thi = appliedPageTypeKeys[0];
             jsonSetInfosOfUser.ldv_so_luong_vung_chia_se = max_shared_areas[0];
-            jsonSetInfosOfUser.vi_tri_vung_chia_se = -1;
+            jsonSetInfosOfUser.vi_tri_vung_chia_se = 0;
         }
 
         return jsonSetInfosOfUser;
