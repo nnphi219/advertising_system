@@ -4,7 +4,6 @@ class Banner extends Component {
     render() {
         let banner_top_content = this.props.banner_content;
         let image_url = banner_top_content ? banner_top_content.resource_url : '/images/layout-banner.jpg';
-        console.log(image_url);
         return (
             <div>
                 <div className="banner" id="banner">
