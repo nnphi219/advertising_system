@@ -12,6 +12,94 @@ const uuidv4 = require('uuid/v4');
 
 const data_tinh_thanh_quan_huyen = require("../../data_sheet/tinh_thanh_quan_huyen.json");
 
+var calculateTimeSlotsOnState = async (state) => {
+    let {
+        loai_dich_vu,
+        co_che_hien_thi,
+        vi_tri_vung_chia_se
+    } = state;
+
+    let ngay_bat_dau = DateToJsonDate(state.ngay_bat_dau);
+    let ngay_ket_thuc = DateToJsonDate(state.ngay_ket_thuc);
+    let content = {
+        loai_dich_vu,
+        co_che_hien_thi,
+        vi_tri_vung_chia_se,
+        ngay_bat_dau,
+        ngay_ket_thuc
+    };
+    Request.post(UrlApi.GetAvailableTimeSlots)
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(content)
+        .end((err, res) => {
+            if (err) {
+                return "error";
+            }
+            else {
+                return res.body;
+            }
+        });
+}
+
+function getStateOnChangeInput(oldState, eventInput, next) {
+    let name = eventInput.target.name;
+    let value = eventInput.target.value;
+    let newState = Object.assign({}, oldState);
+    newState[name] = value;
+
+    if (name === "khung_gio_hien_thi") {
+        value = TransferTimeLogStringToJson(value);
+
+        this.props.UpdateState(newState);
+    }
+    else if (name === "loai_dich_vu") {
+        var adsAreaKeys = newState.AdsAreaIds.keys;
+        var appliedPageTypeKeys = newState.AdsAreaIds.appliedPageTypeKeys;
+        var indexOfValueInKeys = adsAreaKeys.indexOf(value);
+
+        var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
+        newState.trang_hien_thi = appliedPageType;
+        newState.ldv_so_luong_vung_chia_se = newState.AdsAreaIds.max_shared_areas[indexOfValueInKeys];
+        newState.vi_tri_vung_chia_se = 0;
+
+        newState.co_che_hien_thi = newState.co_che_hien_thi;
+        newState.url_image = '';
+        newState.url_redirect = '';
+
+        let $this = this;
+        newState = this.props.handleUpdatePostOfSystemByServiceOnChange(newState, function (newState) {
+            $this.props.GetBasicPriceByAreaAndDisplayedMode(newState, newState.co_che_hien_thi, newState.XAdminUsername)
+                .then((newState) => {
+                    $this.props.CalculatedIntoMoney(newState, function (newState) {
+                        next(newState);
+                    });
+                });
+        });
+    }
+    else if (name === "co_che_hien_thi") {
+        let $this = this;
+        this.props.GetBasicPriceByAreaAndDisplayedMode(newState, newState.co_che_hien_thi, newState.XAdminUsername)
+            .then((newState) => {
+                $this.props.CalculatedIntoMoney(newState, function (newState) {
+                    next(newState);
+                });
+            });
+    }
+    else if (name === "ma_khuyen_mai") {
+        let $this = this;
+        this.GetPromotionByPromotionCode(value, newState, function (newState) {
+            next(newState);
+        });
+    }
+    else if (name === "vi_tri_vung_chia_se") {
+        newState[name] = parseInt(e.target.id, 10);
+        next(newState);
+    }
+    else {
+        next(newState);
+    }
+}
+
 function IsBannerAds(stateValues) {
     let isBannerAds = false;
     if (stateValues.AdsAreaIds !== undefined) {
@@ -571,61 +659,12 @@ class PostCampaignCreatorUpdaterForm extends Component {
 
     OnChangeInput(e) {
         var stateValues = this.props.stateValues;
-        var name = e.target.name;
-        var value = e.target.value;
-        stateValues[name] = value;
-
-        if (name === "khung_gio_hien_thi") {
-            value = TransferTimeLogStringToJson(value);
-
-            this.props.UpdateState(stateValues);
-        }
-        else if (name === "loai_dich_vu") {
-            var adsAreaKeys = stateValues.AdsAreaIds.keys;
-            var appliedPageTypeKeys = stateValues.AdsAreaIds.appliedPageTypeKeys;
-            var indexOfValueInKeys = adsAreaKeys.indexOf(value);
-
-            var appliedPageType = appliedPageTypeKeys[indexOfValueInKeys];
-            stateValues.trang_hien_thi = appliedPageType;
-            stateValues.ldv_so_luong_vung_chia_se = stateValues.AdsAreaIds.max_shared_areas[indexOfValueInKeys];
-            stateValues.vi_tri_vung_chia_se = 0;
-
-            stateValues.co_che_hien_thi = stateValues.co_che_hien_thi;
-            stateValues.url_image = '';
-            stateValues.url_redirect = '';
-
-            let $this = this;
-            stateValues = this.props.handleUpdatePostOfSystemByServiceOnChange(stateValues, function (stateValues) {
-                $this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
-                    .then((stateValues) => {
-                        $this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
-                            $this.props.UpdateState(stateValues);
-                        });
-                    });
-            });
-        }
-        else if (name === "co_che_hien_thi") {
-            let $this = this;
-            this.props.GetBasicPriceByAreaAndDisplayedMode(stateValues, stateValues.co_che_hien_thi, stateValues.XAdminUsername)
-                .then((stateValues) => {
-                    $this.props.CalculatedIntoMoney(stateValues, function (stateValues) {
-                        $this.props.UpdateState(stateValues);
-                    });
-                });
-        }
-        else if (name === "ma_khuyen_mai") {
-            let $this = this;
-            this.GetPromotionByPromotionCode(value, stateValues, function (stateValues) {
-                $this.props.UpdateState(stateValues);
-            });
-        }
-        else if (name === "vi_tri_vung_chia_se") {
-            stateValues[name] = parseInt(e.target.id, 10);
-            this.props.UpdateState(stateValues);
-        }
-        else {
-            this.props.UpdateState(stateValues);
-        }
+        var $this = this;
+        getStateOnChangeInput(stateValues, e, function(newState){
+            let timeSlots = calculateTimeSlotsOnState(newState);
+            console.log(timeSlots);
+            $this.props.UpdateState(newState);
+        });
     }
 
     OnchangeStartDate(date) {
@@ -809,35 +848,6 @@ class XPostCampaign extends Component {
                             $this.setState(jsonSetInfosOfUser);
                         });
                 });
-            });
-    }
-
-    GetTimeSlots() {
-        let {
-            loai_dich_vu,
-            co_che_hien_thi,
-            vi_tri_vung_chia_se
-        } = this.state;
-
-        let ngay_bat_dau = DateToJsonDate(this.state.ngay_bat_dau);
-        let ngay_ket_thuc = DateToJsonDate(this.state.ngay_ket_thuc);
-        let content = {
-            loai_dich_vu,
-            co_che_hien_thi,
-            vi_tri_vung_chia_se,
-            ngay_bat_dau,
-            ngay_ket_thuc
-        };
-        Request.post(UrlApi.GetAvailableTimeSlots)
-            .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send(content)
-            .end((err, res) => {
-                if(err){
-                    console.log(err);
-                }
-                else{
-                    console.log(res.body);
-                }
             });
     }
 
@@ -1146,7 +1156,8 @@ class XPostCampaign extends Component {
     handleUpdateState(jsonState) {
         jsonState = this.SetInitError(jsonState);
         jsonState.tong_cong = this.GetTotalHaveToPay(jsonState);
-        this.GetTimeSlots();
+        var test = calculateTimeSlotsOnState(jsonState);
+        console.log(test);
         this.setState(jsonState);
     }
 
