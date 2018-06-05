@@ -4,7 +4,7 @@ import Header from './components/header/Header';
 import Contents from './components/contents/Contents';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Footer from './components/footer/Footer';
-import LoginForm from './components/users/LoginForm';
+import UserAuthen from './components/users/UserAuthen';
 
 class AppContent extends Component {
   render() {
@@ -33,7 +33,7 @@ class App extends Component {
       <div>
         {
           isLogginForm ?
-            <LoginForm />
+            <UserAuthen />
             :
             <AppContent />
         }

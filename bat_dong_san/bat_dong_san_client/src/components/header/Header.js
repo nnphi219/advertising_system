@@ -34,6 +34,7 @@ class Header extends React.Component {
                                     <li><NavLink to="/rent">Rent</NavLink></li>
                                     <li><a href="#6">About</a></li>
                                     <li><a href="#7">Contact</a></li>
+                                    <li><NavLink to="/posts">Quản lý tin đăng</NavLink></li>
                                 </ul>
                                 <button className="login_btn" onClick={this.redirectToLoginForm}>Login</button>
                             </nav>

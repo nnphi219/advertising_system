@@ -12,36 +12,38 @@ import './css/main.css';
 
 import { URL_API } from '../share/UrlAPI';
 
-class LoginForm extends React.Component {
+class RegisterForm extends React.Component {
     constructor(props) {
         super(props);
-        this.username = null;
 
-        this.onLogin = this.onLogin.bind(this);
+        this.onRegister = this.onRegister.bind(this);
     }
 
-    onLogin(event) {
+    onRegister(event) {
         let username = this.username.value;
+        let email = this.email.value;
         let password = this.password.value;
+        let passwordConfirm = this.passwordConfirm.value;
 
         let data = {
-            username, password
+            username, email, password
         };
 
-        fetch(URL_API.UserLogin, {
-            method: "POST",
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json())
-            .then(data => {
-                localStorage.setItem('x-auth', data.accessToken);
-                window.location.href = "/";
-            }).catch(err => {
-                console.log(err);
-            });
-
+        if (password === passwordConfirm) {
+            fetch(URL_API.UserRegister, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => res.json())
+                .then(data => {
+                    localStorage.setItem('x-auth', data.accessToken);
+                    window.location.href = "/";
+                }).catch(err => {
+                    console.log(err);
+                });
+        }
     }
 
     render() {
@@ -51,7 +53,7 @@ class LoginForm extends React.Component {
                     <div className="wrap-login100 p-l-85 p-r-85 p-t-55 p-b-55">
                         <div className="login100-form validate-form flex-sb flex-w">
                             <span className="login100-form-title p-b-32">
-                                Đăng nhập tài khoản
+                                Đăng ký
                             </span>
 
                             <span className="txt1 p-b-11">
@@ -63,6 +65,14 @@ class LoginForm extends React.Component {
                             </div>
 
                             <span className="txt1 p-b-11">
+                                Email
+                            </span>
+                            <div className="wrap-input100 validate-input m-b-36" data-validate="Username is required">
+                                <input className="input100" type="text" name="username" ref={email => this.email = email} />
+                                <span className="focus-input100"></span>
+                            </div>
+
+                            <span className="txt1 p-b-11">
                                 Mật khẩu
                             </span>
                             <div className="wrap-input100 validate-input m-b-12" data-validate="Password is required">
@@ -70,6 +80,17 @@ class LoginForm extends React.Component {
                                     <i className="fa fa-eye"></i>
                                 </span>
                                 <input className="input100" type="password" name="pass" ref={password => this.password = password} />
+                                <span className="focus-input100"></span>
+                            </div>
+
+                            <span className="txt1 p-b-11">
+                                Xác nhận mật khẩu
+                            </span>
+                            <div className="wrap-input100 validate-input m-b-12" data-validate="Password is required">
+                                <span className="btn-show-pass">
+                                    <i className="fa fa-eye"></i>
+                                </span>
+                                <input className="input100" type="password" name="pass" ref={passwordConfirm => this.passwordConfirm = passwordConfirm} />
                                 <span className="focus-input100"></span>
                             </div>
 
@@ -89,14 +110,13 @@ class LoginForm extends React.Component {
                             </div>
 
                             <div className="container-login100-form-btn">
-                                <button className="login100-form-btn" onClick={this.onLogin} style={{ marginRight: "5px" }}>
-                                    Đăng nhập
-                                </button>
-                                <button className="login100-form-btn" onClick={this.props.openRegister} >
+                                <button className="login100-form-btn" onClick={this.onRegister} >
                                     Đăng ký
                                 </button>
+                                <button className="login100-form-btn" onClick={this.props.openLogin} >
+                                    Đăng nhập
+                                </button>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -105,4 +125,4 @@ class LoginForm extends React.Component {
     }
 }
 
-export default LoginForm;
+export default RegisterForm;

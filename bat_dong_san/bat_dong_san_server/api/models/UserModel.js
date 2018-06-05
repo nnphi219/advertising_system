@@ -106,10 +106,10 @@ UserSchema.statics.findByUserType = function (token, user_type) {
     });
 };
 
-UserSchema.statics.findByCredentials = function (email, password) {
+UserSchema.statics.findByCredentials = function (username, password) {
     var User = this;
 
-    return User.findOne({ email }).then((user) => {
+    return User.findOne({ username }).then((user) => {
         if (!user) {
             return Promise.reject();
         }
