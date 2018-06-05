@@ -4,6 +4,7 @@ import Buy from './buy/Buy';
 import { Route } from 'react-router-dom';
 import './contents.css';
 import Rent from './rent/Rent';
+import LoginForm from '../users/LoginForm';
 
 class Contents extends Component {
     render() {
