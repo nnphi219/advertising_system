@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import Home from './home/Home';
-import Test from './test/Test';
+import Buy from './buy/Buy';
 import { Route } from 'react-router-dom';
+import './contents.css';
+import Rent from './rent/Rent';
 
 class Contents extends Component {
     render() {
         return (
             <div className="content">
                 <Route exact={true} path="/" component={Home} />
-                <Route path="/test" component={Test} />
+                <Route path="/buy" component={Buy} />
+                <Route path="/rent" component={Rent} />
             </div>
         );
     }

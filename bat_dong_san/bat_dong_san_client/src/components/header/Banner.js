@@ -24,6 +24,9 @@ export class BannerLeft extends React.Component {
 
     render() {
         let left = (this.state.width - MAIN_CONTENT_WIDTH) / 2 - BANNER_LEFT_WIDTH;
+
+        let banner_left_content = this.props.banner_content;
+        let image_url = banner_left_content ? banner_left_content.resource_image_url : 'https://file4.batdongsan.com.vn/2017/03/27/vou5EgPQ/20170327155510-d928.jpg';
         return (
             <div id="SiteLeft" className="banner-left">
                 <div className="container-default">
@@ -33,7 +36,7 @@ export class BannerLeft extends React.Component {
                                 <div className="adshared">
                                     <div className="aditem" time="15" style={{ display: "block" }} src="https://file4.batdongsan.com.vn/2017/03/27/vou5EgPQ/20170327155510-d928.jpg" altsrc="https://file4.batdongsan.com.vn/2017/03/27/vou5EgPQ/20170327155510-d928.jpg" link="https://alokiddy.com.vn/" bid="3848" tip="" tp="7" w="100" h="300" k="">
                                         <a href="/click.aspx?bannerid=3848" target="_blank" title="" rel="nofollow">
-                                            <img src="https://file4.batdongsan.com.vn/2017/03/27/vou5EgPQ/20170327155510-d928.jpg" style={{ width: BANNER_LEFT_WIDTH }} />
+                                            <img src={image_url} style={{ width: BANNER_LEFT_WIDTH }} />
                                         </a>
                                     </div>
                                 </div>
@@ -69,6 +72,8 @@ export class BannerRight extends React.Component {
     render() {
         let right = (this.state.width - MAIN_CONTENT_WIDTH) / 2 - BANNER_RIGHT_WIDTH;
         
+        let banner_right_content = this.props.banner_content;
+        let image_url = banner_right_content ? banner_right_content.resource_image_url : 'https://file4.batdongsan.com.vn/2018/04/26/RUFz0fap/20180426115906-0b71.jpg';
         return (
             <div id="SiteRight" className="banner-right">
                 <div className="container-default">
@@ -78,7 +83,7 @@ export class BannerRight extends React.Component {
                                 <div className="adshared">
                                     <div className="aditem" time="15" style={{ display: "block" }} src="https://file4.batdongsan.com.vn/2018/04/26/RUFz0fap/20180426115906-0b71.jpg" altsrc="https://file4.batdongsan.com.vn/2018/04/26/RUFz0fap/20180426115906-0b71.jpg" link="https://banxehoi.com/" bid="3713" tip="" tp="7" w="100" h="300" k="">
                                         <a href="/click.aspx?bannerid=3713" target="_blank" title="" rel="nofollow">
-                                            <img src="https://file4.batdongsan.com.vn/2018/04/26/RUFz0fap/20180426115906-0b71.jpg" style={{ width: BANNER_RIGHT_WIDTH }} />
+                                            <img src={image_url} style={{ width: BANNER_RIGHT_WIDTH }} />
                                         </a>
                                     </div>
                                 </div>

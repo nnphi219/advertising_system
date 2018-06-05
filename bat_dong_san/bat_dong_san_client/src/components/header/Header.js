@@ -4,22 +4,31 @@ import { BannerLeft, BannerRight } from './Banner';
 
 class Header extends React.Component {
     render() {
+        let bannerLeft_content = {
+            resource_image_url: 'https://file4.batdongsan.com.vn/2017/03/27/vou5EgPQ/20170327155510-d928.jpg'
+        };
+        let bannerRight_content = {
+            resource_image_url: 'https://file4.batdongsan.com.vn/2018/04/26/RUFz0fap/20180426115906-0b71.jpg'
+        };
+        let bannerMain_content = {
+            resource_image_url: '../img/hero.jpg'
+        };
         return (
             <div>
-                <BannerLeft />
-                <section style={{background: "url('../img/hero.jpg') no-repeat bottom center"}} className="hero">
+                <BannerLeft
+                    banner_content={bannerLeft_content}
+                />
+                <section style={{ background: `url('${bannerMain_content.resource_image_url}') no-repeat bottom center` }} className="hero">
                     <header>
                         <div className="wrapper">
-                            <a href="#1"><img src="img/logo.png" className="logo" alt="" titl="" /></a>
+                            <NavLink to="/"><img src="img/logo.png" className="logo" alt="" titl="" /></NavLink>
                             <a href="#2" className="hamburger"></a>
                             <nav>
                                 <ul>
-                                    <li><a href="#3">Buy</a></li>
-                                    <li><a href="#4">Rent</a></li>
-                                    <li><a href="#5">Sell</a></li>
+                                    <li><NavLink to="/buy">Buy</NavLink></li>
+                                    <li><NavLink to="/rent">Rent</NavLink></li>
                                     <li><a href="#6">About</a></li>
                                     <li><a href="#7">Contact</a></li>
-                                    <li><NavLink to="/test">Test</NavLink></li>
                                 </ul>
                                 <a href="#8" className="login_btn">Login</a>
                             </nav>
@@ -65,7 +74,9 @@ class Header extends React.Component {
                         </div>
                     </div>
                 </section>
-                <BannerRight />
+                <BannerRight
+                    banner_content={bannerRight_content}
+                />
             </div>
         );
     }
