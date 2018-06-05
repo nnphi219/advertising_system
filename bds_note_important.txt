@@ -1,0 +1,5 @@
+--- bat dong san
+- trang layout: 3 vung: banner_left, banner_right, banner_main
+- trang home: 1 vung: rao_vat.
+- trang buy: 1 vung: rao_vat_tin_mua_nha.
+- trang rent: 1 vung: rao_vat_tin_thue_nha.

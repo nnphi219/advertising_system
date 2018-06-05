@@ -1,0 +1,51 @@
+.page-listings {
+    padding: 100px 0;
+}
+
+.page-listings .page-rent ul.properties_list li{
+    width: 100%;
+    height: 250px;
+    list-style-type: none;
+}
+
+.page-listings .page-rent ul.properties_list li img{
+    width: 100%;
+    height: 200px;
+}
+
+.page-listings .page-rent ul.properties_list li .property_details {
+    width: 68%;
+    height: 189px;
+    float: left;
+    border: 1px solid;
+    border-style: dotted;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.page-listings .page-rent ul.properties_list li .property_details .title a{
+    margin-top: 10px;
+    color: grey !important;
+    font-size: 35px;
+}
+
+.page-listings .page-rent ul.properties_list li .property_details .sub-title{
+    margin-top: 10px;
+    color: grey;
+}
+
+.page-listings .page-rent ul.properties_list li .property_details .price{
+    position: absolute;
+    padding: 15px 20px;
+    color: #514d4d;
+    font-family: "lato-bold", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    background: #ece7e7;
+}
+
+.page-listings .page-rent ul.properties_list li .property_image {
+    width: 30%;
+    float: left;
+}
