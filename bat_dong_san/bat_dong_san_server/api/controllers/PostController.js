@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
   Post = mongoose.model('Posts');
 
 exports.list_all_posts = function (req, res) {
-  Post.find({ nguoi_tao: req.user._id }, function (err, post) {
+  Post.find({ nguoi_tao: req.user.username }, function (err, post) {
     if (err)
       res.send(err);
     res.json(post);
@@ -30,9 +30,9 @@ exports.get_posts_by_PostIds = function (req, res) {
 };
 
 exports.create_a_post = function (req, res) {
-  var creatorID = req.user._id;
+  var creator = req.user.username;
   var new_post = new Post(req.body);
-  new_post.nguoi_tao = creatorID;
+  new_post.nguoi_tao = creator;
 
   new_post.save(function (err, post) {
     if (err)

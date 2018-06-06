@@ -1,0 +1,49 @@
+.post {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.post-title {
+    padding-left: 10px;
+    font-size: 45px;
+}
+
+.post-add {
+    padding-left: 30px;
+    margin-top: 15px;
+}
+
+.post-add .nav-link {
+    background: #00b0e7;
+    color: white;
+    padding: 0 16px;
+    line-height: 36px;
+    border-radius: 2px;
+    width: 110px;
+    text-align: center;
+    font-family: normal;
+}
+
+.post-add-form {
+    width: 90%;
+    margin:auto;
+}
+
+.post-add-submit {
+    text-align: center;
+}
+
+.post-add-form .nav-link {
+    background: #00b0e7;
+    color: white;
+    padding: 0 16px;
+    line-height: 36px;
+    border-radius: 2px;
+    width: 110px;
+    text-align: center;
+    font-family: normal;
+    margin: 0 5px;
+    display: inline-block;
+    
+}
