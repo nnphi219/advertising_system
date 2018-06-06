@@ -21,9 +21,7 @@ var PostSchema = new mongoose.Schema({
         require: true,
         minlength: 6
     },
-    imageUrls: [{
-        type: String
-    }],
+    imageUrl: String,
     url: {
         type: String,
         require: true
