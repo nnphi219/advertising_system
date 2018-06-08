@@ -13,6 +13,9 @@ module.exports = function (app) {
         .put(authenticate, priceFactorController.update_a_priceFactor)
         .delete(authenticate, priceFactorController.delete_a_priceFactor);
 
+    app.route('/priceFactorsWithoutTimeSlots/:priceFactorId')
+        .put(authenticate, priceFactorController.update_a_priceFactor_without_timeSlots);
+
     app.route('/priceFactors/check/:priceFactorId')
         .get(authenticate, priceFactorController.read_a_priceFactor_by_priceFactorId);
 };

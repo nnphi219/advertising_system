@@ -67,7 +67,7 @@ exports.update_a_apiUrl = function (req, res) {
 
 exports.delete_a_apiUrl = function (req, res) {
     XsystemApiUrl.remove({
-        _id: req.params.apiUrlId
+        _id: req.body.apiId
     }, function (err, apiUrl) {
         if (err)
             res.send(err);
