@@ -95,6 +95,17 @@ exports.update_a_priceFactor = function (req, res) {
     });
 };
 
+exports.update_a_priceFactor_without_timeSlots = function(req, res) {
+    PriceFactor.findOneAndUpdate({_id: req.params.priceFactorId}, req.body, {new: true}, function(err, priceFactor) {
+        if(err) {
+            res.send(err);
+        }
+        else {
+            res.json(priceFactor);
+        }
+    });
+  };
+
 exports.delete_a_priceFactor = function (req, res) {
     PriceFactor.remove({
         _id: req.params.priceFactorId

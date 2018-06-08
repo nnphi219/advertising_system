@@ -51,6 +51,18 @@ class LeftNav extends React.Component {
                                 <li>
                                     <NavLink to="/ads-pages">Quản lý trang quảng cáo</NavLink>
                                 </li>
+                                <li>
+                                    <NavLink to="/post-types">Quản lý loại bài đăng</NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/ads-areas">Quản lý dịch vụ</NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/service-prices">Giá dịch vụ</NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to="/price-factors">Chỉ số ảnh hưởng gía</NavLink>
+                                </li>
                                 {/* <li><a><i className="fa fa-edit"></i> Forms <span className="fa fa-chevron-down"></span></a>
                                     <ul className="nav child_menu">
                                         <li><a href="form.html">General Form</a></li>

@@ -20,6 +20,7 @@ const UrlApi = {
 
     PriceFactor: hostNameServer + "/pricefactors",
     ReadA_PriceFactor: hostNameServer + "/pricefactors/check",
+    PriceFactorWithoutTimeSlots: hostNameServer + "/priceFactorsWithoutTimeSlots",
 
     PriceFactorCalculateTotalAffectValue: hostNameServer + "/priceFactorCalculateTotalAffectValue",
 
@@ -70,13 +71,25 @@ export const UrlRedirect = {
     UserRegister: '/register',
     UserTokenMe: '/users/me/token',
 
+    AdsArea: '/ads-areas',
+    AdsAreaCreator: '/ads-areas/create',
+    AdsAreaEditor: '/ads-areas/edit',
+
+    ServicePrices: '/service-prices',
+    ServicePriceCreator: '/service-prices/create',
+    ServicePriceEditor: '/service-prices/edit',
+
+    PriceFactors: '/price-factors',
+    PriceFactorCreator: '/price-factors/create',
+    PriceFactorEditor: '/price-factors/edit',
+
     AdsPages: '/ads-pages',
     AdsPageCreator: '/ads-pages/create',
     AdsPageEditor: '/ads-pages/edit',
 
-    XsystemPostTypes: '/xsystem-posttypes',
-    XsystemCreatePostType: '/xsystem-posttypes/create',
-    XsystemEditPostType: '/xsystem-posttypes/edit',
+    PostTypes: '/post-types',
+    PostTypeCreator: '/post-types/create',
+    PostTypeEditor: '/post-types/edit',
 
     XsystemDomainUrls: '/domains',
     XsystemUpdateDomainUrl: '/domains/update',
