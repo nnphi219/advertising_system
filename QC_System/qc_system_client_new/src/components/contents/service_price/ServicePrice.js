@@ -171,9 +171,12 @@ class ServicePrice extends Component {
     }
 
     handleDeleteClick(event) {
+        let selectedItemId = event.target.name;
+        let selectedItem = this.state.tbodyServicePrices.find((content) => content._id === selectedItemId);
         this.setState({
             ShowDeletePopup: !this.state.ShowDeletePopup,
-            SelectedItemId: event.target.name
+            SelectedItemId: selectedItemId,
+            selectedItemValue: selectedItem.ma_gia
         });
     }
 
@@ -247,7 +250,7 @@ class ServicePrice extends Component {
                     <HeaderForm2
                         title={"Giá dịch vụ"}
                         buttonTitle={"giá"}
-                        linkTo={UrlRedirect.ServicePriceCreator}/>
+                        linkTo={UrlRedirect.ServicePriceCreator} />
                 </div>
                 <div className="row">
                     <div id="page-wrapper" onKeyDown={this.onKeyDown}>
@@ -278,6 +281,7 @@ class ServicePrice extends Component {
                                         <DeleteForm
                                             url={UrlApi.ServicePrice}
                                             SelectedItemId={this.state.SelectedItemId}
+                                            selectedItemValue={this.state.selectedItemValue}
                                             closeDeletePopup={this.handleCloseDeletePop}
                                             resetContentState={this.handleResetContentsState}
                                         />

@@ -9,6 +9,7 @@ import PostTypesManagement from './post_types/PostTypeManagement';
 import AdsAreaManagement from './ads_area/AdsArea';
 import ServicePriceManagement from './service_price/ServicePrice';
 import PriceFactorManagement from './price_factor/PriceFactor';
+import PromotionManagement from './promotion/Promotion';
 
 import './contents.css';
 import AdsPagesManagement from './ads_page/AdsPage';
@@ -35,6 +36,7 @@ class Contents extends Component {
                 <Route path={UrlRedirect.AdsArea} component={AdsAreaManagement} />
                 <Route path={UrlRedirect.ServicePrices} component={ServicePriceManagement} />
                 <Route path={UrlRedirect.PriceFactors} component={PriceFactorManagement} />
+                <Route path={UrlRedirect.Promotions} component={PromotionManagement} />
             </div>
         );
     }

@@ -1,51 +1,36 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 
-import HeadForm, { HeaderForm2 } from '../share/HeaderForm/HeaderForm';
-import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
-import PriceFactorCreatorUpdater, { PriceFactorCreator, PriceFactorEditor } from './PriceFactorCreatorUpdater';
-
 import RenderHeader from '../share/RenderHeader';
 import DeleteForm from '../share/DeleteForm';
-import './price_factor.css';
+import HeaderForm, { HeaderForm2 } from '../share/HeaderForm/HeaderForm';
+import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
+import PromotionCreatorUpdater, { PromotionCreator, PromotionEditor } from './PromotionCreatorUpdater';
+import './promotion_management.css';
 
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
 import { BrowserRouter, Route, NavLink } from 'react-router-dom';
-import { TransferTimeLogJsonToString } from '../share/Mapper';
 
 function RenderRow(props) {
-    var factorType = props.trContentPriceFactor.loai_nhan_to;
-    var timeSlots = factorType.khung_gio;
+    var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
 
-    var timeSlotStrings = "";
-    timeSlots.forEach(timeSlot => {
-        timeSlotStrings += (timeSlotStrings !== "" ? ", " : "");
-        timeSlotStrings += TransferTimeLogJsonToString(timeSlot);
-    });
-
-    var location = (factorType.vi_tri !== undefined && factorType.vi_tri !== null) ? factorType.vi_tri.quan_huyen + "," + factorType.vi_tri.tinh : "";
-
-    var rateCalculationJson = props.trContentPriceFactor.ti_le_tinh_gia;
-    var rateCalculationString = (rateCalculationJson.tang === 1 ? "+ " : "- ") + rateCalculationJson.gia_tri.toString() + "%";
-    var status = (props.trContentPriceFactor.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";
+    var muc_gia_ap_dung = props.trContent.muc_gia_ap_dung;
+    var ratesApply = muc_gia_ap_dung.gia_tri.toString() + (parseInt(muc_gia_ap_dung.loai_gia, 10) === 1 ? " %" : " VND");
 
     return (
         <tr>
-            <td>{props.trContentPriceFactor.ma_chi_so}</td>
-            <td>{props.trContentPriceFactor.ten_chi_so}</td>
-            <td>{props.trContentPriceFactor.ma_gia}</td>
-            <td>{timeSlotStrings}</td>
-            <td>{location}</td>
-            <td>{rateCalculationString}</td>
+            <td>{props.trContent.ma_khuyen_mai}</td>
+            <td>{props.trContent.mo_ta_khuyen_mai}</td>
+            <td>{ratesApply}</td>
             <td>{status}</td>
             <td>
                 <RenderEditDeleteButton
-                    nameId={props.trContentPriceFactor._id}
+                    nameId={props.trContent._id}
                     handleEditClick={props.handleEditClick}
                     handleDeleteClick={props.handleDeleteClick}
                     handleActiveClick={props.handleActiveClick}
 
-                    trang_thai={props.trContentPriceFactor.trang_thai}
+                    trang_thai={props.trContent.trang_thai}
                 />
             </td>
         </tr>
@@ -57,7 +42,7 @@ function RenderBody(props) {
     props.tbody.forEach((element, id) => {
         rows.push(
             <RenderRow
-                trContentPriceFactor={element}
+                trContent={element}
                 key={id}
                 handleEditClick={props.handleEditClick}
                 handleDeleteClick={props.handleDeleteClick}
@@ -73,25 +58,23 @@ function RenderBody(props) {
     );
 }
 
-class PriceFactorContents extends Component {
+class PromotionManagementContents extends Component {
 
     render() {
-        var theadPriceFactors = {
+        var theaderPromotion = {
             keys: [],
-            values: ["Mã nhân tố", "Tên nhân tố tính giá", "Mã giá", "Khung giờ", "Vị trí", "Tỉ lệ tính giá", "Trạng thái"]
+            values: ["Mã khuyến mãi", "Mô tả khuyến mãi", "Mức giá áp dụng", "Trạng thái"]
         };
 
-        var props = this.props;
-
         return (
-            <div className="adsarea-content">
+            <div className="table-content">
                 <table className="table table-striped">
-                    <RenderHeader theader={theadPriceFactors} />
+                    <RenderHeader theader={theaderPromotion} />
                     <RenderBody
-                        tbody={props.tbodyPriceFactors}
-                        handleEditClick={props.handleEditClick}
-                        handleDeleteClick={props.handleDeleteClick}
-                        handleActiveClick={props.handleActiveClick}
+                        tbody={this.props.tbodyContents}
+                        handleEditClick={this.props.handleEditClick}
+                        handleDeleteClick={this.props.handleDeleteClick}
+                        handleActiveClick={this.props.handleActiveClick}
                     />
                 </table>
             </div>
@@ -99,7 +82,7 @@ class PriceFactorContents extends Component {
     }
 }
 
-class PriceFactor extends Component {
+class Promotion extends Component {
     constructor(props) {
         super(props);
 
@@ -108,21 +91,22 @@ class PriceFactor extends Component {
             EditContents: null,
             ShowCreatorUpdaterPopup: false,
             ShowDeletePopup: false,
-            tbodyPriceFactors: []
+            tbodyContents: []
         };
 
         this.handleShowCreatorUpdaterPopup = this.handleShowCreatorUpdaterPopup.bind(this);
         this.handleEditClick = this.handleEditClick.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
-        this.handleActiveClick = this.handleActiveClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
+        this.handleClosePopup = this.handleClosePopup.bind(this);
+        this.handleActiveClick = this.handleActiveClick.bind(this);
 
         this._onKeyDown = this._onKeyDown.bind(this);
     }
 
     componentDidMount() {
-        this.getPriceFactors();
+        this.getPromotions();
     }
 
     _onKeyDown(e) {
@@ -142,50 +126,51 @@ class PriceFactor extends Component {
         document.addEventListener("keydown", this._onKeyDown);
     }
 
-    getPriceFactors() {
-        Request.get(UrlApi.PriceFactor)
+    getPromotions() {
+        Request.get(UrlApi.PromotionManagement)
             .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
                 this.setState({
-                    tbodyPriceFactors: res.body
+                    tbodyContents: res.body
                 });
             });
-    }
-
-    handleEditClick(event) {
-        window.location.href = UrlRedirect.PriceFactorEditor + `/${event.target.name}`;
-    }
-
-    handleActiveClick(event) {
-        var url = UrlApi.PriceFactorWithoutTimeSlots + "/" + event.target.name;
-        var $this = this;
-        var updatePriceFactorJson = {
-            trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
-        };
-
-        Request.put(url)
-            .set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('x-auth', localStorage.getItem('x-auth'))
-            .send(updatePriceFactorJson)
-            .end(function (err, res) {
-                $this.getPriceFactors();
-            });
-    }
-
-    handleDeleteClick(event) {
-        let selectedItemId = event.target.name;
-        let selectedItem = this.state.tbodyPriceFactors.find((content) => content._id === selectedItemId);
-        this.setState({
-            ShowDeletePopup: !this.state.ShowDeletePopup,
-            SelectedItemId: selectedItemId,
-            selectedItemValue: selectedItem.ma_chi_so
-        });
     }
 
     handleShowCreatorUpdaterPopup() {
         this.setState({
             ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup,
             ModeAction: "create"
+        });
+    }
+
+    handleEditClick(event) {
+        window.location.href = UrlRedirect.PromotionEditor + `/${event.target.name}`;
+    }
+
+    handleActiveClick(event) {
+        console.log("dwadawdw");
+        var url = UrlApi.PromotionManagement + "/" + event.target.name;
+        var $this = this;
+        var updatePromotionJson = {
+            trang_thai: parseInt(event.target.id, 10) === 1 ? 0 : 1
+        };
+
+        Request.put(url)
+            .set('Content-Type', 'application/x-www-form-urlencoded')
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .send(updatePromotionJson)
+            .end(function (err, res) {
+                $this.getPromotions();
+            });
+    }
+
+    handleDeleteClick(event) {
+        let selectedItemId = event.target.name;
+        let selectedItem = this.state.tbodyContents.find((content) => content._id === selectedItemId);
+        this.setState({
+            ShowDeletePopup: !this.state.ShowDeletePopup,
+            SelectedItemId: selectedItemId,
+            selectedItemValue: selectedItem.ma_khuyen_mai
         });
     }
 
@@ -196,7 +181,13 @@ class PriceFactor extends Component {
     }
 
     handleResetContentsState() {
-        this.getPriceFactors();
+        this.getPromotions();
+    }
+
+    handleClosePopup() {
+        this.setState({
+            ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
+        });
     }
 
     render() {
@@ -204,16 +195,16 @@ class PriceFactor extends Component {
             <div className="right_col">
                 <div className="row tile_count" >
                     <HeaderForm2
-                        title={"Chỉ số ảnh hưởng giá"}
-                        buttonTitle={"chỉ số"}
-                        linkTo={UrlRedirect.PriceFactorCreator} />
+                        title={"Quản lý khuyến mãi"}
+                        buttonTitle={"Khuyến mãi"}
+                        linkTo={UrlRedirect.PromotionCreator} />
                 </div>
                 <div className="row">
-                    <div id="page-wrapper" onKeyDown={this.onKeyDown}>
+                    <div id="page-wrapper">
                         <div className="row">
                             <div>
-                                <PriceFactorContents
-                                    tbodyPriceFactors={this.state.tbodyPriceFactors}
+                                <PromotionManagementContents
+                                    tbodyContents={this.state.tbodyContents}
                                     handleEditClick={this.handleEditClick}
                                     handleDeleteClick={this.handleDeleteClick}
                                     handleActiveClick={this.handleActiveClick}
@@ -221,7 +212,7 @@ class PriceFactor extends Component {
 
                                 {
                                     this.state.ShowCreatorUpdaterPopup ?
-                                        <PriceFactorCreatorUpdater
+                                        <PromotionCreatorUpdater
                                             modeAction={this.state.ModeAction}
                                             editContents={this.state.EditContents}
                                             resetContentState={this.handleResetContentsState}
@@ -233,7 +224,7 @@ class PriceFactor extends Component {
                                 {
                                     this.state.ShowDeletePopup ?
                                         <DeleteForm
-                                            url={UrlApi.PriceFactor}
+                                            url={UrlApi.PromotionManagement}
                                             SelectedItemId={this.state.SelectedItemId}
                                             selectedItemValue={this.state.selectedItemValue}
                                             closeDeletePopup={this.handleCloseDeletePop}
@@ -250,18 +241,18 @@ class PriceFactor extends Component {
     }
 }
 
-class PriceFactorManagement extends Component {
+class PromotionManagement extends Component {
     render() {
         return (
             <BrowserRouter>
                 <div>
-                    <Route exact={true} path={UrlRedirect.PriceFactors} component={PriceFactor} />
-                    <Route exact={true} path={UrlRedirect.PriceFactorCreator} component={PriceFactorCreator} />
-                    <Route exact={true} path={UrlRedirect.PriceFactorEditor + "/:id"} component={PriceFactorEditor} />
+                    <Route exact={true} path={UrlRedirect.Promotions} component={Promotion} />
+                    <Route exact={true} path={UrlRedirect.PromotionCreator} component={PromotionCreator} />
+                    <Route exact={true} path={UrlRedirect.PromotionEditor + "/:id"} component={PromotionEditor} />
                 </div>
             </BrowserRouter>
         );
     }
 }
 
-export default PriceFactorManagement;
+export default PromotionManagement;

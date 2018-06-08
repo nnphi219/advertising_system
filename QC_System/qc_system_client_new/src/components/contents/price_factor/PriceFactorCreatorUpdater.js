@@ -323,7 +323,7 @@ class RenderProperties extends Component {
                         <input type="text" id={"gia_tri_thuc_tang_them"} value={Math.abs(realValue)} key={"gia_tri_thuc_tang_them"} name={"gia_tri_thuc_tang_them"} onChange={this.props.OnChangeInput} readOnly className="pricefactor--input" />
                     </label>
                 </div>
-                <div className="submit">
+                <div className="pricefactor-submit">
                     <button className="btn btn-primary" onClick={this.props.handleSubmit}>Lưu</button>
                     <button className="btn btn-primary" onClick={this.onCancel}>Hủy</button>
                 </div>

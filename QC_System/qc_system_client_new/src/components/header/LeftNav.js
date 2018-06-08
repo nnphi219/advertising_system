@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { UrlRedirect } from '../../components/contents/share/UrlApi';
 
 class LeftNav extends React.Component {
     render() {
@@ -43,36 +44,29 @@ class LeftNav extends React.Component {
                                     </ul>
                                 </li>
                                 <li>
-                                    <NavLink to="/domains">Domain</NavLink>
+                                    <NavLink to={UrlRedirect.XsystemDomainUrls}>Domain</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/api-urls">Api</NavLink>
+                                    <NavLink to={UrlRedirect.XsystemApiUrls}>Api</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/ads-pages">Quản lý trang quảng cáo</NavLink>
+                                    <NavLink to={UrlRedirect.AdsPages}>Quản lý trang quảng cáo</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/post-types">Quản lý loại bài đăng</NavLink>
+                                    <NavLink to={UrlRedirect.PostTypes}>Quản lý loại bài đăng</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/ads-areas">Quản lý dịch vụ</NavLink>
+                                    <NavLink to={UrlRedirect.AdsArea}>Quản lý dịch vụ</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/service-prices">Giá dịch vụ</NavLink>
+                                    <NavLink to={UrlRedirect.ServicePrices}>Giá dịch vụ</NavLink>
                                 </li>
                                 <li>
-                                    <NavLink to="/price-factors">Chỉ số ảnh hưởng gía</NavLink>
+                                    <NavLink to={UrlRedirect.PriceFactors}>Chỉ số ảnh hưởng gía</NavLink>
                                 </li>
-                                {/* <li><a><i className="fa fa-edit"></i> Forms <span className="fa fa-chevron-down"></span></a>
-                                    <ul className="nav child_menu">
-                                        <li><a href="form.html">General Form</a></li>
-                                        <li><a href="form_advanced.html">Advanced Components</a></li>
-                                        <li><a href="form_validation.html">Form Validation</a></li>
-                                        <li><a href="form_wizards.html">Form Wizard</a></li>
-                                        <li><a href="form_upload.html">Form Upload</a></li>
-                                        <li><a href="form_buttons.html">Form Buttons</a></li>
-                                    </ul>
-                                </li> */}
+                                <li>
+                                    <NavLink to={UrlRedirect.Promotions}>Bảng khuyến mãi</NavLink>
+                                </li>
                             </ul>
                         </div>
                         <div className="menu_section">

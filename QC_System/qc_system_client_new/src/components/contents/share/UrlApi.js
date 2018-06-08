@@ -83,6 +83,10 @@ export const UrlRedirect = {
     PriceFactorCreator: '/price-factors/create',
     PriceFactorEditor: '/price-factors/edit',
 
+    Promotions: '/promotions',
+    PromotionCreator: '/promotions/create',
+    PromotionEditor: '/promotions/edit',
+
     AdsPages: '/ads-pages',
     AdsPageCreator: '/ads-pages/create',
     AdsPageEditor: '/ads-pages/edit',

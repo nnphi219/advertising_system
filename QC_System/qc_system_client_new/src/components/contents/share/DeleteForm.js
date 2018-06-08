@@ -28,7 +28,7 @@ class DeleteForm extends Component {
                 <div className='popup_inner deleteform'>
                     <h2>Xác nhận</h2>
                     <div className='popup_inner--delete-content'>
-                        <p>Do you want to delete {this.props.SelectedItemId}?</p>
+                        <p>Bạn có chắc muốn xóa {this.props.selectedItemValue}?</p>
                         <button className="btn btn-primary" onClick={this.handleDeleteItem}>Ok</button>
                         <button className="btn btn-primary" onClick={this.props.closeDeletePopup}>Cancel</button>
                     </div>
