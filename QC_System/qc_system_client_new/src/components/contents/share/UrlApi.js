@@ -78,11 +78,11 @@ export const UrlRedirect = {
     XsystemCreatePostType: '/xsystem-posttypes/create',
     XsystemEditPostType: '/xsystem-posttypes/edit',
 
-    XsystemDomainUrls: '/domain-urls',
-    XsystemCreateDomainUrl: '/domain-urls/update',
+    XsystemDomainUrls: '/domains',
+    XsystemUpdateDomainUrl: '/domains/update',
 
     XsystemApiUrls: '/api-urls',
-    XsystemCreateApiUrl: '/api-urls/update'
+    XsystemUpdateApiUrl: '/api-urls/update'
 }
 
 export default UrlApi;

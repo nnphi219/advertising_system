@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import { UrlRedirect } from './share/UrlApi';
 
 import Home from './home/Home';
-import XsystemDomainUrl from './Domain_Url/DomainUrlManagement';
-import XsystemApiUrl from './Api_Url/ApiUrlManagement';
+import DomainUrlManagement from './Domain_Url/DomainUrlManagement';
+import ApiUrlManagement from './Api_Url/ApiUrlManagement';
 
 import './contents.css';
 
@@ -22,8 +23,8 @@ class Contents extends Component {
         return (
             <div>
                 <Route exact={true} path="/" component={Home} />
-                <Route path="/domains" component={XsystemDomainUrl} />
-                <Route path="/apiurls" component={XsystemApiUrl} />
+                <Route path={UrlRedirect.XsystemDomainUrls} component={DomainUrlManagement} />
+                <Route path={UrlRedirect.XsystemApiUrls} component={ApiUrlManagement} />
             </div>
         );
     }

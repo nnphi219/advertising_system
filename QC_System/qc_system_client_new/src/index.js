@@ -14,9 +14,11 @@ import './frontend/vendors/iCheck/skins/flat/green.css';
 import './frontend/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css';
 import './frontend/vendors/jqvmap/dist/jqvmap.min.css';
 import './frontend/vendors/bootstrap-daterangepicker/daterangepicker.css';
-import './frontend/build/css/custom.min.css';
+import './frontend/build/css/custom.css';
+import './frontend/vendors/css/bootstrap-tokenfield.css';
+import './frontend/css/popup.css';
 
-const store = createStore(reducers);
+// const store = createStore(reducers);
 
 ReactDOM.render(
     // <Provider store={store}>

@@ -9,29 +9,36 @@ class DeleteFormWithoutPopup extends Component {
     }
 
     handleDeleteItem() {
-        var url = this.props.url + "/" + this.props.SelectedItemId.toString();
-        var $this = this;
+        if (this.props.isDeletedBySelf) {
+            this.props.deleteBySelf(this.props.SelectedItemId.toString());
+        }
+        else {
+            var url = this.props.url + "/" + this.props.SelectedItemId.toString();
+            var $this = this;
 
-        Request.delete(url)
-        .set('x-auth', localStorage.getItem('x-auth'))
-        .send({ id: this.props.SelectedItemId })
-        .set('Accept', 'application/json')
-        .end(function(err, res){
-            $this.Rediect();
-        });
+            Request.delete(url)
+                .set('x-auth', localStorage.getItem('x-auth'))
+                .set("Content-Type", "application/json")
+                .send({ id: this.props.SelectedItemId })
+                .set('Accept', 'application/json')
+                .end(function (err, res) {
+                    $this.Rediect();
+                });
+        }
+
     }
 
-    Rediect(){
+    Rediect() {
         window.location.href = this.props.urlRedirect;
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <div className='popup'>
                 <div className='deleteform popup_inner'>
                     <h2>Xác nhận</h2>
                     <div className='popup_inner--delete-content'>
-                        <p>Do you want to delete {this.props.SelectedItemId}?</p>
+                        <p>Bạn có muốn xóa {this.props.selectedItemValue} ?</p>
                         <button className="btn btn-primary deleteform--button" onClick={this.handleDeleteItem}>Ok</button>
                         <button className="btn btn-primary deleteform--button" onClick={this.props.closeDeletePopup}>Cancel</button>
                     </div>

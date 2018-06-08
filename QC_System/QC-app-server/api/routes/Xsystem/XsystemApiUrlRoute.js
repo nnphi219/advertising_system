@@ -6,13 +6,14 @@ module.exports = function (app) {
 
     app.route('/XsystemApiUrls')
         .get(authenticate, xsystemApiUrlController.list_all_api_urls)
-        .post(authenticate, xsystemApiUrlController.create_a_apiUrl);
+        .post(authenticate, xsystemApiUrlController.create_a_apiUrl)
+        .delete(authenticate, xsystemApiUrlController.delete_a_apiUrl);
 
     app.route('/XsystemApiUrlsCreateManyApiUrl')
         .post(authenticate, xsystemApiUrlController.create_many_apiUrls);
 
     app.route('/XsystemApiUrls/:apiUrlId')
         .get(authenticate, xsystemApiUrlController.read_a_apiUrl)
-        .put(authenticate, xsystemApiUrlController.update_a_apiUrl)
-        .delete(authenticate, xsystemApiUrlController.delete_a_apiUrl);
+        .put(authenticate, xsystemApiUrlController.update_a_apiUrl);
+        
 };

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 import Request from 'superagent';
 
 import RenderHeader from '../share/RenderHeader';
@@ -9,6 +10,7 @@ import UrlApi, { UrlRedirect } from '../share/UrlApi';
 import { HeaderForm3 } from '../share/HeaderForm/HeaderForm';
 
 import './domain_url.css';
+import { XsystemDomainUrlCreator } from './DomainUrlCreatorUpdater';
 
 function RenderRow(props) {
     return (
@@ -81,6 +83,7 @@ class XsystemDomainUrl extends Component {
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
+        this.deleteBySelf = this.deleteBySelf.bind(this);
     }
 
     componentDidMount() {
@@ -106,9 +109,12 @@ class XsystemDomainUrl extends Component {
     }
 
     handleDeleteClick(event) {
+        let selectedItemId = event.target.name;
+        let selectedItem = this.state.tbodyContents.find((content) => content._id === selectedItemId);
         this.setState({
             ShowDeletePopup: !this.state.ShowDeletePopup,
-            SelectedItemId: event.target.name
+            SelectedItemId: selectedItemId,
+            selectedItemValue: selectedItem.domain
         });
     }
 
@@ -119,27 +125,49 @@ class XsystemDomainUrl extends Component {
     }
 
     handleResetContentsState() {
-        this.getUsers();
+        this.getDomainUrls();
+    }
+
+    deleteBySelf(id) {
+        let $this = this;
+        Request.delete(UrlApi.XsystemDomainUrls)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .send({ domainId: id })
+            .set('Accept', 'application/json')
+            .end(function (err, res) {
+                $this.getDomainUrls();
+                $this.handleCloseDeletePop();
+            });
     }
 
     render() {
         return (
-            <div id="page-wrapper">
-                <HeaderForm3 title={"Domain"} buttonTitle={"Cập nhật domain"} CreateItem={this.UpdateDomain} />
-                <DomainUrlContents
-                    tbodyContents={this.state.tbodyContents}
-                    handleEditClick={this.EditDomainUrl}
-                    handleDeleteClick={this.handleDeleteClick}
-                />
-
+            <div className="right_col">
+                <div className="row tile_count" >
+                    <div className="col-md-12 col-sm-12 col-xs-12">
+                        <HeaderForm3 title={"Domain"} buttonTitle={"Cập nhật domain"} linkTo={UrlRedirect.XsystemUpdateDomainUrl} CreateItem={this.UpdateDomain} />
+                    </div>
+                </div>
+                <div className="row" >
+                    <div className="col-md-12 col-sm-12 col-xs-12">
+                        <DomainUrlContents
+                            tbodyContents={this.state.tbodyContents}
+                            handleEditClick={this.EditDomainUrl}
+                            handleDeleteClick={this.handleDeleteClick}
+                        />
+                    </div>
+                </div>
                 {
                     this.state.ShowDeletePopup ?
                         <DeleteFormWithoutPopup
                             url={UrlApi.XsystemDomainUrls}
                             urlRedirect={UrlRedirect.XsystemDomainUrls}
                             SelectedItemId={this.state.SelectedItemId}
+                            selectedItemValue={this.state.selectedItemValue}
                             closeDeletePopup={this.handleCloseDeletePop}
                             resetContentState={this.handleResetContentsState}
+                            isDeletedBySelf={true}
+                            deleteBySelf={this.deleteBySelf}
                         />
                         : null
                 }
@@ -148,4 +176,17 @@ class XsystemDomainUrl extends Component {
     }
 }
 
-export default XsystemDomainUrl;
+class DomainUrlManagement extends Component {
+    render() {
+        return (
+            <BrowserRouter>
+                <div>
+                    <Route exact={true} path={UrlRedirect.XsystemDomainUrls} component={XsystemDomainUrl} />
+                    <Route path={UrlRedirect.XsystemUpdateDomainUrl} component={XsystemDomainUrlCreator} />
+                </div>
+            </BrowserRouter>
+        );
+    }
+}
+
+export default DomainUrlManagement;

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import UrlApi, { UrlRedirect } from '../../share/UrlApi';
-import { RenderInput } from '../../share/InputsRender';
+import { NavLink } from 'react-router-dom';
+import UrlApi, { UrlRedirect } from '../share/UrlApi';
+import { RenderInput } from '../share/InputsRender';
 
-import { ArrayRemoveItem } from '../../share/CommonFunction';
+import { ArrayRemoveItem } from '../share/CommonFunction';
 
 import './domain_url.css';
 
@@ -13,7 +14,7 @@ class RenderProperties extends Component {
     render() {
         let props = this.props;
         let domains = props.stateValues.domains || [];
-   
+
         let domainTokenFields = domains.map((domain) => {
             return (
                 <div key={domain} className="token domain--token">
@@ -50,7 +51,7 @@ class RenderProperties extends Component {
                 </div>
                 <div className="domain_submit">
                     <button className="btn btn-primary" onClick={props.handleSubmit}>Lưu</button>
-                    <button className="btn btn-primary" onClick={props.handleCancel}>Hủy</button>
+                    <NavLink to={UrlRedirect.XsystemDomainUrls} className="btn btn-primary" style={{ backgroundColor: "#337ab7" }}>Hủy</NavLink>
                 </div>
             </div>
         );
@@ -108,7 +109,7 @@ class DomainUrlCreatorUpdater extends Component {
         };
         this.SetInitState(jsonState);
         this.state = jsonState;
-    
+
         this.OnAddTokenField = this.OnAddTokenField.bind(this);
         this.OnRemoveTokenField = this.OnRemoveTokenField.bind(this);
         this.OnEditTokenField = this.OnEditTokenField.bind(this);
@@ -136,7 +137,7 @@ class DomainUrlCreatorUpdater extends Component {
     SetInitState(jsonState) {
         jsonState.error_domain = '';
         jsonState.domain = '';
-        jsonState.domains = this.props.editContents;
+        jsonState.domains = [];
     }
 
     handleUpdateState(jsonState) {
@@ -169,7 +170,7 @@ class DomainUrlCreatorUpdater extends Component {
         if (domains === "error") {
             return;
         }
-        console.log(domains);
+        
         let token = localStorage.getItem('x-auth');
         Request.post(UrlApi.XsystemDomainUrlsCreateManyItem)
             .set('x-auth', token)
@@ -264,8 +265,14 @@ class DomainUrlCreatorUpdater extends Component {
 export class XsystemDomainUrlCreator extends Component {
     render() {
         return (
-            <DomainUrlCreatorUpdater
-            />
+            <div className="right_col">
+                <div className="row tile_count" >
+                    <div className="col-md-12 col-sm-12 col-xs-12">
+                        <DomainUrlCreatorUpdater
+                        />
+                    </div>
+                </div>
+            </div>
         );
     }
 }

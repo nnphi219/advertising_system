@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import './headerform.css';
 
@@ -32,11 +33,15 @@ export class HeaderForm3 extends Component {
   render() {
     var buttonTitle = this.props.buttonTitle;
     return (
-      <div className="header2">
-        <h2 className="header2-title float-left">
-          {this.props.title}
-          <button type="button" className="btn btn-primary header2--button" onClick={this.props.CreateItem}>{buttonTitle}</button>
-        </h2>
+      <div>
+        <div className="header2">
+          <h2 className="header2-title float-left">
+            {this.props.title}
+          </h2>
+        </div>
+        <div>
+          <NavLink to={this.props.linkTo} className="btn btn-primary header2--button">{buttonTitle}</NavLink>
+        </div>
       </div>
     );
   }

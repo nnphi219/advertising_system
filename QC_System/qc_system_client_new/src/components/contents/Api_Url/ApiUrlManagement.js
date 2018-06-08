@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
+import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 
 import RenderHeader from '../share/RenderHeader';
 import DeleteFormWithoutPopup from '../share/DeleteFormWithoutPopup';
@@ -7,6 +8,7 @@ import { RenderDeleteButton } from '../share/RenderEditDeleteButton';
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
 
 import { HeaderForm3 } from '../share/HeaderForm/HeaderForm';
+import { XsystemApiUrlCreator } from './ApiUrlCreatorUpdater';
 
 import './api_url.css';
 
@@ -81,6 +83,7 @@ class XsystemApiUrl extends Component {
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
+        this.deleteBySelf = this.deleteBySelf.bind(this);
     }
 
     componentDidMount() {
@@ -106,9 +109,12 @@ class XsystemApiUrl extends Component {
     }
 
     handleDeleteClick(event) {
+        let selectedItemId = event.target.name;
+        let selectedItem = this.state.tbodyContents.find((content) => content._id === selectedItemId);
         this.setState({
             ShowDeletePopup: !this.state.ShowDeletePopup,
-            SelectedItemId: event.target.name
+            SelectedItemId: selectedItemId,
+            selectedItemValue: selectedItem.api_url
         });
     }
 
@@ -119,27 +125,49 @@ class XsystemApiUrl extends Component {
     }
 
     handleResetContentsState() {
-        this.getUsers();
+        this.getApiUrls();
+    }
+
+    deleteBySelf(id) {
+        let $this = this;
+        Request.delete(UrlApi.XsystemApiUrls)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .send({ apiId: id })
+            .set('Accept', 'application/json')
+            .end(function (err, res) {
+                $this.getApiUrls();
+                $this.handleCloseDeletePop();
+            });
     }
 
     render() {
         return (
-            <div id="page-wrapper">
-                <HeaderForm3 title={"Api"} buttonTitle={"Cập nhật api"} CreateItem={this.UpdateApi} />
-                <ApiUrlContents
-                    tbodyContents={this.state.tbodyContents}
-                    handleEditClick={this.EditApiUrl}
-                    handleDeleteClick={this.handleDeleteClick}
-                />
-
+            <div className="right_col">
+                <div className="row tile_count" >
+                    <div className="col-md-12 col-sm-12 col-xs-12">
+                        <HeaderForm3 title={"Api"} buttonTitle={"Cập nhật api"} linkTo={UrlRedirect.XsystemUpdateApiUrl} CreateItem={this.UpdateApi} />
+                    </div>
+                </div>
+                <div className="row" >
+                    <div className="col-md-12 col-sm-12 col-xs-12">
+                        <ApiUrlContents
+                            tbodyContents={this.state.tbodyContents}
+                            handleEditClick={this.EditApiUrl}
+                            handleDeleteClick={this.handleDeleteClick}
+                        />
+                    </div>
+                </div>
                 {
                     this.state.ShowDeletePopup ?
                         <DeleteFormWithoutPopup
                             url={UrlApi.XsystemApiUrls}
                             urlRedirect={UrlRedirect.XsystemApiUrls}
                             SelectedItemId={this.state.SelectedItemId}
+                            selectedItemValue={this.state.selectedItemValue}
                             closeDeletePopup={this.handleCloseDeletePop}
                             resetContentState={this.handleResetContentsState}
+                            isDeletedBySelf={true}
+                            deleteBySelf={this.deleteBySelf}
                         />
                         : null
                 }
@@ -148,4 +176,17 @@ class XsystemApiUrl extends Component {
     }
 }
 
-export default XsystemApiUrl;
+class ApiUrlManagement extends Component {
+    render() {
+        return (
+            <BrowserRouter>
+                <div>
+                    <Route exact={true} path={UrlRedirect.XsystemApiUrls} component={XsystemApiUrl} />
+                    <Route path={UrlRedirect.XsystemUpdateApiUrl} component={XsystemApiUrlCreator} />
+                </div>
+            </BrowserRouter>
+        );
+    }
+}
+
+export default ApiUrlManagement;

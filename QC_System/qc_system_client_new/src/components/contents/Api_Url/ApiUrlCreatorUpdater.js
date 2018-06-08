@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import UrlApi, { UrlRedirect } from '../../share/UrlApi';
-import { RenderInput } from '../../share/InputsRender';
-
-import { ArrayRemoveItem } from '../../share/CommonFunction';
+import UrlApi, { UrlRedirect } from '../share/UrlApi';
+import { RenderInput } from '../share/InputsRender';
+import { ArrayRemoveItem } from '../share/CommonFunction';
+import { NavLink } from 'react-router-dom';
 
 import './api_url.css';
 
@@ -11,7 +11,7 @@ class RenderProperties extends Component {
     render() {
         let props = this.props;
         let apis = props.stateValues.apis || [];
-   
+
         let apiTokenFields = apis.map((api) => {
             return (
                 <div key={api} className="token api--token">
@@ -106,7 +106,7 @@ class ApiUrlCreatorUpdater extends Component {
         };
         this.SetInitState(jsonState);
         this.state = jsonState;
-    
+
         this.OnAddTokenField = this.OnAddTokenField.bind(this);
         this.OnRemoveTokenField = this.OnRemoveTokenField.bind(this);
         this.OnEditTokenField = this.OnEditTokenField.bind(this);
@@ -167,7 +167,7 @@ class ApiUrlCreatorUpdater extends Component {
         if (apis === "error") {
             return;
         }
-        
+
         let token = localStorage.getItem('x-auth');
         Request.post(UrlApi.XsystemApiUrlsCreateManyItem)
             .set('x-auth', token)
@@ -190,7 +190,7 @@ class ApiUrlCreatorUpdater extends Component {
         let stateValues = this.state;
         let currentInputApi = stateValues.api_url.trim();
         let currentApis = stateValues.apis;
-        
+
         if (currentInputApi === "") {
             return;
         }
@@ -262,8 +262,14 @@ class ApiUrlCreatorUpdater extends Component {
 export class XsystemApiUrlCreator extends Component {
     render() {
         return (
-            <ApiUrlCreatorUpdater
-            />
+            <div className="right_col">
+                <div className="row tile_count" >
+                    <div className="col-md-12 col-sm-12 col-xs-12">
+                        <ApiUrlCreatorUpdater
+                        />
+                    </div>
+                </div>
+            </div>
         );
     }
 }

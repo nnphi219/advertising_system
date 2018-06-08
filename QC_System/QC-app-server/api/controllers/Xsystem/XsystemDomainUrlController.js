@@ -67,8 +67,9 @@ exports.update_a_domainUrl = function (req, res) {
 
 
 exports.delete_a_domainUrl = function (req, res) {
+    console.log(req.body.domainId);
     XsystemDomainUrl.remove({
-        _id: req.params.domainUrlId
+        _id: req.body.domainId
     }, function (err, domainUrl) {
         if (err)
             res.send(err);
