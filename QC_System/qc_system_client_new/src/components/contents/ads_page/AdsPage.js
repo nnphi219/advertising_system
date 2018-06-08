@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 import Request from 'superagent';
+import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 
 import RenderHeader from '../share/RenderHeader';
 import DeleteFormWithoutPopup from '../share/DeleteFormWithoutPopup';
-import { RenderDeleteButton } from '../share/RenderEditDeleteButton';
+import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
+import { XsystemPageCreator, XsystemPageEditor } from './AdsPageCreatorUpdater';
 
-import { HeaderForm3 } from '../share/HeaderForm/HeaderForm';
-
-import './domain_url.css';
-import { XsystemDomainUrlCreator } from './DomainUrlCreatorUpdater';
+import './ads_page.css';
+import { HeaderForm2 } from '../share/HeaderForm/HeaderForm';
 
 function RenderRow(props) {
     return (
         <tr>
-            <td>{props.trContent.domain}</td>
+            <td>{props.trContent.ma_trang_quang_cao}</td>
+            <td>{props.trContent.ten_trang_quang_cao}</td>
             <td>
-                <RenderDeleteButton
+                <RenderEditDeleteButton
                     nameId={props.trContent._id}
+                    handleEditClick={props.handleEditClick}
                     handleDeleteClick={props.handleDeleteClick}
+                    ActiveIsNotShown={true}
                 />
             </td>
         </tr>
@@ -46,11 +48,11 @@ function RenderBody(props) {
     );
 }
 
-class DomainUrlContents extends Component {
+class PageContents extends Component {
     render() {
         var theader = {
-            keys: ["domain"],
-            values: ["Tên domain"]
+            keys: ["ma_trang_quang_cao", "ten_trang_quang_cao"],
+            values: ["Mã trang quảng cáo", "Tên trang quảng cáo"]
         };
 
         return (
@@ -68,7 +70,7 @@ class DomainUrlContents extends Component {
     }
 }
 
-class XsystemDomainUrl extends Component {
+class XsystemPages extends Component {
     constructor(props) {
         super(props);
 
@@ -78,34 +80,35 @@ class XsystemDomainUrl extends Component {
             tbodyContents: []
         };
 
-        this.UpdateDomain = this.UpdateDomain.bind(this);
-        this.EditDomainUrl = this.EditDomainUrl.bind(this);
+        this.CreatePage = this.CreatePage.bind(this);
+        this.EditPage = this.EditPage.bind(this);
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
         this.handleCloseDeletePop = this.handleCloseDeletePop.bind(this);
         this.handleResetContentsState = this.handleResetContentsState.bind(this);
-        this.deleteBySelf = this.deleteBySelf.bind(this);
     }
 
     componentDidMount() {
-        this.getDomainUrls();
+        this.getPages();
     }
 
-    getDomainUrls() {
-        Request.get(UrlApi.XsystemDomainUrls)
+    getPages() {
+        Request.get(UrlApi.XsystemPages)
             .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
-                this.setState({
-                    tbodyContents: res.body
-                });
+                if (res.body) {
+                    this.setState({
+                        tbodyContents: res.body
+                    });
+                }
             });
     }
 
-    UpdateDomain() {
-        window.location.href = UrlRedirect.XsystemCreateDomainUrl;
+    CreatePage() {
+        window.location.href = UrlRedirect.XsystemCreatePage;
     }
 
-    EditDomainUrl(event) {
-        window.location.href = UrlRedirect.XsystemEditDomainUrl + `/${event.target.name}`;
+    EditPage(event) {
+        window.location.href = UrlRedirect.AdsPageEditor + `/${event.target.name}`;
     }
 
     handleDeleteClick(event) {
@@ -114,7 +117,7 @@ class XsystemDomainUrl extends Component {
         this.setState({
             ShowDeletePopup: !this.state.ShowDeletePopup,
             SelectedItemId: selectedItemId,
-            selectedItemValue: selectedItem.domain
+            selectedItemValue: selectedItem.ten_trang_quang_cao
         });
     }
 
@@ -125,38 +128,24 @@ class XsystemDomainUrl extends Component {
     }
 
     handleResetContentsState() {
-        this.getDomainUrls();
-    }
-
-    deleteBySelf(id) {
-        let $this = this;
-        Request.delete(UrlApi.XsystemDomainUrls)
-            .set('x-auth', localStorage.getItem('x-auth'))
-            .send({ domainId: id })
-            .set('Accept', 'application/json')
-            .end(function (err, res) {
-                $this.getDomainUrls();
-                $this.handleCloseDeletePop();
-            });
+        this.getUsers();
     }
 
     render() {
         return (
             <div className="right_col">
                 <div className="row tile_count" >
-                    <div className="col-md-12 col-sm-12 col-xs-12">
-                        <HeaderForm3
-                            title={"Domain"}
-                            buttonTitle={"Cập nhật domain"}
-                            linkTo={UrlRedirect.XsystemUpdateDomainUrl}
-                            CreateItem={this.UpdateDomain} />
-                    </div>
+                    <HeaderForm2
+                        title={"Trang áp dụng cho quảng cáo"}
+                        buttonTitle={"trang"}
+                        linkTo={UrlRedirect.AdsPageCreator}
+                        CreateItem={this.CreatePage} />
                 </div>
                 <div className="row" >
                     <div className="col-md-12 col-sm-12 col-xs-12">
-                        <DomainUrlContents
+                        <PageContents
                             tbodyContents={this.state.tbodyContents}
-                            handleEditClick={this.EditDomainUrl}
+                            handleEditClick={this.EditPage}
                             handleDeleteClick={this.handleDeleteClick}
                         />
                     </div>
@@ -164,33 +153,33 @@ class XsystemDomainUrl extends Component {
                 {
                     this.state.ShowDeletePopup ?
                         <DeleteFormWithoutPopup
-                            url={UrlApi.XsystemDomainUrls}
-                            urlRedirect={UrlRedirect.XsystemDomainUrls}
+                            url={UrlApi.XsystemPages}
+                            urlRedirect={UrlRedirect.AdsPages}
                             SelectedItemId={this.state.SelectedItemId}
                             selectedItemValue={this.state.selectedItemValue}
                             closeDeletePopup={this.handleCloseDeletePop}
                             resetContentState={this.handleResetContentsState}
-                            isDeletedBySelf={true}
-                            deleteBySelf={this.deleteBySelf}
                         />
                         : null
                 }
+
             </div>
         );
     }
 }
 
-class DomainUrlManagement extends Component {
+class AdsPagesManagement extends Component {
     render() {
         return (
             <BrowserRouter>
                 <div>
-                    <Route exact={true} path={UrlRedirect.XsystemDomainUrls} component={XsystemDomainUrl} />
-                    <Route path={UrlRedirect.XsystemUpdateDomainUrl} component={XsystemDomainUrlCreator} />
+                    <Route exact={true} path={UrlRedirect.AdsPages} component={XsystemPages} />
+                    <Route exact={true} path={UrlRedirect.AdsPageCreator} component={XsystemPageCreator} />
+                    <Route exact={true} path={UrlRedirect.AdsPageEditor + "/:id"} component={XsystemPageEditor} />
                 </div>
             </BrowserRouter>
         );
     }
 }
 
-export default DomainUrlManagement;
+export default AdsPagesManagement;

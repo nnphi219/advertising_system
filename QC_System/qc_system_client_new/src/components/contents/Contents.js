@@ -7,6 +7,7 @@ import DomainUrlManagement from './Domain_Url/DomainUrlManagement';
 import ApiUrlManagement from './Api_Url/ApiUrlManagement';
 
 import './contents.css';
+import AdsPagesManagement from './ads_page/AdsPage';
 
 class Test extends Component {
     render() {
@@ -25,6 +26,7 @@ class Contents extends Component {
                 <Route exact={true} path="/" component={Home} />
                 <Route path={UrlRedirect.XsystemDomainUrls} component={DomainUrlManagement} />
                 <Route path={UrlRedirect.XsystemApiUrls} component={ApiUrlManagement} />
+                <Route path={UrlRedirect.AdsPages} component={AdsPagesManagement} />
             </div>
         );
     }

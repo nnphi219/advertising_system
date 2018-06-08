@@ -70,9 +70,9 @@ export const UrlRedirect = {
     UserRegister: '/register',
     UserTokenMe: '/users/me/token',
 
-    XsystemPages: '/xsystem-pages',
-    XsystemCreatePage: '/xsystem-pages/create',
-    XsystemEditPage: '/xsystem-pages/edit',
+    AdsPages: '/ads-pages',
+    AdsPageCreator: '/ads-pages/create',
+    AdsPageEditor: '/ads-pages/edit',
 
     XsystemPostTypes: '/xsystem-posttypes',
     XsystemCreatePostType: '/xsystem-posttypes/create',

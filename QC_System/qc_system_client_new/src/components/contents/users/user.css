@@ -49,7 +49,7 @@
 .user--input
 {
     display: block;
-    width: 90%;
+    width: 700px;
     height: 34px;
     padding: 6px 12px;
     font-size: 14px;
@@ -64,6 +64,11 @@
     -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.user--input.a_part {
+    width: 200px;
+    margin-right: 5px;
 }
 
 .user_margin_button-close {

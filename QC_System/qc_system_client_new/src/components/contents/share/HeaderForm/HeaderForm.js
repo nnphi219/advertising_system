@@ -8,7 +8,7 @@ class HeaderForm extends Component {
     var buttonTitle = "Tạo " + this.props.title;
     return (
       <div className="header">
-        <h2 className="header-title float-left">{this.props.title}</h2>
+        <h2 className="header-title">{this.props.title}</h2>
         <button type="button" className="btn btn-primary float-left" onClick={this.props.showCreatorUpdaterPopup}>{buttonTitle}</button>
       </div>
     );
@@ -19,11 +19,15 @@ export class HeaderForm2 extends Component {
   render() {
     var buttonTitle = "Tạo " + this.props.buttonTitle;
     return (
-      <div className="header2">
-        <h2 className="header2-title float-left">
-          {this.props.title}
-          <button type="button" className="btn btn-primary header2--button" onClick={this.props.CreateItem}>{buttonTitle}</button>
-        </h2>
+      <div>
+        <div className="header2">
+          <h2 className="header2-title">
+            {this.props.title}
+          </h2>
+        </div>
+        <div>
+          <NavLink to={this.props.linkTo} className="btn btn-primary header2--button">{buttonTitle}</NavLink>
+        </div>
       </div>
     );
   }
@@ -35,7 +39,7 @@ export class HeaderForm3 extends Component {
     return (
       <div>
         <div className="header2">
-          <h2 className="header2-title float-left">
+          <h2 className="header2-title">
             {this.props.title}
           </h2>
         </div>
