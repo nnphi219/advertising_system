@@ -478,7 +478,6 @@ class ServicePriceCreatorUpdater extends Component {
                 return;
             }
 
-            var $this = this;
             Request.post(UrlApi.ServicePrice)
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .set('x-auth', localStorage.getItem('x-auth'))
@@ -502,7 +501,7 @@ class ServicePriceCreatorUpdater extends Component {
         var servicePriceContent = this.GetModelStateJson();
 
         var url = UrlApi.ServicePrice + "/" + this.props.editContents._id;
-        var $this = this;
+
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .set('x-auth', localStorage.getItem('x-auth'))

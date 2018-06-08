@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 
-import HeadForm, { HeaderForm2 } from '../share/HeaderForm/HeaderForm';
+import  { HeaderForm2 } from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import PriceFactorCreatorUpdater, { PriceFactorCreator, PriceFactorEditor } from './PriceFactorCreatorUpdater';
 
@@ -10,7 +10,7 @@ import DeleteForm from '../share/DeleteForm';
 import './price_factor.css';
 
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
-import { BrowserRouter, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { TransferTimeLogJsonToString } from '../share/Mapper';
 
 function RenderRow(props) {

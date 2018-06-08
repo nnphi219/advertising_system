@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
-import { RenderInput } from '../share/InputsRender';
 import './user.css';
 
 class UserLogin extends Component {
@@ -96,7 +95,7 @@ class UserLogin extends Component {
                         Quên
 						        </span>
 
-                    <a href="#" className="txt2">
+                    <a href="#40" className="txt2">
                         User name / password?
 						        </a>
                 </div>

@@ -735,7 +735,6 @@ class PriceFactorCreatorUpdater extends Component {
                 return;
             }
 
-            var $this = this;
             Request.post(UrlApi.PriceFactor)
                 .set('x-auth', localStorage.getItem('x-auth'))
                 .set('Content-Type', 'application/x-www-form-urlencoded')
@@ -757,7 +756,7 @@ class PriceFactorCreatorUpdater extends Component {
         var priceFactorContent = this.GetModelStateJson();
 
         var url = UrlApi.PriceFactor + "/" + this.props.editContents._id;
-        var $this = this;
+        
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .set('x-auth', localStorage.getItem('x-auth'))

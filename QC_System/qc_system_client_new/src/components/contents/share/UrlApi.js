@@ -65,6 +65,8 @@ const UrlApi = {
 
 export const UrlRedirect = {
     Users : '/users',
+    UserCreator: '/users/create',
+    UserEditor: '/users/edit',
     CreateUser: '/users/create',
     EditUser: '/users/edit',
     UserLogin: '/login',

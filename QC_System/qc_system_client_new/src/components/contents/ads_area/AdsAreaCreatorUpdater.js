@@ -856,7 +856,6 @@ class AdsAreaCreatorUpdater extends Component {
                 return;
             }
 
-            var $this = this;
             Request.post(UrlApi.AdsArea)
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .set('x-auth', localStorage.getItem('x-auth'))
@@ -880,7 +879,7 @@ class AdsAreaCreatorUpdater extends Component {
         var adsAreaContent = this.GetModelStateJson();
 
         var url = UrlApi.AdsArea + "/" + this.props.editContents._id;
-        var $this = this;
+       
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .set('x-auth', localStorage.getItem('x-auth'))

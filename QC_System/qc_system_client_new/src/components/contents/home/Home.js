@@ -119,11 +119,11 @@ class Home extends Component {
                                     <li><a className="collapse-link"><i className="fa fa-chevron-up"></i></a>
                                     </li>
                                     <li className="dropdown">
-                                        <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
+                                        <a href="#0" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
                                         <ul className="dropdown-menu" role="menu">
-                                            <li><a href="#">Settings 1</a>
+                                            <li><a href="#1">Settings 1</a>
                                             </li>
-                                            <li><a href="#">Settings 2</a>
+                                            <li><a href="#2">Settings 2</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -228,11 +228,11 @@ class Home extends Component {
                                     <li><a className="collapse-link"><i className="fa fa-chevron-up"></i></a>
                                     </li>
                                     <li className="dropdown">
-                                        <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
+                                        <a href="#3" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
                                         <ul className="dropdown-menu" role="menu">
-                                            <li><a href="#">Settings 1</a>
+                                            <li><a href="#4">Settings 1</a>
                                             </li>
-                                            <li><a href="#">Settings 2</a>
+                                            <li><a href="#5">Settings 2</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -243,58 +243,62 @@ class Home extends Component {
                             </div>
                             <div className="x_content">
                                 <table className="" style={{ width: "100%" }}>
-                                    <tr>
-                                        <th style={{ width: "37%" }}>
-                                            <p>Top 5</p>
-                                        </th>
-                                        <th>
-                                            <div className="col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                                                <p className="">Device</p>
-                                            </div>
-                                            <div className="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                                                <p className="">Progress</p>
-                                            </div>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <canvas className="canvasDoughnut" height="140" width="140" style={{ margin: "15px 10px 10px 0" }}></canvas>
-                                        </td>
-                                        <td>
-                                            <table className="tile_info">
-                                                <tr>
-                                                    <td>
-                                                        <p><i className="fa fa-square blue"></i>IOS </p>
-                                                    </td>
-                                                    <td>30%</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <p><i className="fa fa-square green"></i>Android </p>
-                                                    </td>
-                                                    <td>10%</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <p><i className="fa fa-square purple"></i>Blackberry </p>
-                                                    </td>
-                                                    <td>20%</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <p><i className="fa fa-square aero"></i>Symbian </p>
-                                                    </td>
-                                                    <td>15%</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <p><i className="fa fa-square red"></i>Others </p>
-                                                    </td>
-                                                    <td>30%</td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <th style={{ width: "37%" }}>
+                                                <p>Top 5</p>
+                                            </th>
+                                            <th>
+                                                <div className="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                                                    <p className="">Device</p>
+                                                </div>
+                                                <div className="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                                    <p className="">Progress</p>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <canvas className="canvasDoughnut" height="140" width="140" style={{ margin: "15px 10px 10px 0" }}></canvas>
+                                            </td>
+                                            <td>
+                                                <table className="tile_info">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <p><i className="fa fa-square blue"></i>IOS </p>
+                                                            </td>
+                                                            <td>30%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <p><i className="fa fa-square green"></i>Android </p>
+                                                            </td>
+                                                            <td>10%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <p><i className="fa fa-square purple"></i>Blackberry </p>
+                                                            </td>
+                                                            <td>20%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <p><i className="fa fa-square aero"></i>Symbian </p>
+                                                            </td>
+                                                            <td>15%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <p><i className="fa fa-square red"></i>Others </p>
+                                                            </td>
+                                                            <td>30%</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -309,11 +313,11 @@ class Home extends Component {
                                     <li><a className="collapse-link"><i className="fa fa-chevron-up"></i></a>
                                     </li>
                                     <li className="dropdown">
-                                        <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
+                                        <a href="#6" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
                                         <ul className="dropdown-menu" role="menu">
-                                            <li><a href="#">Settings 1</a>
+                                            <li><a href="#7">Settings 1</a>
                                             </li>
-                                            <li><a href="#">Settings 2</a>
+                                            <li><a href="#8">Settings 2</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -325,17 +329,17 @@ class Home extends Component {
                             <div className="x_content">
                                 <div className="dashboard-widget-content">
                                     <ul className="quick-list">
-                                        <li><i className="fa fa-calendar-o"></i><a href="#">Settings</a>
+                                        <li><i className="fa fa-calendar-o"></i><a href="#9">Settings</a>
                                         </li>
-                                        <li><i className="fa fa-bars"></i><a href="#">Subscription</a>
+                                        <li><i className="fa fa-bars"></i><a href="#10">Subscription</a>
                                         </li>
-                                        <li><i className="fa fa-bar-chart"></i><a href="#">Auto Renewal</a> </li>
-                                        <li><i className="fa fa-line-chart"></i><a href="#">Achievements</a>
+                                        <li><i className="fa fa-bar-chart"></i><a href="#11">Auto Renewal</a> </li>
+                                        <li><i className="fa fa-line-chart"></i><a href="#12">Achievements</a>
                                         </li>
-                                        <li><i className="fa fa-bar-chart"></i><a href="#">Auto Renewal</a> </li>
-                                        <li><i className="fa fa-line-chart"></i><a href="#">Achievements</a>
+                                        <li><i className="fa fa-bar-chart"></i><a href="#13">Auto Renewal</a> </li>
+                                        <li><i className="fa fa-line-chart"></i><a href="#14">Achievements</a>
                                         </li>
-                                        <li><i className="fa fa-area-chart"></i><a href="#">Logout</a>
+                                        <li><i className="fa fa-area-chart"></i><a href="#15">Logout</a>
                                         </li>
                                     </ul>
 
@@ -365,11 +369,11 @@ class Home extends Component {
                                     <li><a className="collapse-link"><i className="fa fa-chevron-up"></i></a>
                                     </li>
                                     <li className="dropdown">
-                                        <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
+                                        <a href="#16" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
                                         <ul className="dropdown-menu" role="menu">
-                                            <li><a href="#">Settings 1</a>
+                                            <li><a href="#17">Settings 1</a>
                                             </li>
-                                            <li><a href="#">Settings 2</a>
+                                            <li><a href="#18">Settings 2</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -459,11 +463,11 @@ class Home extends Component {
                                             <li><a className="collapse-link"><i className="fa fa-chevron-up"></i></a>
                                             </li>
                                             <li className="dropdown">
-                                                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
+                                                <a href="#19" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
                                                 <ul className="dropdown-menu" role="menu">
-                                                    <li><a href="#">Settings 1</a>
+                                                    <li><a href="#20">Settings 1</a>
                                                     </li>
-                                                    <li><a href="#">Settings 2</a>
+                                                    <li><a href="#21">Settings 2</a>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -520,11 +524,11 @@ class Home extends Component {
                                             <li><a className="collapse-link"><i className="fa fa-chevron-up"></i></a>
                                             </li>
                                             <li className="dropdown">
-                                                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
+                                                <a href="#22" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
                                                 <ul className="dropdown-menu" role="menu">
-                                                    <li><a href="#">Settings 1</a>
+                                                    <li><a href="#23">Settings 1</a>
                                                     </li>
-                                                    <li><a href="#">Settings 2</a>
+                                                    <li><a href="#24">Settings 2</a>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -586,11 +590,11 @@ class Home extends Component {
                                             <li><a className="collapse-link"><i className="fa fa-chevron-up"></i></a>
                                             </li>
                                             <li className="dropdown">
-                                                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
+                                                <a href="#25" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-wrench"></i></a>
                                                 <ul className="dropdown-menu" role="menu">
-                                                    <li><a href="#">Settings 1</a>
+                                                    <li><a href="#26">Settings 1</a>
                                                     </li>
-                                                    <li><a href="#">Settings 2</a>
+                                                    <li><a href="#27">Settings 2</a>
                                                     </li>
                                                 </ul>
                                             </li>

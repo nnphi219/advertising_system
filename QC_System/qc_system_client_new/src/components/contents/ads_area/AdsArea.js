@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import AdsAreaCreatorUpdater, { AdsAreaEditor, AdsAreaCreator } from './AdsAreaCreatorUpdater';
+import { AdsAreaEditor, AdsAreaCreator } from './AdsAreaCreatorUpdater';
 import AdsAreaDeleteForm from './AdsAreaDelete';
 import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 import './ads_area.css';

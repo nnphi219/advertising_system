@@ -3,12 +3,13 @@ import Request from 'superagent';
 
 import RenderHeader from '../share/RenderHeader';
 import DeleteForm from '../share/DeleteForm';
-import HeaderForm from '../share/HeaderForm/HeaderForm';
+import { HeaderForm2 } from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
-import UrlApi from '../share/UrlApi';
+import UrlApi, { UrlRedirect } from '../share/UrlApi';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import './user.css';
-import UserCreatorUpdater from './UserCreatorUpdater';
+import UserCreatorUpdater, { UserCreator, UserEditor } from './UserCreatorUpdater';
 
 function RenderRow(props) {
     return (
@@ -70,7 +71,7 @@ class UserContents extends Component {
     }
 }
 
-class UserManagement extends Component {
+class User extends Component {
     constructor(props) {
         super(props);
 
@@ -130,31 +131,16 @@ class UserManagement extends Component {
     }
 
     handleEditClick(event) {
-        var nameId = event.target.name;
-        var editContents = {};
-
-        var i = 0;
-        var finishLoop = false;
-        while (i < this.state.tbodyContents.length && !finishLoop) {
-            var element = this.state.tbodyContents[i];
-            if (nameId === element._id) {
-                editContents = element;
-                finishLoop = true;
-            }
-            i++;
-        }
-
-        this.setState({
-            ModeAction: "edit",
-            EditContents: editContents,
-            ShowCreatorUpdaterPopup: !this.state.ShowCreatorUpdaterPopup
-        });
+        window.location.href = UrlRedirect.UserEditor + `/${event.target.name}`;
     }
 
     handleDeleteClick(event) {
+        let selectedItemId = event.target.name;
+        let selectedItem = this.state.tbodyContents.find((content) => content._id === selectedItemId);
         this.setState({
             ShowDeletePopup: !this.state.ShowDeletePopup,
-            SelectedItemId: event.target.name
+            SelectedItemId: selectedItemId,
+            selectedItemValue: selectedItem.username
         });
     }
 
@@ -176,40 +162,64 @@ class UserManagement extends Component {
 
     render() {
         return (
-            < div id="page-wrapper" >
-                <div className="row">
-                    <div>
-                        <HeaderForm title={"user"} showCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup} />
-                        <UserContents
-                            tbodyContents={this.state.tbodyContents}
-                            handleEditClick={this.handleEditClick}
-                            handleDeleteClick={this.handleDeleteClick}
-                        />
-
-                        {
-                            this.state.ShowCreatorUpdaterPopup ?
-                                <UserCreatorUpdater
-                                    modeAction={this.state.ModeAction}
-                                    editContents={this.state.EditContents}
-                                    resetContentState={this.handleResetContentsState}
-                                    closeCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup}
-                                />
-                                : null
-                        }
-
-                        {
-                            this.state.ShowDeletePopup ?
-                                <DeleteForm
-                                    url={UrlApi.UserManagement}
-                                    SelectedItemId={this.state.SelectedItemId}
-                                    closeDeletePopup={this.handleCloseDeletePop}
-                                    resetContentState={this.handleResetContentsState}
-                                />
-                                : null
-                        }
-                    </div>
+            <div className="right_col">
+                <div className="row tile_count" >
+                    <HeaderForm2
+                        title={"Quản lý user"}
+                        buttonTitle={"user"}
+                        linkTo={UrlRedirect.UserCreator} />
                 </div>
+                <div className="row">
+                    <div id="page-wrapper" >
+                        <div className="row">
+                            <div>
+                                <UserContents
+                                    tbodyContents={this.state.tbodyContents}
+                                    handleEditClick={this.handleEditClick}
+                                    handleDeleteClick={this.handleDeleteClick}
+                                />
+
+                                {
+                                    this.state.ShowCreatorUpdaterPopup ?
+                                        <UserCreatorUpdater
+                                            modeAction={this.state.ModeAction}
+                                            editContents={this.state.EditContents}
+                                            resetContentState={this.handleResetContentsState}
+                                            closeCreatorUpdaterPopup={this.handleShowCreatorUpdaterPopup}
+                                        />
+                                        : null
+                                }
+
+                                {
+                                    this.state.ShowDeletePopup ?
+                                        <DeleteForm
+                                            url={UrlApi.UserManagement}
+                                            SelectedItemId={this.state.SelectedItemId}
+                                            selectedItemValue={this.state.selectedItemValue}
+                                            closeDeletePopup={this.handleCloseDeletePop}
+                                            resetContentState={this.handleResetContentsState}
+                                        />
+                                        : null
+                                }
+                            </div>
+                        </div>
+                    </div >
+                </div >
             </div >
+        );
+    }
+}
+
+class UserManagement extends Component {
+    render() {
+        return (
+            <BrowserRouter>
+                <div>
+                    <Route exact={true} path={UrlRedirect.Users} component={User} />
+                    <Route exact={true} path={UrlRedirect.UserCreator} component={UserCreator} />
+                    <Route exact={true} path={UrlRedirect.UserEditor + "/:id"} component={UserEditor} />
+                </div>
+            </BrowserRouter>
         );
     }
 }

@@ -124,7 +124,7 @@ class RenderProperties extends Component {
                             </div>
 
                             <div className="float-left">
-                                <p style={{ fontWeight: "blod", color: "#73879C", fontWeight: "700", marginBottom: "5px" }}>Loại quảng cáo</p>
+                                <p style={{ color: "#73879C", fontWeight: "700", marginBottom: "5px" }}>Loại quảng cáo</p>
                                 <RenderSelect
                                     nameId={"loai_quang_cao"}
                                     keys={[BANNER, TINRAO]}

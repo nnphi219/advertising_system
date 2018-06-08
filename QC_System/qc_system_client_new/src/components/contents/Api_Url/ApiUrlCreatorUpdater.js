@@ -3,7 +3,6 @@ import Request from 'superagent';
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
 import { RenderInput } from '../share/InputsRender';
 import { ArrayRemoveItem } from '../share/CommonFunction';
-import { NavLink } from 'react-router-dom';
 
 import './api_url.css';
 

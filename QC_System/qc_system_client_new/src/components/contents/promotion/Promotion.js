@@ -3,13 +3,13 @@ import Request from 'superagent';
 
 import RenderHeader from '../share/RenderHeader';
 import DeleteForm from '../share/DeleteForm';
-import HeaderForm, { HeaderForm2 } from '../share/HeaderForm/HeaderForm';
+import { HeaderForm2 } from '../share/HeaderForm/HeaderForm';
 import RenderEditDeleteButton from '../share/RenderEditDeleteButton';
 import PromotionCreatorUpdater, { PromotionCreator, PromotionEditor } from './PromotionCreatorUpdater';
 import './promotion_management.css';
 
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
-import { BrowserRouter, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 function RenderRow(props) {
     var status = (props.trContent.trang_thai === 1) ? "Kích hoạt" : "Đã hủy";

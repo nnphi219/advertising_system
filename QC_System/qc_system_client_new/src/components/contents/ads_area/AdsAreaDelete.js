@@ -12,7 +12,6 @@ class AdsAreaDeleteForm extends Component {
 
     handleDeleteItem() {
         var url = UrlApi.AdsArea + "/" + this.props.SelectedItemId.toString();
-        var $this = this;
 
         Request.delete(url)
         .send({ id: this.props.SelectedItemId })

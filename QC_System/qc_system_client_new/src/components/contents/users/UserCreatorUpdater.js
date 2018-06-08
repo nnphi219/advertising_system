@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
-import UrlApi from '../share/UrlApi';
+import UrlApi, { UrlRedirect } from '../share/UrlApi';
 import { RenderInput, RenderSelect } from '../share/InputsRender';
 import './user.css';
 
@@ -64,9 +64,13 @@ class UserCreatorUpdaterForm extends Component {
         this.props.UpdateState(jsonState);
     }
 
+    onCancel(){
+        window.location.href = UrlRedirect.Users;
+    }
+
     render() {
         return (
-            <div className='popup_inner user_createform_size div_scroll_bar'>
+            <div>
                 <div>
                     <a className="close popup-button-close user_margin_button-close" onClick={this.handleClosePopup}>×</a>
                     <h1>{this.props.titleForm}</h1>
@@ -76,9 +80,9 @@ class UserCreatorUpdaterForm extends Component {
 
                     stateValues={this.props.stateValues}
                 />
-                <div className="submit">
+                <div className="user_creator-submit">
                     <button className="btn btn-primary" onClick={this.props.handleSubmit}>Lưu</button>
-                    <button className="btn btn-primary" onClick={this.props.handleClosePopup}>Hủy</button>
+                    <button className="btn btn-primary" onClick={this.onCancel}>Hủy</button>
                 </div>
             </div>
         );
@@ -128,13 +132,11 @@ class UserCreatorUpdater extends Component {
     CreateUser() {
         var userContent = this.GetModelStateJson();
 
-        var $this = this;
         Request.post(UrlApi.UserManagement)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(userContent)
             .end(function (err, res) {
-                $this.props.closeCreatorUpdaterPopup();
-                $this.props.resetContentState();
+                window.location.href = UrlRedirect.Users
             });
     }
 
@@ -142,13 +144,12 @@ class UserCreatorUpdater extends Component {
         var userContent = this.GetModelStateJson();
 
         var url = UrlApi.UserManagement + "/" + this.props.editContents._id;
-        var $this = this;
+       
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(userContent)
             .end(function (err, res) {
-                $this.props.closeCreatorUpdaterPopup();
-                $this.props.resetContentState();
+                window.location.href = UrlRedirect.Users
             });
     }
 
@@ -164,7 +165,7 @@ class UserCreatorUpdater extends Component {
     render() {
         var titleForm = this.props.modeAction === "create" ? "Tạo user" : "Chỉnh sửa user";
         return (
-            <div className='popup'>
+            <div>
                 <UserCreatorUpdaterForm
                     titleForm={titleForm}
                     stateValues={this.state}
@@ -176,6 +177,71 @@ class UserCreatorUpdater extends Component {
         );
     }
 }
+
+export class UserCreator extends Component {
+    render() {
+        return (
+            <div className="right_col">
+                <div className="row" >
+                    <UserCreatorUpdater
+                        modeAction={"create"}
+                    />
+                </div>
+            </div>
+        );
+    }
+}
+
+export class UserEditor extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isLoad: false,
+            editContents: {}
+        };
+    }
+
+    componentDidMount() {
+        var urlSplit = window.location.href.split('/');
+        var paraId = urlSplit[urlSplit.length - 1];
+        console.log(2);
+        Request.get(UrlApi.UserManagement + "/" + paraId)
+            .set('x-auth', localStorage.getItem('x-auth'))
+            .then((res) => {
+                console.log(res.body);
+                this.setState({
+                    editContents: res.body,
+                    isLoad: true
+                });
+
+            })
+            .catch((e) => {
+                // window.location.href = UrlRedirect.ServicePrices;
+            });
+    }
+
+    render() {
+        console.log(1);
+        return (
+            <div className="right_col">
+                <div className="row tile_count" >
+                    <div className="col-md-12 col-sm-12 col-xs-12">
+                        {
+                            this.state.isLoad ?
+                                <UserCreatorUpdater
+                                    modeAction={"edit"}
+                                    editContents={this.state.editContents}
+                                />
+                                : null
+                        }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
 var userInputsData = {
     user_type: {
         keys: ["user", "admin"],

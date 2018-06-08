@@ -44,6 +44,9 @@ class LeftNav extends React.Component {
                                     </ul>
                                 </li>
                                 <li>
+                                    <NavLink to={UrlRedirect.Users}>Quản lý user</NavLink>
+                                </li>
+                                <li>
                                     <NavLink to={UrlRedirect.XsystemDomainUrls}>Domain</NavLink>
                                 </li>
                                 <li>
@@ -110,7 +113,7 @@ class LeftNav extends React.Component {
                                         </li>
                                     </ul>
                                 </li>
-                                <li><a href="javascript:void(0)"><i className="fa fa-laptop"></i> Landing Page <span className="label label-success pull-right">Coming Soon</span></a></li>
+                                <li><a href="#1"><i className="fa fa-laptop"></i> Landing Page <span className="label label-success pull-right">Coming Soon</span></a></li>
                             </ul>
                         </div>
 

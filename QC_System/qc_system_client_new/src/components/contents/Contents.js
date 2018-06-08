@@ -13,22 +13,14 @@ import PromotionManagement from './promotion/Promotion';
 
 import './contents.css';
 import AdsPagesManagement from './ads_page/AdsPage';
-
-class Test extends Component {
-    render() {
-        return (
-            <div className="right_col">
-                This is test page!
-            </div>
-        );
-    }
-}
+import UserManagement from './users/UserManagement';
 
 class Contents extends Component {
     render() {
         return (
             <div>
                 <Route exact={true} path="/" component={Home} />
+                <Route path={UrlRedirect.Users} component={UserManagement} />
                 <Route path={UrlRedirect.XsystemDomainUrls} component={DomainUrlManagement} />
                 <Route path={UrlRedirect.XsystemApiUrls} component={ApiUrlManagement} />
                 <Route path={UrlRedirect.AdsPages} component={AdsPagesManagement} />

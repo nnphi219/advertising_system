@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { RenderInput } from '../share/InputsRender';
 import validator from 'validator';
 import Request from 'superagent';
 import UrlApi, { UrlRedirect } from '../share/UrlApi';

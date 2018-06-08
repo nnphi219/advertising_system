@@ -92,10 +92,10 @@ class PromotionCreatorUpdaterForm extends Component {
         this.OnChangeSelect = this.OnChangeSelect.bind(this);
         this.OnChangeRadioButton = this.OnChangeRadioButton.bind(this);
         this.OnGenerateCode = this.OnGenerateCode.bind(this);
-        
+
     }
 
-    OnGenerateCode(){
+    OnGenerateCode() {
         var jsonState = {
             code: uuidV1()
         };
@@ -118,7 +118,7 @@ class PromotionCreatorUpdaterForm extends Component {
         this.props.UpdateState(jsonState);
     }
 
-    onCancel(){
+    onCancel() {
         window.location.href = UrlRedirect.Promotions
     }
 
@@ -312,7 +312,6 @@ class PromotionCreatorUpdater extends Component {
                 return;
             }
 
-            var $this = this;
             Request.post(UrlApi.PromotionManagement)
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .set('x-auth', localStorage.getItem('x-auth'))
@@ -336,7 +335,7 @@ class PromotionCreatorUpdater extends Component {
         var promotionContent = this.GetModelStateJson();
 
         var url = UrlApi.PromotionManagement + "/" + this.props.editContents._id;
-        var $this = this;
+
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .set('x-auth', localStorage.getItem('x-auth'))
