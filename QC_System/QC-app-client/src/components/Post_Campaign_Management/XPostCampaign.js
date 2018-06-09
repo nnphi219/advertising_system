@@ -965,6 +965,7 @@ class XPostCampaign extends Component {
         let max_quantity_posts = [];
 
         adsAreas.forEach((adsArea) => {
+            console.log(adsArea);
             _ids.push(adsArea._id);
             keys.push(adsArea.ma_dich_vu);
             values.push(adsArea.ten_hien_thi);
