@@ -30,11 +30,10 @@ class Header extends React.Component {
                             <a href="#2" className="hamburger"></a>
                             <nav>
                                 <ul>
-                                    <li><NavLink to="/buy">Buy</NavLink></li>
-                                    <li><NavLink to="/rent">Rent</NavLink></li>
-                                    <li><a href="#6">About</a></li>
-                                    <li><a href="#7">Contact</a></li>
+                                    <li><NavLink to="/buy">Mua</NavLink></li>
+                                    <li><NavLink to="/rent">Cho thuê</NavLink></li>
                                     <li><NavLink to="/posts">Quản lý tin đăng</NavLink></li>
+                                    <li><NavLink to="/post-campaign">Tạo chiến dịch tin đăng</NavLink></li>
                                 </ul>
                                 <button className="login_btn" onClick={this.redirectToLoginForm}>Login</button>
                             </nav>
