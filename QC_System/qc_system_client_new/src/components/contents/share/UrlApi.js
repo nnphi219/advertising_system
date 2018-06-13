@@ -97,6 +97,8 @@ export const UrlRedirect = {
     PostTypeCreator: '/post-types/create',
     PostTypeEditor: '/post-types/edit',
 
+    PostCampaign: '/post-campaign',
+
     XsystemDomainUrls: '/domains',
     XsystemUpdateDomainUrl: '/domains/update',
 

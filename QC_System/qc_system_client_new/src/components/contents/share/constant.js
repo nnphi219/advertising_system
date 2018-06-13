@@ -19,3 +19,8 @@ export const CO_CHE_HIEN_THI = {
     CHIA_SE_VI_TRI_CO_DINH: "chia_se_vi_tri_co_dinh", 
     NGAU_NHIEN: "ngau_nhien"
 }
+
+export const USER_TYPE = {
+    ADMIN: 'admin',
+    USER: 'user'
+}

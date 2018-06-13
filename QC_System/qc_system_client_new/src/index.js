@@ -18,12 +18,12 @@ import './frontend/build/css/custom.css';
 import './frontend/vendors/css/bootstrap-tokenfield.css';
 import './frontend/css/popup.css';
 
-// const store = createStore(reducers);
+ const store = createStore(reducers);
 
 ReactDOM.render(
-    // <Provider store={store}>
+    <Provider store={store}>
         <App />
-    // </Provider>
+    </Provider>
 
     , document.getElementById('root'));
 registerServiceWorker();

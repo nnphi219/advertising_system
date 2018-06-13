@@ -1,9 +1,14 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { UrlRedirect } from '../../components/contents/share/UrlApi';
+import { connect } from 'react-redux';
+import { USER_TYPE } from '../contents/share/constant';
 
 class LeftNav extends React.Component {
     render() {
+        let username = this.props.user ? this.props.user.username : "";
+        let userIsAdmin = this.props.user && this.props.user.user_type === USER_TYPE.ADMIN ? true : false;
+
         return (
             <div className="col-md-3 left_col">
                 <div className="left_col scroll-view">
@@ -19,7 +24,7 @@ class LeftNav extends React.Component {
                         </div>
                         <div className="profile_info">
                             <span>Welcome,</span>
-                            <h2>John Doe</h2>
+                            <h2>{username}</h2>
                         </div>
                     </div>
 
@@ -43,9 +48,13 @@ class LeftNav extends React.Component {
                                         <li><a href="index3.html">Dashboard3</a></li>
                                     </ul>
                                 </li>
-                                <li>
-                                    <NavLink to={UrlRedirect.Users}>Quản lý user</NavLink>
-                                </li>
+                                {
+                                    userIsAdmin ?
+                                        <li>
+                                            <NavLink to={UrlRedirect.Users}>Quản lý user</NavLink>
+                                        </li>
+                                        : null
+                                }
                                 <li>
                                     <NavLink to={UrlRedirect.XsystemDomainUrls}>Domain</NavLink>
                                 </li>
@@ -138,4 +147,15 @@ class LeftNav extends React.Component {
     }
 }
 
-export default LeftNav;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        user: state.user
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LeftNav);
