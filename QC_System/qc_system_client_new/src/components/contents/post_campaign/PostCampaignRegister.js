@@ -167,7 +167,7 @@ function RenderBannerOption(props) {
                 nameId={"url_redirect"}
                 type={"text"}
                 value={props.stateValues.url_redirect}
-                className={"post--input"}
+                className={"x_post_campaign--input"}
                 OnChangeInput={props.OnChangeInput}
             />
             <div>
@@ -230,6 +230,7 @@ function RenderForm(props) {
 
         var adsAreaDetailDescription = [];
         if (indexOfAdsAreas !== -1) {
+            console.log(stateValues.AdsAreaIds.appliedPageTypeKeys);
             trang_hien_thi = stateValues.AdsAreaIds.appliedPageTypeKeys[indexOfAdsAreas].value;
             if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === BANNER) {
                 isBannerAds = true;
@@ -1307,7 +1308,7 @@ class PostCampaignRegister extends Component {
         if (postCampaignContent === null) {
             return;
         }
-
+        console.log(postCampaignContent);
         var $this = this;
         Request.post(UrlApi.PostCampaignforXsystem)
             .set('Content-Type', 'application/x-www-form-urlencoded')

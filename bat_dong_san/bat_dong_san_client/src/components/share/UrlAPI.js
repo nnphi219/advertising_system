@@ -8,7 +8,9 @@ export const URL_API = {
 
     PostManagement: HOST_NAME_SERVER + "/posts",
 
-    UploadFile: HOST_NAME_SERVER + "/uploads"
+    UploadFile: HOST_NAME_SERVER + "/uploads",
+
+    GetAdvertisement: HOST_NAME_SERVER + "/getPostsBasicOnAppliedPage",
 };
 
 export const QCSytemUrl = {

@@ -35,6 +35,6 @@ export const POST_TYPES = {
         NAME_ID: "tin_cho_thue_nha"
     },
     BUY_RENT: {
-        NAME_ID: "tin_ban_nha_va_cho_thue"
+        NAME_ID: "tin_mua_nha_va_cho_thue"
     }
 }

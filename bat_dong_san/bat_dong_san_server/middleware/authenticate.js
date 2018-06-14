@@ -34,7 +34,7 @@ var authenticateAdmin = (req, res, next) => {
 };
 
 var authenticateQCSystem = (req, res, next) => {
-  var token = req.header('bat_dong_san-auth');
+  var token = req.header('xsystem-auth');
  
   User.findByToken(token).then((user) => {
     if (!user) {

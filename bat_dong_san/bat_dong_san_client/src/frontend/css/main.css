@@ -199,6 +199,7 @@ header nav .login_btn:hover{
     width: 100%;
     max-width: 1200px;
     height: 600px;
+    background-size: 100% 600px;
     position: relative;
     background-size: cover;
     -webkit-background-size: cover;

@@ -198,6 +198,7 @@ header nav .login_btn:hover{
 .hero{
     width: 100%;
     max-width: 1200px;
+    background-size: 100% 600px;
     height: 600px;
     position: relative;
     background-size: cover;

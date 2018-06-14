@@ -62,6 +62,7 @@ function GetAppliedPageAndAppliedAreaState(currentState) {
     };
 
     currentState.selectedXAdsArea = GetSelectedXAdsArea(currentState.AppliedPages, keys[0]);
+    currentState.loai_trang_ap_dung = keys[0];
     return currentState;
 }
 
@@ -454,7 +455,6 @@ class AdsAreaCreatorUpdater extends Component {
                 state = GetAppliedPageAndAppliedAreaState(state);
 
                 if (this.props.modeAction === "create" && keys.length > 0) {
-                    state.loai_trang_ap_dung = keys[0];
                     state.vung_ap_dung_quang_cao = state.selectedXAdsArea.keys[0];
                 }
                 else {
