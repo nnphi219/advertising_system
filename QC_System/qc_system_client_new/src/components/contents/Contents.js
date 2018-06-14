@@ -18,6 +18,7 @@ import UserManagement from './users/UserManagement';
 import PostCampaignRegister from './post_campaign/PostCampaignRegister';
 
 import { USER_TYPE } from './share/constant';
+import UserProfile from './users/UserProfile';
 
 class Contents extends Component {
     render() {
@@ -30,7 +31,7 @@ class Contents extends Component {
                 {
                     userIsAdmin ?
                         <Route path={UrlRedirect.Users} component={UserManagement} />
-                        : null
+                        : <Route path={UrlRedirect.UserProfile} component={UserProfile} />
                 }
                 <Route path={UrlRedirect.XsystemDomainUrls} component={DomainUrlManagement} />
                 <Route path={UrlRedirect.XsystemApiUrls} component={ApiUrlManagement} />

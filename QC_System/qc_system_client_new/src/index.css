@@ -39,3 +39,11 @@
 .fullwidth {
     width: 100%;
 }
+
+.div_property_margin_bottom {
+    margin-bottom: 20px;
+}
+
+.div_time_slots {
+    display: grid;
+}

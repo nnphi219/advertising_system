@@ -61,6 +61,7 @@ function GetAppliedPageAndAppliedAreaState(currentState) {
         keys, values, adsAreas
     };
 
+    currentState.selectedXAdsArea = GetSelectedXAdsArea(currentState.AppliedPages, keys[0]);
     return currentState;
 }
 
@@ -238,7 +239,7 @@ function RenderProperties(props) {
             inputs.push(<ColorPickerInput key={element.id} valueColor={valueColor} inputData={element} handleOnchangeColor={props.handleOnchangeColor} />);
         }
         else if (element.type === "combobox") {
-            if (!((element.id === "domain" || element.id === "api_url") && props.stateValues.loai_quang_cao === BANNER)) {
+            if (!((element.id === "domain" || element.id === "api_url" || element.id === "loai_bai_dang_ap_dung") && props.stateValues.loai_quang_cao === BANNER)) {
                 inputs.push(<RenderCombobox key={element.id} inputData={element} stateValues={props.stateValues} handleOnchangeSelect={props.handleOnchangeSelect} />);
             }
         }
@@ -333,7 +334,7 @@ class AdsAreaCreatorForm extends Component {
     render() {
         return (
             <div>
-                <div style={{height: "770px"}}>
+                <div style={{ height: "770px" }}>
                     <div>
                         <a className="close popup-button-close adsarea_margin_button-close" onClick={this.handleClosePopup}>×</a>
                         <h1>{this.props.titleForm}</h1>
@@ -362,7 +363,7 @@ class AdsAreaCreatorForm extends Component {
                         />
                     </div>
                 </div>
-                <div className="submit" style={{textAlign: "center"}}>
+                <div className="submit" style={{ textAlign: "center" }}>
                     <button className="btn btn-primary" onClick={this.props.handleSubmit}>Lưu</button>
                     <button className="btn btn-primary" onClick={this.handleClosePopup}>Hủy</button>
                 </div>
@@ -453,7 +454,6 @@ class AdsAreaCreatorUpdater extends Component {
                 state = GetAppliedPageAndAppliedAreaState(state);
 
                 if (this.props.modeAction === "create" && keys.length > 0) {
-                    state.selectedXAdsArea = GetSelectedXAdsArea(state.AppliedPages, keys[0]);
                     state.loai_trang_ap_dung = keys[0];
                     state.vung_ap_dung_quang_cao = state.selectedXAdsArea.keys[0];
                 }
@@ -504,31 +504,47 @@ class AdsAreaCreatorUpdater extends Component {
         var $this = this;
         var x_urlapi = localStorage.getItem("x-urlapi");
 
-        Request.get(x_urlapi + "/getfontfamilies")
-            .then((res) => {
-                var keys = [];
-                var values = [];
+        let fontFamilyKeys = ["Times New Roman", "Courier New", "Arial"];
+        let fontFamilyValues = ["Times New Roman", "Courier New", "Arial"];
 
-                if (res.body) {
-                    keys = res.body.FontFamilies;
-                    values = res.body.FontFamilies;
-                }
+        var jsonFontFamilies = {
+            FontFamilies: {
+                keys: fontFamilyKeys,
+                values: fontFamilyValues
+            },
+        };
 
-                var jsonFontFamilies = {
-                    FontFamilies: {
-                        keys: keys,
-                        values: values
-                    },
-                };
+        if (this.props.modeAction === "create") {
+            jsonFontFamilies.font_tieu_de = fontFamilyKeys[0];
+        }
 
-                if (this.props.modeAction === "create") {
-                    jsonFontFamilies.font_tieu_de = keys[0];
-                }
+        this.setState(jsonFontFamilies);
 
-                $this.setState(jsonFontFamilies);
-            }).catch((e) => {
-                console.log("err");
-            });
+        // Request.get(x_urlapi + "/getfontfamilies")
+        //     .then((res) => {
+        //         var keys = [];
+        //         var values = [];
+
+        //         if (res.body) {
+        //             keys = res.body.FontFamilies;
+        //             values = res.body.FontFamilies;
+        //         }
+
+        //         var jsonFontFamilies = {
+        //             FontFamilies: {
+        //                 keys: keys,
+        //                 values: values
+        //             },
+        //         };
+
+        //         if (this.props.modeAction === "create") {
+        //             jsonFontFamilies.font_tieu_de = keys[0];
+        //         }
+
+        //         $this.setState(jsonFontFamilies);
+        //     }).catch((e) => {
+        //         console.log("err");
+        //     });
     }
 
     GetDomains() {
@@ -879,7 +895,7 @@ class AdsAreaCreatorUpdater extends Component {
         var adsAreaContent = this.GetModelStateJson();
 
         var url = UrlApi.AdsArea + "/" + this.props.editContents._id;
-       
+
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .set('x-auth', localStorage.getItem('x-auth'))

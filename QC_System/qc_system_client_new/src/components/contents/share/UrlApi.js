@@ -72,6 +72,7 @@ export const UrlRedirect = {
     UserLogin: '/login',
     UserRegister: '/register',
     UserTokenMe: '/users/me/token',
+    UserProfile: '/profile',
 
     AdsArea: '/ads-areas',
     AdsAreaCreator: '/ads-areas/create',

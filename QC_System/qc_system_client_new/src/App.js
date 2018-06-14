@@ -73,18 +73,15 @@ class App extends Component {
     let isLogginForm = (currentHref.indexOf('/login') === -1) ? false : true;
     let isPostCampaginRegister = (currentHref.indexOf('/post-campaign') === -1) ? false : true;
     return (
-      !this.state.logedIn ?
-        <UserAuthen />
+      isPostCampaginRegister ?
+        <PostCampaignRegister />
         :
-        isLogginForm ?
+        !this.state.logedIn || isLogginForm ?
           <UserAuthen />
           :
-          isPostCampaginRegister ?
-            <PostCampaignRegister />
-            :
-            <AppContent
-              user={this.state.user}
-            />
+          <AppContent
+            user={this.state.user}
+          />
     );
   }
 }

@@ -487,7 +487,7 @@ class ServicePriceCreatorUpdater extends Component {
                         console.log(err);
                     }
                     else {
-                        window.location.href = UrlRedirect.ServicePrices;
+                        // window.location.href = UrlRedirect.ServicePrices;
                     }
                 });
         }).catch((e) => {

@@ -48,13 +48,13 @@ class LeftNav extends React.Component {
                                         <li><a href="index3.html">Dashboard3</a></li>
                                     </ul>
                                 </li>
-                                {
-                                    userIsAdmin ?
-                                        <li>
+                                <li>
+                                    {
+                                        userIsAdmin ?
                                             <NavLink to={UrlRedirect.Users}>Quản lý user</NavLink>
-                                        </li>
-                                        : null
-                                }
+                                            : <NavLink to={UrlRedirect.UserProfile}>Thông tin user</NavLink>
+                                    }
+                                </li>
                                 <li>
                                     <NavLink to={UrlRedirect.XsystemDomainUrls}>Domain</NavLink>
                                 </li>
