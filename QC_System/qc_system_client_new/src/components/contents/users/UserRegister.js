@@ -43,6 +43,11 @@ class RegisterForm extends Component {
                     <span className="focus-input100"></span>
                 </div>
 
+                <div className="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="Type user name">
+                    <input id="first-name" name="UrlApi" value={stateValues.UrlApi} onChange={this.props.OnChangeInput} className="input100" type="text" placeholder="Domain chính" />
+                    <span className="focus-input100"></span>
+                </div>
+
                 <div className="container-login100-form-btn">
                     <button className="login100-form-btn" onClick={this.props.submit}>
                         Đăng ký
@@ -50,7 +55,7 @@ class RegisterForm extends Component {
                 </div>
 
                 <div className="w-full text-center p-t-27 p-b-100">
-                   
+
                 </div>
 
                 <div className="w-full text-center p-b-100">
@@ -74,7 +79,7 @@ class UserRegister extends Component {
             usernameError: '',
             emailError: '',
             passwordError: '',
-            UrlApi: 'http://localhost:8081'
+            UrlApi: ''
         };
 
         this.OnChangeInput = this.OnChangeInput.bind(this);

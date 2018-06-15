@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { BannerLeft, BannerRight } from './Banner';
+import { PAGES } from '../share/PageConfig';
 
 class Header extends React.Component {
 
@@ -9,21 +10,45 @@ class Header extends React.Component {
     }
 
     render() {
+        let bannerLeft = this.props.bannerContents[PAGES.HEADER.AREAS.BANNER_LEFT];
         let bannerLeft_content = {
             resource_image_url: 'https://file4.batdongsan.com.vn/2017/03/27/vou5EgPQ/20170327155510-d928.jpg'
         };
+        
+        if(bannerLeft){
+            bannerLeft_content = {
+                resource_image_url : bannerLeft.contents[0].resource_url
+            };
+        }
+
+        let bannerRight = this.props.bannerContents[PAGES.HEADER.AREAS.BANNER_RIGHT];
         let bannerRight_content = {
             resource_image_url: 'https://file4.batdongsan.com.vn/2018/04/26/RUFz0fap/20180426115906-0b71.jpg'
         };
+
+        if(bannerRight){
+            bannerRight_content = {
+                resource_image_url : bannerRight.contents[0].resource_url
+            };
+        }
+
+        let bannerMain = this.props.bannerContents[PAGES.HEADER.AREAS.BANNER_TOP];
         let bannerMain_content = {
             resource_image_url: '../img/hero.jpg'
         };
+
+        if(bannerMain){
+            bannerMain_content = {
+                resource_image_url : bannerMain.contents[0].resource_url
+            };
+        }
+
         return (
             <div>
                 <BannerLeft
                     banner_content={bannerLeft_content}
                 />
-                <section style={{ background: `url('${bannerMain_content.resource_image_url}') no-repeat bottom center` }} className="hero">
+                <section style={{ backgroundSize: "100% 600px", backgroundImage: `url('${bannerMain_content.resource_image_url}')` }} className="hero">
                     <header>
                         <div className="wrapper">
                             <NavLink to="/"><img src="img/logo.png" className="logo" alt="" titl="" /></NavLink>

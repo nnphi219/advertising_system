@@ -44,6 +44,16 @@ class RenderProperties extends Component {
                     OnChangeSelect={this.props.OnChangeInput}
                     className={"input--select"}
                 />
+
+                <RenderInput
+                    nameId={"UrlApi"}
+                    title={"Domain chính"}
+                    value={this.props.stateValues.UrlApi}
+                    type={"text"}
+                    className={"user--input"}
+                    OnChangeInput={this.props.OnChangeInput}
+                />
+
             </div>
         );
     }
@@ -108,7 +118,7 @@ class UserCreatorUpdater extends Component {
             jsonState.username = editContents.username;
             jsonState.email = editContents.email;
             jsonState.user_type = editContents.user_type;
-            console.log(jsonState);
+            jsonState.UrlApi = editContents.UrlApi;
         }
     }
 
@@ -123,7 +133,8 @@ class UserCreatorUpdater extends Component {
             username: state.username,
             email: state.email,
             password: state.password,
-            user_type: state.user_type
+            user_type: state.user_type,
+            UrlApi: state.UrlApi
         };
 
         return userContent;
@@ -145,11 +156,17 @@ class UserCreatorUpdater extends Component {
 
         var url = UrlApi.UserManagement + "/" + this.props.editContents._id;
        
+        let $this = this;
         Request.put(url)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(userContent)
             .end(function (err, res) {
-                window.location.href = UrlRedirect.Users
+                if($this.props.isToEditProfile){
+                    window.location.href = '/';
+                }
+                else{
+                    window.location.href = UrlRedirect.Users;
+                }
             });
     }
 
@@ -205,7 +222,7 @@ export class UserEditor extends Component {
     componentDidMount() {
         var urlSplit = window.location.href.split('/');
         var paraId = urlSplit[urlSplit.length - 1];
-        console.log(2);
+        
         Request.get(UrlApi.UserManagement + "/" + paraId)
             .set('x-auth', localStorage.getItem('x-auth'))
             .then((res) => {
@@ -222,7 +239,6 @@ export class UserEditor extends Component {
     }
 
     render() {
-        console.log(1);
         return (
             <div className="right_col">
                 <div className="row tile_count" >

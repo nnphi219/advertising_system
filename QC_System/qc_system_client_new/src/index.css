@@ -1,3 +1,8 @@
+.background_color-grey {
+    background-color: grey !important;
+    color:  #1a4993 !important;
+}
+
 .float-left {
     float: left;
 }
@@ -39,3 +44,12 @@
 .fullwidth {
     width: 100%;
 }
+
+.div_property_margin_bottom {
+    margin-bottom: 20px;
+}
+
+.div_time_slots {
+    display: grid;
+}
+

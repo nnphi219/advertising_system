@@ -1,2 +1,2 @@
-exports.UsernameOnQcSystem = "nnphi219";
-exports.PasswordOnQcSystem = "ngocphi";
+exports.UsernameOnQcSystem = "batdongsan";
+exports.PasswordOnQcSystem = "batdongsan";

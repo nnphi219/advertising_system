@@ -74,7 +74,7 @@ exports.update_a_user = function (req, res) {
     return res.status(404).send();
   }
 
-  var updatedUser = _.pick(req.body, ['email', 'username', 'password', 'user_type']);
+  var updatedUser = _.pick(req.body, ['email', 'username', 'password', 'user_type', 'UrlApi']);
 
   if (updatedUser.password !== undefined) {
     updatedUser.password = bcrypt.hashSync(updatedUser.password);

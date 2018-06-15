@@ -12,7 +12,7 @@ export class PostCreator extends Component {
         super(props);
 
         this.state = {
-            loai_bai_dang: 'tin_ban_nha'
+            loai_bai_dang: 'tin_mua_nha'
         };
 
         this.onSubmit = this.onSubmit.bind(this);

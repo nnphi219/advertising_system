@@ -72,6 +72,7 @@ export const UrlRedirect = {
     UserLogin: '/login',
     UserRegister: '/register',
     UserTokenMe: '/users/me/token',
+    UserProfile: '/profile',
 
     AdsArea: '/ads-areas',
     AdsAreaCreator: '/ads-areas/create',
@@ -96,6 +97,8 @@ export const UrlRedirect = {
     PostTypes: '/post-types',
     PostTypeCreator: '/post-types/create',
     PostTypeEditor: '/post-types/edit',
+
+    PostCampaign: '/post-campaign',
 
     XsystemDomainUrls: '/domains',
     XsystemUpdateDomainUrl: '/domains/update',
