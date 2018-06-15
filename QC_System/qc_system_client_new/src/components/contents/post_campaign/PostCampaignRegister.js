@@ -1308,7 +1308,7 @@ class PostCampaignRegister extends Component {
         if (postCampaignContent === null) {
             return;
         }
-        console.log(postCampaignContent);
+        
         var $this = this;
         Request.post(UrlApi.PostCampaignforXsystem)
             .set('Content-Type', 'application/x-www-form-urlencoded')
