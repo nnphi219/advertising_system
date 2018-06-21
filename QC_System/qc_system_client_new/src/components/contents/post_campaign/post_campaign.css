@@ -152,12 +152,17 @@
 .post_campaign__info--content-description {
     font-size: 17px;
     color: #9b2335;
-    margin-top: 6px;
+    margin-top: 40px;
     margin-left: 20px;
     max-width: 600px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.post_campaign__image-description {
+    margin-left: 20px;
+    max-width: 500px;
 }
 
 .post_campaign__info--content--serviceprice {

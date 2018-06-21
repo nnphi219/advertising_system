@@ -130,14 +130,12 @@ function GetBasicPrice(basicPriceOnTimeSlot, selectedTimeSlots) {
 function RenderSharedAreaButtons(props) {
     var keys = props.keys;
     var values = props.values;
-    // var readOnlyValues = props.readOnlyValues;
     var selectedValue = props.selectedValue;
 
     var elementTypeRadioButtons = [];
 
     keys.forEach((key, index) => {
-        // let isReadOnly = readOnlyValues[index] === 1 ? true : false;
-        let positionClass = "";//isReadOnly ? "text_color-red" : "";
+        let positionClass = "";
         let selectedBackGroundColorClass = selectedValue === key ? "background_color-grey" : "";
         positionClass = selectedValue === key ? "text_color-blue" : positionClass;
         elementTypeRadioButtons.push(
@@ -221,7 +219,7 @@ function RenderForm(props) {
     var trang_hien_thi = "";
 
     let isBannerAds = false;
-
+    let url_hinh_anh_vung_quang_cao = '';
     if (stateValues.AdsAreaIds !== undefined) {
         AdsAreaIdsKeys = stateValues.AdsAreaIds.keys;
         AdsAreaIdsValues = stateValues.AdsAreaIds.values;
@@ -230,7 +228,6 @@ function RenderForm(props) {
 
         var adsAreaDetailDescription = [];
         if (indexOfAdsAreas !== -1) {
-            console.log(stateValues.AdsAreaIds.appliedPageTypeKeys);
             trang_hien_thi = stateValues.AdsAreaIds.appliedPageTypeKeys[indexOfAdsAreas].value;
             if (stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].key === BANNER) {
                 isBannerAds = true;
@@ -238,6 +235,9 @@ function RenderForm(props) {
             adsAreaDetailDescription.push(<p key="1" className="margin_zero"> {"Tên dịch vụ: " + stateValues.AdsAreaIds.values[indexOfAdsAreas] + "."}</p>)
             adsAreaDetailDescription.push(<p key="2" className="margin_zero"> {"Loại quảng cáo: " + stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].value + "."}</p>)
         }
+        console.log(indexOfAdsAreas);
+        console.log(stateValues.AdsAreaIds.adsAreaImages);
+        url_hinh_anh_vung_quang_cao = stateValues.AdsAreaIds.adsAreaImages[indexOfAdsAreas];
     }
 
     var postIdKeys = [];
@@ -339,6 +339,14 @@ function RenderForm(props) {
                     </div>
                     <div className="float-left post_campaign__info--content-description">
                         {adsAreaDetailDescription}
+                    </div>
+                    <div className="float-left post_campaign__image-description">
+                        <div>
+                            <p>{'Hình ảnh mô tả vùng'}</p>
+                        </div>
+                        <div>
+                            <Img className="post_campaign__info--content--banner--image" src={url_hinh_anh_vung_quang_cao} style={{ marginRight: "5px" }} />
+                        </div>
                     </div>
                 </div>
                 {renderAdsType}
@@ -965,6 +973,7 @@ class PostCampaignRegister extends Component {
         let post_api_urls = [];
         let max_shared_areas = [];
         let max_quantity_posts = [];
+        let adsAreaImages = [];
 
         adsAreas.forEach((adsArea) => {
             _ids.push(adsArea._id);
@@ -975,6 +984,8 @@ class PostCampaignRegister extends Component {
             post_api_urls.push(adsArea.tin_rao_api.domain + "/" + adsArea.tin_rao_api.url);
             max_shared_areas.push(adsArea.so_luong_chia_se_vung);
             max_quantity_posts.push(adsArea.so_luong_tin_toi_da);
+            adsAreaImages.push(adsArea.url_hinh_anh_vung_quang_cao);
+            console.log(adsArea)
         });
 
         jsonSetInfosOfUser.AdsAreaIds = {
@@ -985,7 +996,8 @@ class PostCampaignRegister extends Component {
             adsTypes,
             post_api_urls,
             max_shared_areas,
-            max_quantity_posts
+            max_quantity_posts,
+            adsAreaImages
         };
 
         if (modeAction === "create") {
@@ -1014,7 +1026,7 @@ class PostCampaignRegister extends Component {
         }
 
         let post_api_url = adsAreaIds.post_api_urls[indexOfServiceType];
-        
+
         return Request.get(post_api_url)
             .set('xsystem-auth', USerOfXSysyemAccessToken)
             .then((res) => {
@@ -1308,7 +1320,7 @@ class PostCampaignRegister extends Component {
         if (postCampaignContent === null) {
             return;
         }
-        
+
         var $this = this;
         Request.post(UrlApi.PostCampaignforXsystem)
             .set('Content-Type', 'application/x-www-form-urlencoded')

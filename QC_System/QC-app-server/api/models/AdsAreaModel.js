@@ -14,6 +14,7 @@ var AdsAreaSchema = new Schema({
         url: String
     },
     mo_ta_dich_vu: String,
+    url_hinh_anh_vung_quang_cao: String,
     loai_bai_dang_ap_dung: {
         key: String,
         value: String

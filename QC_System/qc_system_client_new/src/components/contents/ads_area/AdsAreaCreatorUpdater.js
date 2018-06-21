@@ -4,7 +4,9 @@ import ColorPickerInput from '../share/color_picker_input';
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
 import { RenderSelect, RenderInput } from '../share/InputsRender';
 import './ads_area.css';
+import Img from 'react-image';
 import { BANNER, TINRAO } from '../share/constant';
+const uuidv4 = require('uuid/v4');
 
 function GetSelectedXAdsArea(arrayAppliedPages, selectedAppliedPage) {
     let keys = [];
@@ -251,6 +253,27 @@ function RenderProperties(props) {
         else if (element.type === "double_inputs") {
             inputs.push(<RenderDoubleInputs key={element.id} inputData={element} stateValues={props.stateValues} OnChangeInput={props.handleOnchangeInput} />);
         }
+        else if (element.type === "image") {
+            let url_hinh_anh_vung_quang_cao = props.stateValues.url_hinh_anh_vung_quang_cao;
+            let error_url_hinh_anh_vung_quang_cao = "";
+            inputs.push(
+                <div>
+                    <div>
+                        <label className="fullwidth post_campaign__info--content-title">
+                            {"Hình ảnh mô tả vùng quảng cáo"}
+                        </label>
+                    </div>
+                    <div className="post_campaign__info--content--banner--file">
+                        <input type="file" id="file" onChange={props.onChangeImageFile} />
+                        <p style={{ color: "red", marginTop: "3px" }}>{error_url_hinh_anh_vung_quang_cao}</p>
+                    </div>
+                    <div>
+                        <Img className="post_campaign__info--content--banner--image" src={url_hinh_anh_vung_quang_cao} style={{ marginRight: "5px" }} />
+                    </div>
+                </div>
+            );
+
+        }
         else {
             var valueInput = props.stateValues[element.id];
             var errorTitle = props.stateValues[element.errorTitleName];
@@ -286,6 +309,7 @@ class AdsAreaCreatorForm extends Component {
         this.handleOnchangeSelect = this.handleOnchangeSelect.bind(this);
         this.handleOnchangeRadioButton = this.handleOnchangeRadioButton.bind(this);
         this.handleOnchangeColor = this.handleOnchangeColor.bind(this);
+        this.onChangeImageFile = this.onChangeImageFile.bind(this);
     }
 
     handleClosePopup() {
@@ -320,6 +344,36 @@ class AdsAreaCreatorForm extends Component {
         this.props.handleUpdateState(stateValues);
     }
 
+    onChangeImageFile(event) {
+        var stateValues = this.props.stateValues;
+        event.stopPropagation();
+        event.preventDefault();
+
+        var file = event.target.files[0];
+        if (file) {
+            const data = new FormData();
+            data.append('file', file);
+            data.append('filename', file.file_name || uuidv4());
+
+            var $this = this;
+            fetch(UrlApi.UploadFile, {
+                method: 'POST',
+                body: data,
+            }).then((response) => {
+                response.json().then((body) => {
+                    stateValues.url_hinh_anh_vung_quang_cao = body.file;
+                    $this.props.handleUpdateState(stateValues);
+                });
+            }).catch((e) => {
+                $this.props.handleUpdateState({ UploadImageDescription: "fail" });
+            });
+        }
+        else {
+            stateValues.url_hinh_anh_vung_quang_cao = '';
+            this.props.handleUpdateState(stateValues);
+        }
+    }
+
     handleOnchangeRadioButton(e) {
         this.props.handleUpdateState({
             [e.target.name]: e.target.value
@@ -348,6 +402,7 @@ class AdsAreaCreatorForm extends Component {
                             handleOnchangeSelect={this.handleOnchangeSelect}
                             handleOnchangeRadioButton={this.handleOnchangeRadioButton}
                             handleOnchangeColor={this.handleOnchangeColor}
+                            onChangeImageFile={this.onChangeImageFile}
                             stateValues={this.props.stateValues}
                         />
                     </div>
@@ -667,6 +722,7 @@ class AdsAreaCreatorUpdater extends Component {
             });
 
             jsonState.ma_dich_vu_isReadOnly = false;
+            jsonState.url_hinh_anh_vung_quang_cao = '';
         }
         else {
             inputs.forEach(element => {
@@ -696,6 +752,11 @@ class AdsAreaCreatorUpdater extends Component {
                     var keySelectedItem = this.props.editContents[element.id];
                     keySelectedItem = (keySelectedItem === 1 || keySelectedItem === true) ? 1 : 0;
                     jsonState[element.id] = keySelectedItem;
+                }
+                else if (element.type === "image") {
+                    console.log( this.props.editContents);
+                    var url_hinh_anh_vung_quang_cao = this.props.editContents[element.id];
+                    jsonState[element.id] = url_hinh_anh_vung_quang_cao;
                 }
                 else { //color & input
                     if (element.id === "kich_thuoc_vung") {
@@ -742,6 +803,11 @@ class AdsAreaCreatorUpdater extends Component {
 
         if (state.ktv_chieu_cao === "") {
             jsonError.error_ktv_chieu_cao = "Yêu cầu lớn hơn 0";
+            isValid = false;
+        }
+
+        if(state.url_hinh_anh_vung_quang_cao === "") {
+            jsonError.error_url_hinh_anh_vung_quang_cao = "Thiếu hình ảnh";
             isValid = false;
         }
 
@@ -804,6 +870,7 @@ class AdsAreaCreatorUpdater extends Component {
                     key: state.vung_ap_dung_quang_cao,
                     value: state.selectedXAdsArea.values[indexOfAppliedAdsArea]
                 },
+                url_hinh_anh_vung_quang_cao: state.url_hinh_anh_vung_quang_cao,
                 loai_bai_dang_ap_dung: {
                     key: state.loai_bai_dang_ap_dung,
                     value: state.AppliedPostTypes.values[indexOfAppliedPostType]
@@ -1044,6 +1111,11 @@ var adsAreaInformationInputs = [
         "type": "combobox",
         "keys": [],
         "values": []
+    },
+    {
+        "description": "Hình ảnh mô tả vùng quảng cáo",
+        "id": "url_hinh_anh_vung_quang_cao",
+        "type": "image"
     },
     {
         "description": "Loại bài đăng áp dụng",
