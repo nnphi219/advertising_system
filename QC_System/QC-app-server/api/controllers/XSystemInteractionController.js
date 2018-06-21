@@ -111,12 +111,32 @@ exports.get_serviceprice_ByAreaIdAndDisplayMode = (req, res) => {
     });
 };
 
-exports.get_promotion_by_promotionCodeAndUsername = (req, res) => {
-    var promotionCode = req.header('promotioncode');
-    var creator = req.header('username');
+exports.get_promotion_by_promotionIdAndUsername = (req, res) => {
+    let data = req.body;
 
-    promotionController.get_a_promotion_by_CodeAndUsername(promotionCode, creator, function (promotion) {
-        res.json(promotion);
+    let promotionId = data.promotionId;
+    let creator = data.username;
+    let startDateCondition = data.jsonStartDate;
+    let endDateCondition = data.jsonEndDate;
+
+    promotionController.get_a_promotion_by_PromotionIdAndUsername(promotionId, creator, function (promotion) {
+        if (promotion) {
+            let promotionStartDate = promotion.start_date;
+            let promotionEndDate = promotion.end_date;
+
+            if ((dateFormat.JsonDate2GreaterThanOrEqualJsonDate1(startDateCondition, promotionStartDate) && dateFormat.JsonDate2GreaterThanOrEqualJsonDate1(promotionStartDate, endDateCondition))
+                || (dateFormat.JsonDate2GreaterThanOrEqualJsonDate1(promotionEndDate, endDateCondition) && dateFormat.JsonDate2GreaterThanOrEqualJsonDate1(startDateCondition, promotionEndDate))
+                || (dateFormat.JsonDate2GreaterThanOrEqualJsonDate1(promotionStartDate, startDateCondition) && dateFormat.JsonDate2GreaterThanOrEqualJsonDate1(startDateCondition, promotionEndDate))
+            ) {
+                res.json(promotion);
+            }
+            else {
+                res.json(null);
+            }
+        }
+        else {
+            res.json(null);
+        }
     });
 };
 

@@ -1,5 +1,5 @@
 export function DateToJsonDate(date) {
-    var jsonDate = {
+    let jsonDate = {
         day: date.getDate(),
         month: date.getMonth() + 1,
         year: date.getFullYear()
@@ -9,8 +9,13 @@ export function DateToJsonDate(date) {
 }
 
 export function JsonDateToDate(jsonDate) {
-    var date = new Date(parseInt(jsonDate.year, 10), parseInt(jsonDate.month, 10) - 1, parseInt(jsonDate.day, 10), null, null, null, null);
-    return date;
+    if (jsonDate) {
+        let date = new Date(parseInt(jsonDate.year, 10), parseInt(jsonDate.month, 10) - 1, parseInt(jsonDate.day, 10), null, null, null, null);
+        return date;
+    }
+    else {
+        return new Date();
+    }
 }
 
 export function TransferFactorUnitKeyToText(value) {
@@ -206,7 +211,7 @@ export function GetProvinces(list_province_district) {
 export function GetDistrictsBasicOnProvince(provinceCode, list_province_district) {
     var districtCodes = [""];
     var districtNames = ["Lựa chọn"];
-    
+
     if (provinceCode === undefined || provinceCode === null || provinceCode === "") {
         return {
             codes: [],

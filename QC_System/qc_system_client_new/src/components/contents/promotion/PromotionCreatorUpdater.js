@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Request from 'superagent';
 import UrlApi, { UrlRedirect } from '../share/UrlApi';
-import { RenderInput, RenderRadioButon } from '../share/InputsRender';
+import { RenderInput, RenderRadioButon, RenderDate } from '../share/InputsRender';
+import { Date2GreaterThanOrEqualDate1 } from '../share/DateFormat';
+import { JsonDateToDate, DateToJsonDate } from '../share/Mapper';
 
 import { PROMOTION_PHAN_TRAM, PROMOTION_GIA_TRI } from '../share/constant';
 import './promotion_management.css';
@@ -64,19 +66,32 @@ class RenderProperties extends Component {
                     OnChangeInput={this.props.OnChangeInput}
                 />
                 <div>
-                    <div>
-                        <RenderInput
-                            nameId={"code"}
-                            title={"Code"}
-                            value={stateValues.code}
-                            type={"text"}
-                            className={"promotion--input"}
-                            OnChangeInput={this.props.OnChangeInput}
-                            isReadOnly={1}
-                        />
+                    <div className="">
+                        <label className="fullwidth">
+                            <div>
+                                <div className={"float-left"} style={{ paddingTop: "5px", marginRight: "5px" }}>
+                                    {"Từ ngày"}
+                                </div>
+                                <RenderDate
+                                    nameId={"start_date"}
+                                    className={"input--date"}
+                                    divClassName={"float-left"}
+                                    value={this.props.stateValues.start_date}
+                                    OnchangeDate={this.props.OnchangeStartDate}
+                                />
+                                <div className={"float-left"} style={{ paddingTop: "5px", marginLeft: "5px", marginRight: "5px" }}>
+                                    {" đến "}
+                                </div>
+                                <RenderDate
+                                    nameId={"end_date"}
+                                    className={"input--date"}
+                                    divClassName={"float-left"}
+                                    value={this.props.stateValues.end_date}
+                                    OnchangeDate={this.props.OnchangeEndDate}
+                                />
+                            </div>
+                        </label>
                     </div>
-
-                    <button className="btn btn-primary" onClick={this.props.OnGenerateCode}>Tạo mới code</button>
                 </div>
 
             </div>
@@ -91,16 +106,8 @@ class PromotionCreatorUpdaterForm extends Component {
         this.OnChangeInput = this.OnChangeInput.bind(this);
         this.OnChangeSelect = this.OnChangeSelect.bind(this);
         this.OnChangeRadioButton = this.OnChangeRadioButton.bind(this);
-        this.OnGenerateCode = this.OnGenerateCode.bind(this);
-
-    }
-
-    OnGenerateCode() {
-        var jsonState = {
-            code: uuidV1()
-        };
-
-        this.props.UpdateState(jsonState);
+        this.OnchangeStartDate = this.OnchangeStartDate.bind(this);
+        this.OnchangeEndDate = this.OnchangeEndDate.bind(this);
     }
 
     OnChangeInput(e) {
@@ -110,6 +117,34 @@ class PromotionCreatorUpdaterForm extends Component {
 
     OnChangeSelect(e) {
         var jsonState = { [e.target.name]: e.target.value };
+        this.props.UpdateState(jsonState);
+    }
+
+    OnchangeStartDate(start_date) {
+        let end_date = this.props.stateValues.end_date;
+        var jsonState = { error_date: "" };
+
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
+            jsonState.start_date = start_date;
+        }
+        else {
+            jsonState.error_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+
+        this.props.UpdateState(jsonState);
+    }
+
+    OnchangeEndDate(end_date) {
+        let start_date = this.props.stateValues.start_date;
+        var jsonState = { error_date: "" };
+
+        if (Date2GreaterThanOrEqualDate1(start_date, end_date)) {
+            jsonState.end_date = end_date;
+        }
+        else {
+            jsonState.error_date = "Ngày bắt đầu phải bé hơn ngày kết thúc";
+        }
+
         this.props.UpdateState(jsonState);
     }
 
@@ -135,7 +170,6 @@ class PromotionCreatorUpdaterForm extends Component {
                     OnChangeRadioButton={this.OnChangeRadioButton}
                     OnchangeStartDate={this.OnchangeStartDate}
                     OnchangeEndDate={this.OnchangeEndDate}
-                    OnGenerateCode={this.OnGenerateCode}
 
                     stateValues={this.props.stateValues}
                     modeAction={this.props.modeAction}
@@ -198,12 +232,16 @@ class PromotionCreatorUpdater extends Component {
     }
 
     SetInitState(jsonState) {
+        var today = new Date();
+
         if (this.props.modeAction === "create") {
             jsonState.ma_khuyen_mai = '';
             jsonState.mo_ta_khuyen_mai = '';
             jsonState.loai_gia = PROMOTION_PHAN_TRAM;
-            jsonState.code = uuidV1();
             jsonState.gia_tri = 0;
+
+            jsonState.start_date = today;
+            jsonState.end_date = today;
         }
         else {
             var editContents = this.props.editContents;
@@ -212,7 +250,9 @@ class PromotionCreatorUpdater extends Component {
             jsonState.mo_ta_khuyen_mai = editContents.mo_ta_khuyen_mai;
             jsonState.loai_gia = editContents.muc_gia_ap_dung.loai_gia;
             jsonState.gia_tri = editContents.muc_gia_ap_dung.gia_tri;
-            jsonState.code = editContents.code;
+
+            jsonState.start_date = JsonDateToDate(editContents.start_date);
+            jsonState.end_date = JsonDateToDate(editContents.end_date);
         }
 
         return jsonState;
@@ -262,15 +302,18 @@ class PromotionCreatorUpdater extends Component {
         var isValid = this.CheckValid(state);
 
         if (isValid) {
+            var startDateJson = DateToJsonDate(state.start_date);
+            var endDateJson = DateToJsonDate(state.end_date);
 
             var promotionContent = {
                 ma_khuyen_mai: state.ma_khuyen_mai,
                 mo_ta_khuyen_mai: state.mo_ta_khuyen_mai,
-                code: state.code,
                 muc_gia_ap_dung: {
                     loai_gia: state.loai_gia,
                     gia_tri: state.gia_tri
                 },
+                start_date: startDateJson,
+                end_date: endDateJson
             };
 
             if (this.props.modeAction === 'edit') {

@@ -10,11 +10,20 @@ var PromotionManagementSchema = new Schema({
         loai_gia: Number, //1 - percent, 2 - value(VND)
         gia_tri: Number
     },
-    code: String,
     trang_thai: Number,
     nguoi_tao: {
         type: String,
         require: true
+    },
+    start_date: {
+        day: Number,
+        month: Number,
+        year: Number
+    },
+    end_date: {
+        day: Number,
+        month: Number,
+        year: Number
     }
 });
 

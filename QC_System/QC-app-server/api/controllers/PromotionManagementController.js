@@ -91,8 +91,8 @@ exports.delete_a_promotionManagement = function (req, res) {
     });
 };
 
-exports.get_a_promotion_by_CodeAndUsername = function (code, creator, next) {
-    PromotionManagement.findOne({ nguoi_tao: creator, code: code }, function (err, promotion) {
+exports.get_a_promotion_by_PromotionIdAndUsername = function (ma_khuyen_mai, creator, next) {
+    PromotionManagement.findOne({ nguoi_tao: creator, ma_khuyen_mai: ma_khuyen_mai }, function (err, promotion) {
         if (err)
             next(null);
         next(promotion);

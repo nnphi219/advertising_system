@@ -10,8 +10,8 @@ module.exports = function (app) {
     app.route('/getServicePriceByAreaIdAndDisplayMode')
         .get(xsystemController.get_serviceprice_ByAreaIdAndDisplayMode);
 
-    app.route('/GetPromotionByPromotionCodeAndUsername')
-        .get(xsystemController.get_promotion_by_promotionCodeAndUsername);
+    app.route('/GetPromotionByPromotionIdAndUsername')
+        .post(xsystemController.get_promotion_by_promotionIdAndUsername);
 
     app.route('/priceFactorCalculateTotalAffectValue')
         .post(xsystemController.calculate_total_affect_value)

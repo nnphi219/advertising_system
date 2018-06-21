@@ -88,7 +88,7 @@ function getStateOnChangeInput(selfObject, oldState, eventInput, next) {
             });
     }
     else if (name === "ma_khuyen_mai") {
-        this.GetPromotionByPromotionCode(value, newState, function (newState) {
+        selfObject.GetPromotionByPromotionId(value, newState, function (newState) {
             next(newState);
         });
     }
@@ -235,8 +235,7 @@ function RenderForm(props) {
             adsAreaDetailDescription.push(<p key="1" className="margin_zero"> {"Tên dịch vụ: " + stateValues.AdsAreaIds.values[indexOfAdsAreas] + "."}</p>)
             adsAreaDetailDescription.push(<p key="2" className="margin_zero"> {"Loại quảng cáo: " + stateValues.AdsAreaIds.adsTypes[indexOfAdsAreas].value + "."}</p>)
         }
-        console.log(indexOfAdsAreas);
-        console.log(stateValues.AdsAreaIds.adsAreaImages);
+
         url_hinh_anh_vung_quang_cao = stateValues.AdsAreaIds.adsAreaImages[indexOfAdsAreas];
     }
 
@@ -431,7 +430,7 @@ function RenderForm(props) {
                 />
 
                 <RenderDate
-                    nameId={"end_date"}
+                    nameId={"ngay_ket_thuc"}
                     title={"Ngày kết thúc chiến dịch"}
                     className={"input--date"}
                     value={stateValues.ngay_ket_thuc}
@@ -625,15 +624,26 @@ class PostCampaignCreatorUpdaterForm extends Component {
         }
     }
 
-    GetPromotionByPromotionCode(code, stateValues, next) {
-        Request.get(UrlApi.GetPromotionByPromotionCodeAndUsername)
-            .set('promotioncode', code)
-            .set('username', stateValues.XAdminUsername)
-            .then((res) => {
-                var promotion = res.body;
+    GetPromotionByPromotionId(promotionId, stateValues, next) {
+        let data = {
+            promotionId: promotionId,
+            username: stateValues.XAdminUsername,
+            jsonStartDate: DateToJsonDate(stateValues.ngay_bat_dau),
+            jsonEndDate: DateToJsonDate(stateValues.ngay_ket_thuc)
+        }
 
-                stateValues.promotionInfo = promotion;
-                next(stateValues);
+        Request.post(UrlApi.GetPromotionByPromotionIdAndUsername)
+            .send(data)
+            .end((err, res) => {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    var promotion = res.body;
+
+                    stateValues.promotionInfo = promotion;
+                    next(stateValues);
+                }
             });
     }
 
@@ -670,6 +680,7 @@ class PostCampaignCreatorUpdaterForm extends Component {
     OnChangeInput(e) {
         let stateValues = this.props.stateValues;
         let name = e.target.name;
+
         let $this = this;
         getStateOnChangeInput(this, stateValues, e, function (newState) {
             if (name === "loai_dich_vu" || name === "co_che_hien_thi" || name === "vi_tri_vung_chia_se"
@@ -959,8 +970,10 @@ class PostCampaignRegister extends Component {
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(content)
             .end((err, res) => {
-                jsonState.tong_gia_tri_anh_huong = res.body.total_affect_value;
-                next(jsonState);
+                if (res) {
+                    jsonState.tong_gia_tri_anh_huong = res.body.total_affect_value;
+                    next(jsonState);
+                }
             });
     }
 
@@ -985,7 +998,6 @@ class PostCampaignRegister extends Component {
             max_shared_areas.push(adsArea.so_luong_chia_se_vung);
             max_quantity_posts.push(adsArea.so_luong_tin_toi_da);
             adsAreaImages.push(adsArea.url_hinh_anh_vung_quang_cao);
-            console.log(adsArea)
         });
 
         jsonSetInfosOfUser.AdsAreaIds = {
