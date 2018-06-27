@@ -47,7 +47,7 @@ export class PostCreator extends Component {
             let data = {
                 ma_bai_dang, tieu_de, noi_dung,
                 ma_loai_bai_dang: loai_bai_dang,
-                imageUrl: fileName
+                imageUrl: 'http://localhost:8082/' + fileName
             };
 
             let accessTolen = localStorage.getItem('x-auth');

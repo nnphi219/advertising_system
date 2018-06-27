@@ -23,6 +23,8 @@ module.exports = function(app) {
         .get(authenticateQCSystem, postController.list_all_posts);
 
     app.route('/postsWithoutAuthen')
-    .get(postController.list_all_posts)
+        .get(postController.list_all_posts);
 
+    app.route('/getPostsByPostIds')
+        .post(postController.list_all_posts_by_listId);
 };

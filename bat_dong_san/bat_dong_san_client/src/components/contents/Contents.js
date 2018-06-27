@@ -10,7 +10,6 @@ import PostCampaign from './post_campaign/PostCampaign';
 
 class Contents extends Component {
     render() {
-        console.log(this.props.postContents)
         return (
             <div className="content">
                 <Route exact={true} path="/" component={Home} />

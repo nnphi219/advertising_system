@@ -7,6 +7,7 @@ export const URL_API = {
     UserLogin: HOST_NAME_SERVER + "/users/login",
 
     PostManagement: HOST_NAME_SERVER + "/posts",
+    GetPostsByPostIds: HOST_NAME_SERVER + "/getPostsByPostIds",
 
     UploadFile: HOST_NAME_SERVER + "/uploads",
 
