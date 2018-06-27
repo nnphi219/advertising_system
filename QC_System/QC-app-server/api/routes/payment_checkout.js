@@ -10,6 +10,7 @@ module.exports = function(app) {
         console.log('userAgent', userAgent);
     
         const params = Object.assign({}, req.body);
+        console.log(params);
     
         const clientIp =
             req.headers['x-forwarded-for'] ||
@@ -50,7 +51,13 @@ module.exports = function(app) {
         let asyncCheckout = null;
         switch (params.paymentMethod) {
             case 'vnPay':
-                asyncCheckout = checkoutVNPay(req, res);
+                var $res = res;
+                asyncCheckout = checkoutVNPay(req, res, function (checkoutUrl){
+                    console.log(checkoutUrl.href);
+                    $res.json({
+                        "url": checkoutUrl.href
+                    });
+                });
                 break;
             case 'nganluong':
                 // this param is not expected in other gateway
@@ -63,7 +70,14 @@ module.exports = function(app) {
                 // this param is not expected in other gateway
                 checkoutData.customerName = `${params.firstname || ''} ${params.lastname || ''}`.trim();
                 checkoutData.paymentMethod = 'VISA';
-                asyncCheckout = checkoutNganLuong(req, res);
+                console.log("nganluongvisa");
+                var $res = res;
+                asyncCheckout = checkoutNganLuong(req, res, function (checkoutUrl){
+                    console.log(checkoutUrl.href);
+                    $res.json({
+                        "url": checkoutUrl.href
+                    });
+                });
                 break;
             case 'sohaPay':
                 asyncCheckout = checkoutSohaPay(req, res);
@@ -72,24 +86,29 @@ module.exports = function(app) {
                 break;
         }
     
-        if (asyncCheckout) {
-            asyncCheckout
-                .then(checkoutUrl => {
-                    res.writeHead(301, { Location: checkoutUrl.href });
-                    res.end();
-                })
-                .catch(err => {
-                    res.send(err);
-                });
-        } else {
-            res.send('Payment method not found');
-        }
+        // if (asyncCheckout) {
+
+        //     let a = asyncCheckout
+        //         .then(checkoutUrl => {
+        //             console.log(checkoutUrl.href);
+        //             res.writeHead(301, { Location: checkoutUrl.href });
+        //             res.end();
+        //         })
+        //         .catch(err => {
+        //             res.send(err);
+        //         });
+        //         console.log("errrrdddsds");
+        // } else {
+        //     console.log("errrr");
+        //     res.send('Payment method not found');
+        // }
     });
 
     app.route('/payment/:gateway/callback')
         .get((req, res) => {
             const gateway = req.params.gateway;
             console.log('gateway', req.params.gateway);
+            console.log(req.originalUrl);
             let asyncFunc = null;
         
             switch (gateway) {
@@ -114,8 +133,21 @@ module.exports = function(app) {
         
             if (asyncFunc) {
                 asyncFunc.then(() => {
-                    res.render('result', {
-                        title: `Nau Store Payment via ${gateway.toUpperCase()}`,
+                    // res.render('result', {
+                    //     title: `Nau Store Payment via ${gateway.toUpperCase()}`,
+                    //     isSucceed: res.locals.isSucceed,
+                    //     email: res.locals.email,
+                    //     orderId: res.locals.orderId,
+                    //     price: res.locals.price,
+                    //     message: res.locals.message,
+                    //     billingStreet: res.locals.billingStreet,
+                    //     billingCountry: res.locals.billingCountry,
+                    //     billingCity: res.locals.billingCity,
+                    //     billingStateProvince: res.locals.billingStateProvince,
+                    //     billingPostalCode: res.locals.billingPostalCode,
+                    // });
+                    res.json({
+                        title: `Thanh toán hóa đơn quảng cáo thành công thông qua cổng ${gateway.toUpperCase()}`,
                         isSucceed: res.locals.isSucceed,
                         email: res.locals.email,
                         orderId: res.locals.orderId,

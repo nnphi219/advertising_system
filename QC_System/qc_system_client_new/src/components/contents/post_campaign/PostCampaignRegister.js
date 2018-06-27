@@ -564,6 +564,15 @@ function RenderForm(props) {
                     OnChangeInput={props.OnChangeInput}
                     isReadOnly={1}
                 />
+                <RenderSelect
+                    nameId={"cong_thanh_toan"}
+                    title={"Cổng thanh toán"}
+                    keys={['sohaPay', 'vnPay', 'nganluong', 'nganluongvisa']}
+                    values={['SohaPay', 'VNpay', 'Ngân lượng (ATM)', 'Ngân lượng (VISA)']}
+                    selectedValue={stateValues.cong_thanh_toan}
+                    OnChangeSelect={props.OnChangeInput}
+                    className={"input--select"}
+                />
             </div>
 
         </div>
@@ -621,6 +630,35 @@ class PostCampaignCreatorUpdaterForm extends Component {
 
     pay() {
         console.log(this.props.stateValues.tong_cong);
+        Request.post(UrlApi.Payment)
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('Accept', 'application/json')
+        .send({
+            firstname: "Nau",
+            lastname: "Dev",
+            billingStreet: "187 Dien Bien Phu, Da Kao Ward",
+            billingCity: "01",
+            billingCountry: "VN",
+            billingPostCode: "700000",
+            billingStateProvince: "Hồ Chí Minh",
+            email: "phanhuutuan.01.01.1995@gmail.com",
+            amount: this.props.stateValues.tong_cong,
+            phoneNumber: "0123456789",
+            paymentMethod: this.props.stateValues.cong_thanh_toan
+        })
+        .end((err, res) => {
+            if (err) {
+                console.log(err);
+                // window.location.href = res.body.href;
+                window.open(res.body.url, '_blank');
+            }
+            else {
+                console.log(res.body.url);
+                // window.location.href = res.body.url;
+
+                window.open(res.body.url, '_blank');
+            }
+        });
     }
 
     OnKeyDown(event) {
@@ -1149,7 +1187,8 @@ class PostCampaignRegister extends Component {
         jsonState.list_province_district = Transfer_Provice_District_JsonToArray(data_tinh_thanh_quan_huyen);
         jsonState.originProvinces = GetProvinces(jsonState.list_province_district);
 
-        jsonState.array_khung_gio = array_khung_gio
+        jsonState.array_khung_gio = array_khung_gio;
+        jsonState.cong_thanh_toan = "vnPay";
         if (modeAction === "create") {
             jsonState.ma_bai_dang = "";
             jsonState.co_che_hien_thi = "doc_quyen";

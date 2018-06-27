@@ -8,24 +8,25 @@ const vnpay = new VNPay({
 	secureSecret: TEST_CONFIG.secureSecret,
 });
 
-exports.checkoutVNPay = function(req, res) {
+exports.checkoutVNPay = function(req, res, next) {
 	const checkoutData = res.locals.checkoutData;
 
 	checkoutData.returnUrl = `http://${req.headers.host}/payment/vnpay/callback`;
-	checkoutData.orderInfo = 'Thanh toan giay adidas';
-	checkoutData.orderType = 'fashion';
+	checkoutData.orderInfo = 'Thanh toán hóa đơn chạy chiến dịch quảng cáo';
+	checkoutData.orderType = 'digital content';
 
-	return vnpay.buildCheckoutUrl(checkoutData).then(checkoutUrl => {
+	vnpay.buildCheckoutUrl(checkoutData).then(checkoutUrl => {
 		res.locals.checkoutUrl = checkoutUrl;
-
-		return checkoutUrl;
+		next(checkoutUrl);
+		// return checkoutUrl;
 	});
 }
 
 exports.callbackVNPay = function(req, res) {
 	const query = req.query;
-
+	console.log(query);
 	return vnpay.verifyReturnUrl(query).then(results => {
+		console.log(results);
 		if (results) {
 			res.locals.email = 'tu.nguyen@naustud.io';
 			res.locals.orderId = results.transactionId || '';

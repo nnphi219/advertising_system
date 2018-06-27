@@ -9,19 +9,19 @@ const nganluong = new NganLuong({
 	secureSecret: TEST_CONFIG.secureSecret,
 });
 
-exports.checkoutNganLuong = function(req, res) {
+exports.checkoutNganLuong = function(req, res, next) {
 	const checkoutData = res.locals.checkoutData;
 	checkoutData.returnUrl = `http://${req.headers.host}/payment/nganluong/callback`;
 	checkoutData.cancelUrl = `http://${req.headers.host}/`;
-	checkoutData.orderInfo = 'Thanh toan giay adidas';
+	checkoutData.orderInfo = 'Thanh toán hóa đơn chạy chiến dịch quảng cáo';
 	checkoutData.locale = checkoutData.locale === 'en' ? 'en' : 'vi';
 	checkoutData.paymentType = '1';
 	checkoutData.totalItem = '1';
-
-	return nganluong.buildCheckoutUrl(checkoutData).then(checkoutUrl => {
-		res.locals.checkoutUrl = checkoutUrl;
-
-		return checkoutUrl;
+    console.log(checkoutData);
+	nganluong.buildCheckoutUrl(checkoutData).then(checkoutUrl => {
+        res.locals.checkoutUrl = checkoutUrl;
+        console.log(checkoutUrl);
+		next(checkoutUrl);
 	});
 }
 
@@ -29,6 +29,7 @@ exports.callbackNganLuong = function (req, res) {
 	const query = req.query;
 
 	return nganluong.verifyReturnUrl(query).then(results => {
+        console.log(res);
 		if (results) {
 			res.locals.email = results.customerEmail;
 			res.locals.orderId = results.transactionId || '';

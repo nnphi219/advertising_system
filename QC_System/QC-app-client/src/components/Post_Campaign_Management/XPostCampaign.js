@@ -581,6 +581,7 @@ class RenderProperties extends Component {
                     <div className="submit">
                         <button className="btn btn-primary" onClick={this.props.handleSubmit}>Lưu</button>
                         <button className="btn btn-primary">Hủy</button>
+                        <button className="btn btn-primary" onClick={this.props.handlePayments}>Thanh toán</button>
                     </div>
                 </div>
                 {/* <div className="vertical_line" style="height: 45px;"></div> */}

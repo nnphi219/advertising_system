@@ -50,6 +50,7 @@ let xSystemDomainUrlRoute = require('./api/routes/Xsystem/XsystemDomainUrlRoute'
 let xSystemApiUrlRoute = require('./api/routes/Xsystem/XsystemApiUrlRoute');
 
 let xSystemInteractionRoute = require('./api/routes/XSystemInteractionRoute');
+let paymentsCheckout = require('./api/routes/payment_checkout');
 
 todoListRoute(app); //register the route
 userRoute(app);
@@ -65,6 +66,7 @@ xSystemPageRoute(app);
 xSystemPostTypeRoute(app);
 xSystemDomainUrlRoute(app);
 xSystemApiUrlRoute(app);
+paymentsCheckout(app);
 
 app.listen(port);
 

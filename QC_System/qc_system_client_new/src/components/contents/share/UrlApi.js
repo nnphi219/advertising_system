@@ -60,7 +60,9 @@ const UrlApi = {
     UploadFile: hostNameServer + "/uploads",
 
     PostManagement: `http://${HOST}:${PORT}/postmanagement`,
-    Upload: `http://${HOST}:${PORT}/uploads`
+    Upload: `http://${HOST}:${PORT}/uploads`,
+
+    Payment: `http://${HOST}:${PORT}/payment/checkout`
 }
 
 export const UrlRedirect = {
