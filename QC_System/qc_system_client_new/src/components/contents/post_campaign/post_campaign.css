@@ -108,7 +108,7 @@
 }
 
 .post_campaign__info--content {
-    padding: 0 30px 20px 30px;
+    padding: 0 30px 40px 30px;
     border: 3px solid #9badf2;
     margin-bottom: 20px;
     padding-top: 10px;
@@ -128,15 +128,15 @@
 }
 
 .post_campaign__info--content--postid {
-    height: 72px;
+    /* height: 72px; */
 }
 
 .post_campaign__info--content--adsarea {
-    height: 155px;
+    /* height: 155px; */
 }
 
 .post_campaign__info--content--displaymode {
-    height: 70px;
+    /* height: 70px; */
 }
 
 .post_campaign__info--content-title {

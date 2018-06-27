@@ -38,20 +38,6 @@ class AppContent extends Component {
       });
   }
 
-  getHomeAdvertising() {
-    let $this = this;
-    let url = URL_API.GetAdvertisement + "/" + PAGES.HOME.NAME_ID;
-    Request.get(url)
-      .then((res) => {
-        let jsonAdsArea = res.body;
-        let newState = $this.state.postContents.HomePostContents = jsonAdsArea;
-
-        $this.setState(newState);
-      }).catch((e) => {
-        console.log('err');
-      });
-  }
-
   getBuyAdvertising() {
     let $this = this;
     let url = URL_API.GetAdvertisement + "/" + PAGES.BUY.NAME_ID;
@@ -82,7 +68,6 @@ class AppContent extends Component {
 
   componentDidMount() {
     this.getHeaderAdvertising();
-    this.getHomeAdvertising();
     this.getBuyAdvertising();
     this.getRentAdvertising();
   }

@@ -9,6 +9,16 @@ exports.list_all_posts = function (req, res) {
       res.send(err);
     res.json(post);
   });
+}
+;
+exports.list_all_posts_by_listId = function (req, res) {
+  var postIds = req.body.postIds;
+  console.log(postIds);
+  Post.find({ ma_bai_dang: {$in: postIds} }, function (err, post) {
+    if (err)
+      res.send(err);
+    res.json(post);
+  });
 };
 
 exports.list_all_posts_for_marketing = function (req, res) {
